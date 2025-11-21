@@ -57,31 +57,36 @@ export default function Footer() {
 
           {/* Courses Column */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Courses</h3>
+            <h3 className="text-white font-semibold mb-4">Useful Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/?category=web-development" className="text-sm hover:text-white transition-colors">
-                  Web Development
+                 About US
                 </Link>
               </li>
               <li>
                 <Link href="/?category=data-science" className="text-sm hover:text-white transition-colors">
-                  Data Science
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link href="/?category=design" className="text-sm hover:text-white transition-colors">
-                  Design
+                  Ethics Policy
                 </Link>
               </li>
               <li>
                 <Link href="/?category=business" className="text-sm hover:text-white transition-colors">
-                  Business
+                  Terms of Use
                 </Link>
               </li>
               <li>
                 <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
-                  Marketing
+                 Disclaimer
+                </Link>
+              </li>
+              <li>
+                <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
+                 Refund Policy
                 </Link>
               </li>
             </ul>
@@ -89,16 +94,16 @@ export default function Footer() {
 
           {/* Company Column */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Company</h3>
+            <h3 className="text-white font-semibold mb-4">Important Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-sm hover:text-white transition-colors">
-                  About Us
+                 All Courses
                 </Link>
               </li>
               <li>
                 <Link href="/careers" className="text-sm hover:text-white transition-colors">
-                  Careers
+                 GST Courses
                 </Link>
               </li>
               <li>

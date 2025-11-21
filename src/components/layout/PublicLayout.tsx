@@ -1,6 +1,10 @@
 import { ReactNode } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import HeroSection from './home/HeroSection.home';
+import FeaturedCourses from './home/Feature.home';
+import MembershipPricing from './home/Member.home';
+import StatsSection from './home/StaticSection.home';
 
 /**
  * Public Layout (CMS Layout)
@@ -16,11 +20,11 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         {children}
       </main>
-      
+
       {showFooter && <Footer />}
     </div>
   );
