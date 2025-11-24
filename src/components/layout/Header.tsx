@@ -25,34 +25,47 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">CS</span>
+            <div className="w-[221px] h-[62px]  flex items-center justify-center">
+          <img src="/images/studycafe_logo.svg" alt="" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">StudyCafe</span>
+           
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 ">
             <Link 
               href="/" 
-              className={`text-gray-700 hover:text-blue-600 transition-colors ${
+              className={`text-gray-700 hover:text-blue-600 transition-colors text-[16px] ${
                 router.pathname === '/' ? 'text-blue-600 font-semibold' : ''
               }`}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/course" 
+              className="text-gray-700 hover:text-blue-600 transition-colors text-[16px] "
             >
               Courses
             </Link>
             <Link 
-              href="/categories" 
+              href="/memberships" 
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
-              Categories
+              Memberships
             </Link>
             <Link 
-              href="/about" 
+              href="/blogs" 
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
-              About
+              Blogs
             </Link>
+            <Link 
+              href="/contact" 
+              className="text-gray-700 hover:text-blue-600 transition-colors"
+            >
+              Contact Us
+            </Link>
+  
           </div>
 
           {/* Right Side - Auth Buttons or User Menu */}
@@ -142,17 +155,12 @@ export default function Header() {
               </div>
             ) : (
               <>
-                <Link 
-                  href="/login" 
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Login
-                </Link>
+      
                 <Link 
                   href="/register" 
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
                 >
-                  Sign Up
+                   Get Started
                 </Link>
               </>
             )}
@@ -178,13 +186,19 @@ export default function Header() {
           <div className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
               <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                Courses
+              Home
               </Link>
               <Link href="/categories" className="text-gray-700 hover:text-blue-600 font-medium">
-                Categories
+               Courses    
+               </Link>
+              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+                Memberships
               </Link>
               <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
-                About
+                Blogs
+              </Link>
+              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+                 Contact Us
               </Link>
               
               <div className="border-t border-gray-200 pt-4 mt-2">
@@ -212,14 +226,12 @@ export default function Header() {
                   </>
                 ) : (
                   <>
-                    <Link href="/login" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
-                      Login
-                    </Link>
+            
                     <Link 
                       href="/register" 
-                      className="block mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-center font-medium"
+                      className="block mt-2 bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-center font-medium"
                     >
-                      Sign Up
+                      Get Started
                     </Link>
                   </>
                 )}
