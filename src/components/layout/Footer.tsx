@@ -13,13 +13,14 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">CS</span>
-              </div>
-              <span className="text-2xl font-bold text-white">StudyCafe</span>
+                <Link href="/" className="flex items-center gap-2">
+            <div className="w-[221px] h-[62px] flex items-center justify-center">
+              <img src="/images/footer_logo.svg" alt="StudyCafe" />
             </div>
-            <p className="text-sm text-gray-400 mb-4">
-              Empowering learners worldwide with high-quality online courses.
+          </Link>
+            </div>
+            <p className="text-[16px] text-gray-400 mb-4">
+             Empowering learners with quality education and professional courses.
             </p>
             <div className="flex gap-4">
               <a 
@@ -57,35 +58,35 @@ export default function Footer() {
 
           {/* Courses Column */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Useful Links</h3>
+            <h3 className="text-white font-semibold mb-4 text-[24px]">Useful Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/?category=web-development" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=web-development" className="text-[16px] hover:text-white transition-colors">
                  About US
                 </Link>
               </li>
               <li>
-                <Link href="/?category=data-science" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=data-science" className="text-[16px] hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/?category=design" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=design" className="text-[16px] hover:text-white transition-colors">
                   Ethics Policy
                 </Link>
               </li>
               <li>
-                <Link href="/?category=business" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=business" className="text-[16px] hover:text-white transition-colors">
                   Terms of Use
                 </Link>
               </li>
               <li>
-                <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=marketing" className="text-[16px] hover:text-white transition-colors">
                  Disclaimer
                 </Link>
               </li>
               <li>
-                <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
+                <Link href="/?category=marketing" className="text-[16px] hover:text-white transition-colors">
                  Refund Policy
                 </Link>
               </li>
@@ -94,31 +95,36 @@ export default function Footer() {
 
           {/* Company Column */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Important Links</h3>
+            <h3 className="text-white font-semibold mb-4 text-[24px]">Important Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-sm hover:text-white transition-colors">
+                <Link href="/about" className="text-[16px] hover:text-white transition-colors">
                  All Courses
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-sm hover:text-white transition-colors">
+                <Link href="/careers" className="text-[16px] hover:text-white transition-colors">
                  GST Courses
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm hover:text-white transition-colors">
-                  Blog
+                <Link href="/blog" className="text-[16px] hover:text-white transition-colors">
+                  Income Tax Courses
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm hover:text-white transition-colors">
-                  Contact
+                <Link href="/contact" className="text-[16px] hover:text-white transition-colors">
+                  ChatGPT & AI
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm hover:text-white transition-colors">
-                  FAQ
+                <Link href="/faq" className="text-[16px] hover:text-white transition-colors">
+                  Excel Courses
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-[16px] hover:text-white transition-colors">
+                 Downloads
                 </Link>
               </li>
             </ul>
@@ -126,30 +132,30 @@ export default function Footer() {
 
           {/* Support Column */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Support</h3>
+            <h3 className="text-white font-semibold mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/help" className="text-sm hover:text-white transition-colors">
-                  Help Center
+                <Link href="/help" className="text-[16px] hover:text-white transition-colors">
+                  Subscribe to get updates on new courses and offers.
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-sm hover:text-white transition-colors">
+                <Link href="/terms" className="text-[16px] hover:text-white transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-sm hover:text-white transition-colors">
+                <Link href="/privacy" className="text-[16px] hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/refund" className="text-sm hover:text-white transition-colors">
+                <Link href="/refund" className="text-[16px] hover:text-white transition-colors">
                   Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/instructors" className="text-sm hover:text-white transition-colors">
+                <Link href="/instructors" className="text-[16px] hover:text-white transition-colors">
                   Become an Instructor
                 </Link>
               </li>

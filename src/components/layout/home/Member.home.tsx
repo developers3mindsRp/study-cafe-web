@@ -64,22 +64,22 @@ export default function MembershipPricing() {
               }`}
             >
               {plan.highlight && (
-                <span className="absolute top-4 right-4 bg-[#09339B] text-white text-xs px-3 py-1 rounded-md">
+                <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
                   Most Popular
                 </span>
               )}
 
-              <h3 className="text-xl font-semibold">{plan.title}</h3>
+              <h3 className="text-[26px] font-medium text-[#252525]">{plan.title}</h3>
 
-              <p className="text-4xl font-bold text-[#121B31] mt-3">
+              <p className="text-[54px] font-medium text-[#252525] mt-3">
                 {plan.price}
               </p>
-              <p className="text-[#6A7181] mt-1">{plan.duration}</p>
+              <p className="text-[#6A7181] mt-1 text-[16px]">{plan.duration}</p>
 
               <ul className="mt-6 space-y-3 text-left  text-[#AFAFAF]">
                 {plan.features.map((feat, index) => (
                   <li key={index} className="flex items-start gap-3 text-[#6A7181] text-[16px]">
-                    <FaCheckCircle className="text-[#3478F6]" />
+                   <img src="/images/tick.svg" alt="" />
                     {feat}
                   </li>
                 ))}
@@ -89,8 +89,8 @@ export default function MembershipPricing() {
                 className={`w-full mt-8 py-3 rounded-md border font-semibold transition 
                   ${
                     plan.highlight
-                      ? "bg-[#09339B] text-white border-[#09339B]"
-                      : "bg-white text-[#09339B] border-[#09339B]"
+                      ? "bg-[#09339B] text-white border-[#09339B] text-[20px]"
+                      : "bg-white text-[#09339B] border-[#09339B] text-[20px]"
                   }`}
               >
                 Buy Membership

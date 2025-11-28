@@ -10,6 +10,11 @@ import HeroSection from '@/components/layout/home/HeroSection.home';
 import StatsSection from '@/components/layout/home/StaticSection.home';
 import FeaturedCourses from '@/components/layout/home/Feature.home';
 import MembershipPricing from '@/components/layout/home/Member.home';
+import Testimonials from '@/components/layout/home/Testimonial.home';
+import BlogSection from '@/components/layout/home/BlogSection.home';
+import FAQSection from '@/components/layout/home/FaqSection.home';
+import Learning from '@/components/layout/home/Learning.home';
+import GSTRCoursePage from '@/components/layout/course/CourseDetail';
 
 /**
  * Home Page - Course Listing
@@ -32,6 +37,11 @@ export default function Home() {
       <StatsSection />
       <FeaturedCourses />
       <MembershipPricing />
+      <Testimonials/>
+      <BlogSection/>
+      <Learning/>
+      <FAQSection/>
+      {/* <GSTRCoursePage/> */}
     </PublicLayout>
   );
 }
