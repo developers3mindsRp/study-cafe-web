@@ -6,7 +6,7 @@ import { useFeaturedCourses } from '@/hooks/useCourses';
 import { queryKeys } from '@/lib/react-query';
 import * as coursesService from '@/services/courses.service';
 import { Header, PublicLayout } from '@/components/layout';
-import HeroSection from '@/components/layout/home/HeroSection.home';
+import HeroSection, { OrbitingCircles } from '@/components/layout/home/HeroSection.home';
 import StatsSection from '@/components/layout/home/StaticSection.home';
 import FeaturedCourses from '@/components/layout/home/Feature.home';
 import MembershipPricing from '@/components/layout/home/Member.home';
@@ -34,6 +34,7 @@ export default function Home() {
     <PublicLayout>
 
       <HeroSection />
+      {/* <OrbitingCircles/> */}
       <StatsSection />
       <FeaturedCourses />
       <MembershipPricing />

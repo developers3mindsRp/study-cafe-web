@@ -143,20 +143,25 @@ export default function BannerSection() {
           {/* Contact Box */}
           <div className=" rounded p-5 space-y-4">
             <p className="font-medium">In case of any Query Call us or WhatsApp</p>
-
+           
+           <div className="block w-full text-center bg-[#09339B] text-white py-3 rounded font-semibold flex justify-center gap-4">
+             <img src="/images/call.png" alt="" width="20" height="20"/>
             <a
               href="tel:+919625080264"
-              className="block w-full text-center bg-blue-600 text-white py-3 rounded font-semibold"
+              className=""
             >
-              +91 9625080264
+             +91 9625080264
             </a>
+           </div>
 
+
+            <div className="block w-full  border border-[#34C759] text-[#34C759] py-3 rounded font-semibold flex justify-center gap-4">
+               <img src="/images/whatsapp.png" alt="" width="25" height="20" className=""/>
             <a
-              href="https://wa.me/919625080264"
-              className="block w-full text-center border border-[#34C759] text-[#34C759] py-3 rounded font-semibold"
-            >
-              WhatsApp
+              href="https://wa.me/919625080264" className=" ">
+             WhatsApp
             </a>
+            </div>
           </div>
         </div>
       </div>

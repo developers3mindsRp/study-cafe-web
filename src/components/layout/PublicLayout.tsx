@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import HeroSection from './home/HeroSection.home';
+
 import FeaturedCourses from './home/Feature.home';
 import MembershipPricing from './home/Member.home';
 import StatsSection from './home/StaticSection.home';

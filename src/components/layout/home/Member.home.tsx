@@ -69,7 +69,7 @@ export default function MembershipPricing() {
                 </span>
               )}
 
-              <h3 className="text-[26px] font-medium text-[#252525]">{plan.title}</h3>
+              <h3 className="text-[26px] font-normal text-[#252525]">{plan.title}</h3>
 
               <p className="text-[54px] font-medium text-[#252525] mt-3">
                 {plan.price}
@@ -86,12 +86,7 @@ export default function MembershipPricing() {
               </ul>
 
               <button
-                className={`w-full mt-8 py-3 rounded-md border font-semibold transition 
-                  ${
-                    plan.highlight
-                      ? "bg-[#09339B] text-white border-[#09339B] text-[20px]"
-                      : "bg-white text-[#09339B] border-[#09339B] text-[20px]"
-                  }`}
+                className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
               >
                 Buy Membership
               </button>

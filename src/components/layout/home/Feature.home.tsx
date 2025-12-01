@@ -123,7 +123,7 @@ export default function FeaturedCourses() {
                   src={c.img}
                   alt={c.title}
                   fill
-                  className="object-cover"
+                  className="object-fit"
                 />
                 <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
                   ⭐ {c.rating}
@@ -157,7 +157,8 @@ export default function FeaturedCourses() {
                       {c.newPrice}
                     </span>
                   </div>
-                  <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm md:text-base">
+                  <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm md:text-base"
+                   onClick={() => window.location.href = "/courses"}>
                     View Course
                   </button>
                 </div>
