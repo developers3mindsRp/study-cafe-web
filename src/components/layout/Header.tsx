@@ -21,12 +21,12 @@ export default function Header() {
   // Collapsible state for mobile
   const [coursesMobileOpen, setCoursesMobileOpen] = useState(false);
 
-  const coursesRef = useRef(null);
-  const userRef = useRef(null);
+  const coursesRef = useRef<any>(null);
+  const userRef = useRef<any>(null);
 
   // Close menus when clicking outside
   useEffect(() => {
-    function handleClickOutside(e) {
+    function handleClickOutside(e: any) {
       if (coursesRef.current && !coursesRef.current.contains(e.target)) {
         setCoursesMenuOpen(false);
       }

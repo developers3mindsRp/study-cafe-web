@@ -24,7 +24,7 @@ export default function FAQSection() {
     },
   ];
 
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState<any>(0);
 
   return (
     <section className=" w-full bg-white py-4 md:py-20 px-4 flex flex-col

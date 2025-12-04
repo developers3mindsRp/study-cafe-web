@@ -82,7 +82,7 @@ export default function CoursesPage() {
     const [active, setActive] = useState("All Courses");
 
   const filtered = useMemo(() => { 
-    return courses.filter(course => {
+    return courses.filter((course:any) => {
       const matchCategory =
         categoryFilter === 'All Categories' || course.category === categoryFilter
       const matchLevel =
