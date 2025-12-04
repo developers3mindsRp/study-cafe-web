@@ -1,51 +1,55 @@
 "use client";
-import { FaUsers, FaBookOpen, FaMedal, FaChartLine } from "react-icons/fa";
+import React from "react";
+import CountUp from "react-countup";
 
 export default function StatsSection() {
   return (
     <section className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between gap-10 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
 
           {/* Active Students */}
           <div className="flex flex-col items-center gap-3">
             <div className="bg-[#EAF0FF] p-6 rounded-full">
-              <FaUsers className="text-[#0A2BA5] text-3xl" />
+              <img src="/images/s1.svg" alt="Active Students" className="w-12 h-12 md:w-16 md:h-16" />
             </div>
-            <h3 className="text-2xl font-bold text-[#121B31]">10,000+</h3>
-            <p className="text-[#6A7181] text-sm">Active Students</p>
+            <h3 className="text-[32px] md:text-[40px] font-bold text-[#121B31]">
+              <CountUp end={10000} duration={2} separator="," />+
+            </h3>
+            <p className="text-[#454545] text-[14px] md:text-[16px]">Active Students</p>
           </div>
-
- 
 
           {/* Total Courses */}
           <div className="flex flex-col items-center gap-3">
             <div className="bg-[#EAF0FF] p-6 rounded-full">
-              <FaBookOpen className="text-[#0A2BA5] text-3xl" />
+              <img src="/images/s2.svg" alt="Total Courses" className="w-12 h-12 md:w-16 md:h-16" />
             </div>
-            <h3 className="text-2xl font-bold text-[#121B31]">150+</h3>
-            <p className="text-[#6A7181] text-sm">Total Courses</p>
+            <h3 className="text-[32px] md:text-[40px] font-bold text-[#121B31]">
+              <CountUp end={150} duration={2} />+
+            </h3>
+            <p className="text-[#454545] text-[14px] md:text-[16px]">Total Courses</p>
           </div>
 
-   
-
-          {/* Certificates issued */}
+          {/* Certificates Issued */}
           <div className="flex flex-col items-center gap-3">
             <div className="bg-[#EAF0FF] p-6 rounded-full">
-              <FaMedal className="text-[#0A2BA5] text-3xl" />
+              <img src="/images/s3.svg" alt="Certificates Issued" className="w-12 h-12 md:w-16 md:h-16" />
             </div>
-            <h3 className="text-2xl font-bold text-[#121B31]">8,500+</h3>
-            <p className="text-[#6A7181] text-sm">Certificates Issued</p>
+            <h3 className="text-[32px] md:text-[40px] font-bold text-[#121B31]">
+              <CountUp end={8500} duration={2} separator="," />+
+            </h3>
+            <p className="text-[#454545] text-[14px] md:text-[16px]">Certificates Issued</p>
           </div>
-
 
           {/* Success Rate */}
           <div className="flex flex-col items-center gap-3">
             <div className="bg-[#EAF0FF] p-6 rounded-full">
-              <FaChartLine className="text-[#0A2BA5] text-3xl" />
+              <img src="/images/s4.svg" alt="Success Rate" className="w-12 h-12 md:w-16 md:h-16" />
             </div>
-            <h3 className="text-2xl font-bold text-[#121B31]">95%</h3>
-            <p className="text-[#6A7181] text-sm">Success Rate</p>
+            <h3 className="text-[32px] md:text-[40px] font-bold text-[#121B31]">
+              <CountUp end={95} duration={2} />%
+            </h3>
+            <p className="text-[#454545] text-[14px] md:text-[16px]">Success Rate</p>
           </div>
 
         </div>
