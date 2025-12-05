@@ -43,23 +43,33 @@ const plans = [
   },
 ];
 
-export default function MembershipPricing() {
+export default function MembershipPricing({ bgImage }) {
   return (
-    <section className="bg-white py-16 ">
-      <div className="container mx-auto text-center px-4">
-        <h2 className="text-3xl md:text-4xl font-semibold text-[#121B31]">
+    <section className="relative bg-white">
+      {/* Top banner with gradient fade */}
+      {bgImage && (
+        <div
+          className="absolute top-0 left-0 w-full h-[500px] bg-top bg-cover bg-no-repeat"
+          style={{
+            backgroundImage: ` url(${bgImage})`,
+          }}
+        />
+      )}
+        {/* Content wrapper */}
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        <h2 className={`text-3xl md:text-[40px] font-semibold text-center ${bgImage ? "text-[#121B31]" : "text-[#121B31]"}`}>
           Choose Your Membership
         </h2>
-        <p className="text-[#6A7181] mt-2">
+        <p className={`${bgImage ? "text-[#454545]" : "text-[#454545]"} mt-2 text-center text-[24px]`}>
           Get unlimited access to all courses and exclusive benefits
         </p>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mt-12">
+        <div className="grid md:grid-cols-3 gap-8 mt-12 ">
           {plans.map((plan, i) => (
             <div
               key={i}
-              className={`border rounded-xl p-8 shadow-md relative ${
+              className={`border rounded-xl p-8 shadow-md relative bg-white ${
                 plan.highlight ? "border-[#09339B]" : "border-gray-300"
               }`}
             >
@@ -69,14 +79,14 @@ export default function MembershipPricing() {
                 </span>
               )}
 
-              <h3 className="text-[26px] font-normal text-[#252525]">{plan.title}</h3>
+              <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
 
-              <p className="text-[54px] font-medium text-[#252525] mt-3">
+              <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">
                 {plan.price}
               </p>
-              <p className="text-[#6A7181] mt-1 text-[16px]">{plan.duration}</p>
+              <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
 
-              <ul className="mt-6 space-y-3 text-left  text-[#AFAFAF]">
+              <ul className="mt-6 space-y-3 text-center  text-[#AFAFAF]">
                 {plan.features.map((feat, index) => (
                   <li key={index} className="flex items-start gap-3 text-[#6A7181] text-[16px]">
                    <img src="/images/tick.svg" alt="" />

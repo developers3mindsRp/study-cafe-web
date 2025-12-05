@@ -9,7 +9,7 @@ const Paymentsection = () => {
         Home › Courses › <span className="text-blue-600">Certification Course On…</span>
       </div>
 
-      <div className=" mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6">
+  
 
         {/* LEFT CONTENT */}
         <div className="lg:col-span-2 space-y-6">
@@ -83,45 +83,8 @@ const Paymentsection = () => {
           </div>
         </div>
 
-        {/* SIDEBAR */}
-        <div className="space-y-5">
-          {/* Pricing Card */}
-          <div className="bg-white shadow rounded p-5 space-y-4">
-            <p className="text-center text-[30px]">
-              <span className="line-through text-[#929292] font-medium">₹2,000</span>{" "}
-              <span className="text-3xl text-black font-bold">₹699</span>
-            </p>
 
-            <p className="text-[#929292] text-center">Hurry up, few days left at this price!</p>
-
-           <div>
-             
-           </div>
-
-        
-
-            <div className="pt-3 space-y-2">
-              <p className="font-medium">This course includes:</p>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                Recording is available for 1 year
-              </div>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                StudyCafe certificate of completion
-              </div>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                Access on laptop or mobile
-              </div>
-            </div>
-          </div>
-
-
-
-
-        </div>
-      </div>
+ 
     </div>
   );
 }

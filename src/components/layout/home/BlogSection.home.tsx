@@ -56,11 +56,7 @@ leading-tight mb-4">
               <button className="text-sm bg-[#09339B] hover:bg-blue-700
 text-white px-4 py-2 rounded-md flex items-center gap-2">
                 Read More
-                <svg className="w-4 h-4" fill="none"
-stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round"
-d="M9 5l7 7-7 7" />
-                </svg>
+         <img src="/images/arrow-left.svg" alt="" />
               </button>
             </div>
           </div>
@@ -91,13 +87,10 @@ strokeWidth="2" viewBox="0 0 24 24">
         </div>
 
         <button className="text-sm text-[#09339B] font-medium flex
-items-center gap-1">
+items-center gap-1 p-4 bg-white rounded-[10px]">
           View All Blogs
-          <svg className="w-4 h-4" fill="none" stroke="currentColor"
-strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9
-5l7 7-7 7" />
-          </svg>
+        <img src="/images/blue_arrow.png" alt="" />
+    
         </button>
       </div>
     </section>

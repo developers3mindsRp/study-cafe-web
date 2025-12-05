@@ -2,7 +2,9 @@ import Image from "next/image";
 
 export default function CourseSection() {
   return (
-    <section className="w-full bg-white py-10 container mx-auto px-4">
+
+   <div className="lg:col-span-2 space-y-6">
+        <div className="w-full bg-white py-10 container mx-auto px-4">
       {/* Alumni Logos */}
       <div className=" mx-auto px-4">
         <h2 className="text-xl font-semibold mb-6">
@@ -104,25 +106,25 @@ export default function CourseSection() {
 
         <div className="border rounded p-5 flex items-start gap-4 shadow">
           <Image
-            src="/images/author.png"
-            width={80}
-            height={80}
+            src="/images/author.svg"
+            width={104}
+            height={104}
             alt="Author"
             className="rounded-full"
           />
 
           <div>
-            <h3 className="font-semibold text-lg">Pratibha Goyal</h3>
-            <p className="text-gray-600 text-sm mt-1">
-              CA | Business  
-              CA Pratibha Goyal is a Chartered Accountant with wide experience
-              in Auditing, Taxation, ROC, GST and Secretarial matters. She has
-              written over a thousand articles and delivered training sessions
-              across India.
+            <h3 className="font-semibold text-[20px] text-[#252525]">Pratibha Goyal</h3>
+            
+           <h3 className="text-[#929292] mb-2">   CA : Business  </h3>
+           <p className="text-[#929292] text-[16px] mt-1">
+             CA Pratibha Goyal is Chartered Accountant qualified in 2016, is a Member of The Institute of Chartered Accountants of India having wide experience in the field of Auditing, Taxation, ROC, GST and Secretarial matters etc. She has written over a thousand articles & has made several videos on topics related to Auditing & Taxation. As a Speaker she has delivered various sessions on various branches of NIRC of ICAI.
             </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+
   );
 }

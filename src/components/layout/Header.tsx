@@ -128,7 +128,7 @@ export default function Header() {
               )}
             </div>
 
-            <Link href="/memberships" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/membership" className="text-gray-700 hover:text-blue-600 transition-colors">
               Memberships
             </Link>
             <Link href="/blogs" className="text-gray-700 hover:text-blue-600 transition-colors">

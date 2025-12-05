@@ -10,6 +10,8 @@ import BannerSection_blog from '@/components/layout/blog/BannerSection';
 import Blog_list from '@/components/layout/blog/BlogList';
 import HeroSection_blog from '@/components/layout/blog-list/HeroSection.blog';
 import BlogDesc from '@/components/layout/blog-list/BlogDesc';
+import SidebarCourseCard from '@/components/layout/course/Sidebar';
+import SidebarBlog from '@/components/layout/blog-list/SidebarBlog';
 
 
 
@@ -28,12 +30,23 @@ export default function Blog_detail() {
 
 
   return (
-    <PublicLayout>
-      <HeroSection_blog/>
-      <BlogDesc/>
-        
 
-    </PublicLayout>
+        <PublicLayout>
+       <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
+    
+            {/* LEFT CONTENT AREA */}
+            <div className="lg:col-span-2 space-y-10">
+                <HeroSection_blog/>
+                <BlogDesc/>
+            </div>
+    
+            {/* RIGHT SIDEBAR (COMMON + STICKY) */}
+            <div className="lg:col-span-1">
+             <SidebarBlog/>
+            </div>
+    
+          </div>
+        </PublicLayout>
   );
 }
 

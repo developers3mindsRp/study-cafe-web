@@ -11,6 +11,8 @@ import GSTRCoursePage from '@/components/layout/course/CourseDetail';
 import BannerSection from '@/components/layout/course/BannerSection';
 import CourseTabs from '@/components/layout/course/CourseDesc';
 import Breadcrumb from '@/Breadcrumb';
+import SidebarCourseCard from '@/components/layout/course/Sidebar';
+import TrendingCourses from '@/components/layout/course/TrendingCourses';
 
 /**
  * Home Page - Course Listing
@@ -28,11 +30,23 @@ export default function Course() {
 
   return (
     <PublicLayout>
-      {/* <Breadcrumb/> */}
-    <BannerSection/>
-    <CourseTabs/>
+   <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
 
-      <GSTRCoursePage/>
+        {/* LEFT CONTENT AREA */}
+        <div className="lg:col-span-2 space-y-10">
+          <BannerSection />
+          <CourseTabs />
+          <GSTRCoursePage />
+        </div>
+
+        {/* RIGHT SIDEBAR (COMMON + STICKY) */}
+        <div className="lg:col-span-1">
+          <SidebarCourseCard/>
+        </div>
+  
+
+      </div>
+            <TrendingCourses/>
     </PublicLayout>
   );
 }

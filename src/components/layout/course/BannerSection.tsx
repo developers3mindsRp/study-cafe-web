@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SidebarCourseCard from "./Sidebar";
 
 export default function BannerSection() {
   return (
@@ -8,7 +9,7 @@ export default function BannerSection() {
         Home › Courses › <span className="text-blue-600">Certification Course On…</span>
       </div>
 
-      <div className=" mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6">
+    
 
         {/* LEFT CONTENT */}
         <div className="lg:col-span-2 space-y-6">
@@ -91,80 +92,9 @@ export default function BannerSection() {
           </div>
         </div>
 
-        {/* SIDEBAR */}
-        <div className="space-y-5">
-          {/* Pricing Card */}
-          <div className="bg-white shadow rounded p-5 space-y-4">
-            <p className="text-center text-[30px]">
-              <span className="line-through text-[#929292] font-medium">₹2,000</span>{" "}
-              <span className="text-3xl text-black font-bold">₹699</span>
-            </p>
+   
 
-            <p className="text-[#929292] text-center">Hurry up, few days left at this price!</p>
-
-            <button className="w-full bg-[#09339B] text-white py-3 rounded font-semibold"
-              onClick={() => window.location.href = "/payment-screen"}>
-              Buy Now
-            </button>
-
-            <button className="w-full border border-[#09339B] text-[#09339B] py-3 rounded font-semibold">
-              View Membership
-            </button>
-
-            <div className="pt-3 space-y-2">
-              <p className="font-medium">This course includes:</p>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                Recording is available for 1 year
-              </div>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                StudyCafe certificate of completion
-              </div>
-              <div className="flex items-center gap-2 text-[#696969]">
-                <input type="checkbox" checked readOnly />
-                Access on laptop or mobile
-              </div>
-            </div>
-          </div>
-
-          {/* Certificate Card */}
-          <div className="bg-white shadow rounded p-5 space-y-3">
-            <p className="font-medium">Certificate to be provided to all the participants.</p>
-            <Image
-              src="/images/certificate.svg"
-              alt="Certificate"
-              width={500}
-              height={300}
-              className="rounded"
-            />
-          </div>
-
-          {/* Contact Box */}
-          <div className=" rounded p-5 space-y-4">
-            <p className="font-medium">In case of any Query Call us or WhatsApp</p>
-           
-           <div className="block w-full text-center bg-[#09339B] text-white py-3 rounded font-semibold flex justify-center gap-4">
-             <img src="/images/call.png" alt="" width="20" height="20"/>
-            <a
-              href="tel:+919625080264"
-              className=""
-            >
-             +91 9625080264
-            </a>
-           </div>
-
-
-            <div className="block w-full  border border-[#34C759] text-[#34C759] py-3 rounded font-semibold flex justify-center gap-4">
-               <img src="/images/whatsapp.png" alt="" width="25" height="20" className=""/>
-            <a
-              href="https://wa.me/919625080264" className=" ">
-             WhatsApp
-            </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

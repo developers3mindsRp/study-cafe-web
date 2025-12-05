@@ -10,6 +10,7 @@ import { Header, PublicLayout } from '@/components/layout';
 import HeroSection_courses from '@/components/layout/course-listing/HeroSection.course';
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Paymentsection from '@/components/layout/course/payment-screen/Paymentsection';
+import PriceCard from '@/components/layout/course/payment-screen/SidebarPayment';
 
 /**
  * Home Page - Course Listing
@@ -26,11 +27,22 @@ export default function PaymentScreen() {
 
 
   return (
-    <PublicLayout>
 
-    <Paymentsection/>
-
-    </PublicLayout>
+       <PublicLayout>
+           <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
+        
+                {/* LEFT CONTENT AREA */}
+                <div className="lg:col-span-2 space-y-10">
+                  <Paymentsection/>
+                </div>
+        
+                {/* RIGHT SIDEBAR (COMMON + STICKY) */}
+                <div className="lg:col-span-1">
+                 <PriceCard/>
+                </div>
+        
+              </div>
+        </PublicLayout>
   );
 }
 

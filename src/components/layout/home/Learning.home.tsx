@@ -4,7 +4,7 @@ const Learning = () => {
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center
-                 bg-[url('/images/bg.svg')] bg-cover bg-center bg-no-repeat container mx-auto px-4 mt-8"
+                 bg-[url('/images/bg.svg')] bg-cover bg-center bg-no-repeat container mx-auto px-4 mt-8 rounded-[50px]"
     >
 
 
@@ -18,8 +18,8 @@ const Learning = () => {
         Join thousands of students already learning on StudyCafe
         </p>
 
-        <button className="bg-white text-[#09339B] px-6 py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition">
-          Get Started Today
+        <button className="bg-white text-[#09339B] px-6 py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition flex mx-auto">
+          Get Started Today <img src="/images/blue_arrow.png" alt="" />
         </button>
       </div>
     </section>

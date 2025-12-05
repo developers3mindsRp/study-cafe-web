@@ -101,7 +101,7 @@ export default function FeaturedCourses() {
                 className={`px-5 py-2 rounded-md whitespace-nowrap transition ${
                   active === cat
                     ? "bg-[#09339B] text-white"
-                    : "bg-white text-[#767676]"
+                    : "bg-transparent text-[#767676]"
                 }`}
                 onClick={() => setActive(cat)}
               >

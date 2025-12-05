@@ -5,7 +5,9 @@ export default function CourseTabs() {
   const [active, setActive] = useState("description");
 
   return (
-    <div className="bg-white rounded-xl shadow p-6 mt-10 container  px-4 mx-auto">
+
+   <div className="lg:col-span-2 space-y-6">
+        <div className="bg-white rounded-xl shadow p-6 mt-10 container  px-4 mx-auto">
       {/* Tabs */}
       <div className="border rounded-lg flex overflow-hidden text-sm font-medium container px-4">
         {[
@@ -120,5 +122,7 @@ export default function CourseTabs() {
 
       </div>
     </div>
+  </div>
+
   );
 }
