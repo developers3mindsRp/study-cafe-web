@@ -43,7 +43,7 @@ const plans = [
   },
 ];
 
-export default function MembershipPricing({ bgImage }) {
+export default function MembershipPricing({ bgImage }:any) {
   return (
     <section className="relative bg-white">
       {/* Top banner with gradient fade */}
