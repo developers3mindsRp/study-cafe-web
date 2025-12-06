@@ -35,15 +35,15 @@ export default function BannerSection() {
 
           {/* Stats */}
           <div className="flex flex-wrap items-center gap-4 text-gray-600">
-            <span>English</span>
-            <span>• 4 Hours</span>
-            <span>• 957 students</span>
-            <span>• ⭐ 4.8 by 47 Users</span>
+          <div className="flex gap-2"> <img src="/images/icon-eng.png" alt="" /> <span>English</span></div>
+          <div className="flex gap-2"><img src="/images/icon-clock.png" alt="" /><span>4 Hours</span></div>
+           <div className="flex gap-2"> <img src="/images/icon-user.png" alt="" /><span>957 students</span></div>
+          <div className="flex gap-2"><img src="/images/star.png" alt="" /><span>4.8 by 47 Users</span></div>
           </div>
 
           {/* Social Share */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="font-medium">Share</span>
+           <div className="flex gap-2"> <img src="/images/icon-share.png" alt="" /><span className="font-medium">Share</span></div>
         
               <div
                 className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center cursor-pointer hover:bg-gray-300 gap-4 ml-[100px] "

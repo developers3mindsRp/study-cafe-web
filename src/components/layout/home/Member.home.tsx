@@ -97,7 +97,7 @@ export default function MembershipPricing({ bgImage }:any) {
 
               <button
                 className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
-              >
+                onClick={() => (window.location.href = "/payment-screen")}>
                 Buy Membership
               </button>
             </div>

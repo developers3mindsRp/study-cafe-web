@@ -52,10 +52,7 @@ const MemberDetail = () => {
               ))}
             </ul>
           </div>
-        </div>
-
-
- 
+        </div> 
     </div>
   );
 }

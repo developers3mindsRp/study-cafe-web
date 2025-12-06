@@ -29,9 +29,9 @@ export default function FAQSection() {
   return (
     <section className=" w-full bg-white py-4 md:py-20 px-4 flex flex-col
 items-center text-center">
-      <h2 className="text-[40px] font-semibold text-[#1A1A1A]">Frequently
+      <h2 className="text-[32px] md:text-[40px] font-semibold text-[#1A1A1A]">Frequently
 Asked Questions</h2>
-      <p className="text-[24px] text-[#454545] max-w-xl mt-2">
+      <p className="text-[18px] md:text-[24px] text-[#454545] max-w-xl mt-2">
         Got questions? We've got answers. Find everything you need to
 know about StudyCafe.
       </p>

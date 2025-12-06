@@ -51,9 +51,9 @@ export default function ReviewSection() {
           ].map((item, idx) => (
             <div key={idx} className="flex items-center gap-4">
               <span className="w-16 text-sm text-gray-500">{item.label}</span>
-              <div className="w-full bg-gray-200 h-2 rounded-lg">
+              <div className="w-full bg-[#D9D9D9] h-4 rounded-lg">
                 <div
-                  className="h-2 bg-yellow-400 rounded-lg"
+                  className="h-4 bg-[#FFB21D] rounded-lg"
                   style={{ width: `${item.value}%` }}
                 ></div>
               </div>
