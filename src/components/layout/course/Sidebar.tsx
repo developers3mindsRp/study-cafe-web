@@ -30,17 +30,17 @@ export default function SidebarCourseCard() {
           <p className="font-medium">This course includes:</p>
 
           <div className="flex items-center gap-2 text-[#696969]">
-            <input type="checkbox" checked readOnly />
+            <img src="/images/icon-video.png" alt="" />
             Recording is available for 1 year
           </div>
 
           <div className="flex items-center gap-2 text-[#696969]">
-            <input type="checkbox" checked readOnly />
+             <img src="/images/icon-certiificate.png" alt="" />
             StudyCafe certificate of completion
           </div>
 
           <div className="flex items-center gap-2 text-[#696969]">
-            <input type="checkbox" checked readOnly />
+            <img src="/images/icon-laptop.png" alt="" />
             Access on laptop or mobile
           </div>
         </div>

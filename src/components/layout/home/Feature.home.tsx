@@ -94,7 +94,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap  gap-2 md:gap-4">
             {categories.map((cat) => (
               <button
                 key={cat}

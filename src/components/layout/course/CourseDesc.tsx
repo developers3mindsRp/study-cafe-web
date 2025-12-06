@@ -7,9 +7,9 @@ export default function CourseTabs() {
   return (
 
    <div className="lg:col-span-2 space-y-6">
-        <div className="bg-white rounded-xl shadow p-6 mt-10 container  px-4 mx-auto">
+        <div className="bg-white rounded-xl shadow p-6 mt-10 container   px-4 mx-auto">
       {/* Tabs */}
-      <div className="border rounded-lg flex overflow-hidden text-sm font-medium container px-4">
+      <div className="border rounded-lg flex overflow-hidden text-sm font-medium container pr-64 ">
         {[
           { key: "description", label: "Course Description" },
           { key: "content", label: "Course Content" },
@@ -18,10 +18,10 @@ export default function CourseTabs() {
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`flex-1 px-5 py-3 border-r last:border-none transition-all ${
+            className={`flex-1 px-0 py-3 border-r last:border-none transition-all  pl-4  ${
               active === tab.key
-                ? "bg-[#09339B] text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-[#09339B] text-white rounded-[20px] "
+                : "bg-white text-[#AFAFAF] hover:bg-gray-200 rounded-[20px]"
             }`}
           >
             {tab.label}
@@ -95,7 +95,7 @@ export default function CourseTabs() {
         )}
 
         {active === "content" && (
-                 <div className="space-y-6">
+              <div className="space-y-6">
             <h2 className="text-[20px] font-semibold text-gray-900">Day 1 : Discussion on GSTR-9</h2>
              <ul className="list-disc pl-6 space-y-1 text-[#929292] text-[16px]">
               <li>GST Provisions related to GSTR-9 and GSTR-9C filing</li>

@@ -20,10 +20,10 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-6 flex justify-center gap-4">
-          <button className="py-2 px-6 border-2 border-black rounded-md text-[20px] font-medium">
+          <button className="py-2 px-6 border-2 border-black rounded-md  text-[15px] md:text-[20px] font-medium">
             View Memberships
           </button>
-          <button className="py-2 px-6 bg-[#09339B]  text-white rounded-md flex gap-3 text-[20px]">
+          <button className="py-2 px-6 bg-[#09339B]  text-white rounded-md flex items-center gap-3 text-[15px] md:text-[20px]">
             Browse Courses <img src="/images/arrow-left.svg" alt="" width="25" height="10" />
           </button>
         </div>

@@ -4,17 +4,17 @@ const Learning = () => {
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center
-                 bg-[url('/images/bg.svg')] bg-cover bg-center bg-no-repeat container mx-auto px-4 mt-8 rounded-[50px]"
+                 bg-[url('/images/bg.svg')] bg-cover bg-center bg-no-repeat container mx-auto px-4  md:mt-8 md:rounded-[50px]"
     >
 
 
       {/* Center Content */}
       <div className="relative z-10 text-center ">
-        <h2 className="text-white text-4xl font-bold mb-4">
+        <h2 className="text-white text-[32px] md:text-[40px] font-bold mb-4">
           Ready to Start Learning?
         </h2>
 
-        <p className="text-white text-[24px] font-normal max-w-xl mx-auto mb-6">
+        <p className="text-white text-[18px] md:text-[24px] font-normal max-w-xl mx-auto mb-6">
         Join thousands of students already learning on StudyCafe
         </p>
 
