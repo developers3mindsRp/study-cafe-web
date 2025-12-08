@@ -1,0 +1,253 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import PhoneInput from "react-phone-number-input";
+import 'react-phone-number-input/style.css';
+
+export default function SignUpPage() {
+    
+  const router = useRouter();
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    number: "",
+    profession: "",
+    company: "",
+    designation: "",
+    city: "",
+    state: "",
+    country: "",
+    password: "",
+    // add more if you need
+  });
+  const [errors, setErrors] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [phone, setPhone] = useState<string | undefined>(undefined)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrors(null);
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setErrors(data.message || "Something went wrong");
+      setSubmitting(false);
+      return;
+    }
+
+    // success — redirect or show success message
+    router.push("/welcome");  // or wherever
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+  const states = ["Madhya Pradesh", "Maharashtra", "Delhi", /* ...other states */];
+  const country = ["India", "Japan", "Russia", /* ...other states */];
+  
+
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row   mx-auto  ">
+      {/* Left branding panel */}
+      <div className="md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 flex flex-col justify-center">
+            <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
+            
+            <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
+
+            <div className="relative z-10">
+                <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
+                <h1 className="text-4xl font-bold mb-4 pt-[12px] pb-[18px]">Join Our Learning <br />Community</h1>
+                <p className="text-[24px] ">Create your account and get access to premium <br /> courses and exclusive content</p>
+            </div>
+
+            </div>
+
+      </div>
+
+      {/* Right form panel */}
+      <div className="md:w-1/2 p-8 flex flex-col justify-center">
+      <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
+        <h2 className="text-2xl font-semibold ">Create your account</h2>
+        <p className="text-[24px] text-[#AFAFAF] mb-6">Sign up to start your learning journey</p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              value={form.fullName}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+              placeholder="Name"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block mb-1">Email <span className="text-red-600">*</span></label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+              placeholder="Enter Email"
+            />
+          </div>
+
+            <div>
+            <label className="block mb-1">Mobile Number <span className="text-red-600">*</span></label>
+            <PhoneInput
+                placeholder="Enter phone number"
+                value={phone}
+                onChange={setPhone}
+                defaultCountry="IN"
+                international
+                className="w-full border px-3 py-2" 
+            />
+          
+            </div>
+
+          <div>
+            <label htmlFor="profession" className="block mb-1">Profession <span className="text-red-600">*</span></label>
+            <input
+              id="profession"
+              name="profession"
+              type="profession"
+              value={form.profession}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+              placeholder="Select"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="company" className="block mb-1">Company Name </label>
+            <input
+              id="company"
+              name="company"
+              type="company"
+              value={form.company}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+               placeholder="Your Company Name"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="designation" className="block mb-1">Designation </label>
+            <input
+              id="designation"
+              name="designation"
+              type="designation"
+              value={form.designation}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+               placeholder="Eg. Owner, Manager, Tax Head Etc."
+            />
+          </div>
+
+          <div>
+            <label htmlFor="city" className="block mb-1">City <span className="text-red-600">*</span></label>
+            <input
+              id="city"
+              name="city"
+              type="city"
+              value={form.city}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+               placeholder="Enter Your City"
+            />
+          </div>
+
+            <div>
+                <label htmlFor="state" className="block mb-1">
+                State <span className="text-red-600">*</span>
+                </label>
+                <select
+                id="state"
+                name="state"
+                value={form.state}
+                onChange={handleChange}
+                required
+                className="w-full border px-3 py-2 bg-white"
+                >
+                <option value="">Select state</option>
+                {states.map((st) => (
+                    <option key={st} value={st}>{st}</option>
+                ))}
+                </select>
+            </div>
+
+          <div>
+            <label htmlFor="country" className="block mb-1">Country <span className="text-red-600">*</span></label>
+            <select
+              id="country"
+              name="country"
+             
+              value={form.country}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+             
+            >
+              <option value="">Select country</option>
+                {country.map((st) => (
+                    <option key={st} value={st}>{st}</option>
+                ))}
+                </select>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block mb-1">Password <span className="text-red-600">*</span></label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2"
+               placeholder="Select"
+            />
+          </div>
+
+                 <p className="mt-4 text-[16px] text-[#AFAFAF]">
+     <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]">Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
+        </p>
+
+       
+
+          {errors && <p className="text-red-600">{errors}</p>}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full bg-[#09339B] text-white py-2 rounded hover:bg-blue-700"
+          >
+            {submitting ? "Registering…" : "Register"}
+          </button>
+        </form>
+
+        <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
+          Already have an account? <a href="/sign-in" className="text-[#09339B]">Sign in</a>
+        </p>
+      </div>
+    </div>
+  );
+}

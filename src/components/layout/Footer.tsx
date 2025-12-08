@@ -36,7 +36,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#252525] text-gray-300 ">
       <div className="container mx-auto px-4 py-10 mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
 
           {/* Brand Column */}
           <div className="col-span-1">
@@ -153,7 +153,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white mt-8 pt-8 text-center">
+        <div className="border-t border-white mt-12 pt-8 text-center">
           <p className="text-[18px] text-white">
             Copyright © 2025 StudyCafe Private Limited. All Rights Reserved.
           </p>
