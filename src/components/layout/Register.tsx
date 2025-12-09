@@ -4,10 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css';
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+ import IndianStatesList  from "indian-states-cities-list";
+ import { getNames } from "country-list";
+
 
 export default function SignUpPage() {
     
   const router = useRouter();
+
+  const [showPwd, setShowPwd] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -50,8 +56,16 @@ export default function SignUpPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
-  const states = ["Madhya Pradesh", "Maharashtra", "Delhi", /* ...other states */];
-  const country = ["India", "Japan", "Russia", /* ...other states */];
+  const states = IndianStatesList.STATES_OBJECT.map(s => s.value);
+  const countries = getNames(); 
+
+
+
+
+
+
+ 
+
   
 
   return (
@@ -73,10 +87,10 @@ export default function SignUpPage() {
       </div>
 
       {/* Right form panel */}
-      <div className="md:w-1/2 p-8 flex flex-col justify-center">
+      <div className="md:w-1/2 p-8 flex flex-col justify-center ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
-        <h2 className="text-2xl font-semibold ">Create your account</h2>
-        <p className="text-[24px] text-[#AFAFAF] mb-6">Sign up to start your learning journey</p>
+        <h2 className="text-[40px] font-semibold  pt-[8px]">Create your account</h2>
+        <p className="text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign up to start your learning journey</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>
@@ -175,70 +189,76 @@ export default function SignUpPage() {
             />
           </div>
 
-            <div>
-                <label htmlFor="state" className="block mb-1">
-                State <span className="text-red-600">*</span>
-                </label>
-                <select
-                id="state"
-                name="state"
-                value={form.state}
-                onChange={handleChange}
-                required
-                className="w-full border px-3 py-2 bg-white"
-                >
-                <option value="">Select state</option>
-                {states.map((st) => (
-                    <option key={st} value={st}>{st}</option>
-                ))}
-                </select>
-            </div>
+          <div>
+            <label htmlFor="state" className="block mb-1">State <span className="text-red-600">*</span></label>
+          <select name="state" value={form.state} onChange={handleChange}    className="w-full border px-3 py-2">
+            <option value="">Select state</option>
+            {states.map(st => <option key={st} value={st}>{st}</option>)}
+          </select>
+          </div>
 
           <div>
             <label htmlFor="country" className="block mb-1">Country <span className="text-red-600">*</span></label>
-            <select
+                <select
               id="country"
               name="country"
-             
               value={form.country}
               onChange={handleChange}
               required
               className="w-full border px-3 py-2"
-             
             >
               <option value="">Select country</option>
-                {country.map((st) => (
-                    <option key={st} value={st}>{st}</option>
-                ))}
-                </select>
+              {countries.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
-
-          <div>
-            <label htmlFor="password" className="block mb-1">Password <span className="text-red-600">*</span></label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2"
-               placeholder="Select"
-            />
-          </div>
-
-                 <p className="mt-4 text-[16px] text-[#AFAFAF]">
-     <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]">Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
-        </p>
-
-       
+    <div className="mb-4">
+      <label htmlFor="password" className="block mb-1 text-sm font-medium">
+        Password <span className="text-red-600">*</span>
+      </label>
+      <div className="relative w-full">
+        <input
+          id="password"
+          name="password"
+          type={showPwd ? "text" : "password"}
+          value={form.password}
+          onChange={handleChange}
+          required
+          className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter your password"
+        />
+        <button
+          type="button"
+          onClick={() => setShowPwd((prev) => !prev)}
+          className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+        >
+          {showPwd ? (
+             <EyeIcon className="w-5 h-5"  />
+          
+          ) : (
+              <EyeSlashIcon className="w-5 h-5"  />
+           
+          )}
+          <span className="sr-only">
+            {showPwd ? "Hide password" : "Show password"}
+          </span>
+        </button>
+      </div>
+    </div>
+  
+        <p className="mt-4 text-[16px] text-[#AFAFAF] pb-[20px]  ">
+      <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]">Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
+      </p>
 
           {errors && <p className="text-red-600">{errors}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#09339B] text-white py-2 rounded hover:bg-blue-700"
+            className="w-full bg-[#09339B] text-white py-2 rounded hover:bg-blue-700 "
           >
             {submitting ? "Registering…" : "Register"}
           </button>

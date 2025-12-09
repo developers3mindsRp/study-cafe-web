@@ -111,61 +111,111 @@ export default function FeaturedCourses() {
           </div>
         </div>
 
-        {/* Courses Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {courses.map((c) => (
-            <div
-              key={c.id}
-              className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
-            >
-              <div className="relative w-full h-[220px] sm:h-[250px] md:h-[233px]">
-                <Image
-                  src={c.img}
-                  alt={c.title}
-                  fill
-                  className="object-fit"
-                />
-                <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
-                  ⭐ {c.rating}
-                </span>
-              </div>
-
-              <div className="p-4 flex flex-col flex-1">
-                <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm">
-                  <span className="flex items-center gap-1">
-                    <FaClock /> {c.hours}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <FaLanguage /> {c.lang}
-                  </span>
-                </div>
-
-                <h3 className="text-[22px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2">
-                  {c.title}
-                </h3>
-
-                <div className="flex items-center gap-2 text-gray-500 text-sm">
-                  <FaUserGraduate /> {c.students} students
-                </div>
-
-                <div className="flex justify-between items-center mt-4">
-                  <div>
-                    <span className="line-through text-gray-400">
-                      {c.oldPrice}
-                    </span>
-                    <span className="text-[#252525] font-normal text-[22px] md:text-[26px] ml-2">
-                      {c.newPrice}
-                    </span>
-                  </div>
-                  <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm md:text-base"
-                   onClick={() => window.location.href = "/courses"}>
-                    View Course
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+ {/* Courses Slider + Grid */}
+<div>
+  {/* Mobile Slider */}
+  <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory sm:hidden pb-4">
+    {courses.map((c) => (
+      <div
+        key={c.id}
+        className="w-[300px] snap-center bg-white shadow-md rounded-md overflow-hidden flex-shrink-0"
+      >
+        <div className="relative w-full h-[220px]">
+          <Image src={c.img} alt={c.title} fill className="object-fit" />
+          <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
+            ⭐ {c.rating}
+          </span>
         </div>
+
+        <div className="p-4 flex flex-col">
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm">
+            <span className="flex items-center gap-1">
+              <FaClock /> {c.hours}
+            </span>
+            <span className="flex items-center gap-1">
+              <FaLanguage /> {c.lang}
+            </span>
+          </div>
+
+          <h3 className="text-[20px] font-normal text-[#252525] mt-2 mb-2">
+            {c.title}
+          </h3>
+
+          <div className="flex items-center gap-2 text-gray-500 text-sm">
+            <FaUserGraduate /> {c.students} students
+          </div>
+
+          <div className="flex justify-between items-center mt-4">
+            <div>
+              <span className="line-through text-gray-400">{c.oldPrice}</span>
+              <span className="text-[#252525] font-normal text-[22px] ml-2">
+                {c.newPrice}
+              </span>
+            </div>
+            <button
+              className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm"
+              onClick={() => (window.location.href = "/courses")}
+            >
+              View Course
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  {/* Desktop Grid */}
+  <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-8">
+    {courses.map((c) => (
+      <div
+        key={c.id}
+        className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
+      >
+        <div className="relative w-full h-[250px] md:h-[233px]">
+          <Image src={c.img} alt={c.title} fill className="object-fit" />
+          <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
+            ⭐ {c.rating}
+          </span>
+        </div>
+
+        <div className="p-4 flex flex-col flex-1">
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm">
+            <span className="flex items-center gap-1">
+              <FaClock /> {c.hours}
+            </span>
+            <span className="flex items-center gap-1">
+              <FaLanguage /> {c.lang}
+            </span>
+          </div>
+
+          <h3 className="text-[22px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2">
+            {c.title}
+          </h3>
+
+          <div className="flex items-center gap-2 text-gray-500 text-sm">
+            <FaUserGraduate /> {c.students} students
+          </div>
+
+          <div className="flex justify-between items-center mt-4">
+            <div>
+              <span className="line-through text-gray-400">{c.oldPrice}</span>
+              <span className="text-[#252525] font-normal text-[22px] md:text-[26px] ml-2">
+                {c.newPrice}
+              </span>
+            </div>
+            <button
+              className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm md:text-base"
+              onClick={() => (window.location.href = "/courses")}
+            >
+              View Course
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
     </section>
   );

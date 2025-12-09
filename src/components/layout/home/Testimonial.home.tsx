@@ -114,7 +114,7 @@ export default function Testimonials() {
         </button>
 
         {/* FIXED center avatars box */}
-        <div className="relative w-[360px] md:w-[460px] h-20 flex items-center justify-center">
+        <div className="relative w-[300px] md:w-[460px] h-20 flex items-center justify-center">
           {testimonials.map((t, i) => {
             const total = testimonials.length;
 

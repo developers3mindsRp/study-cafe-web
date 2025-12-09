@@ -64,45 +64,86 @@ export default function MembershipPricing({ bgImage }:any) {
           Get unlimited access to all courses and exclusive benefits
         </p>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mt-12 ">
-          {plans.map((plan, i) => (
-            <div
-              key={i}
-              className={`border rounded-xl p-8 shadow-md relative bg-white ${
-                plan.highlight ? "border-[#09339B]" : "border-gray-300"
-              }`}
-            >
-              {plan.highlight && (
-                <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
-                  Most Popular
-                </span>
-              )}
+ {/* Pricing Wrapper */}
+<div>
 
-              <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
+  {/* Mobile Slider */}
+  <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden pb-6">
+    {plans.map((plan, i) => (
+      <div
+        key={i}
+        className={`w-[350px] snap-center border rounded-xl p-8 shadow-md relative bg-white flex-shrink-0 mt-12 ${
+          plan.highlight ? "border-[#09339B]" : "border-gray-300"
+        }`}
+      >
+        {plan.highlight && (
+          <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
+            Most Popular
+          </span>
+        )}
 
-              <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">
-                {plan.price}
-              </p>
-              <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
+        <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
 
-              <ul className="mt-6 space-y-3 text-center  text-[#AFAFAF]">
-                {plan.features.map((feat, index) => (
-                  <li key={index} className="flex items-start gap-3 text-[#6A7181] text-[16px]">
-                   <img src="/images/tick.svg" alt="" />
-                    {feat}
-                  </li>
-                ))}
-              </ul>
+        <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">{plan.price}</p>
+        <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
 
-              <button
-                className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
-                onClick={() => (window.location.href = "/payment-screen")}>
-                Buy Membership
-              </button>
-            </div>
+        <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
+          {plan.features.map((feat, index) => (
+            <li key={index} className="flex items-start gap-3">
+              <img src="/images/tick.svg" alt="" /> {feat}
+            </li>
           ))}
-        </div>
+        </ul>
+
+        <button
+          className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
+          onClick={() => (window.location.href = "/payment-screen")}
+        >
+          Buy Membership
+        </button>
+      </div>
+    ))}
+  </div>
+
+  {/* Desktop Grid */}
+  <div className="hidden md:grid grid-cols-3 gap-8 mt-12">
+    {plans.map((plan, i) => (
+      <div
+        key={i}
+        className={`border rounded-xl p-8 shadow-md relative bg-white ${
+          plan.highlight ? "border-[#09339B]" : "border-gray-300"
+        }`}
+      >
+        {plan.highlight && (
+          <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
+            Most Popular
+          </span>
+        )}
+
+        <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
+
+        <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">{plan.price}</p>
+        <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
+
+        <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
+          {plan.features.map((feat, index) => (
+            <li key={index} className="flex items-start gap-3">
+              <img src="/images/tick.svg" alt="" /> {feat}
+            </li>
+          ))}
+        </ul>
+
+        <button
+          className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
+          onClick={() => (window.location.href = "/payment-screen")}
+        >
+          Buy Membership
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
     </section>
   );
