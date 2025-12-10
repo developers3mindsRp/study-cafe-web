@@ -94,10 +94,10 @@ export default function Testimonials() {
 
   return (
     <section className="w-full bg-[url('/images/testimonial_bg.svg')] bg-no-repeat bg-cover bg-center py-20 flex flex-col items-center text-center px-4">
-      <h2 className="text-[40px] font-semibold text-[#1A1A1A]">
+      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
         What Our Students Say
       </h2>
-      <p className="text-[24px] text-gray-600 mt-2">
+      <p className="text-[18px] md:text-[24px] text-gray-600 mt-2">
         Don't just take our word for it – hear from thousands of{" "}
         <br className="hidden sm:block" />
         satisfied students

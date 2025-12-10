@@ -6,28 +6,21 @@ export default function CourseSection() {
    <div className="lg:col-span-2 space-y-6">
         <div className="w-full bg-white py-10 container mx-auto px-4">
       {/* Alumni Logos */}
-      <div className=" mx-auto px-4">
-        <h2 className="text-xl font-semibold mb-6">
-          Our Alumni at Leading Companies
-        </h2>
-<div className="flex flex-wrap items-center gap-6">
-  {[1, 2, 3, 4, 5, 6].map((num) => {
-    return (
-      <div
-        key={num}
-        className="h-[80px] w-[125px] border p-2 rounded flex items-center justify-center shadow-sm"
-      >
-        <img
-          src={`/images/brand_${num}.svg`}
-          alt={`brand_${num}`}
-          className="h-full object-contain"
-        />
-      </div>
-    );
-  })}
+<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+  {[1, 2, 3, 4, 5, 6].map((num) => (
+    <div
+      key={num}
+      className="h-[80px] w-full border p-2 rounded flex items-center justify-center shadow-sm bg-white"
+    >
+      <img
+        src={`/images/brand_${num}.svg`}
+        alt={`brand_${num}`}
+        className="h-full object-contain"
+      />
+    </div>
+  ))}
 </div>
 
-      </div>
 
       {/* FAQ Section */}
       <div className=" mx-auto px-4 mt-10">
@@ -100,29 +93,29 @@ export default function CourseSection() {
         </p>
       </div>
 
-      {/* Author Section */}
-      <div className="container mx-auto px-4 mt-10">
-        <h2 className="text-xl font-semibold mb-4">About Authors</h2>
+    {/* Author Section */}
+    <div className="container mx-auto px-4 mt-10">
+      <h2 className="text-xl font-semibold mb-4">About Authors</h2>
 
-        <div className="border rounded p-5 flex items-start gap-4 shadow">
-          <Image
-            src="/images/author.svg"
-            width={104}
-            height={104}
-            alt="Author"
-            className="rounded-full"
-          />
+      <div className="border rounded p-2 md:p-5 flex flex-col md:flex-row items-start md:items-center gap-4 shadow">
+        <Image
+          src="/images/author.svg"
+          width={104}
+          height={104}
+          alt="Author"
+          className="rounded-full mx-auto md:mx-0"
+        />
 
-          <div>
-            <h3 className="font-semibold text-[20px] text-[#252525]">Pratibha Goyal</h3>
-            
-           <h3 className="text-[#929292] mb-2">   CA : Business  </h3>
-           <p className="text-[#929292] text-[16px] mt-1">
-             CA Pratibha Goyal is Chartered Accountant qualified in 2016, is a Member of The Institute of Chartered Accountants of India having wide experience in the field of Auditing, Taxation, ROC, GST and Secretarial matters etc. She has written over a thousand articles & has made several videos on topics related to Auditing & Taxation. As a Speaker she has delivered various sessions on various branches of NIRC of ICAI.
-            </p>
-          </div>
+        <div className="text-center md:text-left ">
+          <h3 className="font-semibold text-[20px] text-[#252525]">Pratibha Goyal</h3>
+          <h3 className="text-[#929292] mb-2">CA : Business</h3>
+          <p className="text-[#929292] text-[14px] md:text-[16px] mt-1 ">
+            CA Pratibha Goyal is Chartered Accountant qualified in 2016, is a Member of The Institute of Chartered Accountants of India having wide experience in the field of Auditing, Taxation, ROC, GST and Secretarial matters etc. She has written over a thousand articles & has made several videos on topics related to Auditing & Taxation. As a Speaker she has delivered various sessions on various branches of NIRC of ICAI.
+          </p>
         </div>
       </div>
+    </div>
+
     </div>
   </div>
 

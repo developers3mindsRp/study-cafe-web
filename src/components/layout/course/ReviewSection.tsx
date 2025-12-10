@@ -8,7 +8,7 @@ export default function ReviewSection() {
     setShowForm(true); // show the component when button is clicked
   };
   return (
-    <section className="w-full   p-6 rounded-xl bg-white shadow-sm">
+    <section className="w-full   md:p-6 rounded-xl bg-white shadow-sm">
       
       {/* Write Review Button */}
       <div className="text-center mb-6 font-medium text-[20px]">

@@ -9,7 +9,7 @@ export default function CourseTabs() {
    <div className="lg:col-span-2 space-y-6">
         <div className="bg-white rounded-xl shadow p-6 mt-10 container   px-4 mx-auto">
       {/* Tabs */}
-      <div className="border rounded-lg flex overflow-hidden text-sm font-medium container pr-64 ">
+      <div className="border rounded-lg flex overflow-hidden text-sm font-medium container md:pr-64 ">
         {[
           { key: "description", label: "Course Description" },
           { key: "content", label: "Course Content" },
@@ -18,7 +18,7 @@ export default function CourseTabs() {
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`flex-1 px-0 py-3 border-r last:border-none transition-all  pl-4  ${
+            className={`flex-1 px-0 py-3 border-r last:border-none transition-all    ${
               active === tab.key
                 ? "bg-[#09339B] text-white rounded-[20px] "
                 : "bg-white text-[#AFAFAF] hover:bg-gray-200 rounded-[20px]"

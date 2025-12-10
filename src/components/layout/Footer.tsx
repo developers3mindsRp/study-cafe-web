@@ -142,7 +142,7 @@ export default function Footer() {
               </li>
               <li>
                 <label htmlFor="footer-email">Email</label><br />
-                <input id="footer-email" type="text" className="p-3 w-full rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
+                <input id="footer-email" type="text" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
               </li>
               <button className="p-2 rounded-[10px] w-1/2 bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] text-[20px]">
                 Subscribe Now

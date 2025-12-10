@@ -57,10 +57,10 @@ export default function MembershipPricing({ bgImage }:any) {
       )}
         {/* Content wrapper */}
       <div className="relative z-10 container mx-auto px-4 py-16">
-        <h2 className={`text-3xl md:text-[40px] font-semibold text-center ${bgImage ? "text-[#121B31]" : "text-[#121B31]"}`}>
+        <h2 className={`text-[30px] md:text-[40px] font-semibold text-center ${bgImage ? "text-[#121B31]" : "text-[#121B31]"}`}>
           Choose Your Membership
         </h2>
-        <p className={`${bgImage ? "text-[#454545]" : "text-[#454545]"} mt-2 text-center text-[24px]`}>
+        <p className={`${bgImage ? "text-[#454545]" : "text-[#454545]"} mt-2 text-center text-[18px] md:text-[24px]`}>
           Get unlimited access to all courses and exclusive benefits
         </p>
 

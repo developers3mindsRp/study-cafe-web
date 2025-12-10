@@ -15,12 +15,12 @@ export default function BannerSection() {
         <div className="lg:col-span-2 space-y-6">
 
           {/* Course Start Time */}
-          <p className=" bg-[#F9F9FB] w-[379px] p-2 text-[#454545] font-[400px] font-Outfit font-[16px]">
+          <p className=" bg-[#F9F9FB] md:w-[379px] p-2 text-[#454545] font-[400px] font-Outfit font-[16px]">
             <strong>Starts at Thursday November 27, 2025 – 18:00</strong>
           </p>
 
           {/* Title */}
-          <h1 className="text-[30px] font-medium text-gray-900 leading-snug">
+          <h1 className="text-[20px] md:text-[30px] font-medium text-gray-900 leading-snug">
             Certification Course On Practical Filing of GSTR-9 & GSTR-9C
           </h1>
 
@@ -71,7 +71,7 @@ export default function BannerSection() {
 
           {/* Key Features */}
           <div className="space-y-3 pt-4">
-            <h2 className="text-[30px] text-[#252525] font-medium">Course Key Features</h2>
+            <h2 className="text-[20px] md:text-[30px] text-[#252525] font-medium">Course Key Features</h2>
 
             <ul className="space-y-3 text-[#929292]">
               {[
