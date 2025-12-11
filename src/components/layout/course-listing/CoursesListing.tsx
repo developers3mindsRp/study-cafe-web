@@ -78,6 +78,7 @@ export default function CoursesPage() {
   const [categoryFilter, setCategoryFilter] = useState('All Categories')
   const [levelFilter, setLevelFilter] = useState('All Levels')
   const [priceFilter, setPriceFilter] = useState('All Prices')
+  const [latestFilter, setLatestFilter] = useState('Latest')
   const [currentPage, setCurrentPage] = useState(1)
     const [active, setActive] = useState("All Courses");
 
@@ -113,11 +114,13 @@ export default function CoursesPage() {
 
   return (
     <div className="container px-4 mx-auto">
-      {/* Filter bar */}
-      <div className="filter-bar flex gap-4 mb-10 mt-10 px-4">
+    {/* Filter bar */}
+    <div className="filter-bar md:flex  mb-10 mt-10  md:px-4 items-center">
+      <div className="flex-wrap gap-2 md:flex md:gap-4 ">
         <select
           value={categoryFilter}
           onChange={e => { setCategoryFilter(e.target.value); setCurrentPage(1) }}
+          className='border p-2 rounded-[10px]'
         >
           <option>All Categories</option>
           <option>Accounting</option>
@@ -128,6 +131,7 @@ export default function CoursesPage() {
         <select
           value={levelFilter}
           onChange={e => { setLevelFilter(e.target.value); setCurrentPage(1) }}
+          className='border p-2 rounded-[10px]'
         >
           <option>All Levels</option>
           <option>Beginner</option>
@@ -138,6 +142,7 @@ export default function CoursesPage() {
         <select
           value={priceFilter}
           onChange={e => { setPriceFilter(e.target.value); setCurrentPage(1) }}
+          className='border p-2 rounded-[10px]'
         >
           <option>All Prices</option>
           <option>Free</option>
@@ -146,6 +151,19 @@ export default function CoursesPage() {
           <option>₹1000+</option>
         </select>
       </div>
+
+      <select
+        value={latestFilter}         
+        onChange={e => { setLatestFilter(e.target.value); setCurrentPage(1) }}
+        className='border p-2 rounded-[10px] md:ml-auto'
+      >
+        <option>Latest</option>
+        <option>Newest</option>
+        <option>Recently added</option>
+        <option>Oldest</option>
+      </select>
+    </div>
+
 
       {/* Cards Grid */}
       <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4 ">

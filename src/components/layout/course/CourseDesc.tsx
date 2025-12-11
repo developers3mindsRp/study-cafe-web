@@ -18,10 +18,10 @@ export default function CourseTabs() {
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`flex-1 px-0 py-3 border-r last:border-none transition-all    ${
+            className={`flex-1 px-0 py-3 last:border-none transition-all    ${
               active === tab.key
-                ? "bg-[#09339B] text-white rounded-[20px] "
-                : "bg-white text-[#AFAFAF] hover:bg-gray-200 rounded-[20px]"
+                ? "bg-[#09339B] text-white rounded-[15px] m-2 "
+                : "bg-white text-[#AFAFAF] hover:bg-gray-200 m-2 rounded-[15px]"
             }`}
           >
             {tab.label}

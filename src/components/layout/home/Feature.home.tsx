@@ -41,7 +41,7 @@ const courses = [
   },
   {
     id: 4,
-    title: "Course 4 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/f4.jpg",
     hours: "3+ Hours",
     lang: "English",
@@ -52,7 +52,7 @@ const courses = [
   },
   {
     id: 5,
-    title: "Course 5 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/f5.png",
     hours: "1.5+ Hours",
     lang: "English",
@@ -63,7 +63,7 @@ const courses = [
   },
   {
     id: 6,
-    title: "Course 6 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/f6.png",
     hours: "4+ Hours",
     lang: "English",
@@ -72,10 +72,95 @@ const courses = [
     newPrice: "₹ 699",
     rating: "4.8",
   },
+  {
+    id: 7,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 8,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 9,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 10,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 11,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 12,
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
+    img: "/images/f6.png",
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+
 ];
 
 export default function FeaturedCourses() {
   const [active, setActive] = useState("All Courses");
+
+  const totalSteps = Math.ceil(courses.length / 6); 
+  const [step, setStep] = useState(1);
+
+  const next = () => {
+    if (step < totalSteps) setStep(step + 1);
+  };
+
+  const prev = () => {
+    if (step > 1) setStep(step - 1);
+  };
+
+  const progress = (step / totalSteps) * 100;
+
+    // Calculate which blogs to show for current step
+  const startIndex = (step - 1) * 6;
+  const endIndex = startIndex + 6;
+  const visibleBCourses = courses.slice(startIndex, endIndex);
 
   return (
     <section
@@ -166,7 +251,7 @@ export default function FeaturedCourses() {
 
   {/* Desktop Grid */}
   <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-8">
-    {courses.map((c) => (
+    {visibleBCourses.map((c) => (
       <div
         key={c.id}
         className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
@@ -217,6 +302,46 @@ export default function FeaturedCourses() {
 </div>
 
       </div>
+      {/* Bottom Navigation */}
+  <div className="flex items-center container mx-auto mt-10 px-4">
+
+      {/* Left Buttons */}
+      <div className="flex gap-3">
+        <button
+          onClick={prev}
+          className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
+        >
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M5.5 12.002L19 12.002" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10.9999 18.002C10.9999 18.002 5.00001 13.583 5 12.0019C4.99999 10.4208 11 6.00195 11 6.00195" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+        </button>
+
+        <button
+          onClick={next}
+          className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18.5 11.998L5 11.998" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.0001 5.998C13.0001 5.998 19 10.417 19 11.9981C19 13.5792 13 17.998 13 17.998" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      {/* Progress Bar Middle Line */}
+      <div className="flex-grow mx-4 h-[4px] bg-gray-300 rounded-full relative overflow-hidden">
+        <div
+          className="h-full bg-[#09339B] rounded-full transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+
+      {/* Right Button */}
+      <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
+        View All Courses
+        <img src="/images/blue_arrow.png" alt="" />
+      </button>
+    </div>
     </section>
   );
 }
