@@ -35,8 +35,8 @@ export default function CourseSection() {
    <div className="lg:col-span-2 space-y-6">
         <div className="w-full bg-white py-10 container mx-auto px-4">
       {/* Alumni Logos */}
-<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-  {[1, 2, 3, 4, 5, 6].map((num) => (
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+      {[1, 2, 3, 4, 5, 6].map((num) => (
     <div
       key={num}
       className="h-[80px] w-full border p-2 rounded flex items-center justify-center shadow-sm bg-white"

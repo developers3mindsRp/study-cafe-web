@@ -62,16 +62,10 @@ export default function SignUpPage() {
 
 
 
-
-
- 
-
-  
-
   return (
-    <div className="min-h-screen flex flex-col md:flex-row   mx-auto  ">
+    <div className="h-screen flex flex-col md:flex-row mx-auto  ">
       {/* Left branding panel */}
-      <div className="md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 flex flex-col justify-center">
+      <div className="md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 flex flex-col justify-center ">
             <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
             
             <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
@@ -88,9 +82,17 @@ export default function SignUpPage() {
 
       {/* Right form panel */}
       <div className="md:w-1/2 p-8 flex flex-col justify-center ">
+       {/* Close (X) */}
+      <button
+        onClick={() => router.push('/')}
+        className="absolute right-4 top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+      >
+        <span className="text-[#09339B]">✕</span>
+      </button>
+      <div className="h-screen overflow-y-auto md:p-8 scrollbar-thin-custom">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
-        <h2 className="text-[40px] font-semibold  pt-[8px]">Create your account</h2>
-        <p className="text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign up to start your learning journey</p>
+        <h2 className="text-[28px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
+        <p className="text-[18px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign up to start your learning journey</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>
@@ -265,8 +267,9 @@ export default function SignUpPage() {
         </form>
 
         <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
-          Already have an account? <a href="/sign-in" className="text-[#09339B]">Sign in</a>
+          Already have an account? <a href="/login" className="text-[#09339B]">Sign in</a>
         </p>
+      </div>
       </div>
     </div>
   );

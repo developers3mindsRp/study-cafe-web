@@ -70,6 +70,13 @@ export default function LoginPage() {
       </div>
 
       {/* Right form panel */}
+             {/* Close (X) */}
+      <button
+        onClick={() => router.back()}
+       className="absolute right-4 top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+      >
+        <span className="text-[#09339B]">✕</span>
+      </button>
       <div className="md:w-1/2 p-8 flex flex-col justify-center ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[40px] font-semibold  pt-[8px]">Welcome</h2>
@@ -149,7 +156,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
-          Don't have an account? <a href="/sign-in" className="text-[#09339B]">Sign up</a>
+          Don't have an account? <a href="/register" className="text-[#09339B]">Sign up</a>
         </p>
       </div>
     </div>

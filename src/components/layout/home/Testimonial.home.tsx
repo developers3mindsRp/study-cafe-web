@@ -138,19 +138,19 @@ export default function Testimonials() {
             let left: string | undefined;
 
             if (i === extremeLeftIndex) {
-              positionClass = "w-14 h-14 hidden md:block scale-90 opacity-50 z-0";
+              positionClass = "w-20 h-20 hidden md:block scale-90 opacity-50 z-0";
               left = slots.extremeLeft;
             } else if (i === leftIndex) {
-              positionClass = "w-16 h-16 scale-95 opacity-80 z-10";
+              positionClass = "w-20 h-20 scale-95 opacity-80 z-10";
               left = slots.left;
             } else if (i === currentIndex) {
-              positionClass = "w-20 h-20 scale-110 opacity-100 z-20";
+              positionClass = "w-24 h-24 scale-110 opacity-100 z-20";
               left = slots.center;
             } else if (i === rightIndex) {
-              positionClass = "w-16 h-16 scale-95 opacity-80 z-10";
+              positionClass = "w-20 h-20 scale-95 opacity-80 z-10";
               left = slots.right;
             } else if (i === extremeRightIndex) {
-              positionClass = "w-14 h-14 hidden md:block scale-90 opacity-50 z-0";
+              positionClass = "w-20 h-20 hidden md:block scale-90 opacity-50 z-0";
               left = slots.extremeRight;
             }
 
