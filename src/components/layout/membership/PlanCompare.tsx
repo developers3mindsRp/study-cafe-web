@@ -25,9 +25,9 @@ const Cross = () => <img src="/images/cancel.png" alt="" className="mx-auto" />
 
 export default function PlansComparisonTable() {
   return (
-    <div className="w-full container px-4 mx-auto py-10">
-      <h2 className="text-[40px] text-[#252525] font-bold text-center mb-2">Compare Plans</h2>
-      <p className="text-center text-[#454545] mb-16 text-[24px]">
+    <div className="w-full container px-4 mx-auto md:py-10">
+      <h2 className="text-[30px] md:text-[40px] text-[#252525] font-bold text-center mb-2">Compare Plans</h2>
+      <p className="text-center text-[#454545] mb-16 text-[18px] md:text-[24px]">
         See what's included in each membership tier
       </p>
 

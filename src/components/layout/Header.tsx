@@ -272,14 +272,14 @@ export default function Header() {
                     <Link href="/courses/categories" className="text-gray-700 hover:text-blue-600 font-medium">
                       Categories
                     </Link>
-                    <Link href="/memberships" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
                       Memberships & Pricing
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link href="/memberships" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
                 Memberships
               </Link>
               <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium">

@@ -164,7 +164,7 @@ export default function Testimonials() {
                   left,
                   transform: "translateX(-50%)",
                 }}
-                className={`absolute rounded-full object-cover border-2 border-white shadow-md cursor-pointer  ${positionClass}`}
+                className={`absolute rounded-full object-cover border-2 border-white shadow-md cursor-pointer   ${positionClass}`}
               />
             );
           })}

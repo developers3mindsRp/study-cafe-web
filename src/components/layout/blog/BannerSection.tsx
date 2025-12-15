@@ -16,8 +16,8 @@ const BannerSection_blog = () => {
 
 
     <div className='text-center'>
-        <h1 className='text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Blogs</h1>
-        <h3 className='text-[#252525] text-[24px]'>Stay updated with the latest insights, tips, and industry trends from our experts</h3>
+        <h1 className='text-[42px] md:text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Blogs</h1>
+        <h3 className='text-[#252525] text-[18px] md:text-[24px]'>Stay updated with the latest insights, tips, and industry trends from our experts</h3>
     
    <div className="mt-10 w-full max-w-2xl mx-auto">
       <div className="relative">

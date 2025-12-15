@@ -27,7 +27,7 @@ export default function MyCourses() {
   ];
 
   return (
-    <section className="p-6 max-w-6xl mx-auto">
+    <section className="md:p-6 max-w-6xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-1">
         My Courses
       </h2>
