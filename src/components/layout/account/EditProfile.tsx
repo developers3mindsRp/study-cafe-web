@@ -4,7 +4,7 @@ import Image from "next/image";
 import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css';
  import IndianStatesList  from "indian-states-cities-list";
- import { getNames } from "country-list";
+ import countryList from "country-list";
 import PaymentHistory from "./PaymentHistory";
 import MyCourses from "./PurchaseCourse";
 import Sidebar from "./Sidebar";
@@ -31,22 +31,42 @@ export default function EditProfile() {
   const today = new Date();
     const [phone, setPhone] = useState<string | undefined>(undefined)
 
-  useEffect(() => {
-    const total = endDate - startDate;
-    const passed = today - startDate;
+      useEffect(() => {
+        if (!startDate || !endDate) return;
 
-    const percentage = Math.min((passed / total) * 10, 100);
-    setProgress(percentage);
-  }, []);
+        const start = startDate.getTime();
+        const end = endDate.getTime();
+        const now = today.getTime();
+
+        const total = end - start;
+        const passed = now - start;
+
+        if (total <= 0) {
+          setProgress(0);
+          return;
+        }
+
+        const percentage = Math.min((passed / total) * 100, 100);
+        setProgress(percentage);
+      }, [startDate, endDate, today]);
+
 
      const [active, setActive] = useState("Profile");
      
      
-       function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+      function handleChange(
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      ) {
+        const { name, value } = e.target;
+
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+
   const states = IndianStatesList.STATES_OBJECT.map(s => s.value);
-  const countries = getNames(); 
+const countries = countryList.getNames();
 
   return (
 <div className="w-full md:py-10 px-4 md:px-10">

@@ -1,6 +1,7 @@
 "use client";
 
-export default function CourseCard({ course }) {
+
+export default function CourseCard({ course }: { course: any }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Thumbnail */}

@@ -6,7 +6,7 @@ import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
  import IndianStatesList  from "indian-states-cities-list";
- import { getNames } from "country-list";
+ import countryList from "country-list";
 
 
 export default function SignUpPage() {
@@ -53,11 +53,19 @@ export default function SignUpPage() {
     router.push("/welcome");  // or wherever
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+       function handleChange(
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      ) {
+        const { name, value } = e.target;
+
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+
   const states = IndianStatesList.STATES_OBJECT.map(s => s.value);
-  const countries = getNames(); 
+const countries = countryList.getNames();
 
 
 

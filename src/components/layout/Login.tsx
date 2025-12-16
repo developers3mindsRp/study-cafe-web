@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import PhoneInput from "react-phone-number-input";
+
 import 'react-phone-number-input/style.css';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
  
