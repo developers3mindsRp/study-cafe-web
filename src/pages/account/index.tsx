@@ -8,7 +8,7 @@ import * as coursesService from '@/services/courses.service';
 import { PublicLayout } from '@/components/layout';
 import SignUpPage from '@/components/layout/Register';
 import LoginPage from '@/components/layout/Login';
-import EditProfile from '@/components/account/EditProfile';
+import EditProfile from '@/components/layout/account/EditProfile';
 
 /**
  * Home Page - Course Listing

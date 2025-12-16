@@ -77,7 +77,7 @@ export default function PaymentHistory() {
 
 
       {/* Table */}
-      <div className="overflow-x-auto ">
+      <div className="hidden md:block overflow-x-auto ">
         <table className="w-full bg-white rounded-lg shadow-sm divide-y divide-gray-200 border border-gray-200">
           <thead className="bg-gray-50  text-[16px]">
             <tr>
@@ -118,7 +118,7 @@ export default function PaymentHistory() {
                   <button className="text-lg hover:text-green-600 ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                  <path d="M2.24976 12.75C2.24976 13.4475 2.24976 13.7962 2.32643 14.0824C2.53448 14.8588 3.14096 15.4653 3.91742 15.6734C4.20354 15.75 4.55228 15.75 5.24976 15.75H12.7498C13.4473 15.75 13.796 15.75 14.0821 15.6734C14.8585 15.4653 15.4651 14.8588 15.6731 14.0824C15.7498 13.7962 15.7498 13.4475 15.7498 12.75" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12.3748 8.62503C12.3748 8.62503 9.88914 12 8.99971 12C8.11036 12 5.62476 8.62503 5.62476 8.62503M8.99971 11.25V2.25" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12.3748 8.62503C12.3748 8.62503 9.88914 12 8.99971 12C8.11036 12 5.62476 8.62503 5.62476 8.62503M8.99971 11.25V2.25" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                 </td>
@@ -133,6 +133,62 @@ export default function PaymentHistory() {
           </p>
         )}
       </div>
+
+      {/* Mobile View */}
+  <div className="md:hidden space-y-4">
+  {filtered.map((row, i) => (
+    <div
+      key={i}
+      className="border rounded-xl p-4 bg-white shadow-sm text-sm"
+    >
+      <div className="flex justify-between items-center mb-2">
+        <p className="font-medium">{row.item}</p>
+        <span className="bg-[#34C759] text-white px-3 py-1 rounded-full text-xs">
+          {row.status}
+        </span>
+      </div>
+
+      <p className="text-gray-500 text-xs mb-3">{row.date}</p>
+
+      <div className="grid grid-cols-2 gap-3 text-xs text-[#929292]">
+        <div>
+          <p className="text-gray-400">Order ID</p>
+          <p className="font-medium">{row.orderID}</p>
+        </div>
+        <div>
+          <p className="text-gray-400">Amount</p>
+          <p>{row.amount}</p>
+        </div>
+        <div>
+          <p className="text-gray-400">GST</p>
+          <p>{row.gst}</p>
+        </div>
+        <div>
+          <p className="text-gray-400">Method</p>
+          <p>{row.method}</p>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-4 mt-4">
+                <button className="text-lg hover:text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M1.5 6C1.5 6 4.85786 2.25 9 2.25C13.1421 2.25 16.5 6 16.5 6" stroke="#454545" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M16.158 9.78375C16.386 10.1035 16.5 10.2634 16.5 10.5C16.5 10.7366 16.386 10.8965 16.158 11.2162C15.1334 12.6529 12.5169 15.75 9 15.75C5.48309 15.75 2.86657 12.6529 1.84203 11.2162C1.61401 10.8965 1.5 10.7366 1.5 10.5C1.5 10.2634 1.61401 10.1035 1.84203 9.78375C2.86657 8.34705 5.48309 5.25 9 5.25C12.5169 5.25 15.1334 8.34705 16.158 9.78375Z" stroke="#454545" stroke-width="1.5"/>
+                    <path d="M11.25 10.5C11.25 9.25732 10.2427 8.25 9 8.25C7.75732 8.25 6.75 9.25732 6.75 10.5C6.75 11.7427 7.75732 12.75 9 12.75C10.2427 12.75 11.25 11.7427 11.25 10.5Z" stroke="#454545" stroke-width="1.5"/>
+                    </svg>
+                  </button>
+
+                <button className="text-lg hover:text-green-600 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                 <path d="M2.24976 12.75C2.24976 13.4475 2.24976 13.7962 2.32643 14.0824C2.53448 14.8588 3.14096 15.4653 3.91742 15.6734C4.20354 15.75 4.55228 15.75 5.24976 15.75H12.7498C13.4473 15.75 13.796 15.75 14.0821 15.6734C14.8585 15.4653 15.4651 14.8588 15.6731 14.0824C15.7498 13.7962 15.7498 13.4475 15.7498 12.75" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12.3748 8.62503C12.3748 8.62503 9.88914 12 8.99971 12C8.11036 12 5.62476 8.62503 5.62476 8.62503M8.99971 11.25V2.25" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+      </div>
+    </div>
+  ))}
+</div>
+
     </section>
   );
 }

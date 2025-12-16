@@ -38,7 +38,10 @@ export default function EditProfile() {
     const percentage = Math.min((passed / total) * 10, 100);
     setProgress(percentage);
   }, []);
-     const [active, setActive] = useState("description");
+
+     const [active, setActive] = useState("Profile");
+     
+     
        function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }

@@ -24,7 +24,7 @@ export default function FAQSection() {
     },
   ];
 
-  const [openIndex, setOpenIndex] = useState<any>(0);
+  const [openIndex, setOpenIndex] = useState<any>('');
 
   return (
     <section className=" w-full bg-white py-4 md:py-20 px-4 flex flex-col
@@ -44,7 +44,7 @@ know about StudyCafe.
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
               className="w-full flex justify-between items-center p-4  transition"
             >
-              <span className="font-medium text-[20px] text-black">{index + 1}. {item.q}</span>
+              <span className="font-medium text-[20px] text-black text-left">{index + 1}. {item.q}</span>
 
               {/* Arrow Icon */}
               <svg
