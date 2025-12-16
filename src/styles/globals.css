@@ -114,4 +114,8 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
+/* img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+    margin-left: 6px;
+} */

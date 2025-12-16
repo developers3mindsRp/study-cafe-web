@@ -31,37 +31,46 @@ export default function PlansComparisonTable() {
         See what's included in each membership tier
       </p>
 
-      <div className="overflow-x-auto ">
-        <table className="w-full border-collapse text-left bg-white shadow-sm rounded-lg border-l border-gray-300 last:border-r-0">
-          <thead>
-            <tr className="bg-gray-100 text-[#252525] font-bold text-[20px] ">
-              <th className="py-3 px-4 text-center">Features</th>
-              {plans.map((p) => (
-                <th key={p} className="py-3 px-4 text-center border-r border-gray-300">
-                  {p}
-                </th>
-              ))}
-            </tr>
-          </thead>
+    <div className="overflow-x-auto w-full scrollbar-hide">
+  <table className="min-w-[700px] w-full border-collapse bg-white shadow-sm rounded-lg border-l border-gray-300">
+    <thead>
+      <tr className="bg-gray-100 text-[#252525] font-bold text-[20px]">
+        <th className="py-3 px-4 text-center sticky left-0 bg-gray-100 z-10">
+          Features
+        </th>
+        {plans.map((p) => (
+          <th
+            key={p}
+            className="py-3 px-4 text-center border-r border-gray-300"
+          >
+            {p}
+          </th>
+        ))}
+      </tr>
+    </thead>
 
-          <tbody>
-            {features.map((feature, index) => (
-              <tr key={index} className="border-b border-r border-gray-300">
-                <td className="py-3 px-4 font-medium text-[#252525] text-[16px] text-center border-r border-gray-300 last:border-r-0">
-                  {feature.name}
-                </td>
+    <tbody>
+      {features.map((feature, index) => (
+        <tr key={index} className="border-b border-gray-300">
+          <td className="py-3 font-medium text-[#252525] text-[16px] text-center
+            sticky left-0 bg-white z-10 border-r border-gray-300">
+            {feature.name}
+          </td>
 
-                {feature.values.map((v, i) => (
-                 <td key={i} className="py-3 px-4 text-center border-r border-gray-300 last:border-r-0 ">
-                {v ? <Check /> : <Cross />}
-                </td>
+          {feature.values.map((v, i) => (
+            <td
+              key={i}
+              className="py-3 px-4 text-center border-r border-gray-300"
+            >
+              {v ? <Check /> : <Cross />}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

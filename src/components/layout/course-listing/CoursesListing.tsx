@@ -70,17 +70,42 @@ const courses = [
     newPrice: "₹ 699",
     rating: "4.8",
   },
+  {
+    id: 7,
+    title: "Course 6 thumbnail missing",
+    img: "/images/f6.png", // waiting for upload
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
+  {
+    id: 8,
+    title: "Course 6 thumbnail missing",
+    img: "/images/f6.png", // waiting for upload
+    hours: "4+ Hours",
+    lang: "English",
+    students: "1240",
+    oldPrice: "₹ 2,000",
+    newPrice: "₹ 699",
+    rating: "4.8",
+  },
 ];
 
-const ITEMS_PER_PAGE = 6
+
 
 export default function CoursesPage() {
+  const ITEMS_PER_PAGE = 6
   const [categoryFilter, setCategoryFilter] = useState('All Categories')
   const [levelFilter, setLevelFilter] = useState('All Levels')
   const [priceFilter, setPriceFilter] = useState('All Prices')
   const [latestFilter, setLatestFilter] = useState('Latest')
   const [currentPage, setCurrentPage] = useState(1)
     const [active, setActive] = useState("All Courses");
+
+    
 
   const filtered = useMemo(() => { 
     return courses.filter((course:any) => {
@@ -108,9 +133,16 @@ export default function CoursesPage() {
     return filtered.slice(start, start + ITEMS_PER_PAGE)
   }, [filtered, currentPage])
 
-  const handlePageClick = (pageNum:any) => {
-    setCurrentPage(pageNum)
-  }
+
+
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+
+const visibleCourses = courses.slice(startIndex, endIndex);
+const handlePageClick = (page: number) => {
+  if (page < 1 || page > pageCount) return;
+  setCurrentPage(page);
+};
 
   return (
     <div className="container px-4 mx-auto">
@@ -167,7 +199,7 @@ export default function CoursesPage() {
 
       {/* Cards Grid */}
       <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4 ">
-             {courses.map((c) => (
+             {visibleCourses.map((c) => (
                <div key={c.id} className="bg-white shadow-md rounded-md
    overflow-hidden ">
                  <div className="relative w-full h-[233px]">
@@ -212,20 +244,57 @@ export default function CoursesPage() {
              ))}
            </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-8 space-x-2 mb-6">
-        {Array.from({ length: pageCount }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => handlePageClick(i + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+{/* Pagination */}
+<div className="flex justify-center items-center mt-10 gap-2 mb-6">
+  {/* Left Arrow */}
+  <button
+    onClick={() => handlePageClick(currentPage - 1)}
+    disabled={currentPage === 1}
+    className={`w-9 h-9 rounded border  ${
+      currentPage === 1
+        ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full"
+        : "bg-white hover:bg-gray-100 rounded-full"
+    }`}
+  >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className='mx-auto'>
+              <path d="M5.5 12.002L19 12.002" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10.9999 18.002C10.9999 18.002 5.00001 13.583 5 12.0019C4.99999 10.4208 11 6.00195 11 6.00195" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+  </button>
+
+  {/* Page Numbers */}
+  {Array.from({ length: pageCount }, (_, i) => (
+    <button
+      key={i}
+      onClick={() => handlePageClick(i + 1)}
+      className={`w-9 h-9 rounded border text-sm  ${
+        currentPage === i + 1
+          ? "bg-[#09339B] text-white rounded-full"
+          : "bg-white hover:bg-gray-100 rounded-full"
+      }`}
+    >
+      {i + 1}
+    </button>
+  ))}
+
+  {/* Right Arrow */}
+  <button
+    onClick={() => handlePageClick(currentPage + 1)}
+    disabled={currentPage === pageCount}
+    className={`w-9 h-9 rounded border ${
+      currentPage === pageCount
+        ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full "
+        : "bg-white hover:bg-gray-100 rounded-full"
+    }`}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className='mx-auto'>
+              <path d="M18.5 11.998L5 11.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M13.0001 5.998C13.0001 5.998 19 10.417 19 11.9981C19 13.5792 13 17.998 13 17.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+  </button>
+</div>
+
+
     </div>
   )
 }
