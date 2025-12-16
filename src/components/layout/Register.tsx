@@ -138,6 +138,7 @@ const countries = countryList.getNames();
                 onChange={setPhone}
                 defaultCountry="IN"
                 international
+                limitMaxLength={true} 
                 className="w-full border px-3 py-2" 
             />
           

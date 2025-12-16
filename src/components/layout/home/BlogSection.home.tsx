@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Link from "next/link";
+
 
 export default function BlogSection() {
   const blogs = [
@@ -97,7 +99,8 @@ export default function BlogSection() {
       </p>
 
       {/* Mobile Slider (unchanged) */}
-      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2">
+      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2 scrollbar-hide
+">
         {blogs.map((b, i) => (
           <div
             key={i}
@@ -132,19 +135,21 @@ export default function BlogSection() {
               <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4">
                 {b.title}
               </h3>
+    <Link href="/blogs/blog-detail">
               <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
                 Read More
                 <img src="/images/arrow-left.svg" alt="" />
               </button>
+    </Link>
             </div>
           </div>
         ))}
       </div>
 
       {/* Bottom Navigation (unchanged) */}
-      <div className="flex items-center container mx-auto mt-10 px-4">
+      <div className=" flex items-center container mx-auto mt-10 px-4">
         {/* Left Buttons */}
-        <div className="flex gap-3">
+        <div className="hidden md:flex gap-3">
           <button
             onClick={prev}
             className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow "
@@ -167,7 +172,7 @@ export default function BlogSection() {
         </div>
 
         {/* Progress Bar */}
-        <div className="flex-grow mx-4 h-[4px] bg-gray-300 rounded-full relative overflow-hidden">
+        <div className="hidden md:block flex-grow mx-4 h-[4px] bg-gray-300 rounded-full relative overflow-hidden">
           <div
             className="h-full bg-[#09339B] rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -175,10 +180,12 @@ export default function BlogSection() {
         </div>
 
         {/* Right Button */}
+      <Link href="/blogs">
         <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
           View All Blogs
           <img src="/images/blue_arrow.png" alt="" />
         </button>
+      </Link>
       </div>
     </section>
   );

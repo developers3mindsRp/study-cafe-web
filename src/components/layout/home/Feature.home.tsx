@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { FaClock, FaLanguage, FaUserGraduate } from "react-icons/fa";
 
@@ -199,7 +200,7 @@ export default function FeaturedCourses() {
  {/* Courses Slider + Grid */}
 <div>
   {/* Mobile Slider */}
-  <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory sm:hidden pb-4">
+  <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory sm:hidden pb-4 scrollbar-hide">
     {courses.map((c) => (
       <div
         key={c.id}
@@ -303,7 +304,7 @@ export default function FeaturedCourses() {
 
       </div>
       {/* Bottom Navigation */}
-  <div className="flex items-center container mx-auto mt-10 px-4">
+  <div className="hidden md:flex items-center container mx-auto mt-10 px-4">
 
       {/* Left Buttons */}
       <div className="flex gap-3">
@@ -337,10 +338,12 @@ export default function FeaturedCourses() {
       </div>
 
       {/* Right Button */}
-      <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
-        View All Courses
-        <img src="/images/blue_arrow.png" alt="" />
-      </button>
+    <Link href="/courses_list">
+          <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
+            View All Courses
+            <img src="/images/blue_arrow.png" alt="" />
+          </button>
+    </Link>
     </div>
     </section>
   );

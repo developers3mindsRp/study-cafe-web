@@ -1,5 +1,6 @@
 "use client";
 import { FaCheckCircle } from "react-icons/fa";
+import { useState } from "react";
 
 const plans = [
   {
@@ -44,6 +45,18 @@ const plans = [
 ];
 
 export default function MembershipPricing({ bgImage }:any) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const container = e.currentTarget;
+  const scrollLeft = container.scrollLeft;
+  const cardWidth = 350 + 24; // width + gap (w-[350px] + gap-6)
+
+  const index = Math.round(scrollLeft / cardWidth);
+  setActiveIndex(index);
+};
+
+
   return (
     <section className="relative bg-white">
       {/* Top banner with gradient fade */}
@@ -65,45 +78,61 @@ export default function MembershipPricing({ bgImage }:any) {
         </p>
 
  {/* Pricing Wrapper */}
-<div>
+    <div>
 
-  {/* Mobile Slider */}
-  <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden pb-6">
-    {plans.map((plan, i) => (
+      {/* Mobile Slider */}
       <div
-        key={i}
-        className={`w-[350px] snap-center border rounded-xl p-8 shadow-md relative bg-white flex-shrink-0 mt-12 ${
-          plan.highlight ? "border-[#09339B]" : "border-gray-300"
-        }`}
+        className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden pb-6 scrollbar-hide
+"
+        onScroll={handleScroll}
       >
-        {plan.highlight && (
-          <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
-            Most Popular
-          </span>
-        )}
+        {plans.map((plan, i) => {
+          const isActive = i === activeIndex;
 
-        <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
+          return (
+            <div
+              key={i}
+              className={`w-[350px] snap-center border rounded-xl p-8 shadow-md relative bg-white flex-shrink-0 mt-12 transition-all duration-300 ${
+                isActive ? "border-[#09339B]" : "border-gray-300"
+              }`}
+            >
+              {isActive && (
+                <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
+                  Most Popular
+                </span>
+              )}
 
-        <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">{plan.price}</p>
-        <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
+              <h3 className="text-[26px] font-normal text-[#252525] text-center">
+                {plan.title}
+              </h3>
 
-        <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
-          {plan.features.map((feat, index) => (
-            <li key={index} className="flex items-start gap-3">
-              <img src="/images/tick.svg" alt="" /> {feat}
-            </li>
-          ))}
-        </ul>
+              <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">
+                {plan.price}
+              </p>
 
-        <button
-          className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
-          onClick={() => (window.location.href = "/payment-screen")}
-        >
-          Buy Membership
-        </button>
+              <p className="text-[#6A7181] mt-1 text-[16px] text-center">
+                {plan.duration}
+              </p>
+
+              <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
+                {plan.features.map((feat, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <img src="/images/tick.svg" alt="" /> {feat}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
+                onClick={() => (window.location.href = "/payment-screen")}
+              >
+                Buy Membership
+              </button>
+            </div>
+          );
+        })}
       </div>
-    ))}
-  </div>
+
 
   {/* Desktop Grid */}
   <div className="hidden md:grid grid-cols-3 gap-8 mt-12">

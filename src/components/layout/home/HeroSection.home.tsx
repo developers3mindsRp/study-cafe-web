@@ -1,7 +1,16 @@
+"use client";
 import { OrbitingCircles } from "@/components/ui/orbiting-circles";
 import React from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const HeroSection = () => {
+   const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/membership"); 
+  };
+
   return (
     <section className="relative bg-[url('/images/hero_banner.png')] bg-center bg-cover bg-no-repeat h-[700px] md:h-[720px] overflow-hidden">
 
@@ -20,12 +29,17 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-6 flex justify-center gap-4">
-          <button className="py-2 px-6 border-2 border-black rounded-md  text-[15px] md:text-[20px] font-medium">
+          <button  onClick={handleClick}
+           className="py-2 px-6 border-2 border-black rounded-md  text-[15px] md:text-[20px] font-medium">
             View Memberships
           </button>
-          <button className="py-2 px-6 bg-[#09339B]  text-white rounded-md flex items-center gap-3 text-[15px] md:text-[20px]">
+          
+          
+          <Link href="/courses_list">
+          <button className="py-2 px-6 bg-[#09339B] text-white rounded-md flex items-center gap-3 text-[15px] md:text-[20px]">
             Browse Courses <img src="/images/arrow-left.svg" alt="" width="25" height="10" />
           </button>
+        </Link>
         </div>
       </div>
 
