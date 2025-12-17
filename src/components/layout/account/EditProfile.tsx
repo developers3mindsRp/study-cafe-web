@@ -8,8 +8,10 @@ import 'react-phone-number-input/style.css';
 import PaymentHistory from "./PaymentHistory";
 import MyCourses from "./PurchaseCourse";
 import Sidebar from "./Sidebar";
+import ChangePasswordModal from "@/components/ChangePassword";
 
 export default function EditProfile() {
+    const [open, setOpen] = useState(false);
       const [progress, setProgress] = useState(0);
         const [form, setForm] = useState({
     fullName: "",
@@ -198,7 +200,16 @@ const countries = countryList.getNames();
           </div>
 
           <div className="flex justify-between items-center mt-6">
-            <button className="border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB]">Change Password</button>
+  <button
+        onClick={() => setOpen(true)}
+        className="border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB]"
+      >
+        Change Password
+      </button>
+
+      {/* MODAL */}
+        {open && <ChangePasswordModal onClose={() => setOpen(false)} />}
+
             <button className="bg-[#09339B] px-5 py-2 text-white rounded-md">Save Changes</button>
           </div>
           </div>

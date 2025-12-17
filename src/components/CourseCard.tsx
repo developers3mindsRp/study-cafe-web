@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 
 
 export default function CourseCard({ course }: { course: any }) {
@@ -50,12 +51,14 @@ export default function CourseCard({ course }: { course: any }) {
               <button className="flex-1 bg-[#09339B] text-white text-sm py-2 rounded-md">
                 Continue Learning
               </button>
-              <button className="flex-1 border border-[#09339B] text-[#09339B] text-sm py-2 rounded-md">
+
+              <Link href="/course-detailPage" className="flex-1 border border-[#09339B] text-[#09339B] text-sm py-2 rounded-md text-center">
                 Details
-              </button>
+              </Link>
             </>
           )}
         </div>
+
       </div>
     </div>
   );
