@@ -38,7 +38,7 @@ export default function BannerSection() {
           <div className="flex gap-2"> <img src="/images/icon-eng.png" alt="" /> <span>English</span></div>
           <div className="flex gap-2"><img src="/images/icon-clock.png" alt="" /><span>4 Hours</span></div>
            <div className="flex gap-2"> <img src="/images/icon-user.png" alt="" /><span>957 students</span></div>
-          <div className="flex gap-2"><img src="/images/star.png" alt="" /><span>4.8 by 47 Users</span></div>
+          <div className="flex gap-2"><img src="/images/Star.png" alt="" /><span>4.8 by 47 Users</span></div>
           </div>
 
           {/* Social Share */}

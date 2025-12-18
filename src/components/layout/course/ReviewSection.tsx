@@ -33,9 +33,9 @@ export default function ReviewSection() {
           <h2 className="text-4xl font-semibold">4.0</h2>
           <div className="flex mt-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <img key={i} src="/images/star.png" className="w-5" />
+              <img key={i} src="/images/Star.png" className="w-5" />
             ))}
-            <img src="/images/star.png" className="w-5" />
+            <img src="/images/Star.png" className="w-5" />
           </div>
           <p className="text-gray-500 mt-2 text-sm">Total 50 Ratings</p>
         </div>
@@ -83,9 +83,9 @@ export default function ReviewSection() {
               <div className="flex items-center gap-3 mt-2">
                 <div className="flex">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <img key={i} src="/images/star.png" className="w-4" />
+                    <img key={i} src="/images/Star.png" className="w-4" />
                   ))}
-                  <img src="/images/star.png" className="w-4" />
+                  <img src="/images/Star.png" className="w-4" />
                 </div>
                 <span className="text-gray-400 text-sm">• 6 months ago</span>
               </div>
