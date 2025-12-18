@@ -45,7 +45,7 @@ const TrendingCourses = () => {
 
 
  {/* Mobile Slider */}
-<div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2">
+<div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2 scrollbar-hide">
   {courses.map((c, i) => (
     <div
       key={i}

@@ -93,11 +93,11 @@ const countries = countryList.getNames();
        {/* Close (X) */}
       <button
         onClick={() => router.push('/')}
-        className="absolute right-4 top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+        className="absolute right-4 top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
-        <span className="text-[#09339B]">✕</span>
+        <span className="text-[#09339B] ">✕</span>
       </button>
-      <div className="h-screen overflow-y-auto md:p-8 scrollbar-thin-custom">
+      <div className="h-screen overflow-y-auto md:p-8 scrollbar-thin-custom mt-4 ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[28px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
         <p className="text-[18px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign up to start your learning journey</p>

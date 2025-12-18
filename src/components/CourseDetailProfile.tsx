@@ -11,7 +11,7 @@ export default function CourseDetailPage() {
 const [isCertificateOpen, setIsCertificateOpen] = useState(false)
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6">
+    <div className="container  mx-auto px-6 py-6 ">
 
       {/* Back */}
       <div className="text-sm text-[#09339B] mb-3 cursor-pointer">
@@ -82,7 +82,7 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
             <img
               src="/images/f1.jpg"
               alt="course"
-              className="w-full md:h-[450px] object-fit"
+              className="w-full md:h-[550px] object-fit"
             />
 
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center ">
