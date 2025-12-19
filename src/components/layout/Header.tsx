@@ -120,8 +120,8 @@ export default function Header() {
       ? "text-blue-600 font-semibold"
       : "text-gray-700 hover:text-blue-600"}`}>Blogs</Link>
 
-    <Link href="/contact"   className={`text-[16px] transition-colors ${
-    router.pathname === "/contact"
+    <Link href="/contact-us"   className={`text-[16px] transition-colors ${
+    router.pathname === "/contact-us"
       ? "text-blue-600 font-semibold"
       : "text-gray-700 hover:text-blue-600"}`}>Contact Us</Link>
 
@@ -208,7 +208,7 @@ export default function Header() {
               <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium">
                 Blogs
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/contact-us" className="text-gray-700 hover:text-blue-600 font-medium">
                 Contact Us
               </Link>
 

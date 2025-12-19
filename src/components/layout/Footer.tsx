@@ -144,9 +144,17 @@ export default function Footer() {
                 <label htmlFor="footer-email">Email</label><br />
                 <input id="footer-email" type="mail" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
               </li>
-              <button className="p-2 rounded-[10px] w-1/2 bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] text-[20px] ">
-                Subscribe Now
-              </button>
+        <button className="
+  whitespace-nowrap
+  w-full sm:w-1/2
+  text-[18px] sm:text-[20px]
+  px-4 py-2 sm:px-6 sm:py-3
+  bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
+  rounded-[10px] transition
+">
+  Subscribe Now
+</button>
+
             </ul>
           </div>
 

@@ -16,7 +16,7 @@ export default function CourseCard({ course }: { course: any }) {
 
       {/* Content */}
       <div className="p-4 space-y-2">
-        <h3 className="text-md font-semibold text-gray-800">
+        <h3 className="text-[20px] font-semibold text-gray-800">
           {course.title}
         </h3>
 
@@ -39,20 +39,22 @@ export default function CourseCard({ course }: { course: any }) {
         <div className="flex gap-2">
           {course.completed === course.lessons ? (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-sm py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[20px] py-2 rounded-md">
                 Review Course
               </button>
-              <button className="flex-1 border border-[#09339B] text-[#09339B] text-sm py-2 rounded-md">
-                Certificate
-              </button>
+          <button className="flex items-center justify-center gap-2 flex-1 border border-[#09339B] text-[#09339B] text-[20px] py-2 rounded-md hover:bg-[#f0f4ff] transition">
+            <img src="/images/download-1.png" alt="Download Certificate" className="w-4 h-4" />
+            <span>Certificate</span>
+          </button>
+
             </>
           ) : (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-sm py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[20px] py-2 rounded-md">
                 Continue Learning
               </button>
 
-              <Link href="/course-detailPage" className="flex-1 border border-[#09339B] text-[#09339B] text-sm py-2 rounded-md text-center">
+              <Link href="/course-detailPage" className="flex-1 border border-[#09339B] text-[#09339B] text-[20px] py-2 rounded-md text-center">
                 Details
               </Link>
             </>

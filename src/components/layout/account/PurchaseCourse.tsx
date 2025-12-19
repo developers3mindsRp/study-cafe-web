@@ -27,11 +27,11 @@ export default function MyCourses() {
   ];
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-1">
+    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF]">
+      <h2 className="text-[26px] font-normal text-gray-800 mb-1">
         My Courses
       </h2>
-      <p className="text-gray-500 text-sm mb-6">
+      <p className="text-gray-500 text-[16px] mb-6">
         Continue your learning Journey
       </p>
 

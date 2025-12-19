@@ -40,7 +40,7 @@ export default function PaymentHistory() {
   );
 
   return (
-    <section className="p-6 max-w-5xl mx-auto">
+    <section className="p-6 max-w-5xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF]">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>

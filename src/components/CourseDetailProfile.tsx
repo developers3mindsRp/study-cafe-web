@@ -14,17 +14,17 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
     <div className="container  mx-auto px-6 py-6 ">
 
       {/* Back */}
-      <div className="text-sm text-[#09339B] mb-3 cursor-pointer">
+      <div className="text-[16px] text-[#09339B] mb-3 cursor-pointer">
         ← Back to My Courses
       </div>
 
       {/* Header */}
       <div className="flex justify-between items-start gap-4">
         <div>
-          <h1 className="md:text-2xl font-semibold">
-            Certification Course on Python with AI for Finance Professionals
+          <h1 className="md:text-[40px] font-semibold">
+            Certification Course on Python with AI for <br /> Finance Professionals
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-1 text-[24px]">
             Instructor: CA Rahul Sharma
           </p>
         </div>
@@ -42,11 +42,13 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
     )}
 
     <button
-      className="border px-4 py-2 rounded-md text-[#09339B]"
       onClick={() => setIsCertificateOpen(true)}
+      className="flex items-center gap-2 border px-4 py-2 rounded-md text-[#09339B] hover:bg-[#f0f4ff] transition"
     >
-      Certificate
+      <img src="/images/award.png" alt="Certificate icon" className="w-5 h-5" />
+      <span className="font-medium">Certificate</span>
     </button>
+
 
     {isCertificateOpen && (
       <Certificate onClose={() => setIsCertificateOpen(false)} />
@@ -55,9 +57,9 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
       </div>
 
       {/* Progress */}
-      <div className="mt-6 bg-white border rounded-lg p-4">
-        <div className="flex justify-between text-sm mb-2">
-          <span className="font-medium">Course Progress</span>
+      <div className="mt-6 bg-white border border-[#9FBBFF] rounded-lg p-4">
+        <div className="flex justify-between text-sm mb-4">
+          <span className="font-normal text-[16px]">Course Progress</span>
           <span>42% Completed</span>
         </div>
 
@@ -65,9 +67,13 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
           <div className="bg-[#09339B] h-2 rounded w-[42%]" />
         </div>
 
-        <div className="flex justify-between text-xs text-gray-500 mt-2">
-          <span>5 of 12 lessons completed</span>
-          <span>8 hours, 30 minutes</span>
+        <div className="flex justify-between text-[16px] text-[#AFAFAF] mt-4">
+          <span className="">5 of 12 lessons completed</span>
+      <span className="flex items-center gap-2 text-sm text-[#AFAFAF]">
+      <img src="/images/icon-clock.png" alt="Clock Icon" className="w-4 h-4" />
+      8 hours, 30 minutes
+    </span>
+
         </div>
       </div>
 
@@ -75,18 +81,18 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
 
         {/* Left */}
-        <div className="lg:col-span-2 bg-white border rounded-xl p-4">
+        <div className="lg:col-span-2 bg-white border border-[#9FBBFF] rounded-xl p-4">
 
           {/* Video Thumbnail */}
           <div className="relative rounded-lg overflow-hidden">
             <img
               src="/images/f1.jpg"
               alt="course"
-              className="w-full md:h-[550px] object-fit"
+              className="w-full md:h-[475px] object-fit"
             />
 
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center ">
-              <button className="bg-white p-4 rounded-full">
+              <button className="bg-white flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full">
                 ▶
               </button>
             </div>
@@ -95,22 +101,24 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
           {/* Day + Title */}
           <div className="flex justify-between items-center mt-4">
          
-            <span className="text-xs border px-3 py-1 rounded-full">
+            <span className="text-xs border px-3 py-1 rounded-full border-[#9FBBFF]">
               Day 1
             </span>
 
-            <button className="text-sm border px-3 py-1 rounded-md text-[#09339B]">
-              Mark as completed
-            </button>
+      <button className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm text-[#09339B] hover:bg-[#f0f4ff] transition">
+      <img src="/images/checkmark.png" alt="Checkmark" className="w-4 h-4" />
+      <span>Mark as completed</span>
+    </button>
+
           </div>
 
-          <h2 className="mt-3 font-medium">
+          <h2 className="mt-3 font-normal text-[26px]">
             Certification Course on Python with AI for Finance Professionals
           </h2>
         </div>
 
         {/* Right */}
-          <div className="bg-white border rounded-xl p-4 space-y-2">
+          <div className="bg-white border border-[#9FBBFF] rounded-xl p-4 space-y-2">
              <h3 className="text-[26px] mb-4">Course Content</h3>
       {/* Day 1 */}
       <div className="border-b pb-3">

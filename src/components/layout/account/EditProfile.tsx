@@ -81,8 +81,8 @@ const countries = countryList.getNames();
 
 
         {/* RIGHT CONTENT */}
-        <div className="md:col-span-2 bg-white shadow-md rounded-xl md:p-6 md:mt-44">
-              <div className="border bg-[#F0F2F4] rounded-lg flex overflow-hidden text-sm font-medium container ">
+        <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
+              <div className="border  bg-[#F0F2F4] rounded-lg flex overflow-hidden text-sm font-medium container ">
         {[
           { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
           { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png"},
@@ -112,7 +112,7 @@ const countries = countryList.getNames();
              </div>
 
          {active === "Profile" && (
-        <div className="space-y-6 mt-8 p-4">
+        <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
           <h2 className=" mb-2 text-[26px]">Edit Profile</h2>
           <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
 
@@ -200,12 +200,14 @@ const countries = countryList.getNames();
           </div>
 
           <div className="flex justify-between items-center mt-6">
-  <button
+      <button
         onClick={() => setOpen(true)}
-        className="border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB]"
+        className="flex items-center gap-2 border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB] hover:bg-[#ececf2] transition"
       >
-        Change Password
+        <img src="/images/lock.png" alt="Change Password icon" className="w-5 h-5" />
+        <span className="font-medium">Change Password</span>
       </button>
+
 
       {/* MODAL */}
         {open && <ChangePasswordModal onClose={() => setOpen(false)} />}

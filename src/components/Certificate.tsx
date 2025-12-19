@@ -27,7 +27,11 @@ export default function Certificate({ onClose }: CertifyModalProps) {
 
                 {/* Certificate Card */}
                 <div className="bg-white shadow rounded p-5 space-y-3">
-                    <h3 className="text-[#09339B] text-center text-[20px]">Course Certificate</h3>
+             <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
+            <img src="/images/award.png" alt="Certificate Icon" className="w-6 h-6" />
+            Course Certificate
+          </h3>
+
                   <p className="text-[16px] text-[#929292] text-center">Download your certificate of completion of this course</p>
           
                   <Image
