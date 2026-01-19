@@ -109,11 +109,11 @@ export default function Header() {
     router.pathname === "/membership"
       ? "text-blue-600 font-semibold"
       : "text-gray-700 hover:text-blue-600"}`}> Memberships</Link>
-
+{/* 
     <Link href="/download"   className={`text-[16px] transition-colors ${
     router.pathname === "/download"
       ? "text-blue-600 font-semibold"
-      : "text-gray-700 hover:text-blue-600"}`}> Downloads</Link>
+      : "text-gray-700 hover:text-blue-600"}`}> Downloads</Link> */}
 
     <Link href="/blogs"   className={`text-[16px] transition-colors ${
     router.pathname === "/blogs"
@@ -125,7 +125,7 @@ export default function Header() {
       ? "text-blue-600 font-semibold"
       : "text-gray-700 hover:text-blue-600"}`}>Contact Us</Link>
 
-    <Link href="/notify" className="text-gray-700 hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link>
+    {/* <Link href="/notify" className="text-gray-700 hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link> */}
 
     {/* Auth Buttons / User Menu */}
     {user ? (
@@ -137,7 +137,7 @@ export default function Header() {
         href="/register"
         className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
       >
-        Get Started
+       Login
       </Link>
     )}
   </div>

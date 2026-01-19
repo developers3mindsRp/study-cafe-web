@@ -7,7 +7,7 @@ const HeroSection_courses = () => {
           <div className="  mx-auto px-14 py-3 text-sm text-gray-500 bg-[#DDDDDD]">
         Home ›  <span className="text-blue-600"> Course </span>
       </div>
-   <div className='container mx-auto pt-20 pb-32 w-[100%] h-[580px] px-4'>
+   <div className='container mx-auto pt-10 md:pt-20 pb-12 md:pb-32 w-[100%] md:h-[580px] px-4'>
  
 <div className="flex items-center justify-center mb-4 mt-6">
   <p className="text-[20px] bg-white p-3 rounded-md">
@@ -17,8 +17,8 @@ const HeroSection_courses = () => {
 
 
     <div className='text-center'>
-        <h1 className='text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Courses</h1>
-        <h3 className='text-[#252525] text-[24px]'>Find the perfect course to advance your skills and career</h3>
+        <h1 className='text-[30px] md:text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Courses</h1>
+        <h3 className='text-[#252525] text-[16px] md:text-[24px]'>Find the perfect course to advance your skills and career</h3>
     
    <div className="mt-10 w-full max-w-2xl mx-auto">
       <div className="relative">

@@ -1,203 +1,143 @@
-"use client";
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
 const testimonials = [
   {
+    message:
+      "StudyCafe transformed my career! The courses are practical, well-structured, and the instructors are incredibly knowledgeable.",
     name: "Rahul Verma",
     role: "Software Developer",
-    image: "/images/r1.png",
     rating: 5,
-    text: "StudyCafe transformed my career! The courses are practical, well-structured, and the instructors are incredibly knowledgeable.",
   },
   {
-    name: "Priya Sharma",
-    role: "Data Analyst",
-    image: "/images/r2.png",
+    message:
+      "What I love most  is the simplicity of learning. The dashboard is easy to use, courses are well-organized, and progress tracking keeps me motivated.",
+    name: "Neha Sharma",
+    role: "CA Intermediate Aspirant",
     rating: 5,
-    text: "I gained so much confidence after taking the courses. Highly recommended!",
   },
   {
-    name: "Ankit Jain",
-    role: "Frontend Developer",
-    image: "/images/r3.png",
+    message:
+      "StudyCafe offers high-quality content with real-world insights. The learning experience feels premium, and the material is extremely well explained.",
+    name: "Priya Jain",
+    role: "MBA Student",
     rating: 5,
-    text: "The hands-on projects made learning fun and effective.",
   },
   {
-    name: "Sneha Gupta",
-    role: "UX Designer",
-    image: "/images/r4.png",
+    message:
+      "StudyCafe offers high-quality content with real-world insights. The learning experience feels premium, and the material is extremely well explained.",
+    name: "Priya Jain",
+    role: "MBA Student",
     rating: 5,
-    text: "Amazing instructors and course content. I landed my dream job!",
   },
-  {
-    name: "Vikram Singh",
-    role: "Backend Developer",
-    image: "/images/r5.png",
-    rating: 5,
-    text: "The courses are concise, practical, and career-focused.",
-  },
-  {
-    name: "Rahul Verma",
-    role: "Software Developer",
-    image: "/images/r1.png",
-    rating: 5,
-    text: "StudyCafe transformed my career! The courses are practical, well-structured, and the instructors are incredibly knowledgeable.",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Data Analyst",
-    image: "/images/r2.png",
-    rating: 5,
-    text: "I gained so much confidence after taking the courses. Highly recommended!",
-  },
-  {
-    name: "Ankit Jain",
-    role: "Frontend Developer",
-    image: "/images/r3.png",
-    rating: 5,
-    text: "The hands-on projects made learning fun and effective.",
-  },
-  {
-    name: "Sneha Gupta",
-    role: "UX Designer",
-    image: "/images/r4.png",
-    rating: 5,
-    text: "Amazing instructors and course content. I landed my dream job!",
-  },
-  {
-    name: "Vikram Singh",
-    role: "Backend Developer",
-    image: "/images/r5.png",
-    rating: 5,
-    text: "The courses are concise, practical, and career-focused.",
-  },
+  // {
+  //   message:
+  //     "StudyCafe offers high-quality content with real-world insights. The learning experience feels premium, and the material is extremely well explained.",
+  //   name: "Priya Jain",
+  //   role: "MBA Student",
+  //   rating: 5,
+  // },
 ];
 
 export default function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const prevTestimonial = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? testimonials.length - 1 : prev - 1
-    );
-  };
-
-  const nextTestimonial = () => {
-    setCurrentIndex((prev) =>
-      prev === testimonials.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const current = testimonials[currentIndex];
-
   return (
-    <section className="w-full bg-[url('/images/testimonial_bg.svg')] bg-no-repeat bg-cover bg-center py-20 flex flex-col items-center text-center px-4">
-      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
-        What Our Students Say
-      </h2>
-      <p className="text-[18px] md:text-[24px] text-gray-600 mt-2">
-        Don't just take our word for it – hear from thousands of{" "}
-        <br className="hidden sm:block" />
-        satisfied students
-      </p>
+    <section className="py-12 md:py-20 bg-white">
+      <div className=" mx-auto px-4 text-center">
+        {/* Heading */}
+        <h2 className="text-[30px] md:text-[40px] font-semibold text-gray-900">
+          What Our Students Say
+        </h2>
+        <p className="mt-3 text-gray-500 text-[16px] md:text-[24px]">
+          Don't just take our word for it - hear from thousands of <br />
+          satisfied students
+        </p>
 
-      {/* Avatar Row */}
-      <div className="flex items-center md:gap-16  mt-10">
-        {/* Left Button */}
-        <button
-          onClick={prevTestimonial}
-          className="rounded-full shadow bg-white w-10 h-10 flex items-center justify-center"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
+        {/* Cards */}
+        <div className="mt-8 md:mt-14">
+          {/* Mobile slider */}
+          <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
+            {testimonials.map((item, index) => (
+              <div
+                key={index}
+                className="w-[250px] snap-center flex-shrink-0 relative border border-[#17254E] rounded-xl p-4 text-left"
+              >
+                {/* Quote */}
+                <img
+                  src="/images/quote.png"
+                  alt="quote"
+                  className="absolute -top-2 -left-2 w-10 h-6  "
+                />
 
-        {/* FIXED center avatars box */}
-        <div className="relative w-[300px] md:w-[460px] h-20 flex items-center justify-center">
-          {testimonials.map((t, i) => {
-            const total = testimonials.length;
+                {/* Message */}
+                <p className="text-[#696969] text-[12px]  mt-2 leading-relaxed">
+                  {item.message}
+                </p>
 
-            const leftIndex = (currentIndex - 1 + total) % total;
-            const rightIndex = (currentIndex + 1) % total;
+{/* User + Rating Row */}
+<div className=" flex items-center justify-between">
+  {/* Left: Name & Role */}
+  <div className="max-w-[65%]">
+    <h4 className="font-semibold text-gray-900 text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
+      {item.name}
+    </h4>
+    <p className="text-[#09339B] text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
+      {item.role}
+    </p>
+  </div>
 
-            const extremeLeftIndex = (currentIndex - 2 + total) % total;
-            const extremeRightIndex = (currentIndex + 2) % total;
+  {/* Right: Rating */}
+  <div className="flex gap-1 text-yellow-400 text-[18px] mt-10">
+    {Array(item.rating)
+      .fill(0)
+      .map((_, i) => (
+        <span key={i}>★</span>
+      ))}
+  </div>
+</div>
 
-            // Equal horizontal positions
-            const slots = {
-              extremeLeft: "0%",
-              left: "25%",
-              center: "50%",
-              right: "75%",
-              extremeRight: "100%",
-            };
+              </div>
+            ))}
+          </div>
 
-            let positionClass = "opacity-0 scale-75 pointer-events-none";
+          {/* Desktop grid */}
+          <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {testimonials.map((item, index) => (
+              <div
+                key={index}
+                className="relative border border-[#17254E] rounded-xl p-6 text-left"
+              >
+                {/* Quote */}
+                <img
+                  src="/images/quote.png"
+                  alt="quote"
+                  className="absolute -top-6 -left-2 w-14 h-10"
+                />
 
-            let left: string | undefined;
+                {/* Message */}
+                <p className="text-[#696969] text-[20px] mt-2 leading-relaxed">
+                  {item.message}
+                </p>
 
-            if (i === extremeLeftIndex) {
-              positionClass = "w-20 h-20 hidden md:block scale-90 opacity-50 z-0";
-              left = slots.extremeLeft;
-            } else if (i === leftIndex) {
-              positionClass = "w-20 h-20 scale-95 opacity-80 z-10";
-              left = slots.left;
-            } else if (i === currentIndex) {
-              positionClass = "w-24 h-24 scale-110 opacity-100 z-20";
-              left = slots.center;
-            } else if (i === rightIndex) {
-              positionClass = "w-20 h-20 scale-95 opacity-80 z-10";
-              left = slots.right;
-            } else if (i === extremeRightIndex) {
-              positionClass = "w-20 h-20 hidden md:block scale-90 opacity-50 z-0";
-              left = slots.extremeRight;
-            }
+                {/* User + Rating Row */}
+                <div className="mt-6 flex items-center justify-between">
+                  {/* Left: Name & Role */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-[30px]">
+                      {item.name}
+                    </h4>
+                    <p className="text-[#09339B] text-[17px]">{item.role}</p>
+                  </div>
 
-            return (
-              <img
-                key={i}
-                src={t.image}
-                alt={t.name}
-                onClick={() => setCurrentIndex(i)}
-                style={{
-                  left,
-                  transform: "translateX(-50%)",
-                }}
-                className={`absolute rounded-full object-cover border-2 border-white shadow-md cursor-pointer   ${positionClass}`}
-              />
-            );
-          })}
+                  {/* Right: Rating */}
+                  <div className="flex gap-1 text-yellow-400 text-[18px] mt-10">
+                    {Array(item.rating)
+                      .fill(0)
+                      .map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {/* Right Button */}
-        <button
-          onClick={nextTestimonial}
-          className="rounded-full shadow bg-white w-10 h-10 flex items-center justify-center"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Name + Role */}
-      <div className="mt-6">
-        <h3 className="text-[26px] font-semibold text-[#1A1A1A]">
-          {current.name}
-        </h3>
-        <p className="text-[16px] text-gray-500 -mt-1 mb-4">{current.role}</p>
-
-        <div className="flex justify-center gap-1 mt-2">
-          {Array.from({ length: current.rating }).map((_, i) => (
-            <span key={i} className="text-yellow-400 text-xl">
-              ★
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Text */}
-      <div className="mt-6 max-w-2xl">
-        <p className="text-[#696969] italic text-[20px]">"{current.text}"</p>
       </div>
     </section>
   );

@@ -89,7 +89,7 @@ export default function BlogSection() {
 
   return (
     <section
-      className="w-full py-12 bg-[url('/images/feature_bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center "
+      className="w-full py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center "
     >
       <h2 className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
         Latest from Our Blog
@@ -180,12 +180,15 @@ export default function BlogSection() {
         </div>
 
         {/* Right Button */}
-      <Link href="/blogs">
-        <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
-          View All Blogs
-          <img src="/images/blue_arrow.png" alt="" />
-        </button>
-      </Link>
+  <div className="w-full flex justify-center md:w-auto md:justify-end">
+    <Link href="/blogs">
+      <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
+        View All Blogs
+        <img src="/images/blue_arrow.png" alt="" />
+      </button>
+    </Link>
+  </div>
+
       </div>
     </section>
   );

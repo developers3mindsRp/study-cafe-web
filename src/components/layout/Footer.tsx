@@ -39,7 +39,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
 
           {/* Brand Column */}
-          <div className="col-span-1">
+          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
             <div className="flex items-center gap-2 mb-4">
               <Link href="/" className="flex items-center gap-2">
                 <div className="w-[221px] h-[62px] flex items-center justify-center">
@@ -70,7 +70,7 @@ export default function Footer() {
                 <img src="/images/telegram.png" alt="Telegram" />
               </a>
             </div>
-            <div className="mt-6">
+            <div className="mt-6 hidden md:block">
               <img src="/images/google_play.png" alt="Download on Google Play" width="159" height="90" />
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function Footer() {
           </div>
 
           {/* Support / Newsletter Column */}
-          <div className="col-span-1">
+          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
             <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
               <li>
@@ -141,12 +141,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <label htmlFor="footer-email">Email</label><br />
+                {/* <label htmlFor="footer-email">Email</label><br /> */}
                 <input id="footer-email" type="mail" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
               </li>
         <button className="
   whitespace-nowrap
-  w-full sm:w-1/2
+  w-1/2 
   text-[18px] sm:text-[20px]
   px-4 py-2 sm:px-6 sm:py-3
   bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
@@ -163,7 +163,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white mt-12 pt-8 text-center">
           <p className="text-[18px] text-white">
-            Copyright © 2025 StudyCafe Private Limited. All Rights Reserved.
+            Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
           </p>
         </div>
       </div>

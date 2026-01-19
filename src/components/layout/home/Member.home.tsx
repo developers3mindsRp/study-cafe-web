@@ -1,178 +1,238 @@
-"use client";
-import { FaCheckCircle } from "react-icons/fa";
-import { useState } from "react";
+import { Check } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const plans = [
   {
-    title: "Basic",
-    price: "₹1,299",
+    name: "Basic",
+    price: "₹ 2,599",
     duration: "Yearly",
-    features: [
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-    ],
     highlight: false,
   },
   {
-    title: "Advanced",
-    price: "₹3,999",
-    duration: "Yearly",
-    features: [
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-    ],
+    name: "Ultimate",
+    price: "₹ 8,999",
+    duration: "Lifetime",
     highlight: true,
+    badge: "Most Popular",
   },
   {
-    title: "Premium",
-    price: "₹7,999",
+    name: "Premium",
+    price: "₹6,999",
     duration: "Lifetime",
-    features: [
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-      "Lorem Ipsum is simply dummy text of the printing",
-    ],
     highlight: false,
   },
 ];
 
-export default function MembershipPricing({ bgImage }:any) {
-  const [activeIndex, setActiveIndex] = useState(0);
+export default function MembershipPricing() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-  const container = e.currentTarget;
-  const scrollLeft = container.scrollLeft;
-  const cardWidth = 350 + 24; // width + gap (w-[350px] + gap-6)
+  useEffect(() => {
+    // Only run on client and only for mobile widths
+    if (typeof window === "undefined") return;
+    if (window.innerWidth >= 768) return;
 
-  const index = Math.round(scrollLeft / cardWidth);
-  setActiveIndex(index);
-};
-
+    const middle = Math.floor(plans.length / 2);
+    const el = cardRefs.current[middle];
+    if (el) {
+      // center without animation so the page loads centered
+      el.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
+    }
+  }, []);
 
   return (
-    <section className="relative bg-white">
-      {/* Top banner with gradient fade */}
-      {bgImage && (
-        <div
-          className="absolute top-0 left-0 w-full h-[500px] bg-top bg-cover bg-no-repeat"
-          style={{
-            backgroundImage: ` url(${bgImage})`,
-          }}
-        />
-      )}
-        {/* Content wrapper */}
-      <div className="relative z-10 container mx-auto px-4 py-16">
-        <h2 className={`text-[30px] md:text-[40px] font-semibold text-center ${bgImage ? "text-[#121B31]" : "text-[#121B31]"}`}>
-          Choose Your Membership
+    <section
+      className="w-full py-18 md:py-24 bg-cover bg-center pb-20"
+      style={{ backgroundImage: "url('/images/member_bg.png')" }}
+    >
+      <div className="max-w-7xl mx-auto md:px-4 pt-4">
+        <h2 className="text-center text-white text-[30px] md:text-[40px] font-semibold ">
+          Choose Your <br className="block md:hidden" /> Membership
         </h2>
-        <p className={`${bgImage ? "text-[#454545]" : "text-[#454545]"} mt-2 text-center text-[18px] md:text-[24px]`}>
-          Get unlimited access to all courses and exclusive benefits
+        <p className="text-center text-blue-100 mt-2 text-[16px] md:text-[24px]">
+          Get unlimited access to all courses and <br /> exclusive benefits
         </p>
 
- {/* Pricing Wrapper */}
-    <div>
+        {/* Prepare refs for mobile slider */}
+        {/* Note: slider visible on small screens, hidden on md+ */}
+        <div className="mt-16">
+          <div
+            ref={containerRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4  scrollbar-hide"
+          >
+            {/* Mobile slider: each card is snap-center */}
+            {plans.map((plan, index) => (
+              <div
+                key={plan.name}
+                ref={(el) => (cardRefs.current[index] = el)}
+                className={`w-[320px] snap-center flex-shrink-0 relative rounded-2xl overflow-hidden bg-white shadow-xl min-h-[520px] p-2 ${
+                  plan.highlight ? "scale-105 z-10" : ""
+                }`}>
+                {/* MOST POPULAR */}
+                {plan.highlight && (
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2  text-[#09339B] text-[13px] font-bold px-4 py-1">
+                    {plan.badge}
+                  </div>
+                )}
 
-      {/* Mobile Slider */}
-      <div
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden pb-6 scrollbar-hide
-"
-        onScroll={handleScroll}
-      >
-        {plans.map((plan, i) => {
-          const isActive = i === activeIndex;
+                {/* HEADER */}
+                <div
+                  className={`p-6 ${
+                    plan.highlight
+                      ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10"
+                      : "bg-white"
+                  }`}
+                >
+                  <div className="flex items-center justify-between ">
+                    <div>
+                      <h3
+                        className={`text-[26px] font-semibold ${
+                          plan.highlight
+                            ? "text-white"
+                            : "text-[#1F2937]"
+                        }`}
+                      >
+                        {plan.name}
+                      </h3>
 
-          return (
-            <div
-              key={i}
-              className={`w-[350px] snap-center border rounded-xl p-8 shadow-md relative bg-white flex-shrink-0 mt-12 transition-all duration-300 ${
-                isActive ? "border-[#09339B]" : "border-gray-300"
-              }`}
-            >
-              {isActive && (
-                <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
-                  Most Popular
-                </span>
-              )}
+                      <p
+                        className={`text-[21px] font-bold leading-tight mt-1 ${
+                          plan.highlight
+                            ? "text-white"
+                            : "text-black"
+                        }`}
+                      >
+                        {plan.price}
+                      </p>
 
-              <h3 className="text-[26px] font-normal text-[#252525] text-center">
-                {plan.title}
-              </h3>
+                      <span
+                        className={`text-sm ${
+                          plan.highlight
+                            ? "text-blue-100"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {plan.duration}
+                      </span>
+                    </div>
 
-              <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">
-                {plan.price}
-              </p>
+                    <button
+                      className={`px-5 py-2 rounded-lg text-[10px] font-medium whitespace-nowrap transition mt-14 ${
+                        plan.highlight
+                          ? "bg-white text-[#09339B] hover:bg-blue-50"
+                          : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                      }`}
+                    >
+                      Buy Membership
+                    </button>
+                  </div>
+                </div>
 
-              <p className="text-[#6A7181] mt-1 text-[16px] text-center">
-                {plan.duration}
-              </p>
+                {/* DIVIDER */}
+                <div className="h-px bg-black " />
 
-              <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
-                {plan.features.map((feat, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <img src="/images/tick.svg" alt="" /> {feat}
-                  </li>
-                ))}
-              </ul>
+                {/* FEATURES */}
+                <ul className="px-6 py-6 space-y-4 text-gray-400 text-[16px]">
+                  {[...Array(5)].map((_, i) => (
+                    <li key={i} className="flex gap-3 ">
+                      <span className="">
+                        <img src="/images/tick.svg" alt="" className=""/>
+                      </span>
+                      Lorem Ipsum is simply dummy text of the printing
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
-              <button
-                className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
-                onClick={() => (window.location.href = "/payment-screen")}
+          {/* Desktop grid (unchanged) */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8 items-start">
+            {plans.map((plan) => (
+              <div
+                key={plan.name}
+                className={`relative rounded-2xl overflow-hidden bg-white shadow-xl min-h-[520px] p-2  ${
+                  plan.highlight ? "scale-105 z-10" : ""
+                }`}
               >
-                Buy Membership
-              </button>
-            </div>
-          );
-        })}
-      </div>
+                {/* MOST POPULAR */}
+                {plan.highlight && (
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2  text-[#09339B] text-[24px] font-bold px-4 py-1">
+                    {plan.badge}
+                  </div>
+                )}
 
+                {/* HEADER */}
+                <div
+                  className={`p-6 ${
+                    plan.highlight
+                      ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10"
+                      : "bg-white"
+                  }`}
+                >
+                  <div className="flex items-center justify-between ">
+                    <div>
+                      <h3
+                        className={`text-[26px] font-semibold ${
+                          plan.highlight
+                            ? "text-white"
+                            : "text-[#1F2937]"
+                        }`}
+                      >
+                        {plan.name}
+                      </h3>
 
-  {/* Desktop Grid */}
-  <div className="hidden md:grid grid-cols-3 gap-8 mt-12">
-    {plans.map((plan, i) => (
-      <div
-        key={i}
-        className={`border rounded-xl p-8 shadow-md relative bg-white ${
-          plan.highlight ? "border-[#09339B]" : "border-gray-300"
-        }`}
-      >
-        {plan.highlight && (
-          <span className="absolute top-4 right-4 bg-[#3FB3E7] text-white text-xs px-3 py-1 rounded-md">
-            Most Popular
-          </span>
-        )}
+                      <p
+                        className={`text-[32px] font-bold leading-tight mt-1 ${
+                          plan.highlight
+                            ? "text-white"
+                            : "text-black"
+                        }`}
+                      >
+                        {plan.price}
+                      </p>
 
-        <h3 className="text-[26px] font-normal text-[#252525] text-center">{plan.title}</h3>
+                      <span
+                        className={`text-sm ${
+                          plan.highlight
+                            ? "text-blue-100"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {plan.duration}
+                      </span>
+                    </div>
 
-        <p className="text-[54px] font-medium text-[#252525] mt-3 text-center">{plan.price}</p>
-        <p className="text-[#6A7181] mt-1 text-[16px] text-center">{plan.duration}</p>
+                    <button
+                      className={`px-5 py-2 rounded-lg text-[20px] font-medium whitespace-nowrap transition mt-14 ${
+                        plan.highlight
+                          ? "bg-white text-[#09339B] hover:bg-blue-50"
+                          : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                      }`}
+                    >
+                      Buy Membership
+                    </button>
+                  </div>
+                </div>
 
-        <ul className="mt-6 space-y-3 text-[#6A7181] text-[16px]">
-          {plan.features.map((feat, index) => (
-            <li key={index} className="flex items-start gap-3">
-              <img src="/images/tick.svg" alt="" /> {feat}
-            </li>
-          ))}
-        </ul>
+                {/* DIVIDER */}
+                <div className="h-px bg-black " />
 
-        <button
-          className="w-full mt-8 py-3 rounded-md border font-semibold transition bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border-[#09339B]"
-          onClick={() => (window.location.href = "/payment-screen")}
-        >
-          Buy Membership
-        </button>
-      </div>
-    ))}
-  </div>
-</div>
-
+                {/* FEATURES */}
+                <ul className="px-6 py-6 space-y-4 text-gray-400 text-[16px]">
+                  {[...Array(5)].map((_, i) => (
+                    <li key={i} className="flex gap-3 ">
+                      <span className="">
+                        <img src="/images/tick.svg" alt="" className=""/>
+                      </span>
+                      Lorem Ipsum is simply dummy text of the printing
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,80 +1,67 @@
 "use client";
-import { OrbitingCircles } from "@/components/ui/orbiting-circles";
 import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const HeroSection = () => {
-   const router = useRouter();
+  const router = useRouter();
 
   const handleClick = () => {
-    router.push("/membership"); 
+    router.push("/membership");
   };
 
   return (
-    <section className="relative bg-[url('/images/hero_banner.png')] bg-center bg-cover bg-no-repeat h-[700px] md:h-[720px] overflow-hidden">
+    <section
+      className="relative bg-[url('/images/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-[800px]"
+    >
+      <div className="container mx-auto px-4 py-20 md:py-24 lg:py-24 flex flex-col lg:flex-row items-center">
+        
+        {/* TEXT CONTENT */}
+        <div className="w-full lg:w-1/2 text-center lg:text-left">
+          <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg text-white border border-[#a5aab8]">
+            Welcome to StudyCafe Learning Platform
+          </p>
 
-      {/* TOP TEXT */}
-      <div className="container mx-auto px-4 pt-10 text-center">
-        <p className="bg-white inline-block px-4 py-2 rounded-md mb-4 text-[18px]">
-          Welcome to StudyCafe Learning Platform
-        </p>
+          <h1 className="text-[30px] sm:text-3xl md:text-[40px] lg:text-6xl font-semibold text-white leading-tight mb-10">
+            Master Your Skills with  Professional Courses
+          </h1>
 
-        <h1 className="text-[32px] md:text-[40px] font-bold text-[#252525] leading-tight">
-          Master Your Skills with <br /> Professional Courses
-        </h1>
+          <p className="mt-4 text-[16px] md:text-[24px] text-white max-w-2xl mx-auto lg:mx-0">
+            Learn from industry experts, get certified, and boost your <br className="hidden"/>
+            career with our comprehensive online courses
+          </p>
 
-        <p className="text-[18px] md:text-[22px] mt-4 text-[#252525]">
-          Learn from industry experts, get certified, and boost your career
-        </p>
+          <div className="mt-10 flex flex-row md:flex-row justify-center lg:justify-start gap-4">
+            <button
+              onClick={handleClick}
+              className="py-2 px-6 border-2 border-white rounded-md text-base sm:text-lg font-medium text-white hover:bg-white/20 transition"
+            >
+              View Memberships
+            </button>
 
-        <div className="mt-6 flex justify-center gap-4">
-          <button  onClick={handleClick}
-           className="py-2 px-6 border-2 border-black rounded-md  text-[15px] md:text-[20px] font-medium">
-            View Memberships
-          </button>
-          
-          
-          <Link href="/courses_list">
-          <button className="py-2 px-6 bg-[#09339B] text-white rounded-md flex items-center gap-3 text-[15px] md:text-[20px]">
-            Browse Courses <img src="/images/arrow-left.svg" alt="" width="25" height="10" />
-          </button>
-        </Link>
-        </div>
-      </div>
-
-      {/* CENTER IMAGE + ORBIT */}
-      <div className="relative flex justify-center mt-[150px]">
-        {/* Container sized to fit the orbit (uses CSS max to accommodate image or orbit) */}
-        <div
-          className="relative flex items-center justify-center "
-          style={{ width: "max(520px, 550px)", height: "max(520px, 550px)" }}
-        >
-          {/* CENTER IMAGE (centered inside the container) */}
-          <img
-            src="/images/img1.svg"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[95%] z-20 "
-            alt="Center Icon"
-          />
-
-          {/* ORBITING CIRCLES: centered and sized to the container so icons orbit the image */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none mt-36">
-            <OrbitingCircles iconSize={90} radius={428} speed={1.3}>
-              <img src="/images/icon1.svg" />
-              <img src="/images/icon2.svg" />
-              <img src="/images/icon3.svg" />
-              <img src="/images/icon4.svg" />
-              <img src="/images/icon5.svg" />
-              <img src="/images/icon1.svg" />
-              <img src="/images/icon2.svg" />
-              <img src="/images/icon3.svg" />
-              <img src="/images/icon4.svg" />
-              <img src="/images/icon5.svg" />
-            </OrbitingCircles>
+            <Link href="/courses_list">
+              <button className="py-3 px-6 bg-white text-[#09339B] rounded-md flex items-center justify-center gap-2 text-base md:text-[20px] hover:bg-gray-100 transition font-semibold">
+                Browse Courses
+                <img
+                  src="/images/blue_arrow.png"
+                  alt="→"
+                  className="w-5 h-auto"
+                />
+              </button>
+            </Link>
           </div>
         </div>
-      </div>
 
+        {/* IMAGE */}
+        <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end ">
+          <img
+            src="/images/home.png"
+            alt="Learning illustration"
+            className="w-3/4 md:w-full  object-contain "
+          />
+        </div>
+
+      </div>
     </section>
   );
 };

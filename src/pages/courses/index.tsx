@@ -30,7 +30,7 @@ export default function Course() {
 
   return (
     <PublicLayout>
-   <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
+
 
         {/* LEFT CONTENT AREA */}
         <div className="lg:col-span-2 space-y-10">
@@ -40,12 +40,12 @@ export default function Course() {
         </div>
 
         {/* RIGHT SIDEBAR (COMMON + STICKY) */}
-        <div className="lg:col-span-1">
+        {/* <div className="lg:col-span-1">
           <SidebarCourseCard/>
-        </div>
+        </div> */}
   
 
-      </div>
+    
             <TrendingCourses/>
     </PublicLayout>
   );

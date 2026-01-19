@@ -4,7 +4,7 @@ const Learning = () => {
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center
-                 bg-[linear-gradient(270.19deg,#09339B_0.16%,#01BAFF_100.16%)] bg-cover bg-center bg-no-repeat container mx-auto px-4  md:mt-8 md:rounded-[10px]"
+                 bg-[url('/images/learning-bg.png')]  bg-cover bg-center bg-no-repeat container mx-auto px-4  md:mt-8 md:rounded-[10px]"
     >
 
 

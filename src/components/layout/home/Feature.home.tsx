@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaClock, FaLanguage, FaUserGraduate } from "react-icons/fa";
 
-const categories = ["All Courses", "Excel", "AI Tools", "GST", "Income Tax"];
+const categories = ["Top Selling", "Excel", "AI Tools", "GST", "Income Tax"];
 
 const courses = [
   {
@@ -145,6 +145,18 @@ const courses = [
 export default function FeaturedCourses() {
   const [active, setActive] = useState("All Courses");
 
+  // Reference for mobile categories carousel
+  const catRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll helpers for mobile category slider
+  const scrollCategories = (direction: number) => {
+    if (!catRef.current) return;
+    const width = catRef.current.clientWidth * 0.7; // scroll by ~70% of viewport
+    catRef.current.scrollBy({ left: width * direction, behavior: "smooth" });
+  };
+  const prevCategory = () => scrollCategories(-1);
+  const nextCategory = () => scrollCategories(1);
+
   const totalSteps = Math.ceil(courses.length / 6); 
   const [step, setStep] = useState(1);
 
@@ -165,22 +177,62 @@ export default function FeaturedCourses() {
 
   return (
     <section
-      className="py-14 bg-[url('/images/feature_bg.png')] bg-no-repeat bg-cover bg-center"
+      className="md:py-14 "
     >
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
           <div>
-            <h2 className="text-[36px] md:text-[40px] font-semibold text-[#121B31]">
+            <h2 className="text-[36px] md:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
               Featured Courses
             </h2>
-            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] md:text-[20px] leading-6">
+            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] md:text-[20px] leading-6 text-center">
               Explore our most popular courses designed by industry experts
             </p>
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap  gap-2 md:gap-4">
+          {/* Mobile: carousel with arrows */}
+          <div className="sm:hidden w-full relative">
+            <div className="flex items-center">
+              {/* <button
+                onClick={prevCategory}
+                aria-label="Previous category"
+                className="p-2 rounded-md mr-2 bg-white shadow"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+                  <path d="M15 18L9 12l6-6" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button> */}
+
+              <div
+                ref={catRef}
+                className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide scroll-smooth -ml-1"
+                role="listbox"
+                aria-label="Course categories"
+              >
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    role="option"
+                    aria-selected={active === cat}
+                    className={`snap-center flex-shrink-0  px-6 py-3 rounded-md whitespace-nowrap transition ${
+                      active === cat
+                        ? "bg-[#09339B] text-white"
+                        : "bg-transparent text-[#767676]"
+                    }`}
+                    onClick={() => setActive(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+            </div>
+          </div>
+
+          {/* Desktop: inline buttons */}
+          <div className="hidden sm:flex flex-wrap gap-2 md:gap-4 mt-12">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -304,10 +356,10 @@ export default function FeaturedCourses() {
 
       </div>
       {/* Bottom Navigation */}
-  <div className="hidden md:flex items-center container mx-auto mt-10 px-4">
+  <div className=" md:flex items-center container mx-auto md:mt-10 px-4">
 
       {/* Left Buttons */}
-      <div className="flex gap-3">
+      <div className="hidden  md:flex gap-3">
         <button
           onClick={prev}
           className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
@@ -330,7 +382,7 @@ export default function FeaturedCourses() {
       </div>
 
       {/* Progress Bar Middle Line */}
-      <div className="flex-grow mx-4 h-[4px] bg-gray-300 rounded-full relative overflow-hidden">
+      <div className="hidden md:block flex-grow mx-4 h-[4px] bg-gray-300 rounded-full relative overflow-hidden">
         <div
           className="h-full bg-[#09339B] rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
@@ -338,12 +390,14 @@ export default function FeaturedCourses() {
       </div>
 
       {/* Right Button */}
+      <div className="w-full flex justify-center md:w-auto md:justify-end">
     <Link href="/courses_list">
           <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
             View All Courses
             <img src="/images/blue_arrow.png" alt="" />
           </button>
     </Link>
+    </div>
     </div>
     </section>
   );
