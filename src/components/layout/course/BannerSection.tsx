@@ -1,65 +1,44 @@
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
-import SidebarCourseCard from "./Sidebar";
 
 export default function BannerSection() {
+    const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/membership");
+  };
   return (
-    <div className="  container px-4 mx-auto">
-      {/* Breadcrumb */}
-      <div className="container  mx-auto px-4 py-3 text-sm text-gray-500 bg-[#DDDDDD]">
+    <>
+          {/* Breadcrumb */}
+      <div className="   px-48  py-3 text-sm text-[#696969] bg-[#DDDDDD]">
         Home › Courses › <span className="text-blue-600">Certification Course On…</span>
       </div>
+ <div className="bg-[#F5FAFF]">
+         <div className="  container px-4 mx-auto ">
 
-    
 
         {/* LEFT CONTENT */}
         <div className="lg:col-span-2 space-y-6 mt-6">
-              {/* Course Start Time */}
-    <p className="bg-[#F9F9FB] p-2 text-[#454545] text-[16px] font-Outfit font-normal">
-      Starts at Thursday November 27, 2025 – 18:00
-    </p>
+  
 
   <div className="mt-6 md:flex md:items-start md:gap-8">
     
+    
   {/* Left: Banner */}
   <div className="md:w-1/2">
-    <div className="rounded overflow-hidden shadow">
-      <Image
-        src="/images/c1.png"
-        alt="Banner"
-        width={1200}
-        height={600}
-        className="w-full object-cover"
-      />
-    </div>
-
-        {/* Stats */}
-    <div className="flex flex-wrap justify-around items-center gap-8 text-[#AFAFAF] mt-3 bg-[#F9F9FB] p-3">
-      <div className="flex gap-2 items-center">
-        <img src="/images/icon-eng.png" alt="Language" /> <span>English</span>
-      </div>
-      <div className="flex gap-2 items-center">
-        <img src="/images/icon-clock.png" alt="Duration" /><span>4 Hours</span>
-      </div>
-      <div className="flex gap-2 items-center">
-        <img src="/images/icon-user.png" alt="Students" /><span>957 students</span>
-      </div>
-      <div className="flex gap-2 items-center">
-        <img src="/images/Star.png" alt="Rating" /><span>4.8 by 47 Users</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Right: Content */}
-  <div className="md:w-1/2 mt-6 md:mt-0">
-
-
-    {/* Title */}
-    <h1 className="text-[30px] md:text-[30px] font-medium text-gray-900 leading-snug mt-2">
+              {/* Course Start Time */}
+    <p className="bg-[#DEEBFD] max-w-sm p-4 rounded-[10px] text-[#09339B] text-[16px] font-Outfit font-normal">
+      Starts at Thursday November 27, 2025 – 18:00
+    </p>
+   <h1 className="text-[30px] md:text-[43px] font-semibold text-gray-900 leading-snug mt-6">
       Certification Course On Practical Filing of GSTR-9 & GSTR-9C
     </h1>
 
     {/* Description */}
-    <p className="text-[#929292] text-[16px] leading-relaxed mt-2">
+    <p className="text-[#929292] text-[17px] leading-[32px] mt-6">
       In our continuous endeavour to empower more and more finance professionals,
       this certification course has been designed for you. Detailed 2 Days course
       has been designed where already more than 2 hrs sessions have been organized.
@@ -69,82 +48,117 @@ export default function BannerSection() {
 
 
 
-    {/* Social Share */}
-    <div className="flex items-center gap-4 pt-3">
-      <div className="flex gap-2 items-center">
-        <img src="/images/icon-share.png" alt="Share" />
-        <span className="font-medium">Share</span>
-      </div>
 
-      <div className="flex gap-3 ">
-        <img src="/images/fb.png" alt="Facebook" className="w-6 h-6 cursor-pointer" />
-        <img src="/images/in.png" alt="LinkedIn" className="w-6 h-6 cursor-pointer" />
-        <img src="/images/x.png" alt="X" className="w-6 h-6 cursor-pointer" />
-        <img src="/images/pinterest.png" alt="Pinterest" className="w-6 h-6 cursor-pointer" />
-        <img src="/images/print.png" alt="Print" className="w-6 h-6 cursor-pointer" />
-      </div>
 
- 
-        
-    </div>
-
-        <div className="bg-white">
+        <div className="flex">
         <p className=" text-[30px] mt-4">
           <span className="line-through text-[#929292] font-medium">₹2,000</span>{" "}
           <span className="text-3xl text-black font-bold">₹699</span>
         </p>
-        <p className="text-[#929292]">
+        <p className="text-[#252525] mt-4 bg-[#FFF6E5] p-3 rounded-lg ml-4 text-sm font-medium border-dashed border border-[#000000]">
           Hurry up, few days left at this price!
         </p>
         </div>
 
+            <div className="mt-10 flex flex-row md:flex-row justify-center lg:justify-start gap-4 mb-4 ">
+            <button
+              onClick={handleClick}
+              className="py-2 px-28 border-2 border-white rounded-md text-base sm:text-lg font-medium text-white bg-[#09339B] transition"
+            >
+             Buy Now
+            </button>
+
+            <Link href="/courses_list">
+              <button className="py-3 px-16 bg-white text-[#09339B] rounded-md flex items-center justify-center gap-2 text-base md:text-[20px] border border-[#09339B] transition font-semibold">
+               View Membership
+              
+              </button>
+            </Link>
+          </div>
+
+        
+            {/* Social Share */}
+    <div className="flex items-center gap-4 pt-3">
+      <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
+        <img src="/images/icon-share.png" alt="Share" />
+        <span className="font-medium text-[20px]">Share</span>
+      </div>
+
+      <div className="flex gap-3 ">
+        <img src="/images/fb.png" alt="Facebook" className="w-8 h-8 cursor-pointer" />
+        <img src="/images/in.png" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
+        <img src="/images/x.png" alt="X" className="w-8 h-8 cursor-pointer" />
+        <img src="/images/pinterest.png" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
+        <img src="/images/print.png" alt="Print" className="w-8 h-8 cursor-pointer" />
+      </div>
+        
+    </div>
+
+
+
+
+  </div>
+
+  {/* Right: Content */}
+  <div className="md:w-1/2 mt-6 md:mt-[95px]">
+      <div className="rounded overflow-hidden shadow">
+      <Image
+        src="/images/c1.png"
+        alt="Banner"
+        width={568}
+        height={320}
+        className="w-full object-cover"
+      />
+    </div>
+
+        {/* Stats */}
+    <div className="flex flex-wrap justify-between gap-8 items-center  text-[#AFAFAF] mt-3 p-3 text-[13px] font-bold">
+      <div className="flex gap-2 items-center bg-white text-black p-3">
+        <img src="/images/icon-eng.png" alt="Language" /> <span>English</span>
+      </div>
+      <div className="flex gap-2 items-center bg-white text-black p-3">
+        <img src="/images/icon-clock.png" alt="Duration" /><span>4 Hours</span>
+      </div>
+      <div className="flex gap-2 items-center bg-white text-black p-3">
+        <img src="/images/icon-user.png" alt="Students" /><span>957 students</span>
+      </div>
+      <div className="flex gap-2 items-center bg-white text-black p-3">
+        <img src="/images/Star.png" alt="Rating" /><span>4.8 by 47 Users</span>
+      </div>
+    </div>
+
+
+    {/* Title */}
+   
   </div>
 </div>
 
 
-  {/* Key Features */}
-<div className=" bg-[#F9F9FB] p-8">
-  <h2 className="text-[20px] md:text-[30px] text-[#252525] font-medium ">
-    Course Key Features
-  </h2>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[#929292] pt-4 ">
-    {/* Left Column (first 4) */}
-    <ul className="space-y-6">
-      {[
-        "GST Provisions related to GSTR-9 and GSTR-9C filing",
-        "GST Annual return, recent changes as per GST notification",
-        "GST annual return workflow, table wise changes & comparison",
-        "Compulsory and Optional Tables",
-      ].map((item, i) => (
-        <li key={i} className="flex items-start gap-2">
-          <Image src="/images/tick.svg" alt="tick" width={22} height={22} />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-
-    {/* Right Column (remaining 3) */}
-    <ul className="space-y-6">
-      {[
-        "How to show impact of reversals in GSTR annual return",
-        "Linkage between GSTR-1, GSTR-3B, GSTR-9 and GSTR-9C",
-        "Practical aspects will be discussed",
-      ].map((item, i) => (
-        <li key={i} className="flex items-start gap-2">
-          <Image src="/images/tick.svg" alt="tick" width={22} height={22} />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
-</div>
 
         </div>
+
+            <div className="mt-8">
+          <h3 className="text-[20px] font-medium">This course includes:</h3>
+          <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[13px]">
+      <div className="flex gap-2 items-center bg-white  p-3">
+        <img src="/images/icon-video.png" alt="Language" /> <span>Recording is available for 1 year</span>
+      </div>
+      <div className="flex gap-2 items-center bg-white  p-3">
+        <img src="/images/icon-certiificate.png" alt="Duration" /><span>Studycafe certificate of completion</span>
+      </div>
+      <div className="flex gap-2 items-center bg-white  p-3">
+        <img src="/images/icon-laptop.png" alt="Students" /><span>Access on mobile or computer/laptop </span>
+      </div>
+
+    </div>
+    </div>
 
    
 
       
     </div>
+ </div>
+    </>
   );
 }

@@ -1,85 +1,151 @@
 "use client";
 import React, { useState } from "react";
 import ReviewForm from "./WriteReview";
+import { init } from "next/dist/compiled/webpack/webpack";
 export default function ReviewSection() {
-      const [showForm, setShowForm] = useState(false);
+  const testimonials = [
+  {
+    initial: "R",
+    message:
+      "Managing studies with a full-time job was difficult until I joined StudyCafe. The flexibility, recorded sessions, and detailed notes helped me stay consistent without stress.",
+    name: "Rahul Mehta",
+    role: "Accounts & Finance",
+    rating: 5,
+  },
+  {
+   initial: "N",
+    message:
+      "StudyCafe transformed my career! The courses are practical, well-structured, and the instructors are incredibly knowledgeable",
+    name: "Neha Sharma",
+    role: "CA Intermediate Aspirant",
+    rating: 5,
+  },
+  {
+       initial: "P",
+    message:
+      "What I love most about StudyCafe is the simplicity of learning. The dashboard is easy to use, courses are well-organized, and progress tracking keeps me motivated.",
+    name: "Priya Jain",
+    role: "MBA Student",
+    rating: 5,
+  },
+  {
+       initial: "S",
+    message:
+      "StudyCafe offers high-quality content with real-world insights. The learning experience feels premium, and the material is extremely well explained.",
+    name: "Saurabh Gupta",
+    role: "CA Foundation Student",
+    rating: 5,
+  },
+  {
+       initial: "A",
+    message:
+      "StudyCafe makes even complex topics easy to understand. The step-by-step explanations and practice questions helped me build strong basics with confidence.",
+    name: "Anjali Singh",
+    role: "B.Com (Hons) Student",
+    rating: 5,
+  },
+  {
+       initial: "P",
+    message:
+      "I was struggling with self-study until I found StudyCafe. The structured courses and regular updates keep me on track throughout the semester.",
+    name: "Saurabh Gupta",
+    role: "Software Developer",
+    rating: 5,
+  },
+    
+  ]
 
-  const handleClick = () => {
-    setShowForm(true); // show the component when button is clicked
-  };
+  
   return (
-    <section className="w-full   md:p-6 rounded-xl bg-white shadow-sm">
+    
+    <section className="container px-4 mx-auto  ">
       
-      {/* Write Review Button */}
-      <div className="text-center mb-6 font-medium text-[20px]">
-  <div>
-      {!showForm && (
-        <button
-          className="w-full px-6 py-2 border border-[#09339B] text-[#09339B] rounded-lg hover:bg-blue-50 transition"
-          onClick={() => setShowForm(true)}
-        >
-          Write a Review
-        </button>
-      )}
+    <h2 className="text-[30px] font-semibold mb-4 ">Google Reviews</h2>
+              {/* Mobile slider */}
+  {/* Mobile slider */}
+<div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
+  {testimonials.map((item, index) => (
+    <div
+      key={index}
+      className="w-[260px] sm:w-[280px] snap-center flex-shrink-0 relative border border-[#17254E] rounded-xl p-4 text-left"
+    >
+      {/* User + Rating Row */}
+      <div className="flex flex-col gap-3">
 
-      {showForm && <ReviewForm onClose={() => setShowForm(false)} />}
-    </div>
-      </div>
+        {/* Top Row */}
+        <div className="flex items-start justify-between gap-3">
+          {/* Left: Avatar + Info */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#09339B] text-white rounded-full flex items-center justify-center text-sm sm:text-lg font-medium">
+              {item.initial}
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        {/* Overall Rating */}
-        <div className="col-span-1 flex flex-col items-center p-4 rounded-lg bg-gray-50">
-          <h2 className="text-4xl font-semibold">4.0</h2>
-          <div className="flex mt-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <img key={i} src="/images/Star.png" className="w-5" />
-            ))}
-            <img src="/images/Star.png" className="w-5" />
+            <div>
+              <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
+                {item.name}
+              </h4>
+              <p className="text-[#302A2A99] font-medium text-xs sm:text-sm">
+                {item.role}
+              </p>
+            </div>
           </div>
-          <p className="text-gray-500 mt-2 text-sm">Total 50 Ratings</p>
+             </div>
+
+          {/* Rating */}
+          <div className="flex items-center gap-3 mt-2 mb-2">
+            <div className="flex">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <img key={i} src="/images/Star.png" className="w-3 sm:w-4" />
+              ))}
+            </div>
+            <span className="text-gray-400 text-[10px] sm:text-xs">
+              • 6 months ago
+            </span>
+          </div>
         </div>
 
-        {/* Rating Bars */}
-        <div className="col-span-2 space-y-3">
-          {[
-            { label: "5 Star", value: 50 },
-            { label: "4 Star", value: 70 },
-            { label: "3 Star", value: 10 },
-            { label: "2 Star", value: 0 },
-            { label: "1 Star", value: 0 },
-          ].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-4">
-              <span className="w-16 text-sm text-gray-500">{item.label}</span>
-              <div className="w-full bg-[#D9D9D9] h-4 rounded-lg">
-                <div
-                  className="h-4 bg-[#FFB21D] rounded-lg"
-                  style={{ width: `${item.value}%` }}
-                ></div>
-              </div>
-              <span className="w-10 text-sm text-gray-500">{item.value}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        {/* Message */}
+        <p className="text-[#696969] text-xs sm:text-sm leading-relaxed">
+          {item.message}
+        </p>
 
-      {/* Reviews List */}
-      <div className="mt-10 space-y-8">
+   
+    </div>
+  ))}
+</div>
 
-        {[1, 2].map((_, index) => (
-          <div key={index} className="flex gap-4">
-            
-            {/* Avatar */}
-            <div className="w-12 h-12 bg-[#2F2A2A] text-white rounded-full flex items-center justify-center text-lg font-medium">
-              M
-            </div>
 
-            {/* Content */}
-            <div className="flex-1">
-              <h3 className="font-bold text-[18px]">Maxin Will</h3>
-              <p className="text-sm text-gray-500">Product Manager</p>
 
-              {/* Rating + Time */}
+           {/* Desktop grid */}
+          <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {testimonials.map((item, index) => (
+              <div
+                key={index}
+                className="relative border border-[#17254E] rounded-xl p-6 text-left"
+              >
+      
+
+             
+
+                {/* User + Rating Row */}
+                <div className=" flex items-center justify-between">
+                  {/* Left: Name & Role */}
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 bg-[#09339B] text-white rounded-full flex items-center justify-center text-lg font-medium">
+                      {item.initial}
+                    </div>
+
+                    <div>
+                            <h4 className="font-semibold text-gray-900 text-[30px]">
+                              {item.name}
+                            </h4>
+                            <p className="text-[#302A2A99] font-bold text-[17px]">{item.role}</p>
+                    </div>
+                  </div>
+
+                          
+                </div>
+                                  {/* Rating + Time */}
               <div className="flex items-center gap-3 mt-2">
                 <div className="flex">
                   {Array.from({ length: 4 }).map((_, i) => (
@@ -89,18 +155,13 @@ export default function ReviewSection() {
                 </div>
                 <span className="text-gray-400 text-sm">• 6 months ago</span>
               </div>
-
-              {/* Review Text */}
-              <p className="text-gray-600 mt-3 text-[15px] leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis 
-                nostrud exercitation ullamco.
-              </p>
-            </div>
+                   {/* Message */}
+                <p className="text-[#2F2A2A] text-[18px] mt-2 leading-relaxed">
+                  {item.message}
+                </p>
+              </div>
+            ))}
           </div>
-        ))}
-
-      </div>
     </section>
   );
 }

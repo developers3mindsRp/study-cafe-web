@@ -13,6 +13,9 @@ import CourseTabs from '@/components/layout/course/CourseDesc';
 import Breadcrumb from '@/Breadcrumb';
 import SidebarCourseCard from '@/components/layout/course/Sidebar';
 import TrendingCourses from '@/components/layout/course/TrendingCourses';
+import CourseOverview from '@/components/layout/course/CourseOverview';
+import ReviewForm from '@/components/layout/course/WriteReview';
+import ReviewSection from '@/components/layout/course/ReviewSection';
 
 /**
  * Home Page - Course Listing
@@ -35,7 +38,9 @@ export default function Course() {
         {/* LEFT CONTENT AREA */}
         <div className="lg:col-span-2 space-y-10">
           <BannerSection />
-          <CourseTabs />
+          <CourseTabs/>
+          <CourseOverview/>
+         <ReviewSection/>
           <GSTRCoursePage />
         </div>
 
