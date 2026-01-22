@@ -10,16 +10,16 @@ const Learning = () => {
 
       {/* Center Content */}
       <div className="relative z-10 text-center ">
-        <h2 className="text-white text-[32px] md:text-[40px] font-bold mb-4">
+        <h2 className="text-white text-[32px] md:text-[40px] font-bold mb-4 px-8">
           Ready to Start Learning?
         </h2>
 
-        <p className="text-white text-[18px] md:text-[24px] font-normal max-w-xl mx-auto mb-6">
+        <p className="text-white text-[18px] md:text-[24px] font-normal max-w-xl mx-auto mb-6 px-8">
         Join thousands of students already learning on StudyCafe
         </p>
 
         <button className="bg-white text-[#09339B] px-6 py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition flex mx-auto">
-          Get Started Today <img src="/images/blue_arrow.png" alt="" />
+          Get Started Today <img src="/images/icons/blue_arrow.png" alt="" />
         </button>
       </div>
     </section>

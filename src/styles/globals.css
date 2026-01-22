@@ -119,3 +119,23 @@
     vertical-align: middle;
     margin-left: 6px;
 } */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.marquee-wrapper {
+  overflow: hidden;
+}
+

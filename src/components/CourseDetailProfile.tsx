@@ -86,7 +86,7 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
           {/* Video Thumbnail */}
           <div className="relative rounded-lg overflow-hidden">
             <img
-              src="/images/f1.jpg"
+              src="/images/home/f1.jpg"
               alt="course"
               className="w-full md:h-[475px] object-fit"
             />

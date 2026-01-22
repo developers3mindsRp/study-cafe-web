@@ -116,20 +116,42 @@ export default function Footer() {
                 {importantOpen ? '−' : '+'}
               </button>
             </h3>
-            <ul
-              id="important-links-list"
-              ref={importantRef}
-              className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
-              style={{ maxHeight: '0px' }}
-            >
-              <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
-              <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
-              <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
-              <li><Link href="/contact" className="text-[16px] text-white transition-colors">ChatGPT & AI</Link></li>
-              <li><Link href="/faq" className="text-[16px] text-white transition-colors">Excel Courses</Link></li>
-              <li><Link href="/faq" className="text-[16px] text-white transition-colors">Downloads</Link></li>
-            </ul>
-          </div>
+              <div className='md:flex md:gap-12'>
+              <div>
+                    <ul
+                      id="important-links-list"
+                      ref={importantRef}
+                      className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                      style={{ maxHeight: '0px' }}
+                    >
+
+                      <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
+                      <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
+                      <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
+                      <li><Link href="/contact" className="text-[16px] text-white transition-colors">ChatGPT & AI</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Excel Courses</Link></li>
+                        </ul>
+              </div>
+                 
+                  <div>
+                     <ul
+                      id="important-links-list"
+                      ref={importantRef}
+                      className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                      style={{ maxHeight: '0px' }}
+                    >
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Submit Article</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Finance</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">GST</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Income Tax</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Downloads</Link></li>
+                      <li><Link href="/faq" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
+                      </ul>
+                   </div>
+             </div>
+            </div>
+           
+      
 
           {/* Support / Newsletter Column */}
           <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
@@ -144,16 +166,16 @@ export default function Footer() {
                 {/* <label htmlFor="footer-email">Email</label><br /> */}
                 <input id="footer-email" type="mail" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
               </li>
-        <button className="
-  whitespace-nowrap
-  w-1/2 
-  text-[18px] sm:text-[20px]
-  px-4 py-2 sm:px-6 sm:py-3
-  bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
-  rounded-[10px] transition
-">
-  Subscribe Now
-</button>
+                  <button className="
+                    whitespace-nowrap
+                    w-100%
+                    text-[18px] sm:text-[20px]
+                    px-4 py-2 sm:px-6 sm:py-3
+                    bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
+                    rounded-[10px] transition
+                  ">
+                      Subscribe Now
+                    </button>
 
             </ul>
           </div>

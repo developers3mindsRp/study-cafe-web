@@ -36,9 +36,8 @@ export default function ReviewForm({ onClose }: ReviewFormProps) {
               onClick={() => setRating(star)}
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
-              className={`w-8 h-8 cursor-pointer ${
-                (hoverRating || rating) >= star ? "text-yellow-400" : "text-gray-300"
-              }`}
+              className={`w-8 h-8 cursor-pointer ${(hoverRating || rating) >= star ? "text-yellow-400" : "text-gray-300"
+                }`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >

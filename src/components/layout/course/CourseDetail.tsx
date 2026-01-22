@@ -33,102 +33,117 @@ export default function CourseSection() {
   return (
 
    <div className="lg:col-span-2 space-y-6">
-        <div className="w-full bg-white py-10 container mx-auto px-4">
       {/* Alumni Logos */}
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-      {[1, 2, 3, 4, 5, 6].map((num) => (
-    <div
-      key={num}
-      className="h-[80px] w-full border p-2 rounded flex items-center justify-center shadow-sm bg-white"
-    >
-      <img
-        src={`/images/brand_${num}.svg`}
-        alt={`brand_${num}`}
-        className="h-full object-contain"
-      />
-    </div>
-  ))}
-</div>
+      <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-10 sm:py-12 px-4 sm:px-8 pb-16 sm:pb-20 mb-8">
+        <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2">
+          Our Alumni at Leading Companies
+        </h2>
 
-
-      {/* FAQ Section */}
-      <div className=" mx-auto md:px-4 mt-10">
-        <h2 className="text-xl font-semibold mb-4">FAQ</h2>
-      <div className="space-y-4">
-      {faqs.map((item, index) => (
-          <div key={index} className="border rounded-lg overflow-hidden">
-            {/* Question Button */}
-            <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex justify-between items-center p-4  transition"
-            >
-              <span className="font-medium text-[20px] text-[#252525] text-left">{index + 1}. {item.q}</span>
-
-              {/* Arrow Icon */}
-              <svg
-                className={`w-5 h-5 transition-transform ${openIndex=== index ? "rotate-180" : "rotate-0"}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
+        <div className="container mx-auto">
+          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
+            {[1, 2, 3, 4, 5, 6].map((num) => (
+              <div
+                key={num}
+                className="h-[70px] sm:h-[80px] w-full max-w-[140px]
+                     border p-3 sm:p-4 rounded-[10px]
+                     flex items-center justify-center
+                     shadow-sm bg-white"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {/* Answer */}
-            {openIndex === index && (
-              <div className="px-4 pb-4 text-[16px] text-[#454545] leading-relaxed border-t bg-white">
-                {item.a}
+                <img
+                  src={`/images/brand_${num}.svg`}
+                  alt={`brand_${num}`}
+                  className="h-full object-contain"
+                />
               </div>
-            )}
+            ))}
           </div>
-        ))} 
-    </div>
-      </div>
-
-      {/* Terms */}
-      <div className=" mx-auto px-4 mt-10">
-        <h2 className="text-xl font-semibold mb-2">Terms and Conditions</h2>
-        <ul className="text-gray-700 list-disc ml-6">
-          <li>Course Recording will be Provided for 1 Year.</li>
-          <li>No limitation on number of views.</li>
-        </ul>
-      </div>
-
-      {/* Requirements */}
-      <div className=" mx-auto px-4 mt-8">
-        <h2 className="text-xl font-semibold mb-2">Requirements</h2>
-        <p className="text-gray-700">
-          Required internet connection. Lectures can be viewed on Mobile or Laptop.
-        </p>
-      </div>
-
-    {/* Author Section */}
-    <div className="container mx-auto px-4 mt-10">
-      <h2 className="text-xl font-semibold mb-4">About Authors</h2>
-
-      <div className="border rounded p-2 md:p-5 flex flex-col md:flex-row items-start md:items-center gap-4 shadow">
-        <Image
-          src="/images/author.svg"
-          width={104}
-          height={104}
-          alt="Author"
-          className="rounded-full mx-auto md:mx-0"
-        />
-
-        <div className="text-center md:text-left ">
-          <h3 className="font-semibold text-[20px] text-[#252525]">Pratibha Goyal</h3>
-          <h3 className="text-[#929292] mb-2">CA : Business</h3>
-          <p className="text-[#929292] text-[14px] md:text-[16px] mt-1 ">
-            CA Pratibha Goyal is Chartered Accountant qualified in 2016, is a Member of The Institute of Chartered Accountants of India having wide experience in the field of Auditing, Taxation, ROC, GST and Secretarial matters etc. She has written over a thousand articles & has made several videos on topics related to Auditing & Taxation. As a Speaker she has delivered various sessions on various branches of NIRC of ICAI.
-          </p>
         </div>
       </div>
-    </div>
 
+
+           {/* Author Section */}
+      <div className="container mx-auto px-4 mt-10">
+        <h2 className="text-[30px] font-semibold mb-4">About Authors</h2>
+
+        <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
+          <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
+            <Image
+              src="/images/author.png"
+              width={54}
+              height={54}
+              alt="Author"
+              className="rounded-full"
+            />
+
+            <div className="text-left">
+              <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
+                Pratibha Goyal
+              </h3>
+              <h3 className="text-[#09339B] text-[16px] md:text-[20px]">
+                CA : Business
+              </h3>
+            </div>
+          </div>
+
+          <hr className="m-4 border border-[#AFAFAF]" />
+          <p className="text-[#6C6C6C] text-[14px] md:text-[17px] mt-1 leading-[32px] m-6 font-light">
+            CA Pratibha Goyal is a Chartered Accountant qualified in 2016 and a fellow Member of The Institute of Chartered Accountants of India. She possesses extensive experience in the fields of Auditing, Taxation, ROC, GST, and Secretarial matters. Beyond her core practice, she has established herself as a prominent voice in the financial community, dedicated to simplifying complex regulatory concepts. She has authored over a thousand articles and produced numerous educational videos, serving as a vital resource for staying updated on the dynamic Indian tax landscape. As an active speaker, she has delivered insightful sessions at various branches of the NIRC of ICAI, contributing significantly to the continuous professional development of her peers and the financial literacy of the public.          </p>
+
+        </div>
+
+      </div>
+
+
+      <div className="w-full bg-white  container mx-auto px-4">
+        {/* FAQ Section */}
+        <div className=" mx-auto md:px-4 mt-10">
+          <h2 className="text-[30px] font-medium mb-4">FAQ</h2>
+          <div className="space-y-4">
+            {faqs.map((item, index) => (
+              <div key={index} className="border rounded-lg overflow-hidden">
+                {/* Question Button */}
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className={`
+      w-full flex justify-between items-center p-4 transition
+      ${openIndex === index
+                      ? "bg-[#09339B] text-white"    // Active
+                      : "bg-white text-[#09339B]"}   // Inactive
+    `}
+                >
+                  <span className="font-medium text-[20px] text-left">
+                    {index + 1}. {item.q}
+                  </span>
+
+                  {/* Arrow Icon */}
+                  <svg
+                    className={`
+        w-5 h-5 transition-transform 
+        ${openIndex === index ? "rotate-180 text-white" : "rotate-0 text-[#09339B]"}
+      `}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Answer */}
+                {openIndex === index && (
+                  <div className="px-4 pb-4 text-[16px] text-[#454545] leading-relaxed border-t ">
+                    {item.a}
+                  </div>
+                )}
+              </div>
+
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
   );
 }

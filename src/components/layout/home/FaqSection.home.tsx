@@ -28,12 +28,12 @@ export default function FAQSection() {
 
   return (
     <section className=" w-full bg-white py-4 md:py-20 px-4 flex flex-col
-items-center text-center">
+      items-center text-center">
       <h2 className="text-[32px] md:text-[40px] font-semibold text-[#1A1A1A]">Frequently
-Asked Questions</h2>
+        Asked Questions</h2>
       <p className="text-[18px] md:text-[24px] text-[#454545] max-w-xl mt-2">
         Got questions? We've got answers. Find everything you need to
-know about StudyCafe.
+        know about StudyCafe.
       </p>
 
       <div className="w-full  mt-10 space-y-3 text-left container px-4">
@@ -48,7 +48,7 @@ know about StudyCafe.
 
               {/* Arrow Icon */}
               <svg
-                className={`w-5 h-5 transition-transform ${openIndex=== index ? "rotate-180" : "rotate-0"}`}
+                className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

@@ -44,8 +44,8 @@ export default function Testimonials() {
         <h2 className="text-[30px] md:text-[40px] font-semibold text-gray-900">
           What Our Students Say
         </h2>
-        <p className="mt-3 text-gray-500 text-[16px] md:text-[24px]">
-          Don't just take our word for it - hear from thousands of <br />
+        <p className="mt-3 text-[#454545] text-[16px] md:text-[24px] px-6 md:px-0">
+          Don't just take our word for it - hear from thousands of <br className="hidden md:block" />
           satisfied students
         </p>
 
@@ -62,35 +62,35 @@ export default function Testimonials() {
                 <img
                   src="/images/quote.png"
                   alt="quote"
-                  className="absolute -top-2 -left-2 w-10 h-6  "
+                  className="absolute -top-4 z-10 -left-2 w-10 h-6  "
                 />
 
                 {/* Message */}
-                <p className="text-[#696969] text-[12px]  mt-2 leading-relaxed">
+                <p className="text-[#696969] text-[10px]  mt-2 leading-relaxed ">
                   {item.message}
                 </p>
 
-{/* User + Rating Row */}
-<div className=" flex items-center justify-between">
-  {/* Left: Name & Role */}
-  <div className="max-w-[65%]">
-    <h4 className="font-semibold text-gray-900 text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
-      {item.name}
-    </h4>
-    <p className="text-[#09339B] text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
-      {item.role}
-    </p>
-  </div>
+                {/* User + Rating Row */}
+                <div className=" flex items-center justify-between">
+                  {/* Left: Name & Role */}
+                  <div className="max-w-[65%]">
+                    <h4 className="font-semibold text-gray-900 text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
+                      {item.name}
+                    </h4>
+                    <p className="text-[#09339B] text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
+                      {item.role}
+                    </p>
+                  </div>
 
-  {/* Right: Rating */}
-  <div className="flex gap-1 text-yellow-400 text-[18px] mt-10">
-    {Array(item.rating)
-      .fill(0)
-      .map((_, i) => (
-        <span key={i}>★</span>
-      ))}
-  </div>
-</div>
+                  {/* Right: Rating */}
+                  <div className="flex gap-1 text-yellow-400 text-[18px] mt-10">
+                    {Array(item.rating)
+                      .fill(0)
+                      .map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                  </div>
+                </div>
 
               </div>
             ))}

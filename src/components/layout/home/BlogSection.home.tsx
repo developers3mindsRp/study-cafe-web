@@ -69,7 +69,7 @@ export default function BlogSection() {
     },
   ];
 
-  const totalSteps = Math.ceil(blogs.length / 3); 
+  const totalSteps = Math.ceil(blogs.length / 3);
   const [step, setStep] = useState(1);
 
   const next = () => {
@@ -109,7 +109,7 @@ export default function BlogSection() {
             <img src={b.img} alt="blog" className="w-full h-[233px] object-fit" />
             <div className="p-4">
               <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span>{b.author}</span> • <span>{b.date}</span>
+                <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
               </div>
               <h3 className="font-medium text-[16px] text-[#252525] leading-tight mb-4">
                 {b.title}
@@ -130,17 +130,18 @@ export default function BlogSection() {
             <img src={b.img} alt="blog" className="w-full h-[233px] object-fit" />
             <div className="p-4">
               <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span>{b.author}</span> • <span>{b.date}</span>
+                <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
+
               </div>
               <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4">
                 {b.title}
               </h3>
-    <Link href="/blogs/blog-detail">
-              <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                Read More
-                <img src="/images/arrow-left.svg" alt="" />
-              </button>
-    </Link>
+              <Link href="/blogs/blog-detail">
+                <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                  Read More
+                  <img src="/images/arrow-left.svg" alt="" />
+                </button>
+              </Link>
             </div>
           </div>
         ))}
@@ -155,8 +156,8 @@ export default function BlogSection() {
             className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow "
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M5.5 12.002L19 12.002" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M10.9999 18.002C10.9999 18.002 5.00001 13.583 5 12.0019C4.99999 10.4208 11 6.00195 11 6.00195" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5.5 12.002L19 12.002" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M10.9999 18.002C10.9999 18.002 5.00001 13.583 5 12.0019C4.99999 10.4208 11 6.00195 11 6.00195" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
@@ -165,8 +166,8 @@ export default function BlogSection() {
             className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18.5 11.998L5 11.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M13.0001 5.998C13.0001 5.998 19 10.417 19 11.9981C19 13.5792 13 17.998 13 17.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M18.5 11.998L5 11.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M13.0001 5.998C13.0001 5.998 19 10.417 19 11.9981C19 13.5792 13 17.998 13 17.998" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
@@ -180,14 +181,14 @@ export default function BlogSection() {
         </div>
 
         {/* Right Button */}
-  <div className="w-full flex justify-center md:w-auto md:justify-end">
-    <Link href="/blogs">
-      <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
-        View All Blogs
-        <img src="/images/blue_arrow.png" alt="" />
-      </button>
-    </Link>
-  </div>
+        <div className="w-full flex justify-center md:w-auto md:justify-end">
+          <Link href="/blogs">
+            <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
+              View All Blogs
+              <img src="/images/icons/blue_arrow.png" alt="" />
+            </button>
+          </Link>
+        </div>
 
       </div>
     </section>

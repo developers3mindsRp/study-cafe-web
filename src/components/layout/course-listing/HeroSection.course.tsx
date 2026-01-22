@@ -4,9 +4,7 @@ const HeroSection_courses = () => {
   return (
     
    <section className='bg-[url("/images/course_bg.svg")] bg-no-repeat bg-cover bg-center '>
-          <div className="  mx-auto px-14 py-3 text-sm text-gray-500 bg-[#DDDDDD]">
-        Home ›  <span className="text-blue-600"> Course </span>
-      </div>
+
    <div className='container mx-auto pt-10 md:pt-20 pb-12 md:pb-32 w-[100%] md:h-[580px] px-4'>
  
 <div className="flex items-center justify-center mb-4 mt-6">

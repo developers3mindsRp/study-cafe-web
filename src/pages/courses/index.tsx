@@ -16,6 +16,9 @@ import TrendingCourses from '@/components/layout/course/TrendingCourses';
 import CourseOverview from '@/components/layout/course/CourseOverview';
 import ReviewForm from '@/components/layout/course/WriteReview';
 import ReviewSection from '@/components/layout/course/ReviewSection';
+import Testimonials_course from '@/components/layout/course/TestimonialSection';
+import Gallery from '@/components/layout/course/Gallerysection';
+import Breadcrumbs from '@/Breadcrumb';
 
 /**
  * Home Page - Course Listing
@@ -26,35 +29,30 @@ import ReviewSection from '@/components/layout/course/ReviewSection';
 
 export default function Course() {
   const router = useRouter();
-  // Use the hook on the client side - data is already prefetched on the server
   const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
 
   return (
     <PublicLayout>
 
-
-        {/* LEFT CONTENT AREA */}
-        <div className="lg:col-span-2 space-y-10">
-          <BannerSection />
-          <CourseTabs/>
-          <CourseOverview/>
-         <ReviewSection/>
-          <GSTRCoursePage />
-        </div>
-
-        {/* RIGHT SIDEBAR (COMMON + STICKY) */}
-        {/* <div className="lg:col-span-1">
-          <SidebarCourseCard/>
-        </div> */}
+      {/* Breadcrumbs banner se pehle */}
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs/>
+      </div>
   
 
-    
-            <TrendingCourses/>
+      <BannerSection />
+      <CourseTabs />
+      <CourseOverview />
+      <ReviewSection />
+      <Testimonials_course />
+      <GSTRCoursePage />
+      <Gallery />
+      <TrendingCourses />
+
     </PublicLayout>
   );
 }
+
 
 /**
  * Static Site Generation (SSG)
