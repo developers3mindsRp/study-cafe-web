@@ -35,17 +35,20 @@ export default function Testimonials_course() {
                                 className="w-[250px] snap-center flex-shrink-0 text-left"
                             >
 
+                                <div className="mt-6 relative  flex items-center justify-between">
+                                    {/* Image */}
+                                    <img
+                                        src={item.images}
+                                        alt=""
+                                        className="object-cover w-full h-full rounded-lg gap-6"
+                                    />
 
-
-                                {/* User + Rating Row */}
-                                <div className=" flex items-center justify-between">
-                                    {/* Left: Name & Role */}
-                                    <div className="">
-
-                                        <img src={item.images} alt="" className="object-cover" />
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0   flex items-center justify-center rounded-lg">
+                                        <button className="bg-black w-12 h-12 flex items-center justify-center rounded-full">
+                                            <span className="text-[white] text-[20px] ">▶</span>
+                                        </button>
                                     </div>
-
-
                                 </div>
 
                             </div>
@@ -59,19 +62,22 @@ export default function Testimonials_course() {
                                 key={index}
                                 className=""
                             >
+                                <div className="mt-6 relative  flex items-center justify-between">
+                                    {/* Image */}
+                                    <img
+                                        src={item.images}
+                                        alt=""
+                                        className="object-cover w-full h-full rounded-lg gap-6"
+                                    />
 
-
-
-                                <div className="mt-6 flex items-center justify-between">
-
-                                    <div>
-                                        <img src={item.images} alt="" width="531" height="303"
-                                            className="object-cover w-[530px] h-[303px] rounded-lg"
-                                        />
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0   flex items-center justify-center rounded-lg">
+                                        <button className="bg-black w-16 h-16 flex items-center justify-center rounded-full">
+                                            <span className="text-[white] text-[30px] ">▶</span>
+                                        </button>
                                     </div>
-
-
                                 </div>
+
                             </div>
                         ))}
                     </div>

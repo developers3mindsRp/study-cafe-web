@@ -1,5 +1,5 @@
 // pages/index.jsx
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import { FaClock, FaLanguage, FaUserGraduate } from "react-icons/fa";
 
@@ -7,7 +7,7 @@ const courses = [
   {
     id: 1,
     title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/f1.jpg",   // UPDATED
+    img: "/images/home/f1.jpg",   // UPDATED
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -18,7 +18,7 @@ const courses = [
   {
     id: 2,
     title: "Certification Course on How to Automate Your CA Practice",
-    img: "/images/f2.png",   // UPDATED
+    img: "/images/home/f2.png",   // UPDATED
     hours: "2+ Hours",
     lang: "English",
     students: "957",
@@ -29,7 +29,7 @@ const courses = [
   {
     id: 3,
     title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/f3.png",   // UPDATED
+    img: "/images/home/f3.png",   // UPDATED
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -40,7 +40,7 @@ const courses = [
   {
     id: 4,
     title: "Course 4 thumbnail missing",
-    img: "/images/f4.jpg", // waiting for upload
+    img: "/images/home/f4.jpg", // waiting for upload
     hours: "3+ Hours",
     lang: "English",
     students: "820",
@@ -51,7 +51,7 @@ const courses = [
   {
     id: 5,
     title: "Course 5 thumbnail missing",
-    img: "/images/f5.png", // waiting for upload
+    img: "/images/home/f5.png", // waiting for upload
     hours: "1.5+ Hours",
     lang: "English",
     students: "500",
@@ -62,7 +62,7 @@ const courses = [
   {
     id: 6,
     title: "Course 6 thumbnail missing",
-    img: "/images/f6.png", // waiting for upload
+    img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -73,7 +73,7 @@ const courses = [
   {
     id: 7,
     title: "Course 6 thumbnail missing",
-    img: "/images/f6.png", // waiting for upload
+    img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -84,7 +84,7 @@ const courses = [
   {
     id: 8,
     title: "Course 6 thumbnail missing",
-    img: "/images/f6.png", // waiting for upload
+    img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -95,7 +95,7 @@ const courses = [
   {
     id: 9,
     title: "Course 6 thumbnail missing",
-    img: "/images/f6.png", // waiting for upload
+    img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -106,7 +106,7 @@ const courses = [
   {
     id: 10,
     title: "Course 6 thumbnail missing",
-    img: "/images/f6.png", // waiting for upload
+    img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
     students: "1240",
@@ -119,7 +119,25 @@ const courses = [
 
 
 export default function CoursesPage() {
-  const ITEMS_PER_PAGE = 9
+  const [itemsPerPage, setItemsPerPage] = useState(9)
+useEffect(() => {
+  const updateItemsPerPage = () => {
+    if (window.innerWidth < 768) {
+      setItemsPerPage(3)
+    } else {
+      setItemsPerPage(9)
+    }
+  }
+
+  updateItemsPerPage()
+  window.addEventListener("resize", updateItemsPerPage)
+
+  return () => {
+    window.removeEventListener("resize", updateItemsPerPage)
+  }
+}, [])
+  const ITEMS_PER_PAGE = itemsPerPage;
+
   const [categoryFilter, setCategoryFilter] = useState('All Categories')
   const [levelFilter, setLevelFilter] = useState('All Levels')
   const [priceFilter, setPriceFilter] = useState('All Prices')
@@ -150,7 +168,8 @@ export default function CoursesPage() {
     })
   }, [categoryFilter, levelFilter, priceFilter])
 
-  const pageCount = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+const pageCount = Math.ceil(filtered.length / itemsPerPage)
+
   const paginated = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE
     return filtered.slice(start, start + ITEMS_PER_PAGE)
@@ -158,10 +177,12 @@ export default function CoursesPage() {
 
 
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
 
-  const visibleCourses = courses.slice(startIndex, endIndex);
+// use filtered array (so filters + pagination both work)
+const visibleCourses = filtered.slice(startIndex, endIndex);
+
   const handlePageClick = (page: number) => {
     if (page < 1 || page > pageCount) return;
     setCurrentPage(page);
@@ -261,16 +282,16 @@ export default function CoursesPage() {
 
             <div className="p-3">
               <div className="flex items-center gap-4 text-gray-500 text-sm">
-                <span className="flex items-center gap-1"><img src="/images/clock-light.svg" alt="" width="20" height="20" /> {c.hours}</span>
+                <span className="flex items-center gap-1"><img src="/images/icons/clock-light.svg" alt="" width="20" height="20" /> {c.hours}</span>
                 <span className="flex items-center
-   gap-1"><img src="/images/eng-light.svg" alt="" width="20" height="20" /> {c.lang}</span>
+   gap-1"><img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.lang}</span>
               </div>
 
               <h3 className="text-[26px] font-normal
    text-[#252525] mt-2 mb-2">{c.title}</h3>
 
               <div className="flex items-center gap-2 text-gray-500 text-sm">
-                <img src="/images/user-light.svg" alt="" width="20" height="20" /> {c.students} students
+                <img src="/images/icons/user-light.svg" alt="" width="20" height="20" /> {c.students} students
               </div>
 
               <div className="flex justify-between items-center mt-4">

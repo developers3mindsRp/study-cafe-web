@@ -70,8 +70,9 @@ export default function Footer() {
                 <img src="/images/telegram.png" alt="Telegram" />
               </a>
             </div>
-            <div className="mt-6 hidden md:block">
-              <img src="/images/google_play.png" alt="Download on Google Play" width="159" height="90" />
+            <div className="mt-6 hidden  md:flex">
+              <img src="/images/google-play.png" alt="Download on Google Play" width="159" height="90" />
+              <img src="/images/app-store.png" alt="Download on app store" width="159" height="90" />
             </div>
           </div>
 

@@ -61,10 +61,10 @@ const TrendingCourses = () => {
             <div className="p-4">
               <div className="flex items-center gap-4 text-gray-500 text-sm mb-3">
                 <span className="flex items-center gap-1">
-                   <img src="/images/clock-light.svg" alt="" width="20" height="20" />  {c.hours}
+                   <img src="/images/icons/clock-light.svg" alt="" width="20" height="20" />  {c.hours}
                 </span>
                 <span className="flex items-center gap-1">
-                  <img src="/images/eng-light.svg" alt="" width="20" height="20" />  {c.lang}
+                  <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" />  {c.lang}
                 </span>
               </div>
 
@@ -73,7 +73,7 @@ const TrendingCourses = () => {
               </h3>
 
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
-                  <img src="/images/user-light.svg" alt="" width="20" height="20" />  {c.students} students
+                  <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />  {c.students} students
               </div>
 
               <div className="flex justify-between items-center">
@@ -109,10 +109,10 @@ const TrendingCourses = () => {
             <div className="p-4">
               <div className="flex items-center gap-4 text-gray-500 text-sm mb-3">
                 <span className="flex items-center gap-1">
-                    <img src="/images/clock-light.svg" alt="" width="20" height="20" />  {c.hours}
+                    <img src="/images/icons/clock-light.svg" alt="" width="20" height="20" />  {c.hours}
                 </span>
                 <span className="flex items-center gap-1">
-                     <img src="/images/eng-light.svg" alt="" width="20" height="20" />  {c.lang}
+                     <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" />  {c.lang}
                 </span>
               </div>
 
@@ -121,7 +121,7 @@ const TrendingCourses = () => {
               </h3>
 
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
-                 <img src="/images/user-light.svg" alt="" width="20" height="20" />  {c.students} students
+                 <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />  {c.students} students
               </div>
 
               <div className="flex justify-between items-center">
