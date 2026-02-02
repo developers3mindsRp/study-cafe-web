@@ -57,7 +57,7 @@ const HeroSection = () => {
           <img
             src="/images/home/home.png"
             alt="Learning illustration"
-            className="w-3/4 md:w-full  object-contain "
+            className="px-4 md:w-full  object-contain "
           />
         </div>
 

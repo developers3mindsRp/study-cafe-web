@@ -63,13 +63,13 @@ export default function ReviewSection() {
            
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">Google Reviews</h2>
-      {/* Mobile slider */}
+
       {/* Mobile slider */}
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
         {testimonials.map((item, index) => (
           <div
             key={index}
-            className="w-[260px] sm:w-[280px] snap-center flex-shrink-0 relative border border-[#17254E] rounded-xl p-4 text-left"
+            className="w-[320px] sm:w-[280px] snap-center flex-shrink-0 relative border border-[#AFAFAF] rounded-xl p-4 text-left"
           >
             {/* User + Rating Row */}
             <div className="flex flex-col gap-3">
@@ -83,31 +83,38 @@ export default function ReviewSection() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
+                    <h4 className="font-semibold text-gray-900 text-[16px] sm:text-base">
                       {item.name}
                     </h4>
-                    <p className="text-[#302A2A99] font-medium text-xs sm:text-sm">
+                    <p className="text-[#302A2A99] font-medium text-[16px] sm:text-sm">
                       {item.role}
                     </p>
                   </div>
                 </div>
               </div>
+        {/* Rating */}
+        <div className="flex items-center gap-3 mt-2 mb-2">
+          <div className="flex gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <img
+                key={i}
+                src={i === 4 ? "/images/star-blank.png" : "/images/Star.png"} 
+                className="w-4 h-4 sm:w-4"
+                alt={i === 0 ? "empty star" : "filled star"}
+              />
+            ))}
+          </div>
 
-              {/* Rating */}
-              <div className="flex items-center gap-3 mt-2 mb-2">
-                <div className="flex">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <img key={i} src="/images/Star.png" className="w-3 sm:w-4" />
-                  ))}
-                </div>
-                <span className="text-gray-400 text-[10px] sm:text-xs">
-                  • 6 months ago
-                </span>
-              </div>
+          <span className="text-gray-400 text-[16px] sm:text-xs ml-6">
+            <li> 6 months ago</li>
+          </span>
+
+        </div>
+
             </div>
 
             {/* Message */}
-            <p className="text-[#696969] text-xs sm:text-sm leading-relaxed">
+            <p className="text-[#696969] text-[16px] sm:text-sm leading-relaxed">
               {item.message}
             </p>
 
@@ -123,7 +130,7 @@ export default function ReviewSection() {
         {testimonials.map((item, index) => (
           <div
             key={index}
-            className="relative border border-[#17254E] rounded-xl p-6 text-left"
+            className="relative border border-[#AFAFAF] rounded-xl p-6 text-left"
           >
 
 
@@ -141,21 +148,28 @@ export default function ReviewSection() {
                   <h4 className="font-semibold text-gray-900 text-[30px]">
                     {item.name}
                   </h4>
-                  <p className="text-[#302A2A99] font-bold text-[17px]">{item.role}</p>
+                  <p className="text-[#302A2A99] font-normal text-[18px]">{item.role}</p>
                 </div>
               </div>
 
 
             </div>
-            {/* Rating + Time */}
-            <div className="flex items-center gap-3 mt-2">
-              <div className="flex">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <img key={i} src="/images/Star.png" className="w-4" />
+       
+        {/* Rating */}
+            <div className="flex items-center gap-3 mt-4 mb-2">
+              <div className="flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <img
+                    key={i}
+                    src={i === 4 ? "/images/star-blank.png" : "/images/Star.png"} 
+                    className="w-4 h-4 sm:w-4"
+                    alt={i === 0 ? "empty star" : "filled star"}
+                  />
                 ))}
-                <img src="/images/Star.png" className="w-4" />
               </div>
-              <span className="text-gray-400 text-sm">• 6 months ago</span>
+              <span className="text-gray-400 text-[18px]  ml-6">
+            <li> 6 months ago</li>
+          </span>
             </div>
             {/* Message */}
             <p className="text-[#2F2A2A] text-[18px] mt-2 leading-relaxed">

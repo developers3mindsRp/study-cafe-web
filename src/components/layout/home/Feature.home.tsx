@@ -194,7 +194,7 @@ export default function FeaturedCourses() {
 
           {/* Category Filter */}
           {/* Mobile: carousel with arrows */}
-          <div className="sm:hidden w-full relative">
+          <div className="sm:hidden w-full relative px-2">
             <div className="flex items-center">
               {/* <button
                 onClick={prevCategory}
@@ -208,7 +208,7 @@ export default function FeaturedCourses() {
 
               <div
                 ref={catRef}
-                className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide scroll-smooth -ml-1"
+                className="flex gap-3 overflow-x-auto snap-x snap-mandatory  scrollbar-hide scroll-smooth -ml-1 "
                 role="listbox"
                 aria-label="Course categories"
               >
@@ -252,15 +252,15 @@ export default function FeaturedCourses() {
         {/* Courses Slider + Grid */}
         <div>
           {/* Mobile Slider */}
-          <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory sm:hidden pb-4 scrollbar-hide">
+          <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory sm:hidden pb-4 scrollbar-hide px-2">
             {courses.map((c) => (
               <div
                 key={c.id}
                 className="w-[300px] snap-center bg-white shadow-md rounded-md overflow-hidden flex-shrink-0"
               >
-                <div className="relative w-full h-[220px]">
+                <div className="relative w-full h-[180px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-[14px] text-sm shadow font-semibold mt-4">
+                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-[14px] text-sm shadow font-semibold mt-2">
                      <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
                   </span>
                 </div>

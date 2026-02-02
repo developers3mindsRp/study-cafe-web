@@ -37,6 +37,7 @@ const bonuses = [
 const faqs = [
   {
     q: "Day1: What is the Duration of the Course?",
+    duration: "2Hrs",
     a: [
       "GST Provisions related to GSTR-9 and GSTR-9C filing",
       "⁠GST Annual return, recent changes as per GST notification",
@@ -46,6 +47,7 @@ const faqs = [
   },
   {
     q: "Day2: Discussion on GSTR-9C",
+    duration: "2Hrs",
     a: [
       "GST Provisions related to GSTR-9 and GSTR-9C filing",
       "⁠GST Annual return, recent changes as per GST notification",
@@ -84,7 +86,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Description</h2>
 
-      <div className="bg-white border rounded-lg p-6 text-[#6C6C6C] text-[17px] leading-[32px] mb-12 font-normal shadow-lg">
+      <div className="bg-white  rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-12 font-normal shadow-md">
         <p>
           In our continuous endeavour to empower more and more finance
           professionals, this certification course has been designed for you.
@@ -96,7 +98,7 @@ export default function CourseOverview() {
 
 
         {/* Bonuses */}
-        <div className="p-4 sm:p-8">
+        <div className="p-0 sm:p-8 mt-8 md:mt-6">
           {/* Badge */}
           <button className="flex items-center justify-center gap-2 mb-3 bg-[#F7AA0A] mx-auto px-4 py-2 rounded-[10px]">
             <img src="/images/gift.png" alt="" className="w-5 h-5" />
@@ -106,16 +108,16 @@ export default function CourseOverview() {
           </button>
 
           {/* Heading */}
-          <h3 className="text-center text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
+          <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
             Register Fast to unlock bonuses worth ₹12,000
           </h3>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-10 px-2 sm:px-8 lg:px-32 mt-8 sm:mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 lg:px-32 mt-8 sm:mt-12">
             {bonuses.map((bonus, index) => (
               <div
                 key={index}
-                className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm"
+                className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm "
               >
                 {/* Bonus Tag */}
                 <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
@@ -189,41 +191,52 @@ export default function CourseOverview() {
 
       <div className="w-full  mt-10 space-y-3 text-left container px-4">
         {faqs.map((item, index) => (
-          <div key={index} className="border rounded-lg overflow-hidden bg-[#09339B]">
+          <div key={index} className="shadow-md rounded-lg overflow-hidden ">
             {/* Question Button */}
-            <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className={`
-              w-full flex justify-between items-center p-4 transition
-              ${openIndex === index
-                  ? "bg-[#09339B] text-white"    // Active
-                  : "bg-white text-[#09339B]"}   // Inactive
-            `}
+          <button
+          onClick={() => setOpenIndex(openIndex === index ? null : index)}
+          className={`
+            w-full flex justify-between items-center p-4 transition
+            ${openIndex === index
+              ? "bg-[#09339B] text-white"
+              : "bg-white text-[#09339B]"}
+          `}
+        >
+          {/* Left text */}
+          <span className="font-medium text-[14px] md:text-[20px]">
+            {item.q}
+          </span>
+
+          {/* Right part: duration + arrow */}
+          <div className="flex items-center gap-2 md:gap-32">
+            <span className="font-medium text-[16px] md:text-[20px]">
+              {item.duration}
+            </span>
+
+            {/* Arrow Icon */}
+            <svg
+              className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
             >
-              <span className="font-medium text-[20px]  text-left "> {item.q}</span>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
 
-              {/* Arrow Icon */}
-              <svg
-                className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
 
-            {/* Answer */}
-            {openIndex === index && (
-              <div className="px-4 pb-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                <ul className="list-disc pl-5 mt-2 space-y-1">
-                  {item.a.map((text, i) => (
-                    <li key={i}>{text}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          {/* Answer */}
+          {openIndex === index && (
+            <div className="px-4 pb-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                {item.a.map((text, i) => (
+                  <li key={i}>{text}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
 
           </div>
@@ -235,7 +248,7 @@ export default function CourseOverview() {
            
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="certificate">Certificate</h2>
-      <p className=" text-center text-[20px] mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
+      <p className=" text-center text-[16px] md:text-[20px] mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
       <img src="/images/certificate1.png" alt="" className="mx-auto" />
 
 

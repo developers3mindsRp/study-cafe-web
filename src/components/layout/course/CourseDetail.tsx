@@ -3,7 +3,7 @@ import { useState } from "react";
 const faqs = [
   {
     q: " Who can join this Course?",
-    a: "⭐ Commerce Graduates/CA/CS/CMA/Law students ⭐ Tax professionals in job or practice ⭐ Qualified CA/CS/CMA/LLB ⭐ Semi-qualified CA/CS/CMA working in CA firms ⭐ Anyone interested"
+    a: "⭐ Commerce Graduates/CA/CS/CMA/Law students ⭐ Tax professionals whether in JOB or Practice ⭐ Qualified CA/CS/CMA/LLB ⭐ Semi-qualified CA/CS/CMA working in CA Firms or in Industry ⭐ Any other person not covered above can join course if interested"
   },
   {
     q: " What is the Duration of the Course?",
@@ -118,7 +118,7 @@ export default function CourseSection() {
           ">FAQ</h2>
           <div className="space-y-4">
             {faqs.map((item, index) => (
-              <div key={index} className="border rounded-lg overflow-hidden">
+              <div key={index} className="border rounded-lg overflow-hidden shadow-md">
                 {/* Question Button */}
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -150,7 +150,7 @@ export default function CourseSection() {
 
                 {/* Answer */}
                 {openIndex === index && (
-                  <div className="px-4 pb-4 text-[16px] text-[#454545] leading-relaxed border-t ">
+                  <div className="px-4 pb-4 text-[16px] text-[#6C6C6C] leading-[28px] border-t p-4">
                     {item.a}
                   </div>
                 )}

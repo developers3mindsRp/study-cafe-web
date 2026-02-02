@@ -27,15 +27,15 @@ export default function BannerSection() {
               {/* Left: Banner */}
               <div className="md:w-1/2">
                 {/* Course Start Time */}
-                <p className="bg-[#DEEBFD] max-w-sm p-4 rounded-[10px] text-[#09339B] text-[16px] font-Outfit font-normal">
+                <p className="bg-[#DEEBFD] max-w-sm p-4 rounded-[10px] text-[#09339B] text-[14px] font-Outfit font-normal">
                   Starts at Thursday November 27, 2025 – 18:00
                 </p>
-                <h1 className="text-[30px] md:text-[43px] font-semibold text-gray-900 leading-snug mt-6">
+                <h1 className="text-[20px] md:text-[43px] font-semibold text-gray-900 leading-snug mt-6">
                   Certification Course On Practical Filing of GSTR-9 & GSTR-9C
                 </h1>
 
                 {/* Description */}
-                <p className="text-[#929292] text-[17px] leading-[32px] mt-6">
+                <p className="text-[#929292] text-[16px] leading-[32px] mt-6">
                   In our continuous endeavour to empower more and more finance professionals,
                   this certification course has been designed for you. Detailed 2 Days course
                   has been designed where already more than 2 hrs sessions have been organized.
@@ -131,10 +131,10 @@ export default function BannerSection() {
                 <div
                   className="
                     mt-3 p-3
-                    flex flex-wrap sm:flex-nowrap
+                    flex 
                     gap-3 sm:gap-6
                     justify-center sm:justify-between
-                    text-[12px] sm:text-[13px]
+                    text-[8px] sm:text-[13px]
                     font-bold
                   "
                 >
@@ -143,7 +143,7 @@ export default function BannerSection() {
                     <span>English</span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                  <div className="flex items-center gap-2 bg-white text-black md:px-3 py-2 rounded-md">
                     <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-4" />
                     <span>4 Hours</span>
                   </div>
@@ -168,8 +168,8 @@ export default function BannerSection() {
           </div>
 
           <div className="mt-8">
-            <h3 className="text-[20px] font-medium">This course includes:</h3>
-            <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[13px]">
+            <h3 className="text-[14px] md:text-[20px] font-medium">This course includes:</h3>
+            <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[12px] md:text-[13px]">
               <div className="flex gap-2 items-center bg-white  p-3">
                 <img src="/images/icon-video.png" alt="Language" /> <span>Recording is available for 1 year</span>
               </div>

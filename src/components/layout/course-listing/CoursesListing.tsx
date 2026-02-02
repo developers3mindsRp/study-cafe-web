@@ -1,7 +1,7 @@
 // pages/index.jsx
 import React, { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
-import { FaClock, FaLanguage, FaUserGraduate } from "react-icons/fa";
+
 
 const courses = [
   {
@@ -192,7 +192,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
     <div className="container px-4 mx-auto">
       {/* Filter bar */}
       <div className="filter-bar md:flex  mb-10 mt-10  md:px-4 items-center">
-        <div className="flex-wrap gap-2 md:flex md:gap-4 ">
+        <div className="flex-wrap gap-8 md:flex md:gap-4 px-4 md:px-0">
           <select
             value={latestFilter}
             onChange={e => { setLatestFilter(e.target.value); setCurrentPage(1) }}
@@ -271,34 +271,32 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
         {visibleCourses.map((c) => (
           <div key={c.id} className="bg-white shadow-md rounded-md
    overflow-hidden ">
-            <div className="relative w-full h-[233px]">
-              <Image src={c.img} alt={c.title} fill
-                className="object-fit" />
-              <span className="absolute top-2 right-2 bg-white px-2
-   py-1 rounded text-sm shadow">
-                ⭐ {c.rating}
-              </span>
-            </div>
+             <div className="relative w-full h-[200px]">
+                  <Image src={c.img} alt={c.title} fill className="object-fit" />
+                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-[14px] text-sm shadow font-semibold mt-2">
+                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
+                  </span>
+                </div>
 
             <div className="p-3">
-              <div className="flex items-center gap-4 text-gray-500 text-sm">
+              <div className="flex items-center gap-4 text-[#AFAFAF] text-[14px] md:text-[16px] ">
                 <span className="flex items-center gap-1"><img src="/images/icons/clock-light.svg" alt="" width="20" height="20" /> {c.hours}</span>
                 <span className="flex items-center
    gap-1"><img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.lang}</span>
               </div>
 
-              <h3 className="text-[26px] font-normal
+              <h3 className="text-[16px] md:text-[26px] font-normal
    text-[#252525] mt-2 mb-2">{c.title}</h3>
 
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
+              <div className="flex items-center gap-2 text-[#AFAFAF] text-[14px] md:text-[16px]">
                 <img src="/images/icons/user-light.svg" alt="" width="20" height="20" /> {c.students} students
               </div>
 
-              <div className="flex justify-between items-center mt-4">
+              <div className="flex justify-between items-center mt-2 md:mt-4">
                 <div>
                   <span className="line-through
    text-gray-400">{c.oldPrice}</span>
-                  <span className="text-[#252525] font-normal text-[26px]
+                  <span className="text-[#252525] font-normal text-[16px] md:text-[26px]
                  ml-2">{c.newPrice}</span>
                 </div>
                 <button className="bg-[#09339B] text-white px-4 py-2
