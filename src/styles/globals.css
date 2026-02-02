@@ -134,8 +134,47 @@
   width: max-content;
   animation: marquee 25s linear infinite;
 }
+.marquee-wrapper:hover .marquee {
+  animation-play-state: paused;
+}
 
 .marquee-wrapper {
   overflow: hidden;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.marquee-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+/* Pause when hover on card OR container */
+.marquee-wrapper:hover .marquee-track,
+.marquee-card:hover ~ .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-card:hover {
+  animation-play-state: paused;
+}
+
+/* Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 

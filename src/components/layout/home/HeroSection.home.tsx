@@ -34,13 +34,13 @@ const HeroSection = () => {
           <div className="mt-6 md:mt-10 flex flex-row md:flex-row justify-center lg:justify-start gap-4 px-2 md:px-0 ">
             <button
               onClick={handleClick}
-              className="py-2 px-6 border-2 border-white rounded-md text-[14px] md:text-[20px] font-medium text-white hover:bg-white/20 transition"
+              className="py-2 px-3 border-2 border-white rounded-[10px] text-[14px] md:text-[20px] font-medium text-white hover:bg-white/20 transition"
             >
               View Memberships
             </button>
 
             <Link href="/courses_list">
-              <button className="py-3 px-6 bg-white text-[#09339B] rounded-md flex items-center justify-center gap-2 text-base md:text-[20px] hover:bg-gray-100 transition font-semibold">
+              <button className="py-3 px-3 bg-white text-[#09339B] rounded-[10px] flex items-center justify-center gap-2 text-base md:text-[20px] hover:bg-gray-100 transition font-semibold">
                 Browse Courses
                 <img
                   src="/images/icons/blue_arrow.png"

@@ -18,9 +18,13 @@ const testimonials = [
 export default function Testimonials_course() {
     return (
         <section className=" bg-white container px-4 mx-auto pb-12 ">
-            <div className=" mx-auto px-4 ">
+            <div className=" md:mx-auto  ">
                 {/* Heading */}
-                <h2 className="text-[30px] md:text-[40px] font-semibold text-gray-900">
+                <h2 className="text-[20px] md:text-[40px] font-semibold  mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">
                     Testimonials
                 </h2>
 

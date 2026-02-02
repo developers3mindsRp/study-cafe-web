@@ -62,8 +62,20 @@ export default function CourseSection() {
 
 
            {/* Author Section */}
-      <div className="container mx-auto px-4 mt-10">
-        <h2 className="text-[30px] font-semibold mb-4">About Authors</h2>
+            <div className="container mx-auto px-4 mt-10">
+        <h2
+          className="
+            text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
+          "
+        >
+          About Authors
+        </h2>
+
+
 
         <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
           <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
@@ -97,7 +109,13 @@ export default function CourseSection() {
       <div className="w-full bg-white  container mx-auto px-4">
         {/* FAQ Section */}
         <div className=" mx-auto md:px-4 mt-10">
-          <h2 className="text-[30px] font-medium mb-4">FAQ</h2>
+          <h2 className="
+            text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
+          ">FAQ</h2>
           <div className="space-y-4">
             {faqs.map((item, index) => (
               <div key={index} className="border rounded-lg overflow-hidden">

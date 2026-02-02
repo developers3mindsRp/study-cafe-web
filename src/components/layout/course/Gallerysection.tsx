@@ -19,11 +19,10 @@ export default function Gallery() {
     return (
         <section className="bg-white py-4">
             {/* Heading */}
-            <h2 className="text-[30px] md:text-[40px] font-medium text-gray-900 container px-4 mx-auto">
+            <h2 className="text-[30px] md:text-[40px] font-medium text-gray-900 container px-4 mx-auto  ">
                 Gallery
             </h2>
             <div>
-
 
                 {/* Marquee */}
                 <div className="marquee-wrapper mt-10">
@@ -45,6 +44,5 @@ export default function Gallery() {
                 </div>
             </div>
         </section>
-
   );
 }

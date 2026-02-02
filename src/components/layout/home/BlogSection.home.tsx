@@ -65,7 +65,7 @@ export default function BlogSection() {
       tag: "GST",
       author: "Meetu Kumari",
       date: "Nov 16, 2025",
-      title: "UAE finalises new sugar-based tax model for sweetened...",
+      title: "UAE finalises new sugar-based tax model for sweetened ",
     },
   ];
 
@@ -106,15 +106,28 @@ export default function BlogSection() {
             key={i}
             className="min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
           >
-            <img src={b.img} alt="blog" className="w-full h-[233px] object-fit" />
+            {/* <img src={b.img} alt="blog" className="w-full h-[200px] object-fit" /> */}
+                <div className="relative w-full h-[200px]">
+              <img
+                src={b.img}
+                alt="blog"
+                className="w-full h-full object-fit"
+              />
+
+              {/* Right Corner Tag */}
+              <span className="absolute top-4 left-4 bg-white text-[#252525] text-[10px] font-normal px-2 py-1 rounded-[14px] ">
+                {b.tag}
+              </span>
+            </div>
+
             <div className="p-4">
-              <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
+              <div className="flex items-center gap-2 text-[12px] text-[#AFAFAF] mb-3">
+                <span className="flex"> <img src="/images/user.svg" alt="" width="10" height="10" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="10" height="10" />{b.date}</span>
               </div>
-              <h3 className="font-medium text-[16px] text-[#252525] leading-tight mb-4">
+              <h3 className="font-medium text-[14px] text-[#252525] leading-tight mb-4">
                 {b.title}
               </h3>
-              <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 rounded-md flex items-center gap-2">
+              <button className="text-[12px] bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 rounded-md flex items-center gap-2">
                 Read More
                 <img src="/images/arrow-left.svg" alt="" />
               </button>
@@ -127,13 +140,27 @@ export default function BlogSection() {
       <div className="hidden md:flex gap-6 mt-10 justify-center container mx-auto px-6">
         {visibleBlogs.map((b, i) => (
           <div key={i} className=" rounded-xl shadow-md border bg-white overflow-hidden text-left">
-            <img src={b.img} alt="blog" className="w-full h-[233px] object-fit" />
+          <div className="relative w-full h-[233px]">
+              <img
+                src={b.img}
+                alt="blog"
+                className="w-full h-full object-fit"
+              />
+
+              {/* Right Corner Tag */}
+              <span className="absolute top-4 left-4 bg-white text-[#252525] text-[14px] font-normal px-2 py-1 rounded-[14px] ">
+                {b.tag}
+              </span>
+            </div>
+
+            
+   
             <div className="p-4">
               <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
                 <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
 
               </div>
-              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4">
+              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4 ">
                 {b.title}
               </h3>
               <Link href="/blogs/blog-detail">
@@ -183,7 +210,7 @@ export default function BlogSection() {
         {/* Right Button */}
         <div className="w-full flex justify-center md:w-auto md:justify-end">
           <Link href="/blogs">
-            <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-4 bg-white rounded-[10px] shadow">
+            <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-2 pl-4 pr-4 bg-white rounded-[10px] shadow">
               View All Blogs
               <img src="/images/icons/blue_arrow.png" alt="" />
             </button>

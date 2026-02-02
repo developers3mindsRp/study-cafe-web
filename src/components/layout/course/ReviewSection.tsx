@@ -1,7 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import ReviewForm from "./WriteReview";
-import { init } from "next/dist/compiled/webpack/webpack";
 export default function ReviewSection() {
   const testimonials = [
   {
@@ -60,7 +58,11 @@ export default function ReviewSection() {
 
     <section className="container px-4 mx-auto py-12 ">
 
-      <h2 className="text-[30px] font-semibold mb-4 ">Google Reviews</h2>
+      <h2 className="          text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">Google Reviews</h2>
       {/* Mobile slider */}
       {/* Mobile slider */}
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">

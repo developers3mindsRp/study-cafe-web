@@ -49,7 +49,7 @@ export default function Header() {
 
   {/* Logo (left) */}
   <Link href="/" className="flex items-center gap-2">
-    <div className="w-[221px] h-[62px] flex items-center justify-center">
+    <div className="w-[154px] md:w-[221px] h-[53px] md:h-[62px] flex items-center justify-center">
       <img src="/images/studycafe_logo.svg" alt="StudyCafe" />
     </div>
   </Link>
@@ -145,8 +145,8 @@ export default function Header() {
   {/* Mobile Menu Button */}
   <button
     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-    className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-  >
+    className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"
+  > 
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       {mobileMenuOpen ? (
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef } from "react";
-import { FaClock, FaLanguage, FaUserGraduate } from "react-icons/fa";
 
 const categories = ["Top Selling", "Excel", "AI Tools", "GST", "Income Tax"];
 
@@ -143,7 +142,7 @@ const courses = [
 ];
 
 export default function FeaturedCourses() {
-  const [active, setActive] = useState("All Courses");
+  const [active, setActive] = useState(categories[0]);
 
   // Reference for mobile categories carousel
   const catRef = useRef<HTMLDivElement | null>(null);
@@ -174,6 +173,8 @@ export default function FeaturedCourses() {
   const startIndex = (step - 1) * 6;
   const endIndex = startIndex + 6;
   const visibleBCourses = courses.slice(startIndex, endIndex);
+
+
 
   return (
     <section
@@ -217,8 +218,8 @@ export default function FeaturedCourses() {
                     role="option"
                     aria-selected={active === cat}
                     className={`snap-center flex-shrink-0  px-6 py-3 rounded-md whitespace-nowrap transition ${active === cat
-                        ? "bg-[#09339B] text-white"
-                        : "bg-transparent text-[#767676]"
+                      ? "bg-[#09339B] text-white"
+                      : "bg-transparent text-[#767676]"
                       }`}
                     onClick={() => setActive(cat)}
                   >
@@ -235,7 +236,7 @@ export default function FeaturedCourses() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                className={`px-5 py-2 rounded-md whitespace-nowrap transition ${active === cat
+                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${active === cat
                     ? "bg-[#09339B] text-white"
                     : "bg-transparent text-[#767676]"
                   }`}
@@ -245,6 +246,7 @@ export default function FeaturedCourses() {
               </button>
             ))}
           </div>
+
         </div>
 
         {/* Courses Slider + Grid */}
@@ -258,8 +260,8 @@ export default function FeaturedCourses() {
               >
                 <div className="relative w-full h-[220px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
-                    ⭐ {c.rating}
+                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-[14px] text-sm shadow font-semibold mt-4">
+                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
                   </span>
                 </div>
 
@@ -309,8 +311,8 @@ export default function FeaturedCourses() {
               >
                 <div className="relative w-full h-[250px] md:h-[233px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
-                    ⭐ {c.rating}
+                  <span className="absolute flex  gap-1 top-2 right-3 bg-white px-3 py-1 rounded-[14px] text-md font-semibold shadow mt-4">
+                    <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
                   </span>
                 </div>
 
@@ -360,7 +362,7 @@ export default function FeaturedCourses() {
         <div className="hidden  md:flex gap-3">
           <button
             onClick={prev}
-            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
+            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white border border-gray-300 "
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M5.5 12.002L19 12.002" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -370,7 +372,7 @@ export default function FeaturedCourses() {
 
           <button
             onClick={next}
-            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
+            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white border border-gray-300 "
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M18.5 11.998L5 11.998" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -390,7 +392,7 @@ export default function FeaturedCourses() {
         {/* Right Button */}
         <div className="w-full flex justify-center md:w-auto md:justify-end mb-6 md:mb-0 mt-4 md:mt-0">
           <Link href="/courses_list">
-            <button className="text-sm text-[#09339B] border border-[#09339B] md:border-none font-medium flex items-center gap-1 p-2 md:p-4 bg-white rounded-[10px] shadow">
+            <button className="text-sm text-[#09339B] border border-[#09339B] md:border-none font-medium flex items-center gap-1 p-2 md:p-4 bg-white rounded-[10px] ">
               View All Courses
               <img src="/images/icons/blue_arrow.png" alt="" />
             </button>

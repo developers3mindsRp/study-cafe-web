@@ -6,7 +6,7 @@ export default function StatsSection() {
   return (
     <section className="bg-white py-10 md:py-16 px-4 ">
       <div className="container mx-auto px-4 bg-[#09339B] rounded-[10px] md:rounded-full p-6 ">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center px-2">
 
           {/* Active Students */}
           <div className="flex  flex-col md:flex-row  items-center gap-3">

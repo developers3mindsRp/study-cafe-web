@@ -78,7 +78,11 @@ export default function CourseOverview() {
       </div>
 
       {/* Course Description */}
-      <h2 className="text-[30px] font-semibold mb-4 container px-4 scroll-mt-28" id="description">Course Description</h2>
+      <h2 className="container scroll-mt-28  text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Description</h2>
 
       <div className="bg-white border rounded-lg p-6 text-[#6C6C6C] text-[17px] leading-[32px] mb-12 font-normal shadow-lg">
         <p>
@@ -177,7 +181,11 @@ export default function CourseOverview() {
 
       </div>
 
-      <h2 className="text-[30px] font-semibold mb-4 container px-4 scroll-mt-28" id="content">Course Content</h2>
+      <h2 className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="content">Course Content</h2>
 
       <div className="w-full  mt-10 space-y-3 text-left container px-4">
         {faqs.map((item, index) => (
@@ -222,7 +230,11 @@ export default function CourseOverview() {
         ))}
       </div>
 
-      <h2 className="text-[30px] font-semibold mb-4 container px-4 mt-8 scroll-mt-28" id="certificate">Certificate</h2>
+      <h2 className="  container mt-8 scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="certificate">Certificate</h2>
       <p className=" text-center text-[20px] mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
       <img src="/images/certificate1.png" alt="" className="mx-auto" />
 

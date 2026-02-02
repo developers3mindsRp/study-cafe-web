@@ -41,7 +41,11 @@ const TrendingCourses = () => {
 
   return (
     <section className="w-full py-12  px-4 mx-auto container">
-      <h2 className="text-[30px] md:text-[40px] font-medium text-[#1A1A1A] mb-4 px-4">Trending Courses</h2>
+      <h2 className="text-[20px] md:text-[40px] font-medium   mb-6 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">Trending Courses</h2>
 
 
       {/* Mobile Slider */}
