@@ -1,0 +1,126 @@
+import Image from "next/image";
+import React from "react";
+
+export default function Sidebar() {
+  return (
+    <div className="sticky top-20 space-y-6">
+      <div className=" p-6 h-fit"> <div> <h3 className="text-[30px] md:text-[40px] font-semibold">My Account</h3>
+       <p className="text-[18px] md:text-[24px] text-[#454545]">Manage your profile, subscription, and learning progress</p> </div> </div>
+{/* PROFILE BOX */}
+<div className="flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center">
+
+  {/* Mobile: Image left + content right */}
+  <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
+    
+{/* Profile Image Wrapper */}
+<div className="relative w-24 h-24 md:w-28 md:h-28 flex-shrink-0">
+
+  {/* Image */}
+  <div className="w-full h-full rounded-full overflow-hidden">
+    <Image
+      src="/images/profile.png"
+      alt="Profile"
+      width={120}
+      height={120}
+      className="object-cover w-full h-full"
+    />
+  </div>
+
+  {/* Camera button */}
+  <button
+    aria-label="Change profile photo"
+    className="absolute -right-1 -bottom-1 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white border border-gray-200 shadow flex items-center justify-center hover:bg-gray-50"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M12.6973 3.5H11.3029C10.5883 3.5 10.231 3.5 9.91061 3.612C9.71493 3.68039 9.53107 3.77879 9.36562 3.90367C9.09468 4.10816 8.89649 4.40544 8.50012 5C8.29712 5.30452 7.99788 5.75337 7.87861 5.87871C7.58308 6.18927 7.19557 6.39666 6.77323 6.47029C6.60278 6.5 6.41979 6.5 6.05381 6.5C5.07373 6.5 4.5837 6.5 4.18301 6.61342C3.18068 6.89716 2.39728 7.68055 2.11354 8.68289C2.00012 9.08357 2.00012 9.57361 2.00012 10.5537V14.5C2.00012 17.3284 2.00012 18.7426 2.8788 19.6213C3.75748 20.5 5.1717 20.5 8.00012 20.5H16.0001C18.8285 20.5 20.2427 20.5 21.1214 19.6213C22.0001 18.7426 22.0001 17.3284 22.0001 14.5V10.5537C22.0001 9.57361 22.0001 9.08357 21.8867 8.68289C21.6029 7.68055 20.8195 6.89716 19.8172 6.61342C19.4165 6.5 18.9265 6.5 17.9464 6.5C17.5804 6.5 17.3974 6.5 17.227 6.47029C16.8046 6.39666 16.4171 6.18927 16.1216 5.87871C16.0023 5.75336 15.7031 5.30451 15.5001 5C15.1037 4.40544 14.9055 4.10816 14.6346 3.90367C14.4691 3.77879 14.2853 3.68039 14.0896 3.612C13.7692 3.5 13.4119 3.5 12.6973 3.5Z" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16.0001 13C16.0001 15.2091 14.2092 17 12.0001 17C9.79098 17 8.00012 15.2091 8.00012 13C8.00012 10.7909 9.79098 9 12.0001 9C14.2092 9 16.0001 10.7909 16.0001 13Z" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.0002 9.5V9.51" stroke="#141B34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>
+
+
+    {/* Right Content */}
+    <div className="text-left md:text-center flex-1 md:flex md:flex-col md:items-center md:w-full">
+      <h2 className="text-[22px] md:text-[26px] font-normal">Shubham</h2>
+      <p className="text-gray-500 text-[14px] md:text-[16px] mt-1">
+        Member since January 2025
+      </p>
+
+      <div className="mt-3 space-y-2 md:self-start md:text-left ">
+        <div className="flex gap-2 items-center">
+          <img src="/images/mail.png" alt="" className="mt-1" />
+          <p className="text-gray-500 break-all text-sm">
+            Shubham87548@gmail.com
+          </p>
+        </div>
+
+        <div className="flex gap-2 items-center ">
+          <img src="/images/phone.png" alt="" />
+          <p className="text-gray-500 text-sm">+91 9584784584</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Buttons */}
+  <div className="w-full mt-6 flex gap-3 md:flex-col">
+    <button className="bg-[#09339B] text-white px-4 py-2 rounded-md w-1/2 md:w-full">
+      Save Profile
+    </button>
+
+    <button className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
+      <img src="/images/logout.png" alt="Logout icon" className="w-5 h-5" />
+      <span className="font-medium">Logout</span>
+    </button>
+
+  </div>
+
+</div>
+
+
+      {/* SUBSCRIPTION BOX */}
+      <div className="p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
+        <h3 className="text-[26px] font-normal mb-2">Subscription Status</h3>
+        <p className="text-2xl text-[#09339B]">₹7,999</p>
+        <p className="text-sm text-gray-600">Premium Membership</p>
+
+    <div className="mt-3 text-sm text-gray-500 space-y-2">
+      {/* Days Remaining Row */}
+      <div className="flex justify-between">
+        <span>Days Remaining:</span>
+        <span className="font-semibold">26 Days</span>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+        <div className="h-full bg-[#09339B]" style={{ width: `30%` }}></div>
+      </div>
+
+      {/* Dates Row */}
+      <div className="flex justify-between text-xs">
+        <span>01 Jan 2024</span>
+        <span className="font-semibold">31 Dec 2024</span>
+      </div>
+    </div>
+
+
+        <button className="mt-4 text-[20px] w-full border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
+          Renew Now
+        </button>
+        <button className="mt-2 w-full text-[20px] border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
+          Change Plan
+        </button>
+          <a
+      href="/invoice.pdf"
+      download
+      className="mt-2 text-[20px] w-full flex items-center justify-center border bg-[#F9F9FB] text-[#454545] py-2 rounded-md"
+    >
+      <img src="/images/download.png" alt="Download" className="mr-2" />
+      Download Invoice
+    </a>
+
+      </div>
+    </div>
+  );
+}

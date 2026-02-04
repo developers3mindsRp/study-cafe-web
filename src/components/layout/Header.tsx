@@ -1,19 +1,42 @@
-import { useState } from 'react';
+'use client';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCurrentUser, useLogout } from '@/hooks/useAuth';
 
 /**
- * Header Component
- * Used in public pages (CMS layout)
+ * Header Component - with Courses dropdown (desktop + mobile)
  */
 
 export default function Header() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
   const logout = useLogout();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  // Dropdown state for desktop
+  const [coursesMenuOpen, setCoursesMenuOpen] = useState(false);
+  // Collapsible state for mobile
+  const [coursesMobileOpen, setCoursesMobileOpen] = useState(false);
+
+  const coursesRef = useRef<any>(null);
+  const userRef = useRef<any>(null);
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: any) {
+      if (coursesRef.current && !coursesRef.current.contains(e.target)) {
+        setCoursesMenuOpen(false);
+      }
+      if (userRef.current && !userRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout.mutate();
@@ -22,185 +45,173 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-[221px] h-[62px]  flex items-center justify-center">
-          <img src="/images/studycafe_logo.svg" alt="" />
-            </div>
-           
-          </Link>
+   <div className="flex items-center justify-between w-full">
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 ">
-            <Link 
-              href="/" 
-              className={`text-gray-700 hover:text-blue-600 transition-colors text-[16px] ${
-                router.pathname === '/' ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/course" 
-              className="text-gray-700 hover:text-blue-600 transition-colors text-[16px] "
-            >
-              Courses
-            </Link>
-            <Link 
-              href="/memberships" 
-              className="text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Memberships
-            </Link>
-            <Link 
-              href="/blogs" 
-              className="text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Blogs
-            </Link>
-            <Link 
-              href="/contact" 
-              className="text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Contact Us
-            </Link>
-  
+  {/* Logo (left) */}
+  <Link href="/" className="flex items-center gap-2">
+    <div className="w-[154px] md:w-[221px] h-[53px] md:h-[62px] flex items-center justify-center">
+      <img src="/images/studycafe_logo.svg" alt="StudyCafe" />
+    </div>
+  </Link>
+
+  {/* Right Side - Navigation + Auth */}
+  <div className="hidden md:flex items-center gap-8">
+
+    {/* Navigation Links */}
+    <Link
+      href="/"
+      className={` transition-colors text-[16px] ${
+        router.pathname === "/" ? "text-blue-600 font-semibold" : "text-gray-700 hover:text-blue-600"
+      }`}
+    >
+      Home
+    </Link>
+
+    {/* Courses dropdown */}
+    <div
+      ref={coursesRef}
+      className="relative"
+      onMouseEnter={() => setCoursesMenuOpen(true)}
+      onMouseLeave={() => setCoursesMenuOpen(false)}
+    >
+      <button
+        onClick={() => setCoursesMenuOpen((s) => !s)}
+        aria-expanded={coursesMenuOpen}
+        className={`flex items-center gap-1 text-[16px] transition-colors ${
+          router.pathname.startsWith("/course")
+            ? "text-blue-600 font-semibold"
+            : "text-gray-700 hover:text-blue-600"
+        }`}
+      >
+        Courses
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform ${coursesMenuOpen ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {coursesMenuOpen && (
+        <div className="absolute left-0 top-2 mt-2 pt-5">
+          <div className="w-56 bg-white rounded-lg shadow-lg py-2 z-20 border border-gray-100">
+            <Link href="/courses_list" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Excel Courses</Link>
+            <Link href="/courses" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">AI Tools Courses</Link>
+            <Link href="/courses/categories" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">GST Courses</Link>
+            <Link href="/memberships" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Income Tax Courses</Link>
           </div>
-
-          {/* Right Side - Auth Buttons or User Menu */}
-          <div className="hidden md:flex items-center gap-4">
-            {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 hover:bg-gray-100 rounded-lg px-3 py-2 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <span className="text-gray-700 font-medium">{user.name}</span>
-                  <svg 
-                    className={`w-4 h-4 text-gray-500 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {/* User Dropdown Menu */}
-                {userMenuOpen && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-10" 
-                      onClick={() => setUserMenuOpen(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-20 border border-gray-100">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-900">{user.name}</p>
-                        <p className="text-xs text-gray-500">{user.email}</p>
-                      </div>
-                      
-                      <Link 
-                        href="/dashboard" 
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Dashboard
-                      </Link>
-                      
-                      <Link 
-                        href="/dashboard/courses" 
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        My Courses
-                      </Link>
-                      
-                      <Link 
-                        href="/dashboard/profile" 
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        Profile
-                      </Link>
-                      
-                      <div className="border-t border-gray-100 mt-2 pt-2">
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                          </svg>
-                          Logout
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
-              <>
-      
-                <Link 
-                  href="/register" 
-                  className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
-                >
-                   Get Started
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
         </div>
+      )}
+    </div>
+
+    <Link href="/membership"   className={`text-[16px] transition-colors ${
+    router.pathname === "/membership"
+      ? "text-blue-600 font-semibold"
+      : "text-gray-700 hover:text-blue-600"}`}> Memberships</Link>
+{/* 
+    <Link href="/download"   className={`text-[16px] transition-colors ${
+    router.pathname === "/download"
+      ? "text-blue-600 font-semibold"
+      : "text-gray-700 hover:text-blue-600"}`}> Downloads</Link> */}
+
+    <Link href="/blogs"   className={`text-[16px] transition-colors ${
+    router.pathname === "/blogs"
+      ? "text-blue-600 font-semibold"
+      : "text-gray-700 hover:text-blue-600"}`}>Blogs</Link>
+
+    <Link href="/contact-us"   className={`text-[16px] transition-colors ${
+    router.pathname === "/contact-us"
+      ? "text-blue-600 font-semibold"
+      : "text-gray-700 hover:text-blue-600"}`}>Contact Us</Link>
+
+    {/* <Link href="/notify" className="text-gray-700 hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link> */}
+
+    {/* Auth Buttons / User Menu */}
+    {user ? (
+      <div className="relative" ref={userRef}>
+        {/* …Your user dropdown code here */}
+      </div>
+    ) : (
+      <Link
+        href="/register"
+        className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
+      >
+       Login
+      </Link>
+    )}
+  </div>
+
+  {/* Mobile Menu Button */}
+  <button
+    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+    className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"
+  > 
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {mobileMenuOpen ? (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+      )}
+    </svg>
+  </button>
+</div>
+
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
               <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium">
-              Home
+                Home
               </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-blue-600 font-medium">
-               Courses    
-               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+
+              {/* Courses - mobile collapsible */}
+              <div>
+                <button
+                  onClick={() => setCoursesMobileOpen((s) => !s)}
+                  className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium"
+                  aria-expanded={coursesMobileOpen}
+                >
+                  <span>Courses</span>
+                  <svg
+                    className={`w-4 h-4 text-gray-500 transition-transform ${coursesMobileOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {coursesMobileOpen && (
+                  <div className="mt-2 pl-4 flex flex-col gap-1">
+                    <Link href="/courses" className="text-gray-700 hover:text-blue-600 font-medium">
+                      All Courses
+                    </Link>
+                    <Link href="/courses/featured" className="text-gray-700 hover:text-blue-600 font-medium">
+                      Featured
+                    </Link>
+                    <Link href="/courses/categories" className="text-gray-700 hover:text-blue-600 font-medium">
+                      Categories
+                    </Link>
+                    <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
+                      Memberships & Pricing
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
                 Memberships
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium">
                 Blogs
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
-                 Contact Us
+              <Link href="/contact-us" className="text-gray-700 hover:text-blue-600 font-medium">
+                Contact Us
               </Link>
-              
+
               <div className="border-t border-gray-200 pt-4 mt-2">
                 {user ? (
                   <>
@@ -225,15 +236,12 @@ export default function Header() {
                     </button>
                   </>
                 ) : (
-                  <>
-            
-                    <Link 
-                      href="/register" 
-                      className="block mt-2 bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-center font-medium"
-                    >
-                      Get Started
-                    </Link>
-                  </>
+                  <Link
+                    href="/register"
+                    className="block mt-2 bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-center font-medium"
+                  >
+                    Get Started
+                  </Link>
                 )}
               </div>
             </div>
@@ -243,4 +251,3 @@ export default function Header() {
     </header>
   );
 }
-

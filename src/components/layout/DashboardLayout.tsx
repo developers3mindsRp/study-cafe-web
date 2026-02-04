@@ -18,11 +18,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/login?redirect=' + router.pathname);
-    }
-  }, [user, isLoading, router]);
+  // useEffect(() => {
+  //   if (!isLoading && !user) {
+  //     router.push('/login?redirect=' + router.pathname);
+  //   }
+  // }, [user, isLoading, router]);
 
   // Show loading while checking auth
   if (isLoading) {
@@ -37,9 +37,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   // Don't render if not authenticated (will redirect)
-  if (!user) {
-    return null;
-  }
+  // if (!user) {
+  //   return null;
+  // }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* User Avatar (Mobile) */}
               <div className="lg:hidden w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-semibold">
-                  {user.name.charAt(0).toUpperCase()}
+                  {/* {user.name.charAt(0).toUpperCase()} */}
                 </span>
               </div>
             </div>

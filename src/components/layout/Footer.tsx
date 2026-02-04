@@ -1,181 +1,195 @@
+// components/Footer.jsx
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
-/**
- * Footer Component
- * Used in public pages (CMS layout)
- */
-
 export default function Footer() {
+  const [usefulOpen, setUsefulOpen] = useState(false);
+  const [importantOpen, setImportantOpen] = useState(false);
+
+  // Optional: refs if you want to manage dynamic height — simpler version uses a fixed max-height
+  const usefulRef = useRef<HTMLUListElement>(null);
+  const importantRef = useRef<HTMLUListElement>(null);
+
+  // Example: update max-height based on content, to avoid clipping (if needed)
+  useEffect(() => {
+    if (usefulRef.current) {
+      if (usefulOpen) {
+        usefulRef.current.style.maxHeight = usefulRef.current.scrollHeight + 'px';
+      } else {
+        usefulRef.current.style.maxHeight = '0px';
+      }
+    }
+  }, [usefulOpen]);
+
+  useEffect(() => {
+    if (importantRef.current) {
+      if (importantOpen) {
+        importantRef.current.style.maxHeight = importantRef.current.scrollHeight + 'px';
+      } else {
+        importantRef.current.style.maxHeight = '0px';
+      }
+    }
+  }, [importantOpen]);
+
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-[#252525] text-gray-300 ">
+      <div className="container mx-auto px-4 py-10 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
+
           {/* Brand Column */}
-          <div className="col-span-1">
+          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">CS</span>
-              </div>
-              <span className="text-2xl font-bold text-white">StudyCafe</span>
+              <Link href="/" className="flex items-center gap-2">
+                <div className="w-[221px] h-[62px] flex items-center justify-center">
+                  <img src="/images/footer_logo.svg" alt="StudyCafe" />
+                </div>
+              </Link>
             </div>
-            <p className="text-sm text-gray-400 mb-4">
-              Empowering learners worldwide with high-quality online courses.
+            <p className="text-[16px] text-white mb-4 font-normal">
+              Empowering learners with quality education and professional courses.
             </p>
             <div className="flex gap-4">
-              <a 
-                href="https://facebook.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
+                <img src="/images/twitter.png" alt="Twitter" />
               </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                </svg>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
+                <img src="/images/insta.png" alt="Instagram" />
               </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
+                <img src="/images/in.png" alt="LinkedIn" />
               </a>
+              <a href="https://fb.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
+                <img src="/images/fb.png" alt="Facebook" />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center transition-colors">
+                <img src="/images/youtube.png" alt="YouTube" />
+              </a>
+              <a href="https://telegram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
+                <img src="/images/telegram.png" alt="Telegram" />
+              </a>
+            </div>
+            <div className="mt-6 hidden  md:flex gap-2">
+              <img src="/images/google-play.png" alt="Download on Google Play" width="130" height="40" />
+              <img src="/images/app-store.png" alt="Download on app store" width="130" height="40" />
             </div>
           </div>
 
-          {/* Courses Column */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Useful Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/?category=web-development" className="text-sm hover:text-white transition-colors">
-                 About US
-                </Link>
-              </li>
-              <li>
-                <Link href="/?category=data-science" className="text-sm hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/?category=design" className="text-sm hover:text-white transition-colors">
-                  Ethics Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/?category=business" className="text-sm hover:text-white transition-colors">
-                  Terms of Use
-                </Link>
-              </li>
-              <li>
-                <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
-                 Disclaimer
-                </Link>
-              </li>
-              <li>
-                <Link href="/?category=marketing" className="text-sm hover:text-white transition-colors">
-                 Refund Policy
-                </Link>
-              </li>
+          {/* Courses Column / Useful Links */}
+          <div className="col-span-1">
+            <h3 className="text-white font-normal mb-4 text-[24px] ml-0 md:ml-24 flex justify-between items-center md:block">
+              Useful Links
+              <button
+                className="md:hidden text-white text-[24px] focus:outline-none"
+                aria-expanded={usefulOpen}
+                aria-controls="useful-links-list"
+                onClick={() => setUsefulOpen(prev => !prev)}
+              >
+                {usefulOpen ? '−' : '+'}
+              </button>
+            </h3>
+            <ul
+              id="useful-links-list"
+              ref={usefulRef}
+              className="ml-0 md:ml-24 space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+              style={{ maxHeight: '0px' /* collapsed by default */ }}
+            >
+              <li><Link href="/?category=web-development" className="text-[16px] text-white transition-colors">About US</Link></li>
+              <li><Link href="/?category=data-science" className="text-[16px] text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/?category=design" className="text-[16px] text-white transition-colors">Ethics Policy</Link></li>
+              <li><Link href="/?category=business" className="text-[16px] text-white transition-colors">Terms of Use</Link></li>
+              <li><Link href="/?category=marketing" className="text-[16px] text-white transition-colors">Disclaimer</Link></li>
+              <li><Link href="/?category=marketing" className="text-[16px] text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
 
-          {/* Company Column */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Important Links</h3>
+          {/* Company Column / Important Links */}
+          <div className="col-span-1">
+            <h3 className="text-white font-normal mb-4 text-[24px] flex justify-between items-center md:block">
+              Important Links
+              <button
+                className="md:hidden text-white text-[24px] focus:outline-none"
+                aria-expanded={importantOpen}
+                aria-controls="important-links-list"
+                onClick={() => setImportantOpen(prev => !prev)}
+              >
+                {importantOpen ? '−' : '+'}
+              </button>
+            </h3>
+            <div className='md:flex md:gap-12'>
+              <div>
+                <ul
+                  id="important-links-list"
+                  ref={importantRef}
+                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                  style={{ maxHeight: '0px' }}
+                >
+
+                  <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
+                  <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
+                  <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
+                  <li><Link href="/contact" className="text-[16px] text-white transition-colors">ChatGPT & AI</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Excel Courses</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <ul
+                  id="important-links-list"
+                  ref={importantRef}
+                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                  style={{ maxHeight: '0px' }}
+                >
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Submit Article</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Finance</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">GST</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Income Tax</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Downloads</Link></li>
+                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+
+
+          {/* Support / Newsletter Column */}
+          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
+            <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-sm hover:text-white transition-colors">
-                 All Courses
+                <Link href="/help" className="text-[16px] text-white transition-colors">
+                  Subscribe to get updates on new courses and offers.
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-sm hover:text-white transition-colors">
-                 GST Courses
-                </Link>
+                {/* <label htmlFor="footer-email">Email</label><br /> */}
+                <input id="footer-email" type="mail" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
               </li>
-              <li>
-                <Link href="/blog" className="text-sm hover:text-white transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-sm hover:text-white transition-colors">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-sm hover:text-white transition-colors">
-                  FAQ
-                </Link>
-              </li>
+              <button className="
+                    whitespace-nowrap
+                    w-100%
+                    text-[18px] sm:text-[20px]
+                    px-4 py-2 sm:px-6 sm:py-3
+                    bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
+                    rounded-[10px] transition
+                  ">
+                Subscribe Now
+              </button>
+
             </ul>
           </div>
 
-          {/* Support Column */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/help" className="text-sm hover:text-white transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-sm hover:text-white transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-sm hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/refund" className="text-sm hover:text-white transition-colors">
-                  Refund Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/instructors" className="text-sm hover:text-white transition-colors">
-                  Become an Instructor
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-400">
-            © 2024 StudyCafe. All rights reserved.
+        <div className="border-t border-white mt-12 pt-8 text-center">
+          <p className="text-[18px] text-white">
+            Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
           </p>
-          <div className="flex gap-6">
-            <Link href="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Terms
-            </Link>
-            <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Privacy
-            </Link>
-            <Link href="/cookies" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Cookies
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
   );
 }
-
