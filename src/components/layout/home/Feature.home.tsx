@@ -260,7 +260,7 @@ export default function FeaturedCourses() {
               >
                 <div className="relative w-full h-[180px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-[14px] text-sm shadow font-semibold mt-2">
+                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow  mt-2">
                      <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
                   </span>
                 </div>
@@ -311,7 +311,7 @@ export default function FeaturedCourses() {
               >
                 <div className="relative w-full h-[250px] md:h-[233px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute flex  gap-1 top-2 right-3 bg-white px-3 py-1 rounded-[14px] text-md font-semibold shadow mt-4">
+                  <span className="absolute flex  gap-1 top-2 right-3 bg-white px-3 py-1 rounded-full text-md font-normal shadow mt-4">
                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
                   </span>
                 </div>

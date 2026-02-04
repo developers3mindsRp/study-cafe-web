@@ -105,7 +105,7 @@ const TrendingCourses = () => {
           <div key={i} className="rounded-xl shadow-md border bg-white overflow-hidden text-left">
             <div className="relative w-full h-[233px]">
               <Image src={c.img} alt={c.title} fill className="object-fit" />
-              <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded text-sm shadow">
+              <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm shadow">
                 ⭐ {c.rating}
               </span>
             </div>
