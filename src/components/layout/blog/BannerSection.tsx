@@ -7,7 +7,7 @@ const BannerSection_blog = () => {
    <div className='container mx-auto pt-20 pb-32 w-[100%] h-[580px] px-4'>
  
       <div className="flex items-center justify-center mb-4 mt-6">
-        <p className="text-[20px] bg-white p-3 rounded-md">
+        <p className="text-[20px] bg-white p-3 rounded-[10px] font-medium">
         The Leader in Online Learning
         </p>
       </div>
@@ -22,7 +22,7 @@ const BannerSection_blog = () => {
         <input
           type="text"
           placeholder="Search"
-          className="w-full bg-white border border-gray-300 rounded-[10px] py-3 pl-4 pr-10 text-gray-800 placeholder-[#49454F] focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full bg-white border border-gray-300 rounded-[10px] py-4 pl-4 pr-10 text-gray-800 placeholder-[#49454F] focus:outline-none focus:ring-2 focus:ring-blue-300"
         />
         <button
           type="submit"

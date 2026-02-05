@@ -62,11 +62,11 @@ export default function BlogHighlightCard({
 
  
      <div className="flex  items-center justify-center gap-2 mb-2">
-  <img src="/images/lock1.png" alt="Premium Content" className="w-6 h-6" />
-  <h4 className="text-[#929292] text-center text-sm font-medium">
-    Premium Content
-  </h4>
-</div>
+      <img src="/images/lock1.png" alt="Premium Content" className="w-6 h-6" />
+      <h4 className="text-[#929292] text-center text-sm font-medium">
+        Premium Content
+      </h4>
+      </div>
 
     
       <h2 className="text-[40px] font-semibold text-[#252525] mb-4 text-center">

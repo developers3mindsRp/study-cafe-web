@@ -45,7 +45,7 @@ const TrendingCourses = () => {
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
-            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">Trending Courses</h2>
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id='Courses'>Trending Courses</h2>
 
 
       {/* Mobile Slider */}
@@ -103,7 +103,7 @@ const TrendingCourses = () => {
       <div className="hidden md:grid md:grid-cols-3 gap-6 mt-10 container mx-auto px-4">
         {courses.map((c, i) => (
           <div key={i} className="rounded-xl shadow-md border bg-white overflow-hidden text-left">
-            <div className="relative w-full h-[233px]">
+            <div className="relative w-full h-[243px]">
               <Image src={c.img} alt={c.title} fill className="object-fit" />
               <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm shadow">
                 ⭐ {c.rating}
@@ -130,8 +130,8 @@ const TrendingCourses = () => {
 
               <div className="flex justify-between items-center">
                 <div>
-                  <span className="line-through text-gray-400 text-[16px]">{c.oldPrice}</span>
-                  <span className="text-[#252525] font-semibold text-[26px] ml-2">{c.newPrice}</span>
+                  <span className="line-through text-gray-400 text-[26px]">{c.oldPrice}</span>
+                  <span className="text-[#252525] font-normal text-[26px] ml-2">{c.newPrice}</span>
                 </div>
 
                 <button

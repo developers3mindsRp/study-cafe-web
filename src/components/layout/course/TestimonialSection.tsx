@@ -24,7 +24,7 @@ export default function Testimonials_course() {
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
-            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id='testimonials'>
                     Testimonials
                 </h2>
 

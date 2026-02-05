@@ -27,8 +27,8 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<any>('');
 
   return (
-    <section className=" w-full bg-white py-4 md:py-20 px-4 flex flex-col
-      items-center text-center">
+    <section className=" w-full  py-4 md:py-20 px-4 flex flex-col
+      items-center text-center bg-[#FAFBFB]">
       <h2 className="text-[32px] md:text-[40px] font-semibold text-[#1A1A1A]">Frequently
         Asked Questions</h2>
       <p className="text-[18px] md:text-[24px] text-[#454545] max-w-xl mt-2">
@@ -38,13 +38,13 @@ export default function FAQSection() {
 
       <div className="w-full  mt-10 space-y-3 text-left container px-4">
         {faqs.map((item, index) => (
-          <div key={index} className="border rounded-lg overflow-hidden">
+          <div key={index} className="border border-[#AFAFAF] rounded-lg overflow-hidden">
             {/* Question Button */}
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex justify-between items-center p-4  transition"
+              className="w-full flex justify-between items-center p-4  transition bg-white"
             >
-              <span className="font-medium text-[20px] text-black text-left">{index + 1}. {item.q}</span>
+              <span className="font-medium text-[20px] text-black text-left bg-white ">{index + 1}. {item.q}</span>
 
               {/* Arrow Icon */}
               <svg

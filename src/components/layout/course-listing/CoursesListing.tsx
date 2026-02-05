@@ -39,7 +39,7 @@ const courses = [
   },
   {
     id: 4,
-    title: "Course 4 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/home/f4.jpg", // waiting for upload
     hours: "3+ Hours",
     lang: "English",
@@ -50,7 +50,7 @@ const courses = [
   },
   {
     id: 5,
-    title: "Course 5 thumbnail missing",
+    title: "Certification Course on How to Automate Your CA Practice",
     img: "/images/home/f5.png", // waiting for upload
     hours: "1.5+ Hours",
     lang: "English",
@@ -61,7 +61,7 @@ const courses = [
   },
   {
     id: 6,
-    title: "Course 6 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
@@ -72,7 +72,7 @@ const courses = [
   },
   {
     id: 7,
-    title: "Course 6 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
@@ -83,7 +83,7 @@ const courses = [
   },
   {
     id: 8,
-    title: "Course 6 thumbnail missing",
+    title: "Certification Course on How to Automate Your CA Practice",
     img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
@@ -94,7 +94,7 @@ const courses = [
   },
   {
     id: 9,
-    title: "Course 6 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
@@ -105,7 +105,7 @@ const courses = [
   },
   {
     id: 10,
-    title: "Course 6 thumbnail missing",
+    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
     img: "/images/home/f6.png", // waiting for upload
     hours: "4+ Hours",
     lang: "English",
@@ -271,7 +271,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
         {visibleCourses.map((c) => (
           <div key={c.id} className="bg-white shadow-md rounded-md
    overflow-hidden ">
-             <div className="relative w-full h-[200px]">
+             <div className="relative w-full h-[200px] md:h-[243px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
                   <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
                      <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
@@ -295,7 +295,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
               <div className="flex justify-between items-center mt-2 md:mt-4">
                 <div>
                   <span className="line-through
-   text-gray-400">{c.oldPrice}</span>
+   text-gray-400 text-[26px]">{c.oldPrice}</span>
                   <span className="text-[#252525] font-normal text-[16px] md:text-[26px]
                  ml-2">{c.newPrice}</span>
                 </div>
@@ -332,9 +332,9 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
           <button
             key={i}
             onClick={() => handlePageClick(i + 1)}
-            className={`w-9 h-9 rounded border text-sm  ${currentPage === i + 1
+            className={`w-9 h-9 rounded border-2 border-[#EDF1F3] text-sm text-[#454545] shadow-sm ${currentPage === i + 1
                 ? "bg-[#09339B] text-white rounded-full"
-                : "bg-white hover:bg-gray-100 rounded-full"
+                : "bg-white hover:bg-gray-100 rounded-full text-[#454545]"
               }`}
           >
             {i + 1}

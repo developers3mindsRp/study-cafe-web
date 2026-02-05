@@ -146,7 +146,7 @@ export default function Blog_list() {
         {visibleblogs.map((b) => (
           <div key={b.title} className="rounded-xl shadow-md border bg-white
           overflow-hidden text-left">
-            <div className="relative w-full h-[233px]">
+            <div className="relative w-full h-[243px]">
               <img
                 src={b.img}
                 alt="blog"
@@ -207,7 +207,7 @@ export default function Blog_list() {
           <button
             key={i}
             onClick={() => handlePageClick(i + 1)}
-            className={`w-9 h-9 rounded border text-sm  ${currentPage === i + 1
+            className={`w-9 h-9 rounded border text-sm border shadow-sm ${currentPage === i + 1
               ? "bg-[#09339B] text-white rounded-full"
               : "bg-white hover:bg-gray-100 rounded-full"
               }`}

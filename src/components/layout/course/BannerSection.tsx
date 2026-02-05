@@ -27,7 +27,7 @@ export default function BannerSection() {
               {/* Left: Banner */}
               <div className="md:w-1/2">
                 {/* Course Start Time */}
-                <p className="bg-[#DEEBFD] max-w-sm p-4 rounded-[10px] text-[#09339B] text-[14px] font-Outfit font-normal">
+                <p className="bg-[#DEEBFD] max-w-[360px] p-4 rounded-[10px] text-[#09339B] text-[16px] font-Outfit font-normal">
                   Starts at Thursday November 27, 2025 – 18:00
                 </p>
                 <h1 className="text-[20px] md:text-[43px] font-semibold text-gray-900 leading-snug mt-6">
@@ -53,7 +53,7 @@ export default function BannerSection() {
                     <span className="line-through text-[#929292] font-medium mr-2">
                       ₹2,000
                     </span>
-                    <span className="text-black font-bold text-[26px] sm:text-[30px]">
+                    <span className="text-black font-bold text-[26px] sm:text-[40px]">
                       ₹699
                     </span>
                   </p>
@@ -69,7 +69,7 @@ export default function BannerSection() {
                   <button
                     onClick={handleClick}
                     className="w-full sm:w-auto py-2 sm:py-3 px-6 sm:px-28
-                        border-2 border-white rounded-md
+                        border-2 border-white rounded-[10px]
                         text-base sm:text-lg font-medium text-white
                         bg-[#09339B] transition"
                   >
@@ -81,7 +81,7 @@ export default function BannerSection() {
                     <button
                       className="w-full sm:w-auto py-3 px-6 sm:px-16
                           bg-white text-[#09339B]
-                          rounded-md flex items-center justify-center gap-2
+                          rounded-[10px] flex items-center justify-center gap-2
                           text-base md:text-[20px]
                           border border-[#09339B]
                           transition font-semibold"
@@ -169,7 +169,7 @@ export default function BannerSection() {
 
           <div className="mt-8">
             <h3 className="text-[14px] md:text-[20px] font-medium">This course includes:</h3>
-            <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[12px] md:text-[13px]">
+            <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[12px] md:text-[16px]">
               <div className="flex gap-2 items-center bg-white  p-3">
                 <img src="/images/icon-video.png" alt="Language" /> <span>Recording is available for 1 year</span>
               </div>
