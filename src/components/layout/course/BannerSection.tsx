@@ -34,6 +34,68 @@ export default function BannerSection() {
                   Certification Course On Practical Filing of GSTR-9 & GSTR-9C
                 </h1>
 
+                 {/* mobile image */}
+                <div  className="block md:hidden ">
+                        <div className=" rounded overflow-hidden shadow mt-4">
+                        <Image
+                          src="/images/c1.png"
+                          alt="Banner"
+                          width={568}
+                          height={320}
+                          className="w-full object-cover"
+                        />
+                        </div>
+                        
+                      {/* Stats */}
+                      <div
+                        className="
+                          mt-3 p-3
+                          flex 
+                          gap-3 sm:gap-6
+                          justify-center sm:justify-between
+                          text-[8px] sm:text-[13px]
+                          font-bold 
+                        "
+                      >
+                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                          <img src="/images/icon-eng.png" alt="Language" className="w-4 h-4" />
+                          <span>English</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-white text-black md:px-3 py-2 rounded-md">
+                          <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-4" />
+                          <span>4 Hours</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                          <img src="/images/icon-user.png" alt="Students" className="w-4 h-4" />
+                          <span>957 students</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                          <img src="/images/Star.png" alt="Rating" className="w-4 h-4" />
+                          <span>4.8 by 47 Users</span>
+                        </div>
+                      </div>
+
+                      {/* Social Share */}
+                      <div className="flex items-center gap-4 pt-3">
+                        <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
+                          <img src="/images/icon-share.png" alt="Share" />
+                          <span className="font-medium text-[20px]">Share</span>
+                        </div>
+
+                        <div className="flex gap-3 ">
+                          <img src="/images/fb.png" alt="Facebook" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/in.png" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/x.png" alt="X" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/pinterest.png" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/print.png" alt="Print" className="w-8 h-8 cursor-pointer" />
+                        </div>
+
+                      </div>
+              </div>
+
                 {/* Description */}
                 <p className="text-[#929292] text-[16px] leading-[32px] mt-6">
                   In our continuous endeavour to empower more and more finance professionals,
@@ -47,54 +109,63 @@ export default function BannerSection() {
 
 
 
-                <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  {/* Price */}
-                  <p className="text-[22px] sm:text-[26px] lg:text-[30px]">
-                    <span className="line-through text-[#929292] font-medium mr-2">
-                      ₹2,000
-                    </span>
-                    <span className="text-black font-bold text-[26px] sm:text-[40px]">
-                      ₹699
-                    </span>
-                  </p>
+<div
+  className="
+    fixed bottom-0 left-0 w-full z-50 
+    bg-white md:bg-transparent px-4 py-6 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]
+    sm:static sm:shadow-none sm:p-0 rounded-[20px]
+  "
+>
+  <div className="mt-0 md:mt-4 flex flex-col sm:flex-row md:items-start items-center gap-3">
+    {/* Price */}
+    <p className="text-[30px] sm:text-[26px] lg:text-[30px]">
+      <span className="line-through text-[#929292] font-medium mr-2">
+        ₹2,000
+      </span>
+      <span className="text-black font-bold text-[30px] sm:text-[40px]">
+        ₹699
+      </span>
+    </p>
 
-                  {/* Offer badge */}
-                  <p className="text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black">
-                    Hurry up, few days left at this price!
-                  </p>
-                </div>
+    {/* Offer badge */}
+    <p className="text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-3">
+      Hurry up, few days left at this price!
+    </p>
+  </div>
 
-                <div className="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-4">
-                  {/* Buy Now */}
-                  <button
-                    onClick={handleClick}
-                    className="w-full sm:w-auto py-2 sm:py-3 px-6 sm:px-28
-                        border-2 border-white rounded-[10px]
-                        text-base sm:text-lg font-medium text-white
-                        bg-[#09339B] transition"
-                  >
-                    Buy Now
-                  </button>
+      <div className="mt-6 md:mt-4 mb-6 flex flex-row justify-center lg:justify-start gap-4">
+        {/* Buy Now */}
+        <button
+          onClick={handleClick}
+          className="w-full sm:w-auto py-2 sm:py-3 px-4 sm:px-28
+            border-2 border-white rounded-[10px]
+            text-base sm:text-lg font-medium text-white
+            bg-[#09339B] transition"
+        >
+          Buy Now
+        </button>
 
-                  {/* View Membership */}
-                  <Link href="/courses_list" className="w-full sm:w-auto">
-                    <button
-                      className="w-full sm:w-auto py-3 px-6 sm:px-16
-                          bg-white text-[#09339B]
-                          rounded-[10px] flex items-center justify-center gap-2
-                          text-base md:text-[20px]
-                          border border-[#09339B]
-                          transition font-semibold"
-                    >
-                      View Membership
-                    </button>
-                  </Link>
-                </div>
+        {/* View Membership */}
+        <Link href="/courses_list" className="w-full sm:w-auto">
+          <button
+            className="w-full sm:w-auto py-3 px-4 sm:px-16
+              bg-white text-[#09339B]
+              rounded-[10px] flex items-center justify-center gap-2
+              text-base md:text-[20px]
+              border border-[#09339B]
+              transition font-semibold"
+          >
+            View Membership
+          </button>
+        </Link>
+      </div>
+</div>
+
 
 
 
                 {/* Social Share */}
-                <div className="flex items-center gap-4 pt-3">
+                <div className="hidden md:flex items-center gap-4 pt-3">
                   <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
                     <img src="/images/icon-share.png" alt="Share" />
                     <span className="font-medium text-[20px]">Share</span>
@@ -117,7 +188,7 @@ export default function BannerSection() {
 
               {/* Right: Content */}
               <div className="md:w-1/2 mt-6 md:mt-[95px]">
-                <div className="rounded overflow-hidden shadow">
+                <div className="hidden md:block rounded overflow-hidden shadow">
                   <Image
                     src="/images/c1.png"
                     alt="Banner"
@@ -131,11 +202,11 @@ export default function BannerSection() {
                 <div
                   className="
                     mt-3 p-3
-                    flex 
+                    hidden md:flex 
                     gap-3 sm:gap-6
                     justify-center sm:justify-between
                     text-[8px] sm:text-[13px]
-                    font-bold
+                    font-bold 
                   "
                 >
                   <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
