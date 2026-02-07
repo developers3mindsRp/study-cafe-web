@@ -9,9 +9,7 @@ const testimonials = [
     {
         images: "/images/t3.jpg",
     },
-    //   {
-    //    images: "/images/t1.png",
-    //   },
+
 
 ];
 
@@ -60,30 +58,34 @@ export default function Testimonials_course() {
                     </div>
 
                     {/* Desktop grid */}
-                    <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-3 gap-8">
-                        {testimonials.map((item, index) => (
-                            <div
-                                key={index}
-                                className=""
-                            >
-                                <div className="mt-6 relative  flex items-center justify-between">
-                                    {/* Image */}
-                                    <img
-                                        src={item.images}
-                                        alt=""
-                                        className="object-cover w-full h-full rounded-lg gap-6"
-                                    />
+         
+                    <div className="hidden md:block overflow-hidden relative ">
+                        <div className="flex gap-8 animate-marquee hover:[animation-play-state:paused]">
 
-                                    {/* Overlay */}
-                                    <div className="absolute inset-0   flex items-center justify-center rounded-lg">
-                                        <button className="bg-black w-16 h-16 flex items-center justify-center rounded-full">
-                                            <span className="text-[white] text-[30px] ">▶</span>
-                                        </button>
-                                    </div>
-                                </div>
+                    {[...testimonials, ...testimonials].map((item, index) => (
+                    <div
+                        key={index}
+                        className="min-w-[460px] relative"
+                    >
+                        <div className="mt-6 relative flex items-center justify-between">
+                        {/* Image */}
+                        <img
+                            src={item.images}
+                            alt=""
+                            className="object-cover w-full h-[280px] rounded-lg"
+                        />
 
-                            </div>
-                        ))}
+                        {/* Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center rounded-lg">
+                            <button className="bg-black w-16 h-16 flex items-center justify-center rounded-full">
+                            <span className="text-white text-[30px]">▶</span>
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                    ))}
+
+                    </div>
                     </div>
                 </div>
             </div>

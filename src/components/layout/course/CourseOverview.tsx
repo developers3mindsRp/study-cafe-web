@@ -37,7 +37,7 @@ const bonuses = [
 const faqs = [
   {
     q: "Day1: What is the Duration of the Course?",
-    duration: "2Hrs",
+    duration: "2 Hrs",
     a: [
       "GST Provisions related to GSTR-9 and GSTR-9C filing",
       "⁠GST Annual return, recent changes as per GST notification",
@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     q: "Day2: Discussion on GSTR-9C",
-    duration: "2Hrs",
+    duration: "2 Hrs",
     a: [
       "GST Provisions related to GSTR-9 and GSTR-9C filing",
       "⁠GST Annual return, recent changes as per GST notification",
@@ -86,7 +86,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Description</h2>
 
-      <div className="bg-white  rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-12 font-normal shadow-md">
+      <div className="bg-white  rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
         <p>
           In our continuous endeavour to empower more and more finance
           professionals, this certification course has been designed for you.
