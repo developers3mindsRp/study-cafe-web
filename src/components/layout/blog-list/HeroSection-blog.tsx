@@ -8,6 +8,7 @@ type HeroSectionBlogProps = {
   para2?: string;
   author: string;
   date: string;
+  update:string,
   image: string;
 };
 
@@ -19,6 +20,7 @@ const HeroSection_blog = ({
   para2,
   author,
   date,
+  update,
   image,
 }: HeroSectionBlogProps) => {
   return (
@@ -54,8 +56,9 @@ const HeroSection_blog = ({
       </p>
 
       {/* Author + Date */}
-      <div className="flex items-center gap-4 md:text-[16px] text-[#AFAFAF]">
-        <span className="flex items-center gap-2">
+      <div className="flex justify-between items-center gap-4 md:text-[16px] text-[#AFAFAF]">
+        <div className="flex gap-4">
+          <span className="flex items-center gap-2">
           <img src="/images/user.svg" alt="author" width={20} height={20} />
           {author}
         </span>
@@ -64,6 +67,9 @@ const HeroSection_blog = ({
           <img src="/images/calendar.svg" alt="date" width={20} height={20} />
           {date}
         </span>
+        </div>
+
+        <span className="">Last update on {update}</span>
       </div>
 
      {/* Desktop Banner Image (only on md+) */}

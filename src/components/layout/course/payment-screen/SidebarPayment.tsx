@@ -36,7 +36,9 @@ export default function PriceCard() {
               <h3>USE CODE :</h3>
            <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
                <span className="font-medium">STUDY30</span>
-              <button className="text-sm text-gray-500 bg-white">Copy Code</button>
+                    <div className="bg-white flex gap-2 px-1 rounded-md">
+                <button className="text-sm text-gray-500 bg-white">Copy Code </button> <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
+            </div>
            </div>
             </div>
           </div>
@@ -50,7 +52,9 @@ export default function PriceCard() {
               <h3>USE CODE :</h3>
          <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
                <span className="font-medium">LEARN25</span>
-              <button className="text-sm text-gray-500 bg-white">Copy Code</button>
+            <div className="bg-white flex gap-2 px-1 rounded-md">
+                <button className="text-sm text-gray-500 bg-white">Copy Code </button> <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
+            </div>
          </div>
             </div>
           </div>
@@ -79,8 +83,8 @@ export default function PriceCard() {
         <div className="bg-[#F9F9FB] rounded-xl  p-6 ">
           {/* Price */}
           <div className="text-center">
-            <p className="text-[40px] font-semibold text-[#1A1A1A]">
-              <span className="line-through text-gray-400 text-[30px] mr-2">
+            <p className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
+              <span className="line-through text-gray-400 text-[20px] md:text-[30px] mr-2">
                 ₹2,000
               </span>
               ₹699

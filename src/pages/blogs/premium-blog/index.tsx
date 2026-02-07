@@ -19,8 +19,9 @@ export const blogData = [
     subtitle: "How It Works?",
     description:
       "For many investors, especially retirees or those seeking regular cash flow, generating steady monthly income from investments is a key financial goal. While fixed deposits, government savings schemes, or annuities are traditional options, debt funds have increasingly become a popular alternative. They offer the potential for stable returns, liquidity, and tax efficiency — all while providing the flexibility to structure monthly income through specific strategies.",
-    author: "Janvi",
+    author: "Meetu Kumari",
     date: "Jul 21, 2025",
+    update: "Nov 21, 2025",
     image: "/images/b4.png",
 
   }
@@ -64,6 +65,7 @@ export default function Premium_Blog() {
                 // para2={blog.para2}
                 author={blog.author}
                 date={blog.date}
+                update={blog.update}
                 image={blog.image}
               />
 

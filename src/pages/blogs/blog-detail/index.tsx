@@ -18,8 +18,9 @@ export const blogData = [
     subtitle: "How It Works?",
     description:
       "For many investors, especially retirees or those seeking regular cash flow, generating steady monthly income from investments is a key financial goal. While fixed deposits, government savings schemes, or annuities are traditional options, debt funds have increasingly become a popular alternative. They offer the potential for stable returns, liquidity, and tax efficiency — all while providing the flexibility to structure monthly income through specific strategies.",
-    author: "Janvi",
-    date: "Jul 21, 2025",
+    author: "Meetu Kumari",
+    date: "Nov 18, 2025",
+    update: "Nov 20, 2025",
     image: "/images/b4.png",
 
     cards: [
@@ -47,6 +48,7 @@ export const blogData = [
       "In 2025, the Public Sector Banks (PSBs) launched the Credit Assessment Model (CAM) to decide loans for Micro, Small & Medium Enterprises (MSMEs) by looking at their digital footprints.",
     author: "Meetu Kumari",
     date: "Nov 18, 2025",
+    update: "Nov 18, 2025",
     image: "/images/bank-loan.png",
 
     cards: [
@@ -73,6 +75,7 @@ export const blogData = [
       "In 2025, the Public Sector Banks (PSBs) launched the Credit Assessment Model (CAM) to decide loans for Micro, Small & Medium Enterprises (MSMEs) by looking at their digital footprints.",
     author: "Meetu Kumari",
     date: "Nov 18, 2025",
+     update: "Nov 18, 2025",
     image: "/images/bank-loan.png",
 
     cards: [
@@ -123,6 +126,7 @@ export default function Blog_detail() {
                 para2={blog.para2}
                 author={blog.author}
                 date={blog.date}
+                update={blog.update}
                 image={blog.image}
               />
 
