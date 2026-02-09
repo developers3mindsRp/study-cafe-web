@@ -2,34 +2,29 @@ import { useState } from "react";
 import { X } from "lucide-react";
 
 export default function MemberPrice() {
-  const [coupon, setCoupon] = useState("STUDY50");
-  const [applied, setApplied] = useState(true);
-
-
+  const [coupon, setCoupon] = useState("");
+  const [applied, setApplied] = useState(false);
 
   return (
     <div className="w-full max-w-sm bg-[#F9F9FB] rounded-xl shadow-lg p-6 border mx-auto h-auto">
-      
       {/* Price */}
       <div className="text-center">
-        <p className="text-[28px] font-semibold text-[#1A1A1A]">
-    
-          ₹7,999
-        </p>
-        <p className="text-gray-500 text-sm mt-1">
-          Lifetime
-        </p>
+        <p className="text-[28px] font-semibold text-[#1A1A1A]">₹7,999</p>
+        <p className="text-gray-500 text-sm mt-1">Lifetime</p>
       </div>
 
       {/* Coupon */}
       <div className="mt-6">
-        <label className="text-sm font-semibold text-gray-700">Coupon Code</label>
+        <label className="text-sm font-semibold text-gray-700">
+          Coupon Code
+        </label>
 
         <div className="relative mt-2">
           <input
             type="text"
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
+            placeholder="Enter coupon code"
             className="w-full border rounded-lg py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200"
             required
           />
@@ -37,7 +32,6 @@ export default function MemberPrice() {
             <button
               onClick={() => setApplied(false)}
               className="absolute right-3 top-2.5 text-gray-500"
-              
             >
               <X className="w-4 h-4" />
             </button>
@@ -58,7 +52,9 @@ export default function MemberPrice() {
 
       {/* Summary */}
       <div className="mt-6">
-        <h3 className="text-[16px] font-semibold text-gray-800 mb-2">Summary</h3>
+        <h3 className="text-[16px] font-semibold text-gray-800 mb-2">
+          Summary
+        </h3>
 
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
@@ -89,7 +85,10 @@ export default function MemberPrice() {
       </div>
 
       {/* Buy Button */}
-      <button className="w-full bg-[#09339B] hover:bg-white  text-white hover:text-[#09339B] border border-[#09339B] rounded-lg py-3 mt-5 font-medium text-[16px]">
+      <button
+        onClick={() => (window.location.href = "/plans/details")}
+        className="w-full bg-[#09339B] hover:bg-white  text-white hover:text-[#09339B] border border-[#09339B] rounded-lg py-3 mt-5 font-medium text-[16px]"
+      >
         Buy Membership
       </button>
     </div>

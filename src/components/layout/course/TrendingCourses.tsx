@@ -88,7 +88,7 @@ const TrendingCourses = () => {
 
                 <button
                   className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-                  onClick={() => (window.location.href = "/courses")}
+                  onClick={() => (window.location.href = "/course/1")}
                 >
                   View Course
                   <img src="/images/arrow-left.svg" alt="" />
@@ -136,7 +136,7 @@ const TrendingCourses = () => {
 
                 <button
                   className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-                  onClick={() => (window.location.href = "/courses")}
+                  onClick={() => (window.location.href = "/course/1")}
                 >
                   View Course
                   <img src="/images/arrow-left.svg" alt="" />

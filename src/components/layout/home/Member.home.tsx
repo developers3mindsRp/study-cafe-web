@@ -117,6 +117,7 @@ export default function MembershipPricing() {
                         ? "bg-white text-[#09339B] hover:bg-blue-50"
                         : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
                         }`}
+                        onClick={() => (window.location.href = "/plans/details")}
                     >
                       Buy Membership
                     </button>
@@ -198,6 +199,7 @@ export default function MembershipPricing() {
                           ? "bg-white text-[#09339B] hover:bg-blue-50"
                           : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
                         }`}
+                        onClick={() => (window.location.href = "/plans/details")}
                     >
                       Buy Membership
                     </button>

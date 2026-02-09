@@ -8,7 +8,7 @@ export default function BannerSection() {
     const router = useRouter();
 
   const handleClick = () => {
-    router.push("/membership");
+    router.push("/plans");
   };
   return (
     <>
@@ -146,7 +146,7 @@ export default function BannerSection() {
         </button>
 
         {/* View Membership */}
-        <Link href="/courses_list" className="w-full sm:w-auto">
+        <Link href="/courses" className="w-full sm:w-auto">
           <button
             className="w-full sm:w-auto py-3 px-4 sm:px-16
               bg-white text-[#09339B]

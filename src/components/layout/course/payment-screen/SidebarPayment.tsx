@@ -4,13 +4,7 @@ import { X } from "lucide-react";
 export default function PriceCard() {
   const [coupon, setCoupon] = useState("STUDY50");
   const [applied, setApplied] = useState(true);
-  const [openCoupon, setOpenCoupon] = useState(false)
-
-
-
-
-
- 
+  const [openCoupon, setOpenCoupon] = useState(false);
 
   return (
     <div className="w-full max-w-sm mx-auto">
@@ -34,32 +28,38 @@ export default function PriceCard() {
             <p className="font-semibold text-sm mb-1">GET 30% OFF</p>
             <div className="flex items-center justify-between ">
               <h3>USE CODE :</h3>
-           <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
-               <span className="font-medium">STUDY30</span>
-                    <div className="bg-white flex gap-2 px-1 rounded-md">
-                <button className="text-sm text-gray-500 bg-white">Copy Code </button> <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
-            </div>
-           </div>
+              <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
+                <span className="font-medium">STUDY30</span>
+                <div className="bg-white flex gap-2 px-1 rounded-md">
+                  <button className="text-sm text-gray-500 bg-white">
+                    Copy Code
+                  </button>
+                  <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
+                </div>
+              </div>
             </div>
           </div>
 
-               <div className="border-t border-black mb-4"></div>
+          <div className="border-t border-black mb-4"></div>
 
           {/* Coupon 2 */}
           <div className=" pb-4 mb-4">
             <p className="font-semibold text-sm mb-1">GET 25% OFF</p>
             <div className="flex items-center justify-between  rounded-lg p-2">
               <h3>USE CODE :</h3>
-         <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
-               <span className="font-medium">LEARN25</span>
-            <div className="bg-white flex gap-2 px-1 rounded-md">
-                <button className="text-sm text-gray-500 bg-white">Copy Code </button> <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
-            </div>
-         </div>
+              <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
+                <span className="font-medium">LEARN25</span>
+                <div className="bg-white flex gap-2 px-1 rounded-md">
+                  <button className="text-sm text-gray-500 bg-white">
+                    Copy Code
+                  </button>
+                  <img src="/images/copy.png" alt="" className="w-4 h-4 mt-1" />
+                </div>
+              </div>
             </div>
           </div>
-          
-               <div className="border-t border-black mb-4"></div>
+
+          <div className="border-t border-black mb-4"></div>
 
           {/* Apply manually */}
           <div className="mt-4">
@@ -75,8 +75,6 @@ export default function PriceCard() {
               </button>
             </div>
           </div>
-
-          
         </div>
       ) : (
         /* ===== NORMAL PRICE CARD ===== */
@@ -98,7 +96,9 @@ export default function PriceCard() {
 
           {/* Summary */}
           <div className="mt-6 space-y-2 text-sm">
-            <h2 className="text-[20px] text-[#252525] font-medium mb-4">Summary</h2>
+            <h2 className="text-[20px] text-[#252525] font-medium mb-4">
+              Summary
+            </h2>
             <div className="flex justify-between">
               <span>Amount</span>
               <span>₹699</span>
@@ -120,7 +120,9 @@ export default function PriceCard() {
           <div className="border-t border-[#AFAFAF] mt-4"></div>
 
           <div className="pt-3 flex justify-between font-semibold text-[17px]">
-            <span className="text-[20px] text-[#252525] font-medium">Grand Total</span>
+            <span className="text-[20px] text-[#252525] font-medium">
+              Grand Total
+            </span>
             <span>₹531.82</span>
           </div>
 
@@ -139,12 +141,31 @@ export default function PriceCard() {
             <img src="/images/left-arrow.png" alt="" />
           </div>
 
-                    {/* Coupon */}
-           <div className="mt-4"> <label className="text-sm font-semibold text-gray-700">Coupon Code</label> <div className="relative mt-2"> <input type="text" value={coupon} onChange={(e) => setCoupon(e.target.value)} className="w-full border rounded-lg py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200" required /> {applied && ( <button onClick={() => setApplied(false)} className="absolute right-3 top-2.5 text-gray-500" > <X className="w-4 h-4 mt-1" /> </button> )} </div>
-        </div>
-        
+          {/* Coupon */}
+          <div className="mt-4">
+            <label className="text-sm font-semibold text-gray-700">
+              Coupon Code
+            </label>
+            <div className="relative mt-2">
+              <input
+                type="text"
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value)}
+                className="w-full border rounded-lg py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200"
+                required
+              />
+              {applied && (
+                <button
+                  onClick={() => setApplied(false)}
+                  className="absolute right-3 top-2.5 text-gray-500"
+                >
+                  <X className="w-4 h-4 mt-1" />
+                </button>
+              )}
+            </div>
+          </div>
 
-        <div className="border-t border-[#AFAFAF] mt-4"></div>
+          <div className="border-t border-[#AFAFAF] mt-4"></div>
 
           {/* Buy */}
           <button className="w-full bg-[#09339B] text-white rounded-lg py-3 mt-5 font-medium text-[16px]">
@@ -153,7 +174,5 @@ export default function PriceCard() {
         </div>
       )}
     </div>
-  )
+  );
 }
-
-

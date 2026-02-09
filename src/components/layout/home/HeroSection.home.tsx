@@ -7,7 +7,7 @@ const HeroSection = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/membership");
+    router.push("/plans");
   };
 
   return (
@@ -39,7 +39,7 @@ const HeroSection = () => {
               View Memberships
             </button>
 
-            <Link href="/courses_list">
+            <Link href="/courses">
               <button className="py-3 px-3 bg-white text-[#09339B] rounded-[10px] flex items-center justify-center gap-2 text-base md:text-[20px] hover:bg-gray-100 transition font-semibold">
                 Browse Courses
                 <img

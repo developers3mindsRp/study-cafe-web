@@ -292,7 +292,7 @@ export default function FeaturedCourses() {
                     </div>
                     <button
                       className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm"
-                      onClick={() => (window.location.href = "/courses")}
+                      onClick={() => (window.location.href = "/course/1")}
                     >
                       View Course
                     </button>
@@ -343,7 +343,7 @@ export default function FeaturedCourses() {
                     </div>
                     <button
                       className="bg-[#09339B]  text-white px-4 py-2 rounded-md text-sm md:text-base"
-                      onClick={() => (window.location.href = "/courses")}
+                      onClick={() => (window.location.href = "/course/1")}
                     >
                       View Course
                     </button>
@@ -391,7 +391,7 @@ export default function FeaturedCourses() {
 
         {/* Right Button */}
         <div className="w-full flex justify-center md:w-auto md:justify-end mb-6 md:mb-0 mt-4 md:mt-0">
-          <Link href="/courses_list">
+          <Link href="/courses">
             <button className="text-sm text-[#09339B] border border-[#09339B] md:border-none font-medium flex items-center gap-1 p-2 md:p-4 bg-white rounded-[10px] ">
               View All Courses
               <img src="/images/icons/blue_arrow.png" alt="" />

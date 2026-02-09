@@ -96,17 +96,17 @@ export default function Header() {
       {coursesMenuOpen && (
         <div className="absolute left-0 top-2 mt-2 pt-5">
           <div className="w-56 bg-white rounded-lg shadow-lg py-2 z-20 border border-gray-100">
-            <Link href="/courses_list" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Excel Courses</Link>
-            <Link href="/courses" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">AI Tools Courses</Link>
-            <Link href="/courses/categories" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">GST Courses</Link>
-            <Link href="/memberships" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Income Tax Courses</Link>
+            <Link href="/course/1" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Excel Courses</Link>
+            <Link href="/course/1" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">AI Tools Courses</Link>
+            <Link href="/course/1" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">GST Courses</Link>
+            <Link href="/course/1" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Income Tax Courses</Link>
           </div>
         </div>
       )}
     </div>
 
-    <Link href="/membership"   className={`text-[16px] transition-colors ${
-    router.pathname === "/membership"
+    <Link href="/plans"   className={`text-[16px] transition-colors ${
+    router.pathname === "/plans"
       ? "text-blue-600 font-semibold"
       : "text-gray-700 hover:text-blue-600"}`}> Memberships</Link>
 {/* 
@@ -195,14 +195,14 @@ export default function Header() {
                     <Link href="/courses/categories" className="text-gray-700 hover:text-blue-600 font-medium">
                       Categories
                     </Link>
-                    <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium">
                       Memberships & Pricing
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link href="/membership" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium">
                 Memberships
               </Link>
               <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium">
