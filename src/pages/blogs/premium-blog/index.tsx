@@ -16,7 +16,7 @@ export const blogData = [
   // #1--------
   {
     title: "Debt Mutual Funds for Monthly Income",
-    subtitle: "How It Works?",
+    subtitle: "How It Works?", 
     description:
       "For many investors, especially retirees or those seeking regular cash flow, generating steady monthly income from investments is a key financial goal. While fixed deposits, government savings schemes, or annuities are traditional options, debt funds have increasingly become a popular alternative. They offer the potential for stable returns, liquidity, and tax efficiency — all while providing the flexibility to structure monthly income through specific strategies.",
     author: "Meetu Kumari",
