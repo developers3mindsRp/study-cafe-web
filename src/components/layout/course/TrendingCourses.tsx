@@ -7,7 +7,7 @@ const TrendingCourses = () => {
     {
       id: 1,
       title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-      img: "/images/f1.jpg",   // UPDATED
+      img: "/images/home/f1.jpg",   // UPDATED
       hours: "4+ Hours",
       lang: "English",
       students: "1240",
@@ -18,7 +18,7 @@ const TrendingCourses = () => {
     {
       id: 2,
       title: "Certification Course on How to Automate Your CA Practice",
-      img: "/images/f2.png",   // UPDATED
+      img: "/images/home/f2.png",   // UPDATED
       hours: "2+ Hours",
       lang: "English",
       students: "957",
@@ -29,7 +29,7 @@ const TrendingCourses = () => {
     {
       id: 3,
       title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-      img: "/images/f3.png",   // UPDATED
+      img: "/images/home/f3.png",   // UPDATED
       hours: "4+ Hours",
       lang: "English",
       students: "1240",
