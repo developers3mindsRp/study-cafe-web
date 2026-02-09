@@ -124,7 +124,7 @@ export default function BlogSection() {
               <div className="flex items-center gap-2 text-[12px] text-[#AFAFAF] mb-3">
                 <span className="flex"> <img src="/images/user.svg" alt="" width="10" height="10" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="10" height="10" />{b.date}</span>
               </div>
-              <h3 className="font-medium text-[14px] text-[#252525] leading-tight mb-4">
+              <h3 className="font-medium text-[14px] text-[#252525] leading-tight mb-4 line-clamp-2">
                 {b.title}
               </h3>
               <button className="text-[12px] bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 rounded-md flex items-center gap-2">
@@ -160,7 +160,7 @@ export default function BlogSection() {
                 <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
 
               </div>
-              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4 ">
+              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2 ">
                 {b.title}
               </h3>
               <Link href="/blogs/blog-detail">

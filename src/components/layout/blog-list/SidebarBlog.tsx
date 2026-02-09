@@ -1,53 +1,147 @@
 import Image from "next/image";
 
 export default function SidebarBlog() {
+  const recentPosts = [
+  {
+    image: "/images/s-court.png",
+    title: "Supreme Court Sets Aside High Court’s Direction to CBDT on Software Changes in TDS Demand Cases",
+  },
+  {
+    image: "/images/property.png",
+    title: "ITAT Deletes Section 56 Addition on Joint Property Purchase Where Entire Payment Made by Spouse",
+  },
+  {
+    image: "/images/plant.png",
+    title: "A Simple Way to Build Rs.1 Crore: The 15-15-15 Rule Explained",
+  },
+];
+  const AllPosts = [
+  {
+    image: "/images/court.png",
+    title: "Supreme Court: Overtime Must Be Paid on Full Wages, Not Just Basic Pay",
+  },
+  {
+    image: "/images/finance.png",
+    title: "Finance Act 2025 Introduces Lower Tax Burden and Higher Exemption Under New Tax Regime",
+  },
+  {
+    image: "/images/charity.png",
+    title: "ITAT Upholds CIT(A)’s Deletion of Rs. 3.97 Crore Ad Hoc Expense Disallowance in Charitable Trust Case",
+  },
+];
+
   return (
           <div className="space-y-5 sticky top-24">
           {/* Pricing Card */}
         
 
-          {/* Certificate Card */}
-          <div className="bg-white shadow rounded p-5 space-y-3">
-            <p className="font-medium text-[20px]">Recent Posts</p>
-            <Image
-              src="/images/fund.png"
-              alt="Certificate"
-              width={500}
-              height={300}
-              className="rounded"
-            />
-            <p className="text-[20px]">Certificate to be provided to all the participants.</p>
-          </div>
+{/* Recent Posts Section */}
+<div className="bg-[#F9F9FB]  p-3 md:p-5 space-y-3">
 
-          <div className="bg-white shadow rounded p-5 space-y-3">
-      
-            <Image
-              src="/images/car.png"
-              alt="Certificate"
-              width={500}
-              height={300}
-              className="rounded"
-            />
-            <p className="text-[20px]">Rich Wont Tell You Secret to Buy a Car for Free</p>
-          </div>
+  <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent
+      md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
+    Recent Posts
+  </p>
 
-          <div className="bg-white shadow rounded p-5 space-y-3">
+  {/* Slider on Mobile / Normal on Desktop */}
+        <div className="flex md:block gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide">
+
+          {recentPosts.map((post, idx) => (
+            <div
+              key={idx}
+              className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8 md:p-0"
+            >
+              <Image
+                src={post.image}
+                alt={post.title}
+                width={500}
+                height={300}
+                className="rounded w-full"
+              />
+
+              <p className="text-[15px] font-bold mt-2 md:text-[20px]">
+                {post.title}
+              </p>
+         <div className="hidden md:block border-b border-[#AFAFAF] p-2 w-full"></div>
+            </div>
+          ))}
+
+        </div>
+
+       </div>
+
+          {/* #Advertisement--- */}
+          <div className="bg-white p-4 md:p-5 space-y-3">
            
             <Image
-              src="/images/plant.png"
+              src="/images/bitsat.png"
               alt="Certificate"
               width={500}
               height={300}
               className="rounded"
             />
-            <p className="text-[20px]">A Simple Way to Build Rs.1 Crore: The 15-15-15 Rule Explained</p>
+
+          </div>
+        
+
+
+          <div className="bg-[#F9F9FB]  p-3 md:p-5 space-y-3">
+                   <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent
+      md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">All Posts</p>
+
+          <div className="flex md:block gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide">
+
+          {AllPosts.map((post, idx) => (
+            <div
+              key={idx}
+              className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8  md:p-0"
+            >
+              <Image
+                src={post.image}
+                alt={post.title}
+                width={500}
+                height={300}
+                className="rounded w-full"
+              />
+
+              
+
+              <p className="text-[15px] font-bold mt-2 md:text-[20px]">
+                {post.title}
+              </p>
+             <div className="hidden md:block border-b border-[#AFAFAF] p-2 w-full"></div>
+            </div>
+          ))}
+
+        </div>
+           
+    
           </div>
 
-          <div className="bg-white shadow rounded p-5 space-y-3">
-            <h4 className="text-[20px] font-medium mb-4" >Tags</h4>
-          <div className="flex gap-4 text-[18px]">
-                <p>Mutual Funds</p>
-            <p>Finance</p>
+   
+
+          <div className="flex justify-center">
+            <button className="border border-[#09339B]  text-[#09339B] text-[20px] font-medium w-full p-2 rounded-[10px] hover:bg-[#09339B] hover:text-white">View All</button>
+          </div>
+
+          <div className="bg-white shadow rounded p-3 md:p-5 space-y-3">
+           
+            <Image
+              src="/images/bank-au.png"
+              alt="Certificate"
+              width={500}
+              height={300}
+              className="rounded"
+            />
+   
+          </div>
+
+          <div className="bg-white p-5 space-y-6 md:space-y-3">
+            <h4 className="text-[20px] font-medium mb-4 bg-gradient-to-r from-[#253D8E] to-transparent
+      md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto  md:mb-0" >Tags</h4>
+          <div className="flex gap-4 text-[18px]  ">
+            <p className=" bg-white rounded-[14px] border border-black px-4 md:border-none">Mutual Funds</p>
+            <p className=" bg-white rounded-[14px] border border-black px-4 md:border-none">Finance</p>
           </div>
           </div>
 
@@ -58,36 +152,12 @@ export default function SidebarBlog() {
                 <p className="text-[18px] ">For More details about Membership Click Join Membership Button</p>
                 <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded">View Membership</button>
             </div>
-            <p className="font-medium text-[#929292] text-[16px]">Join Studycafe's WhatsApp Group or Telegram Channel for Latest Updates on Government Job, Sarkari Naukri, Private Jobs, Income Tax, GST, Companies Act, Judgements and CA, CS, ICWA, and MUCH MORE!"</p>
+           
            
 
 
 
-            <div className="block w-full  border border-[#34C759] text-[#34C759] py-3 rounded font-semibold flex justify-center gap-4">
-               <img src="/images/whatsapp.png" alt="" width="25" height="20" className=""/>
-            <a
-              href="https://wa.me/919625080264" className=" ">
-             Join WhatsApp Group
-            </a>
-            </div>
 
-                       <div className="block w-full text-center border border-[#039BE5] text-[#039BE5] py-3 rounded font-semibold flex justify-center gap-4">
-             <img src="/images/telegram.png" alt="" width="20" height="20"/>
-            <a
-              href="tel:+919625080264"
-              className=""
-            >
-            Join Telegram Group
-            </a>
-           </div>
-
-            <div className="block w-full  border border-[#252525] text-[#252525] py-3 rounded font-semibold flex justify-center gap-4">
-               <img src="/images/google.png" alt="" width="25" height="20" className=""/>
-            <a
-              href="https://wa.me/919625080264" className=" ">
-             Follow On Google News
-            </a>
-            </div>
           </div>
         </div>
   );

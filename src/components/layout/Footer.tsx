@@ -34,7 +34,7 @@ export default function Footer() {
   }, [importantOpen]);
 
   return (
-    <footer className="bg-[#252525] text-gray-300 ">
+    <footer className="bg-[#252525] text-gray-300 " id='footer'>
       <div className="container mx-auto px-4 py-10 mt-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
 
@@ -155,7 +155,7 @@ export default function Footer() {
 
 
           {/* Support / Newsletter Column */}
-          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start">
+          <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start mb-8">
             <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
               <li>
@@ -183,8 +183,10 @@ export default function Footer() {
 
         </div>
 
+        <div className='border-b  mt-12 h-px '></div>
+
         {/* Bottom Bar */}
-        <div className="border-t border-white mt-12 pt-8 text-center">
+        <div className=" mt-6 text-center ">
           <p className="text-[18px] text-white">
             Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
           </p>

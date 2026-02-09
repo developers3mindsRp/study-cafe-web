@@ -34,8 +34,8 @@ export default function CourseSection() {
 
    <div className="lg:col-span-2 space-y-6">
       {/* Alumni Logos */}
-      <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-10 sm:py-12 px-4 sm:px-8 pb-16 sm:pb-20 mb-8">
-        <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2">
+      <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-10 sm:py-12 px-4 sm:px-8 pb-16 sm:pb-20 mb-8 ">
+        <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
           Our Alumni at Leading Companies
         </h2>
 
@@ -106,11 +106,11 @@ export default function CourseSection() {
       </div>
 
 
-      <div className="w-full bg-white  container mx-auto px-4">
+      <div className="w-full bg-white  container mx-auto px-4 py-1">
         {/* FAQ Section */}
-        <div className=" mx-auto md:px-4 mt-10">
+        <div className=" mx-auto md:px-4 mt-2">
           <h2 className="
-            text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+            text-[20px] md:text-[30px] font-semibold mb-6 md:mb-6
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent

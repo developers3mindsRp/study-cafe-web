@@ -62,7 +62,7 @@ export default function ReviewSection() {
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
-            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto">Google Reviews</h2>
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="reviews">Google Reviews</h2>
 
       {/* Mobile slider */}
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
@@ -145,7 +145,7 @@ export default function ReviewSection() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 text-[30px]">
+                  <h4 className="font-semibold text-gray-900 text-[18px]">
                     {item.name}
                   </h4>
                   <p className="text-[#302A2A99] font-normal text-[18px]">{item.role}</p>
@@ -156,7 +156,7 @@ export default function ReviewSection() {
             </div>
        
         {/* Rating */}
-            <div className="flex items-center gap-3 mt-4 mb-2">
+            <div className="flex items-center gap-3 mt-3 mb-3">
               <div className="flex gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <img

@@ -103,7 +103,7 @@ export default function Testimonials() {
     {[...testimonials, ...testimonials].map((item, index) => (
       <div
         key={index}
-        className="marquee-card relative border border-[#17254E] rounded-xl p-6 text-left min-w-[360px] max-w-[380px] flex-shrink-0"
+        className="marquee-card relative border border-[#17254E] rounded-xl p-6 text-left min-w-[360px] max-w-[400px] flex-shrink-0"
       >
         {/* Quote */}
         <img
