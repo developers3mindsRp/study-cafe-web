@@ -167,17 +167,17 @@ export default function CourseOverview() {
           <div className="bg-[#F9F9FB] p-8 ">
             <img src="/images/duration.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Course Duration</h2>
-            <p>The course duration is 2 Days and around 4+ hours.</p>
+            <p className="leading-relaxed">The course duration is 2 Days and around 4+ hours.</p>
           </div>
           <div className="bg-[#F9F9FB] p-8">
             <img src="/images/view.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Views Limitation</h2>
-            <p>This is a fully online course with 1-year unlimited access, available anytime and anywhere.</p>
+           <p className="leading-relaxed">This is a fully online course with 1-year unlimited access, available anytime and anywhere.</p>
           </div>
           <div className="bg-[#F9F9FB] p-8">
             <img src="/images/time.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Course Timing</h2>
-            <p>Timing: 6:00 pm to 8:00 pm</p>
+           <p className="leading-relaxed">Timing: 6:00 pm to 8:00 pm</p>
           </div>
         </div>
 
@@ -249,7 +249,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="certificate">Certificate</h2>
       <p className=" text-center text-[16px] md:text-[20px] mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
-      <img src="/images/certificate1.png" alt="" className="mx-auto" />
+      <img src="/images/certificate1.svg" alt="" className="mx-auto" />
 
 
     </section>

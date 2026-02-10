@@ -72,7 +72,7 @@ export default function Testimonials_course() {
                         <img
                             src={item.images}
                             alt=""
-                            className="object-cover w-full h-[280px] rounded-lg"
+                            className="object-fit w-full h-[280px] rounded-lg"
                         />
 
                         {/* Overlay */}
