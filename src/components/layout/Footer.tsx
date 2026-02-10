@@ -105,7 +105,7 @@ export default function Footer() {
           </div>
 
           {/* Company Column / Important Links */}
-          <div className="col-span-1">
+          <div className="col-span-1 md:relative right-6">
             <h3 className="text-white font-normal mb-4 text-[24px] flex justify-between items-center md:block">
               Important Links
               <button
@@ -129,7 +129,7 @@ export default function Footer() {
                   <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
                   <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
                   <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
-                  <li><Link href="/contact" className="text-[16px] text-white transition-colors">ChatGPT & AI</Link></li>
+                  <li><Link href="/contact" className="text-[16px] text-white transition-colors"> AI Courses</Link></li>
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Excel Courses</Link></li>
                 </ul>
               </div>
@@ -163,10 +163,21 @@ export default function Footer() {
                   Subscribe to get updates on new courses and offers.
                 </Link>
               </li>
-              <li>
-                {/* <label htmlFor="footer-email">Email</label><br /> */}
-                <input id="footer-email" type="mail" className="p-3 w-full text-black rounded-[10px] bg-white mt-2 mb-3" placeholder="Email" />
-              </li>
+            <li className="relative">
+              <img
+                src="/images/email1.png"
+                alt="email"
+                className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5"
+              />
+
+              <input
+                id="footer-email"
+                type="email"
+                className="p-3 pl-12 w-full text-black rounded-[10px] bg-white mt-3 mb-3"
+                placeholder="Email"
+              />
+            </li>
+
               <button className="
                     whitespace-nowrap
                     w-100%
