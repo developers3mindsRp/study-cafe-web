@@ -65,9 +65,9 @@ export default function Sidebar() {
 
   {/* Buttons */}
   <div className="w-full mt-6 flex gap-3 md:flex-col">
-    <button className="bg-[#09339B] text-white px-4 py-2 rounded-md w-1/2 md:w-full">
+    {/* <button className="bg-[#09339B] text-white px-4 py-2 rounded-md w-1/2 md:w-full">
       Save Profile
-    </button>
+    </button> */}
 
     <button className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
       <img src="/images/logout.png" alt="Logout icon" className="w-5 h-5" />
@@ -82,14 +82,15 @@ export default function Sidebar() {
       {/* SUBSCRIPTION BOX */}
       <div className="p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
         <h3 className="text-[26px] font-normal mb-2">Subscription Status</h3>
-        <p className="text-2xl text-[#09339B]">₹7,999</p>
+      
         <p className="text-sm text-gray-600">Premium Membership</p>
+          <p className="text-2xl text-[#09339B]">₹7,999</p>
 
-    <div className="mt-3 text-sm text-gray-500 space-y-2">
+    <div className="mt-3 text-[16px] text-[#454545] space-y-2">
       {/* Days Remaining Row */}
       <div className="flex justify-between">
         <span>Days Remaining:</span>
-        <span className="font-semibold">26 Days</span>
+        <span className="">30 Days</span>
       </div>
 
       {/* Progress Bar */}
@@ -98,14 +99,21 @@ export default function Sidebar() {
       </div>
 
       {/* Dates Row */}
-      <div className="flex justify-between text-xs">
+      <div className="flex justify-between text-[16px] text-[#929292]">
         <span>01 Jan 2024</span>
-        <span className="font-semibold">31 Dec 2024</span>
+        <span className="">31 Dec 2024</span>
       </div>
     </div>
 
+    <div className="border-b border-[#696969] w-full mt-6"></div>
 
-        <button className="mt-4 text-[20px] w-full border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
+      <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
+
+      <span className="font-medium">Upgrade Plan</span>
+      </button>
+
+
+        {/* <button className="mt-4 text-[20px] w-full border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
           Renew Now
         </button>
         <button className="mt-2 w-full text-[20px] border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
@@ -118,7 +126,7 @@ export default function Sidebar() {
     >
       <img src="/images/download.png" alt="Download" className="mr-2" />
       Download Invoice
-    </a>
+    </a> */}
 
       </div>
     </div>

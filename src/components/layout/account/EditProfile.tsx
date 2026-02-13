@@ -87,6 +87,8 @@ const countries = countryList.getNames();
           { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
           { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png"},
           { key: "Course", label: "Purchased Course", icon: "/images/course.png" },
+          { key: "member", label: "Membership course", icon: "/images/course.png" },
+          { key: "earning", label: "My Earning", icon: "/images/course.png" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -119,13 +121,13 @@ const countries = countryList.getNames();
           <div className="grid md:grid-cols-1 gap-4">
             <div>
               <label className="text-sm font-medium">Full Name<span className="text-red-600">*</span></label>
-              <input type="text" className="w-full border px-3 py-2 rounded-md mt-1" placeholder="Name" />
+              <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Name" />
             </div>
 
             <div className="flex justify-between gap-4">
                       <div className="flex-1">
                     <label className="text-sm font-medium">Email<span className="text-red-600">*</span></label>
-                    <input type="email" className="w-full border px-3 py-2 rounded-md mt-1" placeholder="Enter Email" />
+                    <input type="email" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Enter Email" />
                     </div>
                       <div className="flex-1">
                     <label className="text-sm font-medium">Mobile Number<span className="text-red-600">*</span></label>
@@ -136,7 +138,7 @@ const countries = countryList.getNames();
                         defaultCountry="IN"
                         international
                         limitMaxLength={true} 
-                        className="w-full border px-3 py-2" 
+                        className="w-full border border-[#1A1A1A] px-3 py-2" 
             />
                     </div>
 
@@ -146,14 +148,14 @@ const countries = countryList.getNames();
             <div className="flex justify-between gap-4">
             <div className="flex-1">
                 <label className="text-sm font-medium">Profession</label>
-                       <select className="w-full border px-3 py-2 rounded-md mt-1">
+                       <select className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1">
                 <option>Select</option>
               </select>
             </div>
 
             <div className="flex-1">
                 <label className="text-sm font-medium">Company Name</label>
-                <input type="email" className="w-full border px-3 py-2 rounded-md mt-1" placeholder="Your Company Name" />
+                <input type="email" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Your Company Name" />
             </div>
             </div>
 
@@ -161,18 +163,18 @@ const countries = countryList.getNames();
 
             <div>
               <label className="text-sm font-medium">Designation</label>
-              <input type="text" className="w-full border px-3 py-2 rounded-md mt-1" placeholder="Eg. Owner, Manager, Tax Head Etc." />
+              <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Eg. Owner, Manager, Tax Head Etc." />
             </div>
 
             <div className="flex justify-between gap-4">
                  <div className="flex-1">
                 <label className="text-sm font-medium">City<span className="text-red-600">*</span></label>
-                <input type="text" className="w-full border px-3 py-2 rounded-md mt-1" placeholder="Enter Your City" />
+                <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Enter Your City" />
                 </div>
 
                  <div className="flex-1">
                 <label className="text-sm font-medium">State<span className="text-red-600">*</span></label>
-                    <select name="state" value={form.state} onChange={handleChange}    className="w-full border px-3 py-2">
+                    <select name="state" value={form.state} onChange={handleChange}    className="w-full border border-[#1A1A1A] px-3 py-2">
                 <option value="">Select state</option>
                 {states.map(st => <option key={st} value={st}>{st}</option>)}
             </select>
@@ -187,7 +189,7 @@ const countries = countryList.getNames();
               value={form.country}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border border-[#1A1A1A] px-3 py-2"
             >
               <option value="">Select country</option>
               {countries.map((c) => (
@@ -199,14 +201,8 @@ const countries = countryList.getNames();
             </div>
           </div>
 
-          <div className="flex justify-between items-center mt-6">
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB] hover:bg-[#ececf2] transition"
-      >
-        <img src="/images/lock.png" alt="Change Password icon" className="w-5 h-5" />
-        <span className="font-medium">Change Password</span>
-      </button>
+         <div className="flex justify-end items-center mt-6">
+
 
 
       {/* MODAL */}
@@ -216,6 +212,16 @@ const countries = countryList.getNames();
           </div>
           </div>
           )}
+
+               <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
+            <button
+            onClick={() => setOpen(true)}
+            className="flex items-center gap-2 border  px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB] hover:bg-[#ececf2] transition"
+          >
+            <img src="/images/lock.png" alt="Change Password icon" className="w-5 h-5" />
+            <span className="font-medium">Change Password</span>
+          </button>
+             </div>
 
           {active === "Payment" && (
             <div className="mt-8">
