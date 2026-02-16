@@ -9,6 +9,30 @@ export default function CourseDetailPage() {
      const [open, setOpen] = useState(false);
      const [isReviewOpen, setIsReviewOpen] = useState(false)
 const [isCertificateOpen, setIsCertificateOpen] = useState(false)
+const videos = [
+  {
+    id: 1,
+    title: "GST Provisions related to GSTR-9 and GSTR-9C filing",
+    thumbnail: "/images/home/f1.jpg",
+  },
+  {
+    id: 2,
+    title: "GST Provisions related to GSTR-9 and GSTR-9C filing",
+    thumbnail: "/images/home/f2.png",
+  },
+  {
+    id: 3,
+    title: "GST annual return workflow, table wise changes and comparison with last year",
+    thumbnail: "/images/home/f3.png",
+  },
+  {
+    id: 4,
+    title: "Compulsory and Optional Tables",
+    thumbnail: "/images/home/f4.jpg",
+  },
+];
+const [selectedVideo, setSelectedVideo] = useState(1);
+
 
   return (
     <div className="container  mx-auto px-6 py-6 ">
@@ -142,12 +166,43 @@ const [isCertificateOpen, setIsCertificateOpen] = useState(false)
         </button>
 
         {openDay === 1 && (
-          <ul className="mt-3 space-y-2 text-[16px] text-gray-600">
-            <li className="text-green-600"><input type="checkbox" /> GST Provisions related to GSTR-9 and GSTR-9C filing</li>
-            <li><input type="checkbox" /> GST Provisions related to GSTR-9 and GSTR-9C filing</li>
-            <li><input type="checkbox" /> GST annual return workflow, table wise changes and comparison with last year</li>
-            <li><input type="checkbox" /> Compulsory and Optional Tables</li>
-          </ul>
+        <ul className="mt-3 space-y-3">
+          {videos.map((video) => (
+            <li
+              key={video.id}
+              onClick={() => setSelectedVideo(video.id)}
+              className={`flex items-center gap-3 cursor-pointer p-2 rounded-md transition text-[#929292]
+                ${
+                  selectedVideo === video.id
+                    ? "bg-green-50 text-green-600"
+                    : "hover:bg-gray-100"
+                }`}
+            >
+              {/* Thumbnail */}
+              <div className="relative w-16 h-10 flex-shrink-0">
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="w-full h-full object-cover rounded-md"
+                />
+
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-md">
+                  <div className="bg-[#09339B] w-6 h-6 flex items-center justify-center rounded-full text-[8px] text-white">
+                  <span className="ml-1">▶</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Title */}
+              <span className="text-sm  font-medium">
+                {video.title}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+         
+    
         )}
       </div>
 

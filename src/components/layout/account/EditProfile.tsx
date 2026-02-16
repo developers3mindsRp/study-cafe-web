@@ -114,7 +114,8 @@ const countries = countryList.getNames();
              </div>
 
          {active === "Profile" && (
-        <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
+          <>
+                  <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
           <h2 className=" mb-2 text-[26px]">Edit Profile</h2>
           <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
 
@@ -211,8 +212,7 @@ const countries = countryList.getNames();
             <button className="bg-[#09339B] px-5 py-2 text-white rounded-md">Save Changes</button>
           </div>
           </div>
-          )}
-
+          
                <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
             <button
             onClick={() => setOpen(true)}
@@ -222,6 +222,9 @@ const countries = countryList.getNames();
             <span className="font-medium">Change Password</span>
           </button>
              </div>
+          </>
+          )}
+
 
           {active === "Payment" && (
             <div className="mt-8">

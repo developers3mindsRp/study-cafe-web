@@ -47,7 +47,7 @@ export default function Footer() {
                 </div>
               </Link>
             </div>
-            <p className="text-[11px] text-white mb-4 font-normal">
+            <p className="text-[11px] md:text-[16px] text-white mb-4 font-normal">
               Empowering learners with quality education and professional courses.
             </p>
             <div className="flex gap-4">
@@ -198,7 +198,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className=" mt-6 text-center ">
-          <p className="text-[12px] text-white">
+          <p className="text-[12px] md:text-[18px] text-white">
             Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
           </p>
         </div>
