@@ -47,7 +47,7 @@ export default function Footer() {
                 </div>
               </Link>
             </div>
-            <p className="text-[11px] md:text-[16px] text-white mb-4 font-normal">
+            <p className="text-[16px] md:text-[16px] text-white mb-8 md:mb-4 font-normal px-12 md:px-0">
               Empowering learners with quality education and professional courses.
             </p>
             <div className="flex gap-4">
@@ -158,8 +158,8 @@ export default function Footer() {
           <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start mb-8">
             <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="/help" className="text-[16px] text-white transition-colors">
+              <li className='px-16 md:px-0'>
+                <Link href="/help" className="text-[16px] text-white transition-colors ">
                   Subscribe to get updates on new courses and offers.
                 </Link>
               </li>

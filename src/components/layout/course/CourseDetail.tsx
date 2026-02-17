@@ -115,7 +115,7 @@ export default function CourseSection() {
            
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
-          ">FAQ</h2>
+          ">FAQ's</h2>
           <div className="space-y-4">
             {faqs.map((item, index) => (
               <div key={index} className="border rounded-lg overflow-hidden shadow-md">

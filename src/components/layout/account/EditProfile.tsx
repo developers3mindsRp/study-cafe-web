@@ -9,6 +9,8 @@ import PaymentHistory from "./PaymentHistory";
 import MyCourses from "./PurchaseCourse";
 import Sidebar from "./Sidebar";
 import ChangePasswordModal from "@/components/ChangePassword";
+import MembershipCourses from "./MembershipCourses";
+import Earning from "./Earning";
 
 export default function EditProfile() {
     const [open, setOpen] = useState(false);
@@ -87,8 +89,8 @@ const countries = countryList.getNames();
           { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
           { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png"},
           { key: "Course", label: "Purchased Course", icon: "/images/course.png" },
-          { key: "member", label: "Membership course", icon: "/images/course.png" },
-          { key: "earning", label: "My Earning", icon: "/images/course.png" },
+          { key: "Membership", label: "Membership course", icon: "/images/course.png" },
+          { key: "Earning", label: "My Earning", icon: "/images/course.png" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -236,6 +238,19 @@ const countries = countryList.getNames();
              <MyCourses/>
             </div>
           )}
+          {active === "Membership" && (
+            <div className="mt-8">
+              <MembershipCourses/>
+            
+            </div>
+          )}
+          {active === "Earning" && (
+            <div className="mt-8">
+              <Earning/>
+            
+            </div>
+          )}
+
         </div>
       </div>
     </div>

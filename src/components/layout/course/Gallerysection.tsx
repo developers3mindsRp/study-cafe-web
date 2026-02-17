@@ -19,7 +19,8 @@ export default function Gallery() {
     return (
         <section className="bg-white py-4">
             {/* Heading */}
-            <h2 className="text-[30px] md:text-[40px] font-medium text-gray-900 container px-4 mx-auto  ">
+            <h2 className="text-[20px] md:text-[40px] font-medium text-white md:text-gray-900 container px-4 mx-auto bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none py-3 md:py-0">
+                
                 Gallery
             </h2>
             <div>
