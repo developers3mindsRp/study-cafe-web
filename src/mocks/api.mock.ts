@@ -5,7 +5,13 @@ import {
   mockUserCourses, 
   mockDashboardStats,
   mockCategories,
-  getPurchasedCourseIds
+  getPurchasedCourseIds,
+  mockHomePageData,
+  mockMemberships,
+  mockFaq,
+  mockTestimonials,
+  mockPageContent,
+  mockSeoMetadata,
 } from './data';
 import {
   User,
@@ -20,6 +26,12 @@ import {
   UpdateProfileData,
   LessonProgress,
   CourseProgress,
+  HomePageData,
+  Membership,
+  FAQ,
+  Testimonial,
+  PageContent,
+  SeoMetadata,
 } from '@/types/models.types';
 import { PaginatedResponse, CourseFilters, ApiResponse } from '@/types/api.types';
 
@@ -382,3 +394,38 @@ export const mockPurchasesApi = {
   },
 };
 
+/**
+ * Platform / Website mock APIs (home, memberships, FAQ, testimonials, page content, SEO)
+ */
+export const mockPlatformApi = {
+  getHomePageData: async (): Promise<HomePageData> => {
+    await delay(400);
+    return mockHomePageData;
+  },
+
+  getMemberships: async (): Promise<Membership[]> => {
+    await delay(300);
+    return mockMemberships.filter(m => m.status === 'Active');
+  },
+
+  getFaq: async (): Promise<FAQ[]> => {
+    await delay(300);
+    return [...mockFaq].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  },
+
+  getTestimonials: async (limit?: number): Promise<Testimonial[]> => {
+    await delay(300);
+    const list = [...mockTestimonials].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return limit != null ? list.slice(0, limit) : list;
+  },  getPageContent: async (slug: string): Promise<PageContent> => {
+    await delay(300);
+    const page = mockPageContent[slug];
+    if (!page) throw new Error(`Page not found: ${slug}`);
+    return page;
+  },
+
+  getSeoMetadata: async (pageSlug: string): Promise<SeoMetadata | null> => {
+    await delay(200);
+    return mockSeoMetadata[pageSlug] ?? null;
+  },
+};

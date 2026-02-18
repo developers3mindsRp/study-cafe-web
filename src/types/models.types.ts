@@ -141,3 +141,92 @@ export interface DashboardStats {
   averageProgress: number;
 }
 
+// ========== Platform / Website (public) types ==========
+
+/** Home page hero and above-the-fold content */
+export interface HomeHero {
+  title: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  imageUrl?: string;
+  badge?: string;
+}
+
+/** Feature or value proposition for home page */
+export interface HomeFeature {
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  order?: number;
+}
+
+/** Stat or counter for home page */
+export interface HomeStat {
+  label: string;
+  value: string | number;
+  suffix?: string;
+}
+
+/** Aggregated home page data for landing */
+export interface HomePageData {
+  hero: HomeHero;
+  features?: HomeFeature[];
+  stats?: HomeStat[];
+  testimonialHighlight?: Testimonial;
+  updatedAt?: string;
+}
+
+/** Membership plan for pricing page */
+export interface Membership {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  duration: string;
+  features: string[];
+  status: 'Active' | 'Inactive';
+  highlighted?: boolean;
+  order?: number;
+}
+
+/** FAQ item */
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order?: number;
+}/** Testimonial for home or testimonials page */
+export interface Testimonial {
+  id: string;
+  quote: string;
+  authorName: string;
+  authorRole?: string;
+  avatarUrl?: string;
+  order?: number;
+}
+
+/** CMS page content (about, contact, privacy, etc.) */
+export interface PageContent {
+  slug: string;
+  title: string;
+  content: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  updatedAt?: string;
+}
+
+/** SEO metadata for a page */
+export interface SeoMetadata {
+  pageSlug: string;
+  pageName: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords?: string;
+  robots?: string;
+  canonicalUrl?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImageUrl?: string;
+}

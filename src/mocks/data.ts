@@ -5,7 +5,13 @@ import {
   UserCourse, 
   Purchase,
   DashboardStats,
-  CourseModule 
+  CourseModule,
+  HomePageData,
+  Membership,
+  FAQ,
+  Testimonial,
+  PageContent,
+  SeoMetadata,
 } from '@/types/models.types';
 
 /**
@@ -345,3 +351,84 @@ export const getPurchasedCourseIds = (userId: string): string[] => {
     .map(uc => uc.courseId);
 };
 
+// ========== Platform / Website mock data ==========
+export const mockHomePageData: HomePageData = {
+  hero: {
+    title: 'Learn CA, CS, CWA & Professional Courses',
+    subtitle: 'Your trusted platform for exam preparation, GST, Income Tax, and Business News.',
+    ctaText: 'Explore Courses',
+    ctaLink: '/courses',
+    badge: 'Trusted by 10,000+ students',
+  },
+  features: [
+    { id: 'f1', title: 'Expert-Led Courses', description: 'Learn from industry experts and qualified instructors.', order: 1 },
+    { id: 'f2', title: 'Structured Curriculum', description: 'Clear path from basics to advanced topics.', order: 2 },
+    { id: 'f3', title: 'Practice & Mock Tests', description: 'Test your knowledge with quizzes and mocks.', order: 3 },
+  ],
+  stats: [
+    { label: 'Students', value: '10,000+', suffix: '+' },
+    { label: 'Courses', value: '50+' },
+    { label: 'Instructors', value: '25+' },
+  ],
+  updatedAt: new Date().toISOString(),
+};
+
+export const mockMemberships: Membership[] = [
+  {
+    id: 'mem-1',
+    name: 'Lifetime Ultimate',
+    description: 'Full access to all courses and resources',
+    price: '₹12,999',
+    duration: 'Lifetime',
+    features: ['All courses', 'Certificates', 'Support', 'Updates'],
+    status: 'Active',
+    highlighted: true,
+    order: 1,
+  },
+  {
+    id: 'mem-2',
+    name: 'Annual Pro',
+    description: 'One year access to CA, CS, CWA courses',
+    price: '₹4,999',
+    duration: '12 months',
+    features: ['All courses', 'Articles', 'Support'],
+    status: 'Active',
+    order: 2,
+  },
+  {
+    id: 'mem-3',
+    name: 'Monthly Basic',
+    description: 'Monthly access to selected courses',
+    price: '₹499',
+    duration: '1 month',
+    features: ['Selected courses'],
+    status: 'Active',
+    order: 3,
+  },
+];
+
+export const mockFaq: FAQ[] = [
+  { id: 'faq-1', question: 'How do I access StudyCafe courses?', answer: 'After purchasing a course, you can access it from your dashboard. Log in and go to the Courses section.', order: 1 },
+  { id: 'faq-2', question: 'Are the courses updated regularly?', answer: 'Yes, we update our courses to reflect the latest changes in CA, CS, CWA syllabus, GST, and Income Tax regulations.', order: 2 },
+  { id: 'faq-3', question: 'Can I get a refund?', answer: 'Please refer to our Refund Policy. We offer refunds within a specified period for certain purchases.', order: 3 },
+];
+
+export const mockTestimonials: Testimonial[] = [
+  { id: 't1', quote: 'Studycafe has been instrumental in my CA preparation. The quality of content is exceptional.', authorName: 'Priya Sharma', authorRole: 'CA Final Student', order: 1 },
+  { id: 't2', quote: 'The GST and Income Tax articles are always up to date. Great resource for professionals.', authorName: 'Rahul Gupta', authorRole: 'CA, Practicing', order: 2 },
+  { id: 't3', quote: 'Best platform for CA, CS, and CWA exam preparation. Highly recommended!', authorName: 'Anita Singh', authorRole: 'CS Executive', order: 3 },
+];
+
+export const mockPageContent: Record<string, PageContent> = {
+  'about': { slug: 'about', title: 'About Us', content: '<p>StudyCafe is your trusted platform for CA, CS, CWA exam preparation and professional courses.</p>', metaTitle: 'About | StudyCafe', metaDescription: 'Learn about StudyCafe.', updatedAt: new Date().toISOString() },
+  'contact': { slug: 'contact', title: 'Contact Us', content: '<p>Reach us at support@studycafe.in or use the form below.</p>', metaTitle: 'Contact | StudyCafe', metaDescription: 'Contact StudyCafe.', updatedAt: new Date().toISOString() },
+  'privacy-policy': { slug: 'privacy-policy', title: 'Privacy Policy', content: '<p>We respect your privacy. This policy describes how we collect and use your data.</p>', metaTitle: 'Privacy Policy | StudyCafe', metaDescription: 'Privacy Policy.', updatedAt: new Date().toISOString() },
+  'terms-of-use': { slug: 'terms-of-use', title: 'Terms of Use', content: '<p>By using StudyCafe you agree to these terms.</p>', metaTitle: 'Terms of Use | StudyCafe', metaDescription: 'Terms of Use.', updatedAt: new Date().toISOString() },
+  'refund-policy': { slug: 'refund-policy', title: 'Refund Policy', content: '<p>Refund eligibility and process are described here.</p>', metaTitle: 'Refund Policy | StudyCafe', metaDescription: 'Refund Policy.', updatedAt: new Date().toISOString() },
+};
+
+export const mockSeoMetadata: Record<string, SeoMetadata> = {
+  '/': { pageSlug: '/', pageName: 'Home', metaTitle: 'StudyCafe – CA, CS, CWA | GST, Income Tax & Professional Courses', metaDescription: 'Your trusted platform for CA, CS, CWA exam preparation.', robots: 'index, follow' },
+  'about': { pageSlug: 'about', pageName: 'About', metaTitle: 'About | StudyCafe', metaDescription: 'Learn about StudyCafe.', robots: 'index, follow' },
+  'contact': { pageSlug: 'contact', pageName: 'Contact', metaTitle: 'Contact | StudyCafe', metaDescription: 'Contact StudyCafe.', robots: 'index, follow' },
+};
