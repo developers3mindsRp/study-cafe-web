@@ -68,6 +68,12 @@ export default function CourseOverview() {
 
 
       <div className="grid md:grid-cols-2 gap-6 mb-12 mt-8 scroll-mt-28" id="features">
+            {/* Course Description */}
+      <h2 className="md:hidden container scroll-mt-28  text-[20px] md:text-[30px] font-semibold mb-2 md:mb-4
+            px-4 py-3 text-white
+           
+            bg-gradient-to-r from-[#253D8E] to-transparent
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Key Features</h2>
         {features.map((feature, index) => (
           <div
             key={index}
@@ -189,14 +195,14 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="content">Course Content</h2>
 
-      <div className="w-full  mt-10 space-y-3 text-left container px-4">
+      <div className="w-full  mt-10 space-y-3 text-left container px-4 ">
         {faqs.map((item, index) => (
           <div key={index} className="shadow-md rounded-lg overflow-hidden ">
             {/* Question Button */}
           <button
           onClick={() => setOpenIndex(openIndex === index ? null : index)}
           className={`
-            w-full flex justify-between items-center p-4 transition
+            w-full flex  justify-between items-center py-2 p-1 md:p-4 transition
             ${openIndex === index
               ? "bg-[#09339B] text-white"
               : "bg-white text-[#09339B]"}

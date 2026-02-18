@@ -58,7 +58,7 @@ export default function MembershipPricing() {
         <div className="mt-10 md:mt-16">
           <div
             ref={containerRef}
-            className="flex gap-8 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4  scrollbar-hide pt-8 pl-6"
+            className="flex gap-8 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4  scrollbar-hide pt-8 pl-6 min-h-[540px]"
           >
             {/* Mobile slider: each card is snap-center */}
             {plans.map((plan, index) => (

@@ -35,7 +35,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#252525] text-gray-300 " id='footer'>
-      <div className="container mx-auto px-4 py-10 mt-10">
+      <div className="container mx-auto px-4 py-10 md:mt-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
 
           {/* Brand Column */}
@@ -47,7 +47,7 @@ export default function Footer() {
                 </div>
               </Link>
             </div>
-            <p className="text-[16px] text-white mb-4 font-normal">
+            <p className="text-[16px] md:text-[16px] text-white mb-8 md:mb-4 font-normal px-12 md:px-0">
               Empowering learners with quality education and professional courses.
             </p>
             <div className="flex gap-4">
@@ -158,8 +158,8 @@ export default function Footer() {
           <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start mb-8">
             <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="/help" className="text-[16px] text-white transition-colors">
+              <li className='px-16 md:px-0'>
+                <Link href="/help" className="text-[16px] text-white transition-colors ">
                   Subscribe to get updates on new courses and offers.
                 </Link>
               </li>
@@ -198,7 +198,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className=" mt-6 text-center ">
-          <p className="text-[18px] text-white">
+          <p className="text-[12px] md:text-[18px] text-white">
             Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
           </p>
         </div>

@@ -364,20 +364,14 @@ export default function FeaturedCourses() {
             onClick={prev}
             className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white border border-gray-300 "
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M5.5 12.002L19 12.002" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M10.9999 18.002C10.9999 18.002 5.00001 13.583 5 12.0019C4.99999 10.4208 11 6.00195 11 6.00195" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+          <img src="/images/f-left.svg" alt="" />
           </button>
 
           <button
             onClick={next}
             className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white border border-gray-300 "
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18.5 11.998L5 11.998" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M13.0001 5.998C13.0001 5.998 19 10.417 19 11.9981C19 13.5792 13 17.998 13 17.998" stroke="#252525" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+       <img src="/images/f-right.svg" alt="" />
           </button>
         </div>
 

@@ -52,7 +52,7 @@ export default function Testimonials() {
         {/* Cards */}
         <div className="mt-2 md:mt-14 marquee-wrapper">
           {/* Mobile slider */}
-          <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide  pt-8 marquee ">
+          <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide  pt-8 ">
             {testimonials.map((item, index) => (
               <div
                 key={index}
@@ -66,7 +66,7 @@ export default function Testimonials() {
                 />
 
                 {/* Message */}
-                <p className="text-[#696969] text-[10px]  mt-2 leading-relaxed ">
+                <p className="text-[#696969] text-[12px]  mt-2 leading-relaxed ">
                   {item.message}
                 </p>
 

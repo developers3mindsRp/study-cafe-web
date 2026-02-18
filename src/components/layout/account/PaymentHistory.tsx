@@ -79,16 +79,16 @@ export default function PaymentHistory() {
       {/* Table */}
       <div className="hidden md:block overflow-x-auto ">
         <table className="w-full bg-white rounded-lg shadow-sm divide-y divide-gray-200 border border-gray-200">
-          <thead className="bg-gray-50  text-[16px]">
+          <thead className="bg-gray-50  text-[16px]  ">
             <tr>
-              <th className="px-4 py-3 text-left">Date</th>
-              <th className="px-4 py-3 text-left">Order ID</th>
-              <th className="px-4 py-3 text-left">Item Name</th>
-              <th className="px-4 py-3 text-left">Amount</th>
-              <th className="px-4 py-3 text-left">GST</th>
-              <th className="px-4 py-3 text-left">Method</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-center">Action</th>
+              <th className="px-4 py-3 text-left font-normal ">Date</th>
+              <th className="px-4 py-3 text-left font-normal">Order ID</th>
+              <th className="px-4 py-3 text-left font-normal">Item Name</th>
+              <th className="px-4 py-3 text-left font-normal">Amount</th>
+              <th className="px-4 py-3 text-left font-normal">GST</th>
+              <th className="px-4 py-3 text-left font-normal">Method</th>
+              <th className="px-4 py-3 text-left font-normal">Status</th>
+              <th className="px-4 py-3 text-center font-normal">Action</th>
             </tr>
           </thead>
 
