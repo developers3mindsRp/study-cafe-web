@@ -84,7 +84,8 @@ const countries = countryList.getNames();
 
         {/* RIGHT CONTENT */}
         <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
-              <div className="border  bg-[#F0F2F4] rounded-lg flex overflow-hidden text-sm font-medium container ">
+             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium p-2 scrollbar-hide">
+
         {[
           { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
           { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png"},
