@@ -126,7 +126,7 @@ export default function Blog_list() {
 
     <section className="w-full py-12 px-2 md:px-6 text-center">
       {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 md:gap-8 mx-auto container md:px-4">
+      <div className="flex flex-wrap gap-2 md:gap-4 2xl:gap-8 mx-auto container md:px-4">
         {categories.map((cat) => (
           <button
             key={cat}

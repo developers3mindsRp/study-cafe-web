@@ -110,6 +110,12 @@ const courses = [
                  </div>
                ))}
              </div>
+
+             <div className="flex justify-center mt-6">
+              <button className="px-4 py-2 bg-[#09339B] text-white rounded-md text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
+                View all
+              </button>
+             </div>
  
     </section>
   );
