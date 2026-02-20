@@ -428,4 +428,9 @@ export const mockPlatformApi = {
     await delay(200);
     return mockSeoMetadata[pageSlug] ?? null;
   },
+
+  getArticleBySlug: async (_slug: string): Promise<import('@/types/models.types').ArticleBySlug | null> => {
+    await delay(200);
+    return null;
+  },
 };

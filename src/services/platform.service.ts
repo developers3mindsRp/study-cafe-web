@@ -6,6 +6,7 @@ import {
   Testimonial,
   PageContent,
   SeoMetadata,
+  ArticleBySlug,
 } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -85,6 +86,23 @@ export const getSeoMetadata = async (
       `/platform/seo/${encodeURIComponent(pageSlug)}`
     );
     return response.data.data;
+  } catch {
+    return null;
+  }
+};
+
+/** Public article by slug (body + related_articles for [related id="..."] shortcodes) */
+export const getArticleBySlug = async (
+  slug: string
+): Promise<ArticleBySlug | null> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getArticleBySlug?.(slug) ?? null;
+  }
+  try {
+    const response = await axiosInstance.get<ApiResponse<ArticleBySlug>>(
+      `/platform/articles/${encodeURIComponent(slug)}`
+    );
+    return response.data.data ?? null;
   } catch {
     return null;
   }

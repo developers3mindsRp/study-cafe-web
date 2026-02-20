@@ -230,3 +230,27 @@ export interface SeoMetadata {
   ogDescription?: string;
   ogImageUrl?: string;
 }
+
+/** Resolved "Also Read" article from [related id="..."] in legacy article content */
+export interface RelatedArticle {
+  id: number;
+  title: string;
+  slug: string;
+}
+
+/** Public article by slug (body = content, related_articles from shortcodes) */
+export interface ArticleBySlug {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  body: string;
+  cover_image_url?: string | null;
+  author_name?: number | null;
+  published_at?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  related_articles?: RelatedArticle[];
+}
