@@ -15,10 +15,10 @@ const testimonials = [
 
 export default function Testimonials_course() {
     return (
-        <section className=" bg-white container px-4 mx-auto pb-12 ">
+        <section className=" bg-white container px-4 mx-auto pb-6 md:pb-12 ">
             <div className=" md:mx-auto  ">
                 {/* Heading */}
-                <h2 className="text-[20px] md:text-[40px] font-semibold  mb-6 md:mb-4
+                <h2 className="text-[20px] md:text-[40px] font-semibold  mb-2 md:mb-4
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
@@ -42,7 +42,7 @@ export default function Testimonials_course() {
                                     <img
                                         src={item.images}
                                         alt=""
-                                        className="object-cover w-full h-full rounded-lg gap-6"
+                                        className="object-cover w-full h-[210px] rounded-lg gap-6"
                                     />
 
                                     {/* Overlay */}

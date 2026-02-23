@@ -97,30 +97,23 @@ export default function Blog_list() {
       title: "ICAI Releases Eleventh Edition of GST Acts and Rules",
     },
   ];
-        const ITEMS_PER_PAGE = itemsPerPage;
-        const filtered = active === "All" ? blogs : blogs.filter((b) => b.tag === active);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const visibleblogs = filtered.slice(startIndex, endIndex);
-        const pageCount = Math.ceil(filtered.length / itemsPerPage)
+  const filtered = useMemo(() => {
+    return active === "All"
+      ? blogs
+      : blogs.filter((b) => b.tag === active);
+  }, [blogs, active]);
 
+  const pageCount = Math.ceil(filtered.length / itemsPerPage);
 
-        const paginated = useMemo(() => {
-          const start = (currentPage - 1) * ITEMS_PER_PAGE
-          return filtered.slice(start, start + ITEMS_PER_PAGE)
-        }, [filtered, currentPage])
+  const paginated = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filtered.slice(start, start + itemsPerPage);
+  }, [filtered, currentPage, itemsPerPage]);
 
-
-
-
-
-      // use filtered array (so filters + pagination both work)
-      const visibleCourses = filtered.slice(startIndex, endIndex);
-
-      const handlePageClick = (page: number) => {
-        if (page < 1 || page > pageCount) return;
-        setCurrentPage(page);
-      };
+  const handlePageClick = (page: number) => {
+    if (page < 1 || page > pageCount) return;
+    setCurrentPage(page);
+  };
 
   return (
 
@@ -142,51 +135,68 @@ export default function Blog_list() {
       </div>
 
 
-      <div className="sm:grid grid-cols-2 md:grid-cols-3 gap-6 mt-10  mx-auto container px-4">
-        {visibleblogs.map((b) => (
-          <div key={b.title} className="rounded-xl shadow-md border bg-white
-          overflow-hidden text-left">
-            <div className="relative w-full h-[243px]">
-              <img
-                src={b.img}
-                alt="blog"
-                className="w-full h-full object-fit"
-              />
+      <div className="mt-10 mx-auto container px-4">
 
-              {/* Right Corner Tag */}
-              <span className="absolute top-4 left-4 bg-white text-[#252525] text-[14px] font-normal px-2 py-1 rounded-[14px] ">
-                {b.tag}
-              </span>
-            </div>
+        {filtered.length === 0 ? (
+          <div className="text-center md:py-20">
+            <h3 className="text-2xl font-semibold text-gray-600 mb-2">
+              No Blog Found
+            </h3>
+            <p className="text-gray-400">
+              There are no blogs available in this category.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {paginated.map((b) => (
+              <div
+                key={b.title}
+                className="rounded-xl shadow-md border bg-white overflow-hidden text-left"
+              >
+                <div className="relative w-full h-[243px]">
+                  <img
+                    src={b.img}
+                    alt="blog"
+                    className="w-full h-full object-cover"
+                  />
 
-            <div className="p-4">
+                  <span className="absolute top-4 left-4 bg-white text-[#252525] text-[14px] font-normal px-2 py-1 rounded-[14px]">
+                    {b.tag}
+                  </span>
+                </div>
 
+                <div className="p-4">
+                  <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
+                    <span className="flex">
+                      <img src="/images/user.svg" alt="" width="20" height="20" />
+                      {b.author}
+                    </span>
+                    <span className="flex gap-2">
+                      <img src="/images/calendar.svg" alt="" width="20" height="10" />
+                      {b.date}
+                    </span>
+                  </div>
 
-              <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
-
-              </div>
-
-                      <h3 className="font-medium text-[26px] text-[#252525]
-            leading-tight mb-4">
+                  <h3 className="font-medium text-[16px] md:text-[26px] text-[#252525] leading-tight mb-4">
                     {b.title}
                   </h3>
 
-
-              <Link href="/blogs/blog-detail">
-                <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                  Read More
-             <img src="/images/arrow-left.svg" alt="" />
-                </button>
-              </Link>
-
-            </div>
+                  <Link href="/blogs/blog-detail">
+                    <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                      Read More
+                      <img src="/images/arrow-left.svg" alt="" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-10 gap-2 mb-6">
+      {filtered.length > 0 && (
+        <div className="flex justify-center items-center mt-10 gap-2 mb-6">
         {/* Left Arrow */}
         <button
           onClick={() => handlePageClick(currentPage - 1)}
@@ -224,7 +234,8 @@ export default function Blog_list() {
         >
             <img src="/images/f-right.svg" alt="" className='ml-1'/>
         </button>
-      </div>
+        </div>
+      )}
 
 
     </section>

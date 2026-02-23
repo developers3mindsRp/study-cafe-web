@@ -40,7 +40,7 @@ const TrendingCourses = () => {
   ];
 
   return (
-    <section className="w-full py-12  px-4 mx-auto container">
+    <section className="w-full py-4 md:py-12  px-4 mx-auto container">
       <h2 className="text-[20px] md:text-[40px] font-medium   mb-6 md:mb-4
             px-4 py-3 text-white
            
@@ -49,7 +49,7 @@ const TrendingCourses = () => {
 
 
       {/* Mobile Slider */}
-      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2 scrollbar-hide">
+      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden md:mt-10 pb-4 px-2 scrollbar-hide">
         {courses.map((c, i) => (
           <div
             key={i}

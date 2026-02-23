@@ -73,7 +73,7 @@ export default function CourseOverview() {
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
-            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Key Features</h2>
+            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="features">Course Key Features</h2>
         {features.map((feature, index) => (
           <div
             key={index}
@@ -92,7 +92,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="description">Course Description</h2>
 
-      <div className="bg-white  rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
+      <div className="bg-white  rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-6 md:mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
         <p>
           In our continuous endeavour to empower more and more finance
           professionals, this certification course has been designed for you.
@@ -168,19 +168,19 @@ export default function CourseOverview() {
             <li>Any other person not covered above can join the course if interested.</li>
           </ul>
         </div>
-        <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
+        <div className="grid md:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-12 mt-4 md:mb-12">
 
-          <div className="bg-[#F9F9FB] p-8 ">
+          <div className="bg-[#F9F9FB] p-4 md:p-8 ">
             <img src="/images/duration.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Course Duration</h2>
             <p className="leading-relaxed">The course duration is 2 Days and around 4+ hours.</p>
           </div>
-          <div className="bg-[#F9F9FB] p-8">
+          <div className="bg-[#F9F9FB] p-4 md:p-8">
             <img src="/images/view.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Views Limitation</h2>
            <p className="leading-relaxed">This is a fully online course with 1-year unlimited access, available anytime and anywhere.</p>
           </div>
-          <div className="bg-[#F9F9FB] p-8">
+          <div className="bg-[#F9F9FB] p-4 md:p-8">
             <img src="/images/time.png" alt="" />
             <h2 className="font-bold text-[20px] text-black mb-4 mt-4">Course Timing</h2>
            <p className="leading-relaxed">Timing: 6:00 pm to 8:00 pm</p>
@@ -202,7 +202,7 @@ export default function CourseOverview() {
           <button
           onClick={() => setOpenIndex(openIndex === index ? null : index)}
           className={`
-            w-full flex  justify-between items-center py-2 p-1 md:p-4 transition
+            w-full flex  justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left
             ${openIndex === index
               ? "bg-[#09339B] text-white"
               : "bg-white text-[#09339B]"}
@@ -215,7 +215,7 @@ export default function CourseOverview() {
 
           {/* Right part: duration + arrow */}
           <div className="flex items-center gap-2 md:gap-32">
-            <span className="font-medium text-[16px] md:text-[20px]">
+                <span className="font-medium text-[14px] md:text-[20px] whitespace-nowrap">
               {item.duration}
             </span>
 
@@ -254,7 +254,7 @@ export default function CourseOverview() {
            
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="certificate">Certificate</h2>
-      <p className=" text-center text-[16px] md:text-[20px] mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
+      <p className=" text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
       <img src="/images/certificate1.svg" alt="" className="mx-auto" />
 
 

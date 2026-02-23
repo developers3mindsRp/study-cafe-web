@@ -56,7 +56,7 @@ export default function ReviewSection() {
   
   return (
 
-    <section className="container px-4 mx-auto py-12 ">
+    <section className="container px-4 mx-auto py-6 md:py-12 ">
 
       <h2 className="          text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
             px-4 py-3 text-white

@@ -103,6 +103,7 @@ export default function Footer() {
               <li><Link href="/?category=marketing" className="text-[16px] text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
+          <hr className='block md:hidden' />
 
           {/* Company Column / Important Links */}
           <div className="col-span-1 md:relative right-6">
@@ -194,7 +195,7 @@ export default function Footer() {
 
         </div>
 
-        <div className='border-b  mt-12 h-px '></div>
+        <div className='border-b  md:mt-12 h-px '></div>
 
         {/* Bottom Bar */}
         <div className=" mt-6 text-center ">

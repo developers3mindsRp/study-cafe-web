@@ -95,28 +95,28 @@ export default function BannerSection() {
                         className="
                           mt-3 p-2
                           flex md:hidden
-                          gap sm:gap-6
+                          gap gap-4
                           justify-between
-                          text-[8px] sm:text-[13px]
+                          text-[10px] sm:text-[13px]
                           font-bold 
                         "
                       >
-                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 bg-white text-black px-2 py-2 rounded-md">
                           <img src="/images/icon-eng.png" alt="Language" className="w-4 h-4" />
                           <span>English</span>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-white text-black md:px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 bg-white text-black md:px-2 py-2 rounded-md whitespace-nowrap">
                           <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-4" />
                           <span>4 Hours</span>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md whitespace-nowrap">
                           <img src="/images/icon-user.png" alt="Students" className="w-4 h-4" />
                           <span>957 students</span>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md  whitespace-nowrap">
                           <img src="/images/Star.png" alt="Rating" className="w-4 h-4" />
                           <span>4.8 by 47 Users</span>
                         </div>
@@ -130,11 +130,11 @@ export default function BannerSection() {
                         </div>
 
                         <div className="flex gap-3 ">
-                          <img src="/images/fb.png" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                          <img src="/images/in.png" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                          <img src="/images/x.png" alt="X" className="w-8 h-8 cursor-pointer" />
-                          <img src="/images/pinterest.png" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                          <img src="/images/print.png" alt="Print" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
+                          <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
                         </div>
 
                       </div>
@@ -206,11 +206,11 @@ export default function BannerSection() {
                   </div>
 
                   <div className="flex gap-3 ">
-                    <img src="/images/fb.png" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/in.png" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/x.png" alt="X" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/pinterest.png" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/print.png" alt="Print" className="w-8 h-8 cursor-pointer" />
+                    <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
+                    <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
+                    <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
+                    <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
+                    <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
                   </div>
 
                 </div>

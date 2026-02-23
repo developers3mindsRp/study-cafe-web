@@ -257,7 +257,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
             setAuthorFilter('All Author/faculty');
             setCurrentPage(1);
           }}>
-            Clear All filter X
+            Clear All Filter X
           </button>
 
         </div>
