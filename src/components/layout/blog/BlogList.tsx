@@ -117,9 +117,9 @@ export default function Blog_list() {
 
   return (
 
-    <section className="w-full py-12 px-2 md:px-6 text-center">
+    <section className="w-full py-6 md:py-12 px-2 md:px-6 text-center">
       {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 md:gap-4 2xl:gap-8 mx-auto container md:px-4">
+      <div className="flex flex-wrap gap-2 md:gap-4 2xl:gap-8 mx-auto container px-4 md:px-4">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -135,7 +135,7 @@ export default function Blog_list() {
       </div>
 
 
-      <div className="mt-10 mx-auto container px-4">
+      <div className="mt-8 md:mt-10 mx-auto container px-4">
 
         {filtered.length === 0 ? (
           <div className="text-center md:py-20">

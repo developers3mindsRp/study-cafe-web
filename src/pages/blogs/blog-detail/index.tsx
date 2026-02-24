@@ -139,6 +139,9 @@ export default function Blog_detail() {
                   title={card.title}
                   description={card.description}
                   subDescription={card.subDescription}
+                  showUpNext={cardIndex !== (blog.cards?.length ?? 0) - 1}
+
+               
                 />
               ))}
                              {/* Show Sidebar *after first blog* on mobile */}

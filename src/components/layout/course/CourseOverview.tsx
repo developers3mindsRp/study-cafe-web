@@ -67,7 +67,7 @@ export default function CourseOverview() {
       {/* Course Key Features */}
 
 
-      <div className="grid md:grid-cols-2 gap-6 mb-12 mt-8 scroll-mt-28" id="features">
+      <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28" id="features">
             {/* Course Description */}
       <h2 className="md:hidden container scroll-mt-28  text-[20px] md:text-[30px] font-semibold mb-2 md:mb-4
             px-4 py-3 text-white
@@ -77,11 +77,14 @@ export default function CourseOverview() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex items-start gap-3 rounded-lg border border-[#09B285] bg-[#E9FCF0] p-4"
+            className="flex items-center gap-3 rounded-lg border border-[#09B285] bg-[#E9FCF0] p-4"
           >
             <img src="/images/tick1.png" alt="" width="45" height="45" />
-            <p className="text-[14px] text-black font-medium mt-4">{feature}</p>
+            <p className="text-[14px] text-black font-medium">
+              {feature}
+            </p>
           </div>
+
         ))}
       </div>
 
@@ -168,7 +171,7 @@ export default function CourseOverview() {
             <li>Any other person not covered above can join the course if interested.</li>
           </ul>
         </div>
-        <div className="grid md:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-12 mt-4 md:mb-12">
+        <div className="grid md:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-12  md:mb-12">
 
           <div className="bg-[#F9F9FB] p-4 md:p-8 ">
             <img src="/images/duration.png" alt="" />
@@ -195,7 +198,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="content">Course Content</h2>
 
-      <div className="w-full  mt-10 space-y-3 text-left container px-4 ">
+      <div className="w-full  md:mt-10 space-y-3 text-left container px-4 ">
         {faqs.map((item, index) => (
           <div key={index} className="shadow-md rounded-lg overflow-hidden ">
             {/* Question Button */}

@@ -18,7 +18,7 @@ export default function Testimonials_course() {
         <section className=" bg-white container px-4 mx-auto pb-6 md:pb-12 ">
             <div className=" md:mx-auto  ">
                 {/* Heading */}
-                <h2 className="text-[20px] md:text-[40px] font-semibold  mb-2 md:mb-4
+                <h2 className="text-[20px] md:text-[40px] font-semibold   md:mb-4
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
@@ -30,7 +30,7 @@ export default function Testimonials_course() {
                 {/* Cards */}
                 <div className="">
                     {/* Mobile slider */}
-                    <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
+                    <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden md:mt-4 md:pb-4 px-2 scrollbar-hide">
                         {testimonials.map((item, index) => (
                             <div
                                 key={index}

@@ -65,7 +65,7 @@ export default function ReviewSection() {
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="reviews">Google Reviews</h2>
 
       {/* Mobile slider */}
-      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 px-2 scrollbar-hide">
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 md:pb-4 px-2 scrollbar-hide">
         {testimonials.map((item, index) => (
           <div
             key={index}

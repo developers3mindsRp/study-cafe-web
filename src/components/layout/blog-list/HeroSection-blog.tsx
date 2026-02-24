@@ -24,11 +24,11 @@ const HeroSection_blog = ({
   image,
 }: HeroSectionBlogProps) => {
   return (
-    <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white">
+    <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white ">
 
       {/* Title */}
       <h1 className="text-[20px] md:text-[40px] font-medium text-gray-900 leading-snug">
-        {title}: <br /> {subtitle}
+        {title}: <br className="hidden md:block" /> {subtitle}
       </h1>
 
         {/* Banner Image (mobile first) */}
@@ -56,21 +56,25 @@ const HeroSection_blog = ({
       </p>
 
       {/* Author + Date */}
-      <div className="flex justify-between items-center gap-4 md:text-[16px] text-[#AFAFAF]">
-        <div className="flex gap-4">
-          <span className="flex items-center gap-2">
-          <img src="/images/user.svg" alt="author" width={20} height={20} />
-          {author}
-        </span>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 md:text-[16px] text-[#AFAFAF]  ">
 
-        <span className="flex items-center gap-2">
-          <img src="/images/calendar.svg" alt="date" width={20} height={20} />
-          {date}
-        </span>
+        <div className="flex gap-4 flex-wrap md:flex-nowrap">
+          <span className="flex items-center gap-2 whitespace-nowrap">
+            <img src="/images/user.svg" alt="author" width={20} height={20} />
+            {author}
+          </span>
+
+          <span className="flex items-center gap-2 whitespace-nowrap">
+            <img src="/images/calendar.svg" alt="date" width={20} height={20} />
+            {date}
+          </span>
         </div>
 
-        <span className="">Last update on {update}</span>
+        <span className="whitespace-nowrap">
+          Last update on {update}
+        </span>
       </div>
+
 
      {/* Desktop Banner Image (only on md+) */}
       <div className="hidden md:block rounded-[10px] overflow-hidden shadow ">

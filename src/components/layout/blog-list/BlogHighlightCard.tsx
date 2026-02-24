@@ -8,14 +8,18 @@ type BlogHighlightCardProps = {
   description: string;
   subDescription?: string;
   readMoreLink?: string;
+  showUpNext?: boolean;   
 };
 
 export default function BlogHighlightCard({
   title,
   description,
   subDescription,
+  showUpNext = true,
+  
 }: BlogHighlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  
 
   return (
     
@@ -24,7 +28,7 @@ export default function BlogHighlightCard({
         {/* LEFT CONTENT */}
         <div className="lg:col-span-2 space-y-6 ">
 
-          <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4 mt-12">
+          <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4 md:mt-12">
       <h2 className="text-[15px] md:text-[20px] font-bold text-[#252525]">{title}</h2>
 
       <p className="text-[#6C6C6C] md:text-[17px] leading-[32px] font-light">
@@ -123,13 +127,16 @@ export default function BlogHighlightCard({
 
          
 
-          <div className="flex items-center gap-4 my-6">
+      {showUpNext && (
+        <div className="flex items-center gap-4 my-6">
           <span className="flex-1 h-px bg-[#000000]" />
           <span className="text-[#09339B] text-[20px] font-medium whitespace-nowrap">
             Up Next
           </span>
           <span className="flex-1 h-px bg-[#000000]" />
         </div>
+      )}
+
 
 
     
