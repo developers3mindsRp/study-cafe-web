@@ -80,8 +80,8 @@ const countries = countryList.getNames();
 
             <div className="relative z-10">
                 <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
-                <h1 className="text-4xl font-bold mb-4 pt-[12px] pb-[18px]">Join Our Learning <br />Community</h1>
-                <p className="text-[24px] ">Create your account and get access to premium <br /> courses and exclusive content</p>
+                <h1 className="text-[30px] md:text-4xl font-bold mb-4 pt-[12px] md:pb-[18px]">Join Our Learning <br />Community</h1>
+                <p className="text-[18px] md:text-[24px] pb-2 ">Create your account and get access to premium <br className="hidden" /> courses and exclusive content</p>
             </div>
 
             </div>
@@ -89,19 +89,19 @@ const countries = countryList.getNames();
       </div>
 
       {/* Right form panel */}
-      <div className="md:w-1/2 p-8 flex flex-col justify-center ">
+      <div className="md:w-1/2 p-6 md:p-12 flex flex-col justify-center mx-auto ">
        {/* Close (X) */}
       <button
         onClick={() => router.push('/')}
-        className="absolute right-4 top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+        className="absolute right-[4px] md:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
-        <span className="text-[#09339B] ">✕</span>
+        <span className="md:text-[#09339B] text-white ">✕</span>
       </button>
-      <div className="h-screen overflow-y-auto md:p-8 scrollbar-thin-custom mt-4 ">
+      <div className="md:h-screen overflow-y-auto md:p-8 scrollbar-thin-custom md:mt-4 ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
-        <h2 className="text-[28px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
-        <p className="text-[18px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign up to start your learning journey</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-[20px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
+        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
+        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px]">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>
             <input
@@ -111,7 +111,7 @@ const countries = countryList.getNames();
               value={form.fullName}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
               placeholder="Name"
             />
           </div>
@@ -125,7 +125,7 @@ const countries = countryList.getNames();
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
               placeholder="Enter Email"
             />
           </div>
@@ -139,7 +139,7 @@ const countries = countryList.getNames();
                 defaultCountry="IN"
                 international
                 limitMaxLength={true} 
-                className="w-full border px-3 py-2" 
+                className="w-full border focus-within:ring-2 focus-within:ring-black px-3 py-1"
             />
           
             </div>
@@ -153,7 +153,7 @@ const countries = countryList.getNames();
               value={form.profession}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
               placeholder="Select"
             />
           </div>
@@ -167,7 +167,7 @@ const countries = countryList.getNames();
               value={form.company}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
                placeholder="Your Company Name"
             />
           </div>
@@ -181,7 +181,7 @@ const countries = countryList.getNames();
               value={form.designation}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
                placeholder="Eg. Owner, Manager, Tax Head Etc."
             />
           </div>
@@ -195,14 +195,14 @@ const countries = countryList.getNames();
               value={form.city}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
                placeholder="Enter Your City"
             />
           </div>
 
           <div>
             <label htmlFor="state" className="block mb-1">State <span className="text-red-600">*</span></label>
-          <select name="state" value={form.state} onChange={handleChange}    className="w-full border px-3 py-2">
+          <select name="state" value={form.state} onChange={handleChange}    className="w-full border px-3 py-1">
             <option value="">Select state</option>
             {states.map(st => <option key={st} value={st}>{st}</option>)}
           </select>
@@ -216,7 +216,7 @@ const countries = countryList.getNames();
               value={form.country}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2"
+              className="w-full border px-3 py-1"
             >
               <option value="">Select country</option>
               {countries.map((c) => (
@@ -227,7 +227,7 @@ const countries = countryList.getNames();
             </select>
           </div>
     <div className="mb-4">
-      <label htmlFor="password" className="block mb-1 text-sm font-medium">
+      <label htmlFor="password" className="block mb-1 md:text-[18px] ">
         Password <span className="text-red-600">*</span>
       </label>
       <div className="relative w-full">
@@ -238,7 +238,7 @@ const countries = countryList.getNames();
           value={form.password}
           onChange={handleChange}
           required
-          className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="Enter your password"
         />
         <button
@@ -260,8 +260,8 @@ const countries = countryList.getNames();
       </div>
     </div>
   
-        <p className="mt-4 text-[16px] text-[#AFAFAF] pb-[20px]  ">
-      <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]">Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
+        <p className="mt-4 text-[14px] md:text-[16px]text-[#AFAFAF] pb-[20px] gap-2 flex items-center">
+      <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]"> Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
       </p>
 
           {errors && <p className="text-red-600">{errors}</p>}

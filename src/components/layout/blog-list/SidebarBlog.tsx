@@ -136,21 +136,23 @@ export default function SidebarBlog() {
    
           </div>
 
-          <div className="bg-white p-5 space-y-6 md:space-y-3">
+          <div className="bg-white px-5 space-y-6 md:space-y-3">
             <h4 className="text-[20px] font-medium mb-4 bg-gradient-to-r from-[#253D8E] to-transparent
       md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto  md:mb-0" >Tags</h4>
           <div className="flex gap-4 text-[18px]  ">
             <p className=" bg-white rounded-[14px] border border-black px-4 md:border-none">Mutual Funds</p>
             <p className=" bg-white rounded-[14px] border border-black px-4 md:border-none">Finance</p>
           </div>
-          </div>
+      </div>
+      
+      <hr />
 
           {/* Contact Box */}
-          <div className=" rounded p-5 space-y-4">
-            <div className="bg-[#09339B] shadow rounded p-5 space-y-6 text-white text-center ">
+          <div className=" rounded px-5 space-y-4">
+            <div className="bg-[#09339B] shadow rounded p-5 space-y-3 md:space-y-6 text-white text-center ">
                 <h2 className="text-[20px] font-bold">StudyCafe Membership</h2>
                 <p className="text-[18px] ">For More details about Membership Click Join Membership Button</p>
-                <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded">View Membership</button>
+                <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded ">View Membership</button>
             </div>
            
            

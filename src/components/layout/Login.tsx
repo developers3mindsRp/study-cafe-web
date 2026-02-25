@@ -52,7 +52,7 @@ export default function LoginPage() {
 
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row   mx-auto  ">
+    <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
       {/* Left branding panel */}
       <div className="md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 flex flex-col justify-center">
             <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
@@ -61,8 +61,8 @@ export default function LoginPage() {
 
             <div className="relative z-10">
                 <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
-                <h1 className="text-4xl font-bold mb-4 pt-[12px] pb-[18px]">Start Your Learning  <br />Journey</h1>
-                <p className="text-[24px] ">Access thousands of courses, get certified, <br /> and advance your career with StudyCafe </p>
+                <h1 className="text-[30px] md:text-4xl font-bold mb-4 pt-[12px] md:pb-[18px]">Start Your Learning  <br />Journey</h1>
+            <p className="text-[18px] md:text-[24px] pb-2 ">Access thousands of courses, get certified,  <br className="hidden" /> and advance your career with StudyCafe </p>
             </div>
 
             </div>
@@ -70,33 +70,46 @@ export default function LoginPage() {
       </div>
 
       {/* Right form panel */}
-             {/* Close (X) */}
+      {/* Close (X) */}
+      <div className="md:w-1/3 p-6 flex flex-col justify-center md:mx-auto"> 
       <button
         onClick={() => router.back()}
-       className="absolute right-4 top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+       className="absolute right-4 md:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
-        <span className="text-[#09339B]">✕</span>
+        <span className="md:text-[#09339B] text-white ">✕</span>
       </button>
-      <div className="md:w-1/2 p-8 flex flex-col justify-center ">
+ 
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
-        <h2 className="text-[40px] font-semibold  pt-[8px]">Welcome</h2>
-        <p className="text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign in to your account to continue learning</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
+        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign in to your account to continue learning</p>
+        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px]">
 
 
           <div>
-            <label htmlFor="email" className="block mb-1">Email <span className="text-red-600">*</span></label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2"
-              placeholder="Enter Email"
-            />
+            <label htmlFor="email" className="block mb-1">
+              Email <span className="text-red-600">*</span>
+            </label>
+
+            <div className="relative">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                placeholder="Enter your Email"
+                className="w-full border px-3 py-2 pr-10 rounded-md"
+              />
+
+              <img
+                src="/images/mail1.svg"
+                alt="mail icon"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
+              />
+            </div>
           </div>
+
 
 
     <div className="mb-4">
@@ -111,7 +124,7 @@ export default function LoginPage() {
           value={form.password}
           onChange={handleChange}
           required
-          className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="Enter your password"
         />
         <button
@@ -156,7 +169,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
-          Don't have an account? <a href="/register" className="text-[#09339B]">Sign up</a>
+          Don't have an account? <a href="/register" className="text-[#09339B]">Signup</a>
         </p>
       </div>
     </div>

@@ -190,4 +190,17 @@
   animation: marquee 25s linear infinite;
 }
 
+.PhoneInput {
+  width: 100%;
+}
+
+.PhoneInputInput {
+  padding: 0px 10px !important;
+  /* same as px-3 py-2 */
+  border: none;
+  outline: none;
+
+  background: transparent;
+}
+
 
