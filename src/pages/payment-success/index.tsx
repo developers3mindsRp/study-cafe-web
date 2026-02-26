@@ -11,7 +11,7 @@ import HeroSection_courses from '@/components/layout/course-listing/HeroSection.
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Paymentsection from '@/components/layout/course/payment-screen/Paymentsection';
 import PriceCard from '@/components/layout/course/payment-screen/SidebarPayment';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 import PaymentSuccess from '@/components/layout/course/payment-screen/PaymentSuccess';
 
 /**
@@ -30,16 +30,16 @@ export default function PaymentScreen() {
 
   return (
 
-       <PublicLayout>
-        <div>
-            <PaymentSuccess/>
-        </div>
-          
-              
-         
-        
-       
-        </PublicLayout>
+    <PublicLayout>
+      <div>
+        <PaymentSuccess />
+      </div>
+
+
+
+
+
+    </PublicLayout>
   );
 }
 

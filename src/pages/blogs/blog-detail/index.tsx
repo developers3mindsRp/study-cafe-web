@@ -8,7 +8,7 @@ import { Header, PublicLayout } from '@/components/layout';
 import HeroSection_blog from '@/components/layout/blog-list/HeroSection-blog';
 import BlogDesc from '@/components/layout/blog-list/BlogDesc';
 import SidebarBlog from '@/components/layout/blog-list/SidebarBlog';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 import BlogHighlightCard from '@/components/layout/blog-list/BlogHighlightCard';
 
 export const blogData = [
@@ -75,7 +75,7 @@ export const blogData = [
       "In 2025, the Public Sector Banks (PSBs) launched the Credit Assessment Model (CAM) to decide loans for Micro, Small & Medium Enterprises (MSMEs) by looking at their digital footprints.",
     author: "Meetu Kumari",
     date: "Nov 18, 2025",
-     update: "Nov 18, 2025",
+    update: "Nov 18, 2025",
     image: "/images/bank-loan.png",
 
     cards: [
@@ -139,21 +139,21 @@ export default function Blog_detail() {
                   title={card.title}
                   description={card.description}
                   subDescription={card.subDescription}
-                  // showUpNext={cardIndex !== (blog.cards?.length ?? 0) - 1}
+                // showUpNext={cardIndex !== (blog.cards?.length ?? 0) - 1}
 
-               
+
                 />
               ))}
-                             {/* Show Sidebar *after first blog* on mobile */}
-          {index === 0 && (
-            <div className="block lg:hidden">
-              <SidebarBlog />
-            </div>
-          )}
+              {/* Show Sidebar *after first blog* on mobile */}
+              {index === 0 && (
+                <div className="block lg:hidden">
+                  <SidebarBlog />
+                </div>
+              )}
 
             </div>
           ))}
-          
+
 
           {/* Blog Description */}
           {/* <BlogDesc /> */}

@@ -9,7 +9,7 @@ import { Header, PublicLayout } from '@/components/layout';
 
 import HeroSection_courses from '@/components/layout/course-listing/HeroSection.course';
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 /**
  * Home Page - Course Listing
@@ -27,13 +27,13 @@ export default function Courses() {
 
   return (
     <PublicLayout>
-         {/* Breadcrumbs banner se pehle */}
-            <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
-              <Breadcrumbs/>
-            </div>
+      {/* Breadcrumbs banner se pehle */}
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs />
+      </div>
 
-     <HeroSection_courses/>
-     <CoursesPage/>
+      <HeroSection_courses />
+      <CoursesPage />
 
     </PublicLayout>
   );

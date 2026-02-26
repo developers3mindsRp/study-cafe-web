@@ -128,7 +128,7 @@ export default function Finance_list() {
 
 
 
-      <div className="sm:grid grid-cols-2 md:grid-cols-3 gap-6 mt-10  mx-auto container px-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10  mx-auto container px-4 ">
         {visibleblogs.map((b) => (
           <div key={b.title} className="rounded-xl shadow-md border bg-white
           overflow-hidden text-left ">
@@ -149,7 +149,7 @@ export default function Finance_list() {
 
 
               <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span className="flex"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
+                <span className="flex gap-1"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
 
               </div>
 

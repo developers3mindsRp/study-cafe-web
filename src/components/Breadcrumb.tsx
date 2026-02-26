@@ -7,7 +7,7 @@ export default function Breadcrumbs() {
   const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <nav aria-label="Breadcrumb" className="text-sm text-gray-600 container mx-auto px-4 ">
+    <nav aria-label="Breadcrumb" className="text-[16px] text-gray-600 container mx-auto px-4 ">
       <ol className="flex items-center space-x-2">
         <li>
           <Link href="/" className="text-[#696969] hover:underline">
@@ -25,13 +25,15 @@ export default function Breadcrumbs() {
 
           return (
             <li key={href} className="flex items-center space-x-2">
-              <span>{">>"}</span>
+              <span className="">{">>"}</span>
               {isLast ? (
-                <span className="font-normal text-[#09339B]">{label}</span>
-              ) : (
-                <Link href={href} className="text-blue-600 hover:underline">
+        
+                  <Link href={href} className="text-[#09339B] hover:underline">
                   {label}
                 </Link>
+                       
+              ) : (
+                  <span className="font-normal text-[#696969]">{label}</span>
               )}
             </li>
           );

@@ -118,11 +118,11 @@ const countries = countryList.getNames();
 
          {active === "Profile" && (
           <>
-                  <div className="space-y-6 mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
-          <h2 className=" mb-2 text-[26px]">Edit Profile</h2>
+                  <div className=" mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
+          <p className="  text-[26px]">Edit Profile</p>
           <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
 
-          <div className="grid md:grid-cols-1 gap-4">
+          <div className="grid md:grid-cols-1 gap-4 mt-2">
             <div>
               <label className="text-sm font-medium">Full Name<span className="text-red-600">*</span></label>
               <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Name" />

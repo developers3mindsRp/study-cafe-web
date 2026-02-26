@@ -24,7 +24,7 @@ const HeroSection_blog = ({
   image,
 }: HeroSectionBlogProps) => {
   return (
-    <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white ">
+    <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white pb-4">
 
       {/* Title */}
       <h1 className="text-[20px] md:text-[40px] font-medium text-gray-900 leading-snug">

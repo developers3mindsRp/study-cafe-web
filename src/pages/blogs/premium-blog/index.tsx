@@ -8,7 +8,7 @@ import { Header, PublicLayout } from '@/components/layout';
 import HeroSection_blog from '@/components/layout/blog-list/HeroSection-blog';
 import BlogDesc from '@/components/layout/blog-list/BlogDesc';
 import SidebarBlog from '@/components/layout/blog-list/SidebarBlog';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 import BlogHighlightCard from '@/components/layout/blog-list/BlogHighlightCard';
 import Premium_user from '@/components/layout/blog-list/PremiumUser';
 
@@ -16,7 +16,7 @@ export const blogData = [
   // #1--------
   {
     title: "Debt Mutual Funds for Monthly Income",
-    subtitle: "How It Works?", 
+    subtitle: "How It Works?",
     description:
       "For many investors, especially retirees or those seeking regular cash flow, generating steady monthly income from investments is a key financial goal. While fixed deposits, government savings schemes, or annuities are traditional options, debt funds have increasingly become a popular alternative. They offer the potential for stable returns, liquidity, and tax efficiency — all while providing the flexibility to structure monthly income through specific strategies.",
     author: "Meetu Kumari",
@@ -69,22 +69,22 @@ export default function Premium_Blog() {
                 image={blog.image}
               />
 
-              <Premium_user/>
+              <Premium_user />
 
 
 
 
-        
-                             {/* Show Sidebar *after first blog* on mobile */}
-          {index === 0 && (
-            <div className="block lg:hidden">
-              <SidebarBlog />
-            </div>
-          )}
+
+              {/* Show Sidebar *after first blog* on mobile */}
+              {index === 0 && (
+                <div className="block lg:hidden">
+                  <SidebarBlog />
+                </div>
+              )}
 
             </div>
           ))}
-          
+
 
           {/* Blog Description */}
           {/* <BlogDesc /> */}

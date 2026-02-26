@@ -52,22 +52,22 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/twitter.png" alt="Twitter" />
+                <img src="/images/icons/x.svg" alt="Twitter" />
               </a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/insta.png" alt="Instagram" />
+                <img src="/images/icons/insta.svg" alt="Instagram" />
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/in.png" alt="LinkedIn" />
+                <img src="/images/icons/linkedin.svg" alt="LinkedIn" />
               </a>
               <a href="https://fb.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/fb.png" alt="Facebook" />
+                <img src="/images/icons/fb.svg" alt="Facebook" />
               </a>
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center transition-colors">
-                <img src="/images/youtube.png" alt="YouTube" />
+                <img src="/images/icons/yt.svg" alt="YouTube" />
               </a>
               <a href="https://telegram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/telegram.png" alt="Telegram" />
+                <img src="/images/icons/telegram.svg" alt="Telegram" />
               </a>
             </div>
             <div className="mt-6 hidden  md:flex gap-2">

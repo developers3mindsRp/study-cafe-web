@@ -5,7 +5,7 @@ import Footer from './Footer';
 import FeaturedCourses from './home/Feature.home';
 import MembershipPricing from './home/Member.home';
 import StatsSection from './home/StaticSection.home';
-import Breadcrumb from '@/Breadcrumb';
+import Breadcrumb from '@/components/Breadcrumb';
 
 /**
  * Public Layout (CMS Layout)
@@ -21,7 +21,7 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-    
+
 
       <main className="flex-1">
         {children}

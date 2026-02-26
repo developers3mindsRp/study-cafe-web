@@ -42,12 +42,12 @@ export default function MembershipPricing() {
 
   return (
     <section
-      className="w-full py-18 md:py-20 bg-cover bg-center pb-20"
-      style={{ backgroundImage: "url('/images/member_bg.png')" }}
+      className="w-full py-12 md:py-18 bg-cover bg-center pb-20 pt-10"
+      style={{ backgroundImage: "url('/images/membership-bg.svg')" }}
     >
-      <div className="max-w-7xl mx-auto md:px-4 pt-4">
+      <div className="max-w-7xl mx-auto md:px-4 md:pt-4">
         <h2 className="text-center text-white text-[30px] md:text-[40px] font-semibold ">
-          Choose Your <br className="block md:hidden" /> Membership
+          Choose Your  Membership
         </h2>
         <p className="text-center text-blue-100 mt-2 text-[16px] md:text-[24px]">
           Get unlimited access to all courses and <br /> exclusive benefits

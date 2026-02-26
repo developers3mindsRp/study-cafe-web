@@ -11,7 +11,7 @@ import HeroSection_courses from '@/components/layout/course-listing/HeroSection.
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Paymentsection from '@/components/layout/course/payment-screen/Paymentsection';
 import PriceCard from '@/components/layout/course/payment-screen/SidebarPayment';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 /**
  * Home Page - Course Listing
@@ -29,25 +29,25 @@ export default function PaymentScreen() {
 
   return (
 
-       <PublicLayout>
-             <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
-               <Breadcrumbs/>
-              </div>
-              
-           <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
-        
-                {/* LEFT CONTENT AREA */}
-                <div className="lg:col-span-2 space-y-10">
-                  <Paymentsection/>
-                </div>
-        
-                {/* RIGHT SIDEBAR (COMMON + STICKY) */}
-                <div className="lg:col-span-1">
-                 <PriceCard/>
-                </div>
-        
-              </div>
-        </PublicLayout>
+    <PublicLayout>
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs />
+      </div>
+
+      <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
+
+        {/* LEFT CONTENT AREA */}
+        <div className="lg:col-span-2 space-y-10">
+          <Paymentsection />
+        </div>
+
+        {/* RIGHT SIDEBAR (COMMON + STICKY) */}
+        <div className="lg:col-span-1">
+          <PriceCard />
+        </div>
+
+      </div>
+    </PublicLayout>
   );
 }
 

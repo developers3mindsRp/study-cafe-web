@@ -7,13 +7,19 @@ export default function Sidebar() {
       <div className=" p-6 h-fit"> <div> <h3 className="text-[30px] md:text-[40px] font-semibold">My Account</h3>
        <p className="text-[18px] md:text-[24px] text-[#454545]">Manage your profile, subscription, and learning progress</p> </div> </div>
 {/* PROFILE BOX */}
-<div className="flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center">
+      <div className="flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center">
+        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-md absolute top-30 right-6 rounded-lg text-[10px] md:text-[12px]">
+          Free Member
+        </p>
 
   {/* Mobile: Image left + content right */}
-  <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
+        <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
+          
     
 {/* Profile Image Wrapper */}
-<div className="relative w-24 h-24 md:w-28 md:h-28 flex-shrink-0">
+          <div className="relative w-24 h-24 md:w-28 md:h-28 flex-shrink-0">
+      
+
 
   {/* Image */}
   <div className="w-full h-full rounded-full overflow-hidden">
@@ -43,21 +49,21 @@ export default function Sidebar() {
     {/* Right Content */}
     <div className="text-left md:text-center flex-1 md:flex md:flex-col md:items-center md:w-full">
       <h2 className="text-[22px] md:text-[26px] font-normal">Shubham</h2>
-      <p className="text-gray-500 text-[14px] md:text-[16px] mt-1">
+      {/* <p className="text-gray-500 text-[14px] md:text-[16px] mt-1">
         Member since January 2025
-      </p>
+      </p> */}
 
       <div className="mt-3 space-y-2 md:self-start md:text-left ">
         <div className="flex gap-2 items-center">
           <img src="/images/mail.png" alt="" className="mt-1" />
-          <p className="text-gray-500 break-all text-sm">
+                <p className="text-[#AFAFAF] break-all text-sm">
             Shubham87548@gmail.com
           </p>
         </div>
 
         <div className="flex gap-2 items-center ">
           <img src="/images/phone.png" alt="" />
-          <p className="text-gray-500 text-sm">+91 9584784584</p>
+          <p className="text-[#AFAFAF] text-sm">+91 9584784584</p>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ import * as coursesService from '@/services/courses.service';
 import { Header, PublicLayout } from '@/components/layout';
 import BannerSection_blog from '@/components/layout/blog/BannerSection';
 import Blog_list from '@/components/layout/blog/BlogList';
-import Breadcrumbs from '@/Breadcrumb';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 
 

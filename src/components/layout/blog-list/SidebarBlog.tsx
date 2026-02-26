@@ -85,7 +85,7 @@ export default function SidebarBlog() {
         
 
 
-          <div className="bg-[#F9F9FB]  p-3 md:p-5 space-y-3">
+          <div className="bg-[#F9F9FB]  p-3 md:p-1 md:px-5 space-y-3">
                    <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent
       md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">All Posts</p>
 
