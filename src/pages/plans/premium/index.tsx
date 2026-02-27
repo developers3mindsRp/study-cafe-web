@@ -9,8 +9,8 @@ import { Header, PublicLayout } from '@/components/layout';
 
 import HeroSection_courses from '@/components/layout/course-listing/HeroSection.course';
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
-import Paymentsection from '@/components/layout/course/payment-screen/Paymentsection';
-import PriceCard from '@/components/layout/course/payment-screen/SidebarPayment';
+import Paymentsection from '@/components/layout/course/payment/Paymentsection';
+import PriceCard from '@/components/layout/course/payment/SidebarPayment';
 import Breadcrumbs from '@/components/Breadcrumb';
 
 /**
@@ -29,21 +29,21 @@ export default function PaymentScreen() {
 
   return (
 
-       <PublicLayout>
-             <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
-              <Breadcrumbs/>
-              </div>
-              
-           <div className="mx-auto px-4 pb-10 mt-6 container">
-        
-        
-                {/* RIGHT SIDEBAR (COMMON + STICKY) */}
-                <div className="h-auto">
-                 <PriceCard/>
-                </div>
-        
-              </div>
-        </PublicLayout>
+    <PublicLayout>
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs />
+      </div>
+
+      <div className="mx-auto px-4 pb-10 mt-6 container">
+
+
+        {/* RIGHT SIDEBAR (COMMON + STICKY) */}
+        <div className="h-auto">
+          <PriceCard />
+        </div>
+
+      </div>
+    </PublicLayout>
   );
 }
 

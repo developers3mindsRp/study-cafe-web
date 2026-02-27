@@ -104,7 +104,7 @@ export default function PriceCard() {
               <span>₹699</span>
             </div>
             <div className="flex justify-between">
-              <span>Discount</span>
+                <span>STUDY30</span>
               <span className="text-green-600">-₹180</span>
             </div>
             <div className="flex justify-between">
@@ -140,30 +140,40 @@ export default function PriceCard() {
             </div>
             <img src="/images/left-arrow.png" alt="" />
           </div>
+            {/* Coupon */}
+            <div className="mt-4">
+              <label className="text-sm font-semibold text-gray-700">
+                Coupon Code
+              </label>
 
-          {/* Coupon */}
-          <div className="mt-4">
-            <label className="text-sm font-semibold text-gray-700">
-              Coupon Code
-            </label>
-            <div className="relative mt-2">
-              <input
-                type="text"
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
-                className="w-full border rounded-lg py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200"
-                required
-              />
-              {applied && (
-                <button
-                  onClick={() => setApplied(false)}
-                  className="absolute right-3 top-2.5 text-gray-500"
-                >
-                  <X className="w-4 h-4 mt-1" />
-                </button>
-              )}
+              <div className="relative mt-2">
+                <input
+                  type="text"
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value)}
+                  className="w-full border rounded-lg py-2 px-3 pr-24 focus:outline-none focus:ring focus:ring-blue-200"
+                  required
+                />
+
+                {/* Applied Badge */}
+                {applied && (
+                  <div className="absolute right-24 md:right-44 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
+                    Applied
+                  </div>
+                )}
+
+                {/* Close Button */}
+                {applied && (
+                  <button
+                    onClick={() => setApplied(false)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+
 
           <div className="border-t border-[#AFAFAF] mt-4"></div>
 

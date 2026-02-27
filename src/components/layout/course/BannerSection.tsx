@@ -163,7 +163,7 @@ export default function BannerSection() {
                     </p>
 
                     {/* Offer badge */}
-                    <p className="text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-1 md:mt-3">
+                    <p className="hidden md:block text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-1 md:mt-3">
                       Hurry up, few days left at this price!
                     </p>
                   </div>
@@ -172,7 +172,7 @@ export default function BannerSection() {
                     {/* Buy Now */}
                     <button
                       onClick={handleClick}
-                      className="w-full sm:w-auto py-2 sm:py-3 px-2 sm:px-28
+                      className="w-full sm:w-auto py-1 md:py-2 px-2 sm:px-28
             border-2 border-white rounded-[10px]
             text-base sm:text-lg font-medium text-white
             bg-[#09339B] transition"
@@ -183,7 +183,7 @@ export default function BannerSection() {
                     {/* View Membership */}
                     <Link href="/courses" className="w-full sm:w-auto">
                       <button
-                        className="w-full sm:w-auto py-3 px-2 sm:px-16
+                        className="w-full sm:w-auto py-2 md:py-3 px-2 sm:px-16
               bg-white text-[#09339B]
               rounded-[10px] flex items-center justify-center gap-2
               text-base md:text-[20px]

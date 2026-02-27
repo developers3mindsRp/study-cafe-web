@@ -9,8 +9,8 @@ import { Header, PublicLayout } from "@/components/layout";
 
 import HeroSection_courses from "@/components/layout/course-listing/HeroSection.course";
 import CoursesPage from "@/components/layout/course-listing/CoursesListing";
-import Paymentsection from "@/components/layout/course/payment-screen/Paymentsection";
-import PriceCard from "@/components/layout/course/payment-screen/SidebarPayment";
+import Paymentsection from "@/components/layout/course/payment/Paymentsection";
+import PriceCard from "@/components/layout/course/payment/SidebarPayment";
 import MembershipPricing from "@/components/layout/home/Member.home";
 import PlansComparisonTable from "@/components/layout/membership/PlanCompare";
 

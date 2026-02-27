@@ -39,10 +39,10 @@ export default function CourseCard({ course }: { course: any }) {
         <div className="flex gap-2">
           {course.completed === course.lessons ? (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-[20px] py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[16px] py-2 rounded-md">
                 Review Course
               </button>
-          <button className="flex items-center justify-center gap-2 flex-1 border border-[#09339B] text-[#09339B] text-[20px] py-2 rounded-md hover:bg-[#f0f4ff] transition">
+          <button className="flex items-center justify-center gap-2 flex-1 border border-[#09339B] text-[#09339B] text-[16px] py-2 rounded-md hover:bg-[#f0f4ff] transition">
             <img src="/images/download-1.png" alt="Download Certificate" className="w-4 h-4" />
             <span>Certificate</span>
           </button>
@@ -50,11 +50,11 @@ export default function CourseCard({ course }: { course: any }) {
             </>
           ) : (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-[20px] py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[16px] py-2 rounded-md">
                 Continue Learning
               </button>
 
-              <Link href="/course-detailPage" className="flex-1 border border-[#09339B] text-[#09339B] text-[20px] py-2 rounded-md text-center">
+              <Link href="/course-detailPage" className="flex-1 border border-[#09339B] text-[#09339B] text-[16px] py-2 rounded-md text-center">
                 Details
               </Link>
             </>

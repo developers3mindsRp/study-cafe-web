@@ -1,11 +1,15 @@
 import { useState } from "react";
 import CourseCard from "../../CourseCard";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 import { Calendar, Search } from "lucide-react";
 
 
 export default function Commission() {
+
+  const router = useRouter();
   const ordersData = [
   {
     id: 1,
@@ -86,14 +90,14 @@ export default function Commission() {
   };
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto  bg-white">
-      <div className="text-[16px] text-[#09339B] mb-3 cursor-pointer">
-        ← Back to Affiliate Dashboard
+    <section className="md:p-6 max-w-6xl mx-auto  bg-white px-6">
+      <div className="text-[16px] text-[#09339B] mb-3 cursor-pointer" onClick={() => router.back()}>
+         ← Back to Affiliate Dashboard
       </div>
-      <h2 className="text-[40px] font-semibold text-[#252525] mb-1">
+      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-1">
        Commission Orders
       </h2>
-      <p className="text-[#252525] text-[26px] mb-6">
+      <p className="text-[#252525] text-[16px] md:text-[26px] mb-6">
         Search your affiliate commission orders by date or month.
       </p>
 
@@ -106,15 +110,15 @@ export default function Commission() {
               From <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
-              <Calendar
+              {/* <Calendar
                 size={18}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+              /> */}
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
           </div>
@@ -125,15 +129,12 @@ export default function Commission() {
               To <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
-              <Calendar
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+          
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
           </div>
@@ -158,7 +159,7 @@ export default function Commission() {
  
 
       {/* All courses---------- */}
-      <div>
+      <div className="py-4">
         <div className="flex mt-4 px-2">
         <h2 className="font-bold">2 Orders Found</h2>
         </div>
@@ -168,7 +169,7 @@ export default function Commission() {
          key={order.id}
          className="grid grid-cols-1 gap-3 mt-4 border border-[#9FBBFF] shadow-md rounded-lg p-4 px-6 mx-2"
        >
-         <div className="flex justify-between text-[20px] ">
+         <div className="flex justify-between md:text-[20px] ">
            <p className="font-bold">Order - {order.orderId}</p>
            <p>{order.date}</p>
          </div>

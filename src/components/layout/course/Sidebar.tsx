@@ -11,7 +11,7 @@ export default function SidebarCourseCard() {
           <span className="text-3xl text-black font-bold">₹699</span>
         </p>
 
-        <p className="text-[#929292] text-center">
+        <p className="text-[#929292] text-center ">
           Hurry up, few days left at this price!
         </p>
 

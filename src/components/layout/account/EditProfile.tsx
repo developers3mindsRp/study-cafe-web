@@ -84,14 +84,14 @@ const countries = countryList.getNames();
 
         {/* RIGHT CONTENT */}
         <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
-             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around">
+             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around ">
 
         {[
-          { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
-          { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png"},
-          { key: "Course", label: "Purchased Course", icon: "/images/course.png" },
-          { key: "Membership", label: "Membership course", icon: "/images/course.png" },
-          { key: "Earning", label: "My Earning", icon: "/images/course.png" },
+              { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
+          { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png", activeIcon: "/images/credit-card-active.svg"},
+          { key: "Course", label: "Purchased Course", icon: "/images/course.png", activeIcon: "/images/course-active.svg" },
+          { key: "Membership", label: "Membership course", icon: "/images/crown.svg", activeIcon: "/images/crown-active.svg" },
+          { key: "Earning", label: "My Earning", icon: "/images/earning.svg", activeIcon: "/images/earning-active.svg" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -104,7 +104,7 @@ const countries = countryList.getNames();
           >
           <div className="flex gap-2 justify-center items-center">
             <Image
-              src={tab.icon}
+                src={active === tab.key ? tab.activeIcon : tab.icon}
               alt={tab.label}
               width={18}
               height={18}
@@ -123,7 +123,7 @@ const countries = countryList.getNames();
 
          {active === "Profile" && (
           <>
-                  <div className=" mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
+                  <div className=" mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm ">
           <p className="  text-[26px]">Edit Profile</p>
           <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
 
@@ -132,27 +132,34 @@ const countries = countryList.getNames();
               <label className="text-sm font-medium">Full Name<span className="text-red-600">*</span></label>
               <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Name" />
             </div>
-
-            <div className="flex justify-between gap-4">
-                      <div className="flex-1">
-                    <label className="text-sm font-medium">Email<span className="text-red-600">*</span></label>
-                    <input type="email" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Enter Email" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium">
+                        Email<span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Enter Email"
+                      />
                     </div>
-                      <div className="flex-1">
-                    <label className="text-sm font-medium">Mobile Number<span className="text-red-600">*</span></label>
-                         <PhoneInput
+
+                    <div>
+                      <label className="text-sm font-medium">
+                        Mobile Number<span className="text-red-600">*</span>
+                      </label>
+                      <PhoneInput
                         placeholder="Enter phone number"
                         value={phone}
                         onChange={setPhone}
                         defaultCountry="IN"
                         international
-                        limitMaxLength={true} 
-                        className="w-full border border-[#1A1A1A] px-3 py-2" 
-            />
+                        limitMaxLength
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                      />
                     </div>
+                  </div>
 
-                
-            </div>
 
             <div className="flex justify-between gap-4">
             <div className="flex-1">

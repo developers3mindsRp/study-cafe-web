@@ -57,7 +57,7 @@ const courses = [
   const visibleBCourses = courses.slice(startIndex, endIndex);
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF]">
+    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF] px-4 p-4">
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">
         All Courses
       </h2>
@@ -111,7 +111,7 @@ const courses = [
                ))}
              </div>
 
-             <div className="flex justify-center mt-6">
+             <div className="flex justify-center mt-6 mb-6 ">
               <button className="px-4 py-2 bg-[#09339B] text-white rounded-md text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
                 View all
               </button>

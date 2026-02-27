@@ -9,8 +9,8 @@ import { Header, PublicLayout } from "@/components/layout";
 
 import HeroSection_courses from "@/components/layout/course-listing/HeroSection.course";
 import CoursesPage from "@/components/layout/course-listing/CoursesListing";
-import Paymentsection from "@/components/layout/course/payment-screen/Paymentsection";
-import PriceCard from "@/components/layout/course/payment-screen/SidebarPayment";
+import Paymentsection from "@/components/layout/course/payment/Paymentsection";
+import PriceCard from "@/components/layout/course/payment/SidebarPayment";
 import MembershipPricing from "@/components/layout/home/Member.home";
 import PlansComparisonTable from "@/components/layout/membership/PlanCompare";
 import MemberDetail from "@/components/layout/membership/details/MemberDetail";
@@ -62,7 +62,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
  * Static Site Generation (SSG)
  * Prefetch data at build time for SEO and performance
  */
-export const getStaticProps: GetStaticProps = async ({params}) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const queryClient = new QueryClient();
 
   try {

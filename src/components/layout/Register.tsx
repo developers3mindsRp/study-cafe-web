@@ -260,9 +260,26 @@ const countries = countryList.getNames();
       </div>
     </div>
   
-        <p className="mt-4 text-[14px] md:text-[16px]text-[#AFAFAF] pb-[20px] gap-2 flex items-center">
-      <input type="checkbox" /> I agree with <a href=""><span className="text-[#09339B]"> Terms & Conditions</span></a> and <a href=""><span className="text-[#09339B]">Privacy Policy</span></a>
-      </p>
+            <div className="mt-4 pb-5 flex items-start gap-2 text-[14px] md:text-[16px] text-[#AFAFAF]">
+
+              <input
+                type="checkbox"
+                className="mt-1 shrink-0"
+              />
+
+              <p className="leading-relaxed">
+                I agree with{" "}
+                <a href="#" className="text-[#09339B] hover:underline">
+                  Terms & Conditions
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-[#09339B] hover:underline">
+                  Privacy Policy
+                </a>
+              </p>
+
+            </div>
+
 
           {errors && <p className="text-red-600">{errors}</p>}
 

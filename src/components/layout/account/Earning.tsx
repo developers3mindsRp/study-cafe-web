@@ -129,7 +129,7 @@ const router = useRouter();
   const visibleBCourses = courses.slice(startIndex, endIndex);
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF]">
+    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF] p-4">
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">
        Affiliate Dashboard
       </h2>
@@ -137,7 +137,9 @@ const router = useRouter();
         Manage your referral links and track your performance.
       </p>
 
-     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+      <h2 className="text-[16px] font-bold mb-4">Overall Earning</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
 
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
             <h2 className="text-[20px] text-[#AFAFAF]">Total Earning</h2>
@@ -147,10 +149,10 @@ const router = useRouter();
             <h2 className="text-[20px] text-[#AFAFAF]">Total Order</h2>
             <h3 className="font-bold">15</h3>
         </div>
-        <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
+        {/* <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
             <h2 className="text-[20px] text-[#AFAFAF]">Estimated Value</h2>
             <h3 className="font-bold">₹400</h3>
-        </div>
+        </div> */}
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
             <h2 className="text-[20px] text-[#AFAFAF]">Total Commission</h2>
             <h3 className="font-bold">₹136</h3>
