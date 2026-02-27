@@ -84,7 +84,7 @@ const countries = countryList.getNames();
 
         {/* RIGHT CONTENT */}
         <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
-             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium p-2 scrollbar-hide">
+             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around">
 
         {[
           { key: "Profile", label: "Profile Settings",icon: "/images/user.png" },
@@ -98,20 +98,25 @@ const countries = countryList.getNames();
             onClick={() => setActive(tab.key)}
             className={`md:flex-1 px-0 md:py-3 last:border-none transition-all text-[10px] md:text-[16px]    ${
               active === tab.key
-                ? "bg-white text-[#454545] rounded-[15px] m-2   "
+                ? "bg-white text-[#454545] rounded-[15px] m-2  px-2 py-2 "
                 : " text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 "
             }`}
           >
-        <div className="flex gap-2 justify-center">
+          <div className="flex gap-2 justify-center items-center">
             <Image
-            src={tab.icon}
-            alt={tab.label}
-            width={18}
-            height={18}
-            className="object-contain"
+              src={tab.icon}
+              alt={tab.label}
+              width={18}
+              height={18}
+              className="object-contain"
             />
-        
-            {tab.label}</div>
+
+            {/* Hide text on mobile */}
+            <span className="hidden md:inline">
+              {tab.label}
+            </span>
+          </div>
+
           </button>
         ))}
              </div>

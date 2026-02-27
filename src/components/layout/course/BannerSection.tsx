@@ -95,30 +95,30 @@ export default function BannerSection() {
                   className="
                             mt-3 
                             flex md:hidden
-                            gap-3
+                            gap-1
                             justify-between
-                            text-[10px] sm:text-[13px]
+                            text-[10px] 
                             font-bold
                           "
                 >
-                  <div className="flex items-center gap-1 bg-white text-black px-3 py-2 rounded-md whitespace-nowrap">
+                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
                     <img src="/images/icon-eng.png" alt="Language" className="w-4 h-3" />
                     <span>English</span>
                   </div>
 
-                  <div className="flex items-center gap-1 bg-white text-black px-3 py-2 rounded-md whitespace-nowrap">
+                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
                     <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-3" />
                     <span>4 Hours</span>
                   </div>
 
-                  <div className="flex items-center gap-1 bg-white text-black px-3 py-2 rounded-md whitespace-nowrap">
+                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
                     <img src="/images/icon-user.png" alt="Students" className="w-4 h-3" />
                     <span>957 students</span>
                   </div>
 
-                  <div className="flex items-center gap-1 bg-white text-black px-3 py-2 rounded-md whitespace-nowrap">
-                    <img src="/images/Star.png" alt="Rating" className="w-4 h-3" />
-                    <span>4.8 by 47 Users</span>
+                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap justify-center">
+                    <img src="/images/Star.png" alt="Rating" className="w-4 h-3 " />
+                    <span className="">4.8 by 47 Users</span>
                   </div>
                 </div>
 

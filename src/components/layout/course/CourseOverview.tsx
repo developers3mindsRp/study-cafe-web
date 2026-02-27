@@ -205,7 +205,7 @@ export default function CourseOverview() {
           <button
           onClick={() => setOpenIndex(openIndex === index ? null : index)}
           className={`
-            w-full flex  justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left
+            w-full flex  justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left 
             ${openIndex === index
               ? "bg-[#09339B] text-white"
               : "bg-white text-[#09339B]"}
