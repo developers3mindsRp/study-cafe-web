@@ -50,7 +50,7 @@ export default function BannerSection() {
                   <div
                     className="
                           mt-3 p-3
-                          md:flex 
+                          md:flex flex-wrap 
                           gap-3 sm:gap-6
                           justify-center sm:justify-between
                           text-[8px] sm:text-[13px]
@@ -94,7 +94,7 @@ export default function BannerSection() {
                 <div
                   className="
                             mt-3 
-                            flex md:hidden
+                            flex flex-wrap md:hidden
                             gap-1
                             justify-between
                             text-[10px] 
@@ -124,8 +124,8 @@ export default function BannerSection() {
 
 
                 {/* Social Share */}
-                <div className="md:hidden flex items-center gap-4 pt-3">
-                  <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
+                <div className="md:hidden flex  items-center gap-4 pt-3">
+                  <div className="flex  gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
                     <img src="/images/icon-share.png" alt="Share" />
                     <span className="font-medium text-[20px]">Share</span>
                   </div>

@@ -54,7 +54,7 @@ export default function LoginPage() {
   return (
     <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
       {/* Left branding panel */}
-      <div className="md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 flex flex-col justify-center">
+      <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center">
             <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
             
             <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
         onClick={() => router.back()}
        className="absolute right-4 md:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
-        <span className="md:text-[#09339B] text-white ">✕</span>
+        <span className="md:text-[#09339B] ">✕</span>
       </button>
  
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
@@ -169,7 +169,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
-          Don't have an account? <a href="/register" className="text-[#09339B]">Signup</a>
+          Don't have an account? <a href="/register" className="text-[#09339B]">Sign up</a>
         </p>
       </div>
     </div>

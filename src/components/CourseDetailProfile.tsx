@@ -125,20 +125,35 @@ const [selectedVideo, setSelectedVideo] = useState(1);
           {/* Day + Title */}
           <div className="flex justify-between items-center mt-4">
          
-            <span className="text-xs border px-3 py-1 rounded-full border-[#9FBBFF]">
+            <span className="text-xs border px-3 py-1 rounded-[12px] border-[#9FBBFF]">
               Day 1
             </span>
 
-      <button className="flex items-center gap-2 border px-3 py-1 rounded-md text-sm text-[#09339B] hover:bg-[#f0f4ff] transition">
-      <img src="/images/checkmark.png" alt="Checkmark" className="w-4 h-4" />
-      <span>Mark as completed</span>
+            <button className="flex items-center gap-2 border border-[#9FBBFF] px-3 py-1 rounded-[12px] text-sm text-[#09339B] hover:bg-[#f0f4ff] transition">
+      <img src="/images/time.png" alt="Checkmark" className="w-4 h-4" />
+              <span>12 Minutes</span>
     </button>
 
           </div>
 
           <h2 className="mt-3 font-normal text-[26px]">
-            Certification Course on Python with AI for Finance Professionals
+            Certification Course on Python with AI for Finance <br /> Professionals
           </h2>
+
+          <div className="flex gap-3 mt-4 justify-between items-center">
+            <button className="border px-8 py-2 rounded-md text-[20px] text-white bg-[#09339B]  transition flex items-center gap-2 font-medium">
+             <img src="/images/left.svg" alt="" />Previous
+            </button>
+            <button className="flex items-center gap-2 border border-[#9FBBFF] px-4 py-2 rounded-md text-[20px] text-[#09339B] hover:bg-[#f0f4ff] transition font-medium">
+              <span>Mark as completed</span>
+              <img src="/images/checkmark.png" alt="Checkmark" className="w-6 h-6" />
+            
+            </button>
+            <button className="border px-10 py-2 rounded-md text-[20px] text-white  bg-[#09339B]  transition flex items-center gap-2 font-medium">
+              Next <img src="/images/next.svg" alt="" />
+            </button>
+          </div>
+
         </div>
 
         {/* Right */}
