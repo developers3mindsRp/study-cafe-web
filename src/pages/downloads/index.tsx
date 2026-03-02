@@ -12,7 +12,7 @@ import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Breadcrumbs from '@/components/Breadcrumb';
 import HeroSection_downloads from '@/components/layout/downloads/Bannersection.downloads';
 import Sidebar from '@/components/layout/account/Sidebar';
-import Sidebar_downloads from '@/components/layout/downloads/sidebar.downloads';
+import Sidebar_downloads from '@/components/layout/downloads/Sidebar.downloads';
 import Categories_downloads from '@/components/layout/downloads/Categories.downloads';
 
 /**
