@@ -4,14 +4,14 @@ import React from 'react'
 
 const Accounts_downloads = () => {
     const fileData = [
-        { id: 1, title: "Supreme Court: COVID Extension Saves Arbitration Claim Filed After 3 Years", duration: "December 16 @ 10:33 AM" },
-        { id: 2, title: "ICAI Imposes Rs. 2 Lakh Fine on Chartered Accountant for Professional Misconduct in..", duration: "December 16 @ 10:33 AM" },
-        { id: 3, title: "Amended Schedule III of Companies Act 2013", duration: "December 16 @ 10:33 AM" },
-        { id: 4, title: "New Rules for Tax Audit under Section 44AB", duration: "December 16 @ 10:33 AM" },
-        { id: 5, title: "ICAI release Guidance Note on Accounting for Share-based Payments", duration: "December 16 @ 10:33 AM" },
-        { id: 6, title: "AO cannot made additions by ignoring method of accounting", duration: "December 16 @ 10:33 AM" },
-   
+        { id: 1, title: "Supreme Court: COVID Extension Saves Arbitration Claim Filed After 3 Years", duration: "December 16 2025 @ 10:33 AM" },
+        { id: 2, title: "ICAI Imposes Rs. 2 Lakh Fine on Chartered Accountant for Professional Misconduct in..", duration: "December 16 2025 @ 10:33 AM" },
+        { id: 3, title: "Amended Schedule III of Companies Act 2013", duration: "December 16 2025 @ 10:33 AM" },
+        { id: 4, title: "New Rules for Tax Audit under Section 44AB", duration: "December 16 2025 @ 10:33 AM" },
+        { id: 5, title: "ICAI release Guidance Note on Accounting for Share-based Payments", duration: "December 16 2025 @ 10:33 AM" },
+        { id: 6, title: "AO cannot made additions by ignoring method of accounting", duration: "December 16 2025 @ 10:33 AM" },
     ];
+    
 
   return (
 
@@ -53,11 +53,11 @@ const Accounts_downloads = () => {
                                   className="w-15 h-15"
                               />
                               <div>
-                                  <p className="font-normal text-[16px] text-[#454545]">
+                                  <p className="font-normal text-[16px] text-[#454545] line-clamp-2">
                                       {item.title}
                                   </p>
                                   <p className="text-[12px] text-[#929292]">
-                                      By Nidhi
+                                      By: Nidhi
                                   </p>
                                   <span className="text-[12px] text-[#929292]">
                                       {item.duration}

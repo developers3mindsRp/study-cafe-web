@@ -18,7 +18,7 @@ const Sidebar_downloads = () => {
 
             <section className=' px-4 p-2 bg-[#F9F9FB] rounded-lg'>
                 <div >
-                    <h2 className='text-[26px] font-medium text-[20px] text-[#252525] mb-4 mt-4'>Recent Posts</h2>
+                    <h2 className='text-[26px] font-medium text-[20px] text-[#252525] mt-4'>Recent Posts</h2>
 
                 </div>
                 <div className=" divide-y divide-[#AFAFAF]">
@@ -35,11 +35,11 @@ const Sidebar_downloads = () => {
                                     className="w-20 h-20"
                                 />
                                 <div>
-                                    <p className="font-normal text-[16px] text-[#454545]">
+                                    <p className="font-normal text-[16px] text-[#454545] line-clamp-2">
                                         {item.title}
                                     </p>
                                     <p className="text-[12px] text-[#929292]">
-                                        By Nidhi
+                                        By: Nidhi
                                     </p>
                                     <span className="text-[12px] text-[#929292]">
                                         {item.duration}

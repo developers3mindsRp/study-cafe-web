@@ -82,7 +82,7 @@ export default function LoginPage() {
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
         <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign in to your account to continue learning</p>
-        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px] px-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4">
 
 
           <div>

@@ -42,7 +42,7 @@ export default function MembershipPricing() {
 
   return (
     <section
-      className="w-full py-12 md:py-18 bg-cover bg-center pb-20 pt-10"
+      className="w-full py-12 md:py-12 bg-cover bg-center pb-10 pt-10"
       style={{ backgroundImage: "url('/images/membership-bg.svg')" }}
     >
       <div className="max-w-7xl mx-auto md:px-4 md:pt-4">
@@ -77,9 +77,9 @@ export default function MembershipPricing() {
 
                 {/* HEADER */}
                 <div
-                  className={`p-6 ${plan.highlight
-                    ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-8 rounded-[10px]"
-                    : "bg-white"
+                  className={` ${plan.highlight
+                    ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-8 rounded-[10px] p-4"
+                    : "bg-white p-6"
                     }`}
                 >
                   <div className="flex items-center justify-between ">
@@ -165,9 +165,9 @@ export default function MembershipPricing() {
 
                 {/* HEADER */}
                 <div className={`
-                p-6 ${plan.highlight
-                    ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10 rounded-[10px]"
-                    : "bg-white"
+                 ${plan.highlight
+                    ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10 rounded-[10px] p-4 "
+                    : "bg-white p-6"
                   } flex-shrink-0
       `}>
                   <div className="flex items-center justify-between">

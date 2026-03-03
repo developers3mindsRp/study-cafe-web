@@ -101,7 +101,7 @@ const countries = countryList.getNames();
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[20px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
         <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
-        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px] px-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>  
             <input
@@ -260,7 +260,7 @@ const countries = countryList.getNames();
       </div>
     </div>
   
-            <div className="mt-4 pb-5 flex items-start gap-2 text-[14px] md:text-[16px] text-[#AFAFAF]">
+            <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#AFAFAF]">
 
               <input
                 type="checkbox"

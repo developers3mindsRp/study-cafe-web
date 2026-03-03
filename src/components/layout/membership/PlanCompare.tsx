@@ -1,6 +1,6 @@
 "use client";
 
-const plans = ["Basic", "Advanced", "Premium"];
+const plans = ["Basic", "Premium" , "Ultimate"];
 
 const features = [
   { name: "Ad-Free Content", values: [true, true, true] },
