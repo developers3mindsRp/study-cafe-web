@@ -192,7 +192,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
     <div className="container px-4 mx-auto">
       {/* Filter bar */}
       <div className="filter-bar md:flex  mb-10 mt-10  md:px-4 items-center">
-        <div className="flex-wrap gap-12 md:flex md:gap-4 px-4 md:px-0">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:flex md:gap-4 px-4 md:px-0">
           <select
             value={latestFilter}
             onChange={e => { setLatestFilter(e.target.value); setCurrentPage(1) }}

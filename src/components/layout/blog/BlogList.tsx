@@ -119,20 +119,23 @@ export default function Blog_list() {
 
     <section className="w-full py-6 md:py-12 px-2 md:px-6 text-center">
       {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 md:gap-4 2xl:gap-8 mx-auto container px-4 md:px-4">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={`px-5 py-2 rounded-md whitespace-nowrap transition border ${active === cat
-                ? "bg-[#09339B] text-white"
-                : "bg-transparent text-[#767676]"
-              }`}
-            onClick={() => setActive(cat)}
-          >
-            {cat}
-          </button>
-        ))}
+      <div className="container mx-auto px-4">
+        <div className="flex md:flex-wrap gap-3 overflow-x-auto md:overflow-visible no-scrollbar">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${active === cat
+                  ? "bg-[#09339B] text-white"
+                  : "bg-transparent text-[#767676]"
+                }`}
+              onClick={() => setActive(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
+
 
 
       <div className="mt-8 md:mt-10 mx-auto container px-4">
