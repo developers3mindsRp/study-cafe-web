@@ -167,7 +167,7 @@ export default function Blog_list() {
 
                 <div className="p-4">
                   <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                    <span className="flex">
+                    <span className="flex gap-1">
                       <img src="/images/user.svg" alt="" width="20" height="20" />
                       {b.author}
                     </span>
