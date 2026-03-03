@@ -74,7 +74,7 @@ export default function LoginPage() {
       <div className="md:w-1/3 p-6 flex flex-col justify-center md:mx-auto"> 
       <button
         onClick={() => router.back()}
-       className="absolute right-4 md:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+       className="absolute right-4 md:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
         <span className="md:text-[#09339B] ">✕</span>
       </button>
@@ -82,7 +82,7 @@ export default function LoginPage() {
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
         <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">Sign in to your account to continue learning</p>
-        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px]">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px] px-4">
 
 
           <div>

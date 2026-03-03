@@ -93,7 +93,7 @@ const countries = countryList.getNames();
        {/* Close (X) */}
       <button
         onClick={() => router.push('/')}
-        className="absolute right-[4px] md:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 border border-[#09339B] rounded-[10px] w-10 h-10 "
+        className="absolute right-[4px] md:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
         <span className="md:text-[#09339B]">✕</span>
       </button>
@@ -101,7 +101,7 @@ const countries = countryList.getNames();
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[20px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
         <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
-        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px]">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[14px] md:text-[16px] px-4">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>  
             <input
@@ -137,7 +137,7 @@ const countries = countryList.getNames();
                 value={phone}
                 onChange={setPhone}
                 defaultCountry="IN"
-                international
+                
                 limitMaxLength={true} 
                 className="w-full border focus-within:ring-2 focus-within:ring-black px-3 py-1"
             />

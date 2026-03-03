@@ -134,7 +134,7 @@ export default function Header() {
       </div>
     ) : (
       <Link
-        href="/register"
+        href="/login"
         className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
       >
        Login
@@ -162,7 +162,7 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
-              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Home
               </Link>
 
@@ -186,29 +186,29 @@ export default function Header() {
 
                 {coursesMobileOpen && (
                   <div className="mt-2 pl-4 flex flex-col gap-1">
-                    <Link href="/courses" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/courses" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                       All Courses
                     </Link>
-                    <Link href="/courses/featured" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/courses/featured" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)} >
                       Featured
                     </Link>
-                    <Link href="/courses/categories" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/courses/categories" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                       Categories
                     </Link>
-                    <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                       Memberships & Pricing
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/plans" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Memberships
               </Link>
-              <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Blogs
               </Link>
-              <Link href="/contact-us" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/contact-us" className="text-gray-700 hover:text-blue-600 font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Contact Us
               </Link>
 
@@ -237,10 +237,10 @@ export default function Header() {
                   </>
                 ) : (
                   <Link
-                    href="/register"
+                    href="/login"
                     className="block mt-2 bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-center font-medium"
                   >
-                    Get Started
+                    Login
                   </Link>
                 )}
               </div>
