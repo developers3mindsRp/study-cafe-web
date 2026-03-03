@@ -36,7 +36,7 @@ const Details_downloads = () => {
                               <img src="/images/pdf.svg" alt="PDF Icon" className="w-16 h-16" />
 
 
-                              <h2 className="text-xl md:text-2xl font-medium text-[#252525] mb-4">
+                              <h2 className="text-[16px] md:text-2xl font-medium text-[#252525] mb-4">
                                   ITAT Deletes Section 270A Penalty as AO Fails <br /> to Specify Misreporting Limb
                               </h2>
                               </div>
@@ -50,7 +50,7 @@ const Details_downloads = () => {
                       <hr className="mb-6" />
 
                       {/* Details Section */}
-                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 text-sm">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm">
 
                           <div>
                               <p className="text-[#929292] mb-1">File Name</p>
