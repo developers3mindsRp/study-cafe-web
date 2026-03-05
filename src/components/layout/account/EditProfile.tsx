@@ -87,7 +87,7 @@ const countries = countryList.getNames();
              <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around ">
 
         {[
-              { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
+          { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
           { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png", activeIcon: "/images/credit-card-active.svg"},
           { key: "Course", label: "Purchased Course", icon: "/images/course.png", activeIcon: "/images/course-active.svg" },
           { key: "Membership", label: "Membership course", icon: "/images/crown.svg", activeIcon: "/images/crown-active.svg" },

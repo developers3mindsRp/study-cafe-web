@@ -54,16 +54,16 @@ export default function Sidebar() {
       </p> */}
 
       <div className="mt-3 space-y-2 md:self-start md:text-left ">
-        <div className="flex gap-2 items-center">
-          <img src="/images/mail.png" alt="" className="mt-1" />
-                <p className="text-[#AFAFAF] break-all text-sm">
+        <div className="flex gap-1 md:gap-2 items-center">
+          <img src="/images/mail.png" alt="" className="mt-0 w-4 md:w-5 h-4 md:h-5" />
+                <p className="text-[#AFAFAF]  text-[14px] md:text-[16px] text-ellipsis overflow-hidden"> 
             Shubham87548@gmail.com
           </p>
         </div>
 
-        <div className="flex gap-2 items-center ">
-          <img src="/images/phone.png" alt="" />
-          <p className="text-[#AFAFAF] text-sm">+91 9584784584</p>
+        <div className="flex gap-1 md:gap-2 items-center ">
+          <img src="/images/phone.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
+          <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">+91 9584784584</p>
         </div>
       </div>
     </div>

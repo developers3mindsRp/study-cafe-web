@@ -101,7 +101,7 @@ export default function Commission() {
         Search your affiliate commission orders by date or month.
       </p>
 
-      <div className="border border-[#B4C6FF] rounded-xl p-4">
+      <div className="border border-[#B4C6FF] rounded-xl p-4 shadow-md">
         <div className="flex flex-col md:flex-row gap-6 md:items-end">
 
           {/* From */}
@@ -160,14 +160,22 @@ export default function Commission() {
 
       {/* All courses---------- */}
       <div className="py-4">
-        <div className="flex mt-4 px-2">
-        <h2 className="font-bold">2 Orders Found</h2>
+        <div className="flex flex-col md:flex-row  mt-4 px-2">
+          <h2 className="font-regular text-[20px] mb-2">2 Orders Found</h2>
+          <div className="md:ml-auto flex  gap-4">
+            <button className="md:ml-auto text-[#09339B] hover:text-[#0F2E75] border border-[#09339B] px-4 md:px-4 py-1 rounded-lg font-medium">
+              Download Excel
+            </button>
+            <button className="md:ml-auto text-[#09339B] hover:text-[#0F2E75] border border-[#09339B] px-4 md:px-4 py-1 rounded-lg font-medium">
+              Download PDF
+            </button>
+         </div>
         </div>
 
      {ordersData.map((order) => (
        <div
          key={order.id}
-         className="grid grid-cols-1 gap-3 mt-4 border border-[#9FBBFF] shadow-md rounded-lg p-4 px-6 mx-2"
+         className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-6 mx-2 "
        >
          <div className="flex justify-between md:text-[20px] ">
            <p className="font-bold">Order - {order.orderId}</p>
@@ -183,18 +191,19 @@ export default function Commission() {
 
          <div className="border-t border-[#AFAFAF]"></div>
 
-         <div className="flex justify-between items-start">
-           <p className="font-medium mt-4">{order.course}</p>
+         <div className="flex  justify-between items-start">
+           <div className="flex flex-col">
+             <p className="font-medium mt-4">{order.course}</p>
+             <p className="mt-1">Amount: <span className="font-semibold">₹{order.amount}</span> </p>
+        </div>
 
-           <div className="flex flex-col gap-2 text-sm">
-             <p className="text-end">
-               Amount: <span className="font-semibold">₹{order.amount}</span>
-             </p>
+         
+ 
 
-             <p className="bg-[#C5FFD4] px-3 py-1 rounded-lg text-green-700 font-medium">
+             <p className="bg-[#C5FFD4] px-3 py-1 rounded-lg text-green-700 font-medium mt-6">
                ₹{order.commission} Commission
              </p>
-           </div>
+         
          </div>
        </div>
 ))}
