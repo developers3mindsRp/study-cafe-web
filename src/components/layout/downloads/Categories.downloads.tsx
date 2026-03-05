@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-const Categories_downloads = () => {
+const Categories_downloads = ({ showSearch = true }) => {
     const fileData = [
         { id: 1, title: "Accounts", totalFiles: 6 },
         { id: 2, title: "Audit", totalFiles: 12 },
@@ -14,28 +14,33 @@ const Categories_downloads = () => {
         { id: 4, title: "Custom", totalFiles: 9 },
    
     ];
+   
 
   return (
 
       <>
           <section className='container mx-auto px-4 '>
               <div>
-                  <div className="relative mb-8 gap-2">
+                  <div>
+                      {showSearch && (
+                          <div className="relative mb-8 gap-2">
 
-                      {/* Search Icon */}
-                      <img
-                          src="/images/search-icon.svg"
-                          alt="Search"
-                          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10"
-                      />
+                              {/* Search Icon */}
+                              <img
+                                  src="/images/search-icon.svg"
+                                  alt="Search"
+                                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10"
+                              />
 
-                      {/* Input */}
-                      <input
-                          type="text"
-                          placeholder="Search by file name or author..."
-                          className="w-full pl-14 pr-4 py-3 border border-[#EDF1F3] rounded-lg focus:outline-none focus:ring-2 focus:ring-black shadow-sm text-[#49454F]"
-                      />
+                              {/* Input */}
+                              <input
+                                  type="text"
+                                  placeholder="Search by file name or author..."
+                                  className="w-full pl-14 pr-4 py-3 border border-[#EDF1F3] rounded-lg focus:outline-none focus:ring-2 focus:ring-black shadow-sm text-[#49454F]"
+                              />
 
+                          </div>
+                      )}
                   </div>
 
                   <h2 className='text-[26px] font-normal text-[#252525] mb-4'>Download Categories</h2>

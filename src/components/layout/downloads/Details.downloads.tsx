@@ -8,7 +8,7 @@ const Details_downloads = () => {
   return (
 
       <>
-          <section className='container mx-auto px-4 '>
+          <section className='container mx-auto px-4 pb-6'>
               <div>
                   <div className="relative mb-8 gap-2">
 
@@ -28,15 +28,15 @@ const Details_downloads = () => {
 
                   </div>
 
-                  <div className="bg-white border border-[#9FBBFF] rounded-xl p-6 shadow-sm ">
+                  <div className="bg-white border border-[#9FBBFF] rounded-xl p-6 shadow-md ">
 
                       {/* Header Section */}
                       <div className="flex items-start gap-4 mb-6 justify-between flex-wrap">
-                          <div className='flex gap-8'>
+                          <div className='flex gap-4 md:gap-8'>
                               <img src="/images/pdf.svg" alt="PDF Icon" className="w-16 h-16" />
 
 
-                              <h2 className="text-[16px] md:text-2xl font-medium text-[#252525] mb-4">
+                              <h2 className="text-[16px] md:text-2xl font-bold text-[#252525] mb-4 line-clamp-3 md:line-clamp-0">
                                   ITAT Deletes Section 270A Penalty as AO Fails <br /> to Specify Misreporting Limb
                               </h2>
                               </div>

@@ -43,7 +43,7 @@ export default function Accounts() {
           
 
             {/* Main Content */}
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 py-6 md:py-12">
                 <div className="flex flex-col lg:flex-row gap-8">
 
                     {/* Left Section */}

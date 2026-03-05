@@ -44,13 +44,13 @@ export default function Details() {
 
 
             {/* Main Content */}
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 py-6 md:py-12">
                 <div className="flex flex-col lg:flex-row gap-8">
 
                     {/* Left Section */}
                     <div className="w-full lg:w-[70%]">
                         <Details_downloads/>
-                       <Categories_downloads />
+                        <Categories_downloads showSearch={false} />
                     </div>
 
                     {/* Right Sidebar */}
