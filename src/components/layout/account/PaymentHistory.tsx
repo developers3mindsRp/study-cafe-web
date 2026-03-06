@@ -68,7 +68,7 @@ export default function PaymentHistory() {
             <input
                 type="text"
                 placeholder="Search Orders…"
-                className="border border-gray-300 rounded-lg px-10 py-2 text-sm w-full"
+                className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-full"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />

@@ -61,7 +61,7 @@ export default function Sidebar() {
           </p>
         </div>
 
-        <div className="flex gap-1 md:gap-2 items-center ">
+        <div className="flex gap-1 md:gap-2 items-center">
           <img src="/images/phone.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
           <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">+91 9584784584</p>
         </div>
@@ -87,9 +87,9 @@ export default function Sidebar() {
 
       {/* SUBSCRIPTION BOX */}
       <div className="p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
-        <h3 className="text-[26px] font-normal mb-2">Subscription Status</h3>
+        <h3 className="text-[20px] md:text-[26px] font-normal mb-2">Subscription Status</h3>
       
-        <p className="text-sm text-gray-600">Premium Membership</p>
+        <p className="text-[16px] text-gray-600">Premium Membership</p>
           <p className="text-2xl text-[#09339B]">₹7,999</p>
 
     <div className="mt-3 text-[16px] text-[#454545] space-y-2">

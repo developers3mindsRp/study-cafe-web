@@ -84,7 +84,7 @@ const countries = countryList.getNames();
 
         {/* RIGHT CONTENT */}
         <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
-             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around ">
+             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
 
         {[
           { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
@@ -112,7 +112,7 @@ const countries = countryList.getNames();
             />
 
             {/* Hide text on mobile */}
-            <span className="hidden md:inline">
+            <span className="hidden md:inline whitespace-nowrap">
               {tab.label}
             </span>
           </div>
@@ -124,7 +124,7 @@ const countries = countryList.getNames();
          {active === "Profile" && (
           <>
                   <div className=" mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm ">
-          <p className="  text-[26px]">Edit Profile</p>
+          <p className=" text-[20px] md:text-[26px]">Edit Profile</p>
           <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
 
           <div className="grid md:grid-cols-1 gap-4 mt-2">

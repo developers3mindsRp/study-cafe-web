@@ -72,7 +72,7 @@ const courses = [
                    key={c.id}
                    className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
                  >
-                   <div className="relative w-full h-[250px] md:h-[250px]">
+                   <div className="relative w-full h-[180px] md:h-[250px]">
                      <Image src={c.img} alt={c.title} fill className="object-fit" />
                      <span className="absolute flex  gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
                        <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}

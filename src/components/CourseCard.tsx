@@ -6,7 +6,7 @@ export default function CourseCard({ course }: { course: any }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Thumbnail */}
-      <div className="h-[250px] w-full overflow-hidden">
+      <div className="md:h-[250px] w-full overflow-hidden">
         <img
           src={course.image}
           alt={course.title}
@@ -16,7 +16,7 @@ export default function CourseCard({ course }: { course: any }) {
 
       {/* Content */}
       <div className="p-4 space-y-2">
-        <h3 className="text-[20px] font-semibold text-gray-800">
+        <h3 className="text-[16px] md:text-[20px] font-semibold text-gray-800 line-clamp-2">
           {course.title}
         </h3>
 
