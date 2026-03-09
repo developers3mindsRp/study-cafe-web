@@ -7,6 +7,7 @@ import { queryKeys } from '@/lib/react-query';
 import * as coursesService from '@/services/courses.service';
 import { PublicLayout } from '@/components/layout';
 import CourseDetailPage from '@/components/CourseDetailProfile';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 
 
@@ -27,6 +28,7 @@ export default function CourseDetail() {
 
   return (
     <PublicLayout>
+      <Breadcrumbs/>
     <CourseDetailPage/>
     </PublicLayout>
 

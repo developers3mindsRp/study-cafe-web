@@ -16,8 +16,8 @@ export default function Commission() {
     orderId: "202520210",
     date: "14 Feb 2026",
     name: "Sneha Gupta",
-    email: "sneha@gmail.com",
-    phone: "+91 701234543",
+      email: "sn***@gmail.com",
+      phone: "+91 70***543",
     course: "Income Tax Course",
     amount: 3499,
     commission: 350,
@@ -26,9 +26,9 @@ export default function Commission() {
     id: 2,
     orderId: "202520211",
     date: "15 Feb 2026",
-    name: "Rahul Sharma",
-    email: "rahul@gmail.com",
-    phone: "+91 9876543210",
+    name: "Deepak Joshi",
+    email: "de***@gmail.com",
+    phone: "+91 88***321",
     course: "Microsoft Excel Course",
     amount: 2999,
     commission: 300,
@@ -175,7 +175,7 @@ export default function Commission() {
      {ordersData.map((order) => (
        <div
          key={order.id}
-         className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-6 mx-2 "
+         className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-4 md:px-6 md:mx-2 "
        >
          <div className="flex justify-between md:text-[20px] ">
            <p className="font-bold">Order - {order.orderId}</p>
@@ -183,24 +183,25 @@ export default function Commission() {
          </div>
 
          <p className="font-regular">{order.name}</p>
-
-         <p className="text-sm text-gray-600 flex flex-wrap gap-4">
+         <ul className="text-sm text-gray-600 flex flex-wrap gap-4 list-disc marker:text-[#D9D9D9]">
            <span>{order.email}</span>
-           <span>{order.phone}</span>
-         </p>
+           <li className="ml-4 ">{order.phone}</li>
+         </ul>
+
+
 
          <div className="border-t border-[#AFAFAF]"></div>
 
-         <div className="flex  justify-between items-start">
+         <div className="flex  justify-between items-start ">
            <div className="flex flex-col">
-             <p className="font-medium mt-4">{order.course}</p>
+             <p className="font-medium mt-4 whitespace-nowrap">{order.course}</p>
              <p className="mt-1">Amount: <span className="font-semibold">₹{order.amount}</span> </p>
         </div>
 
          
  
 
-             <p className="bg-[#C5FFD4] px-3 py-1 rounded-lg text-green-700 font-medium mt-6">
+           <p className="bg-[#C5FFD4] px-2  md:px-6 py-1 rounded-lg text-[#275934] font-medium mt-6 text-[14px] md:text-[16px] whitespace-nowrap">
                ₹{order.commission} Commission
              </p>
          

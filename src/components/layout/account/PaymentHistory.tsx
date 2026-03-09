@@ -53,7 +53,7 @@ export default function PaymentHistory() {
             <div className="relative mt-4 sm:mt-0">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -68,7 +68,7 @@ export default function PaymentHistory() {
             <input
                 type="text"
                 placeholder="Search Orders…"
-                className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-full"
+                className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-[200px]"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
@@ -79,12 +79,12 @@ export default function PaymentHistory() {
       {/* Table */}
       <div className="hidden md:block overflow-x-auto ">
         <table className="w-full bg-white rounded-lg shadow-sm divide-y divide-gray-200 border border-gray-200">
-          <thead className="bg-gray-50  text-[16px]  ">
+          <thead className="bg-gray-50  text-[16px] ">
             <tr>
               <th className="px-4 py-3 text-left font-normal ">Date</th>
-              <th className="px-4 py-3 text-left font-normal">Order ID</th>
+              <th className="px-4 py-3 text-left font-normal whitespace-nowrap">Order ID</th>
               <th className="px-4 py-3 text-left font-normal">Item Name</th>
-              <th className="px-4 py-3 text-left font-normal">Amount</th>
+              <th className="px-3 py-3 text-left font-normal">Amount</th>
               <th className="px-4 py-3 text-left font-normal">GST</th>
               <th className="px-4 py-3 text-left font-normal">Method</th>
               <th className="px-4 py-3 text-left font-normal">Status</th>
@@ -95,9 +95,9 @@ export default function PaymentHistory() {
           <tbody>
             {filtered.map((row, i) => (
               <tr key={i} className="hover:bg-gray-50 text-[12px] text-[#929292] border-b ">
-                <td className="px-4 py-3">{row.date}</td>
-                <td className="px-4 py-3 font-medium">{row.orderID}</td>
-                <td className="px-4 py-3">{row.item}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{row.date}</td>
+                <td className="px-4 py-3 font-medium whitespace-nowrap">{row.orderID}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{row.item}</td>
                 <td className="px-4 py-3">{row.amount}</td>
                 <td className="px-4 py-3">{row.gst}</td>
                 <td className="px-4 py-3">{row.method}</td>

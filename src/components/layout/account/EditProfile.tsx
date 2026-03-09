@@ -74,7 +74,7 @@ const countries = countryList.getNames();
 
   return (
 <div className="w-full md:py-10 px-4 md:px-10">
-  <div className="container px-4 mx-auto grid md:grid-cols-3 gap-8 mb-10">
+  <div className="container md:px-4 mx-auto grid md:grid-cols-3 gap-8 mb-10">
         
        {/* LEFT SIDEBAR */}
       <div className="md:col-span-1 ">
@@ -83,8 +83,8 @@ const countries = countryList.getNames();
 
 
         {/* RIGHT CONTENT */}
-        <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-44  ">
-             <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
+        <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-36   ">
+             <div className=" border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
 
         {[
           { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
@@ -163,7 +163,7 @@ const countries = countryList.getNames();
 
             <div className="flex justify-between gap-4">
             <div className="flex-1">
-                <label className="text-sm font-medium">Profession</label>
+                      <label className="text-sm font-medium">Profession <span className="text-red-600">*</span></label>
                        <select className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1">
                 <option>Select</option>
               </select>

@@ -142,12 +142,12 @@ const router = useRouter();
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
 
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-            <h2 className="text-[20px] text-[#AFAFAF]">Total Earning</h2>
-            <h3 className="font-bold">₹1,000</h3>
+          <h2 className="text-[20px] text-[#AFAFAF]">Total Order</h2>
+          <h3 className="font-bold">15</h3>
         </div>
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-            <h2 className="text-[20px] text-[#AFAFAF]">Total Order</h2>
-            <h3 className="font-bold">15</h3>
+          <h2 className="text-[20px] text-[#AFAFAF]">Order Value</h2>
+          <h3 className="font-bold">₹400</h3>
         </div>
         {/* <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
             <h2 className="text-[20px] text-[#AFAFAF]">Estimated Value</h2>
@@ -178,7 +178,7 @@ const router = useRouter();
 
           <div className="border boder-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
             <img src="/images/home.svg" alt="" />
-            <h2>Homepage</h2>
+            <h2 className="font-bold">Homepage</h2>
             <p>Direct traffic to our main landing page for general visitors.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md">https://studycafe.io/?ref=alexm</p>
             <div className="flex justify-center gap-2 px-4 py-2 w-full  text-[#1F4FBF] border border-[#1F4FBF] rounded-md">
@@ -187,7 +187,7 @@ const router = useRouter();
           </div>
           <div className="border boder-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
             <img src="/images/member-b.svg" alt="" />
-            <h2>Homepage</h2>
+            <h2 className="font-bold">Membership</h2>
             <p>Direct traffic to our main landing page for general visitors.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md">https://studycafe.io/?ref=alexm</p>
             <div className="flex justify-center gap-2 px-4 py-2 w-full  text-[#1F4FBF] border border-[#1F4FBF] rounded-md">
@@ -272,6 +272,9 @@ const router = useRouter();
             </div>
           ))}
         </div>
+        <button className="bg-[#09339B] text-white px-12 py-2 rounded-md mt-4 mx-auto block text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
+          View All
+        </button>
 
       </div>
 

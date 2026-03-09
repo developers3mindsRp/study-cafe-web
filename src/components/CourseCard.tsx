@@ -20,10 +20,15 @@ export default function CourseCard({ course }: { course: any }) {
           {course.title}
         </h3>
 
-        {/* Progress */}
-        <div className="text-sm text-gray-500">
-          {course.lessons} lessons · {course.completed} completed
-        </div>
+        <div className="flex items-center justify-between">
+          {/* Progress */}
+          <div className="text-sm text-gray-500">
+            {course.lessons} lessons · {course.completed} completed
+          </div>
+          <div className="text-xs text-gray-500 text-right">
+            {course.progress}%
+          </div>
+</div>
 
         <div className="relative h-2 bg-gray-200 rounded-full mt-1">
           <div
@@ -31,9 +36,7 @@ export default function CourseCard({ course }: { course: any }) {
             style={{ width: `${course.progress}%` }}
           ></div>
         </div>
-        <div className="text-xs text-gray-500 text-right">
-          {course.progress}%
-        </div>
+ 
 
         {/* Buttons */}
         <div className="flex gap-2">
