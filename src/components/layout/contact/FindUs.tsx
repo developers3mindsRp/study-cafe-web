@@ -1,11 +1,11 @@
 export default function MapSection() {
   return (
-    <section className="bg-white py-14 px-4">
+    <section className="bg-white md:py-14 py-4 px-4">
       <div className="container px-4 mx-auto">
         
         {/* Heading */}
         <div className="text-center mb-8">
-          <h2 className="text-[48px] md:text-[62px] font-semibold text-[#09339B]">
+          <h2 className="text-[30px] md:text-[62px] font-semibold text-[#09339B]">
             Find Us on the Map
           </h2>
           <p className="text-[#252525] mt-2 text-[18px] md:text-[26px]">
