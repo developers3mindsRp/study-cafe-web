@@ -1,30 +1,22 @@
 import React, { useState } from "react";
+import type { FAQ } from "@/types/models.types";
 
-export default function FAQSection() {
-  const faqs = [
-    {
-      q: "What is included in the membership plans?",
-      a: "Our membership plans include access to courses based on your tier, downloadable study materials, WhatsApp/Telegram group access for updates, certificates upon course completion, and priority support for Advanced and Premium members. Premium members also get lifetime access and 1-on-1 mentorship sessions.",
-    },
-    {
-      q: "Can I purchase individual courses without a membership?",
-      a: "Yes, individual courses can be purchased without a membership, but membership users get additional benefits and discounts.",
-    },
-    {
-      q: "Are the courses self-paced or do they have fixed schedules?",
-      a: "Most of our courses are self-paced, while some advancedbatches follow a fixed live schedule.",
-    },
-    {
-      q: "Do I get a certificate after completing a course?",
-      a: "Yes, upon successful completion of the course, you will receive a verifiable certificate.",
-    },
-    {
-      q: "What is your refund policy?",
-      a: "We offer a refund within 7 days of purchase if you haven't accessed more than 10% of the course.",
-    },
-  ];
+const FALLBACK_FAQS: FAQ[] = [
+  { id: '1', question: "What is included in the membership plans?", answer: "Our membership plans include access to courses based on your tier, downloadable study materials, WhatsApp/Telegram group access for updates, certificates upon course completion, and priority support for Advanced and Premium members." },
+  { id: '2', question: "Can I purchase individual courses without a membership?", answer: "Yes, individual courses can be purchased without a membership, but membership users get additional benefits and discounts." },
+  { id: '3', question: "Are the courses self-paced or do they have fixed schedules?", answer: "Most of our courses are self-paced, while some advanced batches follow a fixed live schedule." },
+  { id: '4', question: "Do I get a certificate after completing a course?", answer: "Yes, upon successful completion of the course, you will receive a verifiable certificate." },
+  { id: '5', question: "What is your refund policy?", answer: "We offer a refund within 7 days of purchase if you haven't accessed more than 10% of the course." },
+];
 
-  const [openIndex, setOpenIndex] = useState<any>('');
+interface FAQSectionProps {
+  faqs?: FAQ[];
+}
+
+export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
+  const faqs = faqsProp && faqsProp.length > 0 ? faqsProp : FALLBACK_FAQS;
+
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section className=" w-full  py-4 md:py-20 px-4 flex flex-col
@@ -38,15 +30,12 @@ export default function FAQSection() {
 
       <div className="w-full  mt-10 space-y-3 text-left container px-4">
         {faqs.map((item, index) => (
-          <div key={index} className="border border-[#AFAFAF] rounded-lg overflow-hidden">
-            {/* Question Button */}
+          <div key={item.id ?? index} className="border border-[#AFAFAF] rounded-lg overflow-hidden">
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex justify-between items-center p-4  transition bg-white"
+              className="w-full flex justify-between items-center p-4 transition bg-white"
             >
-              <span className="font-medium text-[20px] text-black text-left bg-white ">{index + 1}. {item.q}</span>
-
-              {/* Arrow Icon */}
+              <span className="font-medium text-[20px] text-black text-left bg-white">{index + 1}. {item.question}</span>
               <svg
                 className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
                 fill="none"
@@ -57,11 +46,9 @@ export default function FAQSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-
-            {/* Answer */}
             {openIndex === index && (
               <div className="px-4 p-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                {item.a}
+                <div className="prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer }}/>
               </div>
             )}
           </div>

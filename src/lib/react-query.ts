@@ -55,6 +55,12 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.courses.details(), id] as const,
     search: (query: string) => [...queryKeys.courses.all, 'search', query] as const,
   },
+
+  // Platform keys
+  platform: {
+    all: ['platform'] as const,
+    home: () => [...queryKeys.platform.all, 'home'] as const,
+  },
   
   // Purchase/User Course keys
   purchases: {

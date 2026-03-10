@@ -7,6 +7,8 @@ import {
   PageContent,
   SeoMetadata,
   ArticleBySlug,
+  CourseCat,
+  Course,
 } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -106,6 +108,26 @@ export const getArticleBySlug = async (
   } catch {
     return null;
   }
+};
+
+/** All course categories (for filter tabs) */
+export const getCourseCats = async (): Promise<CourseCat[]> => {
+  const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
+  return response.data.data;
+};
+
+/** Courses filtered by category slug. Pass null/undefined/'all' for all courses */
+export const getCoursesByCategory = async (
+  categorySlug?: string | null,
+  limit = 12
+): Promise<Course[]> => {
+  const params: Record<string, string | number> = { limit };
+  if (categorySlug && categorySlug !== 'all') params.category = categorySlug;
+  const response = await axiosInstance.get<ApiResponse<Course[]>>(
+    '/courses/by-category',
+    { params }
+  );
+  return response.data.data;
 };
 
 /**

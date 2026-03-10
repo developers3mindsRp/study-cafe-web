@@ -2,9 +2,19 @@ import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'ax
 import { getToken, setToken, clearAuthData } from '@/utils/auth.utils';
 import { ApiError } from '@/types/api.types';
 
+const getApiBaseUrl = (): string => {
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL)
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL) {
+    const url = (import.meta as any).env.VITE_API_BASE_URL as string;
+    return url.replace(/\/?$/, '') + (url.endsWith('/api') ? '' : '/api');
+  }
+  return 'http://localhost:3000/api';
+};
+
 // Create Axios instance with base configuration
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: getApiBaseUrl(),
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -43,7 +53,7 @@ axiosInstance.interceptors.response.use(
       try {
         // Attempt to refresh the token
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api'}/auth/refresh`,
+          `${getApiBaseUrl()}/auth/refresh`,
           {},
           {
             headers: {

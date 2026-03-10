@@ -2,12 +2,27 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import type { HomeHero } from "@/types/models.types";
 
-const HeroSection = () => {
+const DEFAULT_HERO: HomeHero = {
+  title: "Master Your Skills with Professional Courses",
+  subtitle:
+    "Learn from industry experts, get certified, and boost your career with our comprehensive online courses",
+  ctaText: "View Memberships",
+  ctaLink: "/plans",
+  badge: "Welcome to StudyCafe Learning Platform",
+};
+
+interface HeroSectionProps {
+  hero?: HomeHero | null;
+}
+
+const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
+  const h = hero ?? DEFAULT_HERO;
 
   const handleClick = () => {
-    router.push("/plans");
+    router.push(h.ctaLink || "/plans");
   };
 
   return (
@@ -18,25 +33,28 @@ const HeroSection = () => {
 
         {/* TEXT CONTENT */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 md:mt-0 ">
-          <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg text-white border border-[#a5aab8]">
-            Welcome to StudyCafe Learning Platform
-          </p>
+          {h.badge && (
+            <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg text-white border border-[#a5aab8]">
+              {h.badge}
+            </p>
+          )}
 
           <h1 className="text-[30px] sm:text-3xl md:text-[40px] lg:text-6xl font-semibold text-white leading-tight md:mb-10">
-            Master Your Skills with  Professional Courses
+            {h.title}
           </h1>
 
-          <p className="mt-4 text-[16px] md:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
-            Learn from industry experts, get certified, and boost your <br className="hidden" />
-            career with our comprehensive online courses
-          </p>
+          {h.subtitle && (
+            <p className="mt-4 text-[16px] md:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
+              {h.subtitle}
+            </p>
+          )}
 
           <div className="mt-6 md:mt-10 flex flex-row md:flex-row justify-center lg:justify-start gap-4 px-2 md:px-0 ">
             <button
               onClick={handleClick}
               className="py-2 px-3 border-2 border-white rounded-[10px] text-[14px] md:text-[20px] font-medium text-white hover:bg-white/20 transition"
             >
-              View Memberships
+              {h.ctaText}
             </button>
 
             <Link href="/courses">
@@ -55,7 +73,7 @@ const HeroSection = () => {
         {/* IMAGE */}
         <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
           <img
-            src="/images/home/home.png"
+            src={h.imageUrl || "/images/home/home.png"}
             alt="Learning illustration"
             className="px-4 md:w-full  object-contain "
           />

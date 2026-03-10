@@ -174,7 +174,8 @@ export interface HomePageData {
   hero: HomeHero;
   features?: HomeFeature[];
   stats?: HomeStat[];
-  testimonialHighlight?: Testimonial;
+  testimonials?: Testimonial[];
+  faqs?: FAQ[];
   updatedAt?: string;
 }
 
@@ -236,6 +237,29 @@ export interface RelatedArticle {
   id: number;
   title: string;
   slug: string;
+}
+
+/** Course category (for filter tabs) */
+export interface CourseCat {
+  id: number;
+  name: string;
+  slug: string;
+  is_featured?: boolean;
+}
+
+/** Public course card */
+export interface Course {
+  id: number;
+  title: string;
+  slug?: string | null;
+  brief_description?: string | null;
+  price: string | number;
+  sale_price?: string | number | null;
+  thumbnail_url?: string | null;
+  enrolled_count?: number;
+  ratings?: string | number | null;
+  language?: string | null;
+  is_published?: boolean;
 }
 
 /** Public article by slug (body = content, related_articles from shortcodes) */
