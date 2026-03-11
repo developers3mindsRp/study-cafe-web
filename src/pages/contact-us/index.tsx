@@ -9,6 +9,7 @@ import { Header, PublicLayout } from '@/components/layout';
 
 import ContactPage from '@/components/layout/contact/GetInTouch';
 import MapSection from '@/components/layout/contact/FindUs';
+import ContactInfo from '@/components/layout/contact/ContactInfo';
 
 
 
@@ -29,7 +30,8 @@ export default function contact() {
   return (
 
         <PublicLayout>
-        <ContactPage/>
+      <ContactPage />
+      <ContactInfo/>
         <MapSection/>
         </PublicLayout>
   );
