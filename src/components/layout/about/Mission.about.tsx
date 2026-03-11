@@ -17,7 +17,7 @@ const Mission_about = () => {
                   </div>
 
                   <div className=" rounded-lg p-12 bg-white  grid grid-cols-2 gap-4">
-                      {/* Email */}
+                   
                       <div className="border border-[#9FBBFF] rounded-xl p-8 bg-white  hover:shadow-md transition flex flex-col bg-[#FAFAFA]">
 
                           <div className="w-16 h-16  flex items-center rounded-full  mb-4 ">

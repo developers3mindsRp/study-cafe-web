@@ -183,9 +183,9 @@ export default function Commission() {
          </div>
 
          <p className="font-regular">{order.name}</p>
-         <ul className="text-sm text-gray-600 flex flex-wrap gap-4 list-disc marker:text-[#D9D9D9]">
+         <ul className="text-sm text-gray-600 flex flex-wrap gap-2 list-disc marker:text-[#D9D9D9] mb-4">
            <span>{order.email}</span>
-           <li className="ml-4 ">{order.phone}</li>
+           <li className="ml-4"><span>{order.phone}</span></li>
          </ul>
 
 

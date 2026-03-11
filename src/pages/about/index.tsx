@@ -14,6 +14,13 @@ import Description_about from '@/components/layout/about/Description.About';
 import Stats_about from '@/components/layout/about/StatsSection.about';
 import Mission_about from '@/components/layout/about/Mission.about';
 import Journey_about from '@/components/layout/about/Journey.about';
+import Leader_about from '@/components/layout/about/Leaders.About';
+import Teams_about from '@/components/layout/about/Teams.About';
+import Manager_about from '@/components/layout/about/Manager.About';
+import Awards_about from '@/components/layout/about/Awards.About';
+import Gallery from '@/components/layout/course/Gallerysection';
+import Feature_about from '@/components/layout/about/Feature.About';
+import Message_about from '@/components/layout/about/Message.About';
 
 /**
  * Home Page - Course Listing
@@ -37,7 +44,14 @@ export default function About() {
             <Description_about />
             <Stats_about />
             <Mission_about />
-            <Journey_about/>
+            <Journey_about />
+            <Leader_about />
+            <Manager_about/>
+            <Teams_about />
+            <Awards_about />
+            <Gallery showHeading={false} />
+            <Feature_about />
+            <Message_about/>
 
         </PublicLayout>
 
