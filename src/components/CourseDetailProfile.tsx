@@ -95,7 +95,7 @@ const [selectedVideo, setSelectedVideo] = useState(1);
           <span className="">5 of 12 lessons completed</span>
       <span className="flex items-center gap-2 text-sm text-[#AFAFAF]">
       <img src="/images/icon-clock.png" alt="Clock Icon" className="w-4 h-4" />
-      8 hours, 30 minutes
+      8 hours 30 minutes
     </span>
 
         </div>

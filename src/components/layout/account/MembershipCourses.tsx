@@ -72,7 +72,7 @@ const courses = [
                    key={c.id}
                    className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
                  >
-                   <div className="relative w-full h-[180px] md:h-[250px]">
+                   <div className="relative w-full h-[180px] md:h-[180px] lg:h-[250px]">
                      <Image src={c.img} alt={c.title} fill className="object-fit" />
                      <span className="absolute flex  gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
                        <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
@@ -89,7 +89,7 @@ const courses = [
                        </span>
                      </div>
    
-                     <h3 className="text-[22px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2">
+                     <h3 className="text-[18px] md:text-[22px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
                        {c.title}
                      </h3>
    
@@ -111,9 +111,9 @@ const courses = [
                ))}
              </div>
 
-             <div className="flex justify-center mt-6 mb-6 ">
+             <div className="flex justify-center mt-6 ">
               <button className="px-4 py-2 bg-[#09339B] text-white rounded-md text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
-                View all
+                View All
               </button>
              </div>
  
