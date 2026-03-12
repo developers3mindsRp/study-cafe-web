@@ -16,7 +16,7 @@ const Feature_about = () => {
                      
                   </div>
 
-                  <div className="rounded-lg  bg-white grid grid-cols-6  border">
+                  <div className="rounded-lg  bg-white grid grid-cols-3 md:grid-cols-6  border">
 
                    
                           <div className=" p-4 mx-auto ">
