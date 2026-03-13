@@ -15,17 +15,19 @@ const testimonials = [
 
 ];
 
-export default function Gallery() {
+export default function Gallery({ showHeading = true }) {
     return (
         <section className="bg-white py-4 mt-4">
             {/* Heading */}
-            <h2 className="text-[20px] md:text-[40px] font-medium 
-  text-white md:text-gray-900
-  bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none px-4 md:px-8 md:container md:mx-auto 
-  py-3 md:py-0
-  mx-4 md:mx-0">
-                Gallery
-            </h2>
+            {showHeading && (
+                <h2 className="text-[20px] md:text-[40px] font-medium 
+        text-white md:text-gray-900
+        bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none 
+        px-4 md:px-8 md:container md:mx-auto 
+        py-3 md:py-0 mx-4 md:mx-0">
+                    Gallery
+                </h2>
+            )}
 
             <div>
 

@@ -68,7 +68,7 @@ export default function PaymentHistory() {
             <input
                 type="text"
                 placeholder="Search Orders…"
-                className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-[200px]"
+            className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-[200px] placeholder-black"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
@@ -102,7 +102,7 @@ export default function PaymentHistory() {
                 <td className="px-4 py-3">{row.gst}</td>
                 <td className="px-4 py-3">{row.method}</td>
                 <td className="px-4 py-3">
-                  <span className="bg-[#34C759] text-white px-3 py-3 rounded-[10px] text-xs font-medium ">
+                  <span className="bg-[#34C759] text-white px-3 py-2 rounded-[10px] text-xs font-medium ">
                     {row.status}
                   </span>
                 </td>

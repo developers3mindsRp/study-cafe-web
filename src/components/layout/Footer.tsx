@@ -95,7 +95,7 @@ export default function Footer() {
               className="ml-0 md:ml-24 space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
               style={{ maxHeight: '0px' /* collapsed by default */ }}
             >
-              <li><Link href="/?category=web-development" className="text-[16px] text-white transition-colors">About US</Link></li>
+              <li><Link href="/about" className="text-[16px] text-white transition-colors">About US</Link></li>
               <li><Link href="/?category=data-science" className="text-[16px] text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/?category=design" className="text-[16px] text-white transition-colors">Ethics Policy</Link></li>
               <li><Link href="/?category=business" className="text-[16px] text-white transition-colors">Terms of Use</Link></li>
