@@ -145,19 +145,19 @@ const countries = countryList.getNames();
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium">
-                        Mobile Number<span className="text-red-600">*</span>
-                      </label>
+                      <label className="block mb-1 font-medium">Mobile Number <span className="text-red-600">*</span></label>
                       <PhoneInput
                         placeholder="Enter phone number"
                         value={phone}
                         onChange={setPhone}
                         defaultCountry="IN"
-                        international
-                        limitMaxLength
-                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+
+                        limitMaxLength={true}
+                        className="w-full border border-black  px-3 py-2 rounded-md"
                       />
+
                     </div>
+
                   </div>
 
 
@@ -171,7 +171,7 @@ const countries = countryList.getNames();
 
             <div className="flex-1">
                 <label className="text-sm font-medium">Company Name</label>
-                <input type="email" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Your Company Name" />
+                      <input type="email" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1 placeholder:text-[12px] md:placeholder:text-[16px]" placeholder="Your Company Name" />
             </div>
             </div>
 
@@ -189,8 +189,8 @@ const countries = countryList.getNames();
                 </div>
 
                  <div className="flex-1">
-                <label className="text-sm font-medium">State<span className="text-red-600">*</span></label>
-                    <select name="state" value={form.state} onChange={handleChange}    className="w-full border border-[#1A1A1A] px-3 py-2">
+                <label className="text-sm font-medium ">State<span className="text-red-600">*</span></label>
+                    <select name="state" value={form.state} onChange={handleChange}    className="w-full border border-[#1A1A1A] px-3 py-2 mt-1 rounded-md">
                 <option value="">Select state</option>
                 {states.map(st => <option key={st} value={st}>{st}</option>)}
             </select>

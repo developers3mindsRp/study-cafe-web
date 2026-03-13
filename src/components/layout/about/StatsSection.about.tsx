@@ -29,17 +29,17 @@ const Stats_about = () => {
   return (
 
       <>
-          <section className="container mx-auto pt-4 md:pt-6 pb-12 w-[100%] px-4 text-left grid grid-cols-1 md:grid-cols-4 gap-8">
+          <section className="container mx-auto pt-4 md:pt-6 pb-12 w-[100%] px-4 text-left grid grid-cols-2 md:grid-cols-4 gap-8">
 
               {statsData.map((item, index) => (
                   <div
                       key={index}
-                      className="p-4 bg-[#09339B] rounded-lg text-center flex items-center justify-center gap-8"
+                      className="p-2 md:p-4 bg-[#09339B] rounded-lg text-center flex items-center justify-center gap-4 md:gap-8"
                   >
-                      <img src={item.icon} alt={item.title} />
+                      <img src={item.icon} alt={item.title} className='' />
 
                       <div className="flex flex-col">
-                          <h2 className="text-[30px] md:text-[16px] font-regular text-white">
+                          <h2 className="text-[14px] md:text-[16px] font-regular text-white">
                               {item.title}
                           </h2>
 
