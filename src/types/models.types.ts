@@ -181,15 +181,17 @@ export interface HomePageData {
 
 /** Membership plan for pricing page */
 export interface Membership {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  price: string;
-  duration: string;
+  slug: string;
+  description?: string;
+  price: string | number;
+  currency: string;
+  duration_days: number;
+  is_lifetime?: boolean;
   features: string[];
-  status: 'Active' | 'Inactive';
-  highlighted?: boolean;
-  order?: number;
+  is_popular?: boolean;
+  sort_order: number;
 }
 
 /** FAQ item */

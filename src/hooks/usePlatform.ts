@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/react-query';
-import { getHomePageData } from '@/services/platform.service';
-import type { HomePageData } from '@/types/models.types';
+import { getHomePageData, getMemberships } from '@/services/platform.service';
+import type { HomePageData, Membership } from '@/types/models.types';
 
 /**
  * Hook for home page data (hero, features, stats, testimonialHighlight).
@@ -13,6 +13,15 @@ export const useHomePageData = (initialData?: HomePageData) => {
     queryKey: queryKeys.platform.home(),
     queryFn: () => getHomePageData(),
     initialData,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+export const useMemberships = (initialData?: Membership[]) => {
+  return useQuery({
+    queryKey: queryKeys.platform.memberships(),
+    queryFn: () => getMemberships(),
+    initialData,
+    staleTime: 10 * 60 * 1000,
   });
 };

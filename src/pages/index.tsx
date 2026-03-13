@@ -8,20 +8,21 @@ import Testimonials from '@/components/layout/home/Testimonial.home';
 import BlogSection from '@/components/layout/home/BlogSection.home';
 import FAQSection from '@/components/layout/home/FaqSection.home';
 import Learning from '@/components/layout/home/Learning.home';
-import { getHomePageData } from '@/services/platform.service';
-import type { HomePageData } from '@/types/models.types';
+import { getHomePageData, getMemberships } from '@/services/platform.service';
+import type { HomePageData, Membership } from '@/types/models.types';
 
 interface HomeProps {
   homePageData: HomePageData | null;
+  memberships: Membership[] | null;
 }
 
-export default function Home({ homePageData }: HomeProps) {
+export default function Home({ homePageData, memberships }: HomeProps) {
   return (
     <PublicLayout>
       <HeroSection hero={homePageData?.hero} />
       <StatsSection stats={homePageData?.stats} />
       <FeaturedCourses />
-      <MembershipPricing />
+      <MembershipPricing memberships={memberships ?? undefined} />
       <Testimonials testimonials={homePageData?.testimonials} />
       <BlogSection/>
       <Learning/>
@@ -32,14 +33,18 @@ export default function Home({ homePageData }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   let homePageData: HomePageData | null = null;
+  let memberships: Membership[] | null = null;
 
   try {
-    homePageData = await getHomePageData();
+    [homePageData, memberships] = await Promise.all([
+      getHomePageData(),
+      getMemberships(),
+    ]);
   } catch (error) {
     console.error('Error fetching home data:', error);
   }
 
   return {
-    props: { homePageData },
+    props: { homePageData, memberships },
   };
 };

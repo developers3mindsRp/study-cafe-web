@@ -60,6 +60,7 @@ export const queryKeys = {
   platform: {
     all: ['platform'] as const,
     home: () => [...queryKeys.platform.all, 'home'] as const,
+    memberships: () => [...queryKeys.platform.all, 'memberships'] as const,
   },
   
   // Purchase/User Course keys
