@@ -114,7 +114,7 @@ export default function ReviewSection() {
             </div>
 
             {/* Message */}
-            <p className="text-[#696969] text-[16px] sm:text-sm leading-relaxed">
+            <p className="text-[#696969] text-[16px] sm:text-sm leading-relaxed ">
               {item.message}
             </p>
 
@@ -148,7 +148,7 @@ export default function ReviewSection() {
                   <h4 className="font-semibold text-gray-900 text-[18px]">
                     {item.name}
                   </h4>
-                  <p className="text-[#302A2A99] font-normal text-[18px]">{item.role}</p>
+                  <p className="text-[#302A2A99] font-normal xl:text-[18px]">{item.role}</p>
                 </div>
               </div>
 
@@ -167,12 +167,12 @@ export default function ReviewSection() {
                   />
                 ))}
               </div>
-              <span className="text-gray-400 text-[18px]  ml-6">
+              <span className="text-gray-400 xl:text-[18px]  ml-6">
             <li> 6 months ago</li>
           </span>
             </div>
             {/* Message */}
-            <p className="text-[#2F2A2A] text-[18px] mt-2 leading-relaxed">
+            <p className="text-[#2F2A2A] xl:text-[18px] mt-2 leading-relaxed md:line-clamp-3 xl:line-clamp-4">
               {item.message}
             </p>
           </div>
