@@ -42,14 +42,14 @@ export default function MembershipPricing() {
 
   return (
     <section
-      className="w-full py-12 md:py-12 bg-cover bg-center pb-10 pt-10"
+      className="w-full py-12 xl:py-12 bg-cover bg-center pb-10 pt-10"
       style={{ backgroundImage: "url('/images/membership-bg.svg')" }}
     >
       <div className="max-w-7xl mx-auto md:px-4 md:pt-4">
-        <h2 className="text-center text-white text-[30px] md:text-[40px] font-semibold ">
+        <h2 className="text-center text-white text-[30px] xl:text-[40px] font-semibold ">
           Choose Your  Membership
         </h2>
-        <p className="text-center text-blue-100 mt-2 text-[16px] md:text-[24px]">
+        <p className="text-center text-blue-100 mt-2 text-[16px] xl:text-[24px]">
           Get unlimited access to all courses and <br /> exclusive benefits
         </p>
 
@@ -158,7 +158,7 @@ export default function MembershipPricing() {
               >
                 {/* MOST POPULAR */}
                 {plan.highlight && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[#09339B] text-[24px] font-bold px-4 py-1 ">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[#09339B] text-[18px] xl:text-[24px] font-bold px-4 py-1 ">
                     {plan.badge}
                   </div>
                 )}
@@ -180,7 +180,7 @@ export default function MembershipPricing() {
                       </h3>
 
                       <p
-                        className={`text-[32px] font-bold leading-tight mt-1 ${plan.highlight ? "text-white" : "text-black"
+                        className={`xl:text-[32px] font-bold leading-tight mt-1 ${plan.highlight ? "text-white" : "text-black"
                           }`}
                       >
                         {plan.price}
@@ -195,7 +195,7 @@ export default function MembershipPricing() {
                     </div>
 
                     <button
-                      className={`mt-14 px-5 py-2 rounded-[10px] text-[20px] font-medium whitespace-nowrap transition ${plan.highlight
+                      className={`mt-14 px-5 py-2 rounded-[10px] xl:text-[20px] font-medium whitespace-nowrap transition ${plan.highlight
                           ? "bg-white text-[#09339B] hover:bg-blue-50"
                           : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
                         }`}
@@ -211,7 +211,7 @@ export default function MembershipPricing() {
                 <div className="-mx-6 h-[1px] bg-black " />
               )}
                 {/* FEATURES */}
-                <ul className="px-6 py-6 space-y-4 text-gray-400 text-[16px] flex-1 bg-[#F6F9FF]">
+                <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
                   {[...Array(5)].map((_, i) => (
                     <li key={i} className="flex gap-3">
                       <span>
