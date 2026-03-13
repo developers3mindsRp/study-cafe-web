@@ -116,7 +116,13 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     const highlight = !!plan.is_popular;
     const priceStr = formatPrice(plan.price, plan.currency);
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
-    const features = plan.features ?? [];
+    // Normalise: strip any HTML that may have been stored before the backend fix
+    const features = (plan.features ?? []).flatMap((f) => {
+      if (!f.includes('<')) return [f.trim()].filter(Boolean);
+      const plain = f.replace(/<\/p>/gi, '\n').replace(/<\/li>/gi, '\n').replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+      return plain.split('\n').map((l) => l.trim()).filter(Boolean);
+    });
 
     if (mobile) {
       return (

@@ -38,7 +38,7 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
           {c.language && (
             <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
               <span className="flex items-center gap-1">
-                <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language}
+                <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
               </span>
             </div>
           )}
@@ -76,7 +76,7 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
         {c.language && (
           <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
             <span className="flex items-center gap-1">
-              <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language}
+              <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
             </span>
           </div>
         )}
@@ -120,8 +120,8 @@ export default function FeaturedCourses() {
   const fetchCourses = useCallback((slug: string) => {
     setLoading(true);
     setStep(1);
-    getCoursesByCategory(slug === "all" ? null : slug, 24)
-      .then(setCourses)
+    getCoursesByCategory({ category: slug === "all" ? undefined : slug, limit: 24 })
+      .then((res) => setCourses(res.data))
       .catch(() => setCourses([]))
       .finally(() => setLoading(false));
   }, []);

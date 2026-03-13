@@ -241,6 +241,14 @@ export interface RelatedArticle {
   slug: string;
 }
 
+/** Paginated courses response from the server */
+export interface PaginatedCourses {
+  data: Course[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
 /** Course category (for filter tabs) */
 export interface CourseCat {
   id: number;
@@ -260,7 +268,7 @@ export interface Course {
   thumbnail_url?: string | null;
   enrolled_count?: number;
   ratings?: string | number | null;
-  language?: string | null;
+  language?: string[] | null;
   is_published?: boolean;
 }
 

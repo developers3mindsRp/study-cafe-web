@@ -1,66 +1,64 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
-import { queryKeys } from '@/lib/react-query';
-import * as coursesService from '@/services/courses.service';
-import { Header, PublicLayout } from '@/components/layout';
-
+import { GetServerSideProps } from 'next';
+import { PublicLayout } from '@/components/layout';
 import HeroSection_courses from '@/components/layout/course-listing/HeroSection.course';
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Breadcrumbs from '@/components/Breadcrumb';
+import { getCourseCats, getCoursesByCategory, CourseQueryParams } from '@/services/platform.service';
+import type { CourseCat, PaginatedCourses } from '@/types/models.types';
 
-/**
- * Home Page - Course Listing
- * 
- * This example shows how to use React Query with SSG (Static Site Generation)
- * for SEO-optimized course listings
- */
+interface Props {
+  cats: CourseCat[];
+  initialCourses: PaginatedCourses;
+  initialQuery: CourseQueryParams;
+}
 
-export default function Courses() {
-  const router = useRouter();
-  // Use the hook on the client side - data is already prefetched on the server
-  const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
+export default function Courses({ cats, initialCourses, initialQuery }: Props) {
   return (
     <PublicLayout>
-      {/* Breadcrumbs banner se pehle */}
-      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+      <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
         <Breadcrumbs />
       </div>
-
       <HeroSection_courses />
-      <CoursesPage />
-
+      <CoursesPage cats={cats} initialCourses={initialCourses} initialQuery={initialQuery} />
     </PublicLayout>
   );
 }
 
-/**
- * Static Site Generation (SSG)
- * Prefetch data at build time for SEO and performance
- */
-export const getStaticProps: GetStaticProps = async () => {
-  const queryClient = new QueryClient();
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
+  // Parse all filter/pagination params from the URL
+  // Use null (not undefined) for absent values — Next.js cannot serialize undefined in props
+  const category = typeof query.category === 'string' && query.category ? query.category : null;
+  const page     = Math.max(1, parseInt(query.page as string) || 1);
+  const search   = typeof query.q === 'string' ? query.q : '';
+  const sort     = (['latest', 'newest', 'oldest'].includes(query.sort as string)
+    ? query.sort as 'latest' | 'newest' | 'oldest'
+    : 'latest');
+  const price    = (['all', 'free', '0-500', '500-1000', '1000+'].includes(query.price as string)
+    ? query.price as 'all' | 'free' | '0-500' | '500-1000' | '1000+'
+    : 'all');
+
+  const initialQuery: CourseQueryParams = { category, page, search, sort, price, limit: 9 };
 
   try {
-    // Prefetch featured courses
-    await queryClient.prefetchQuery({
-      queryKey: [...queryKeys.courses.all, 'featured', 6],
-      queryFn: () => coursesService.getFeaturedCourses(6),
-    });
-  } catch (error) {
-    console.error('Error prefetching data:', error);
-  }
+    const [cats, initialCourses] = await Promise.all([
+      getCourseCats(),
+      getCoursesByCategory(initialQuery),
+    ]);
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    // Revalidate every 10 minutes
-    revalidate: 600,
-  };
+    return {
+      props: {
+        cats,
+        initialCourses,
+        initialQuery,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        cats: [],
+        initialCourses: { data: [], total: 0, page: 1, pageCount: 0 },
+        initialQuery,
+      },
+    };
+  }
 };

@@ -9,6 +9,7 @@ import {
   ArticleBySlug,
   CourseCat,
   Course,
+  PaginatedCourses,
 } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -116,16 +117,24 @@ export const getCourseCats = async (): Promise<CourseCat[]> => {
   return response.data.data;
 };
 
-/** Courses filtered by category slug. Pass null/undefined/'all' for all courses */
-export const getCoursesByCategory = async (
-  categorySlug?: string | null,
-  limit = 12
-): Promise<Course[]> => {
-  const params: Record<string, string | number> = { limit };
-  if (categorySlug && categorySlug !== 'all') params.category = categorySlug;
-  const response = await axiosInstance.get<ApiResponse<Course[]>>(
+export interface CourseQueryParams {
+  category?: string | null;
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: 'latest' | 'newest' | 'oldest';
+  price?: 'all' | 'free' | '0-500' | '500-1000' | '1000+';
+}
+
+/** Paginated course listing with optional category / search / sort / price filters */
+export const getCoursesByCategory = async (params: CourseQueryParams = {}): Promise<PaginatedCourses> => {
+  const { category, page = 1, limit = 9, search = '', sort = 'latest', price = 'all' } = params;
+  const query: Record<string, string | number> = { page, limit, sort, price };
+  if (category && category !== 'all') query.category = category;
+  if (search.trim()) query.search = search.trim();
+  const response = await axiosInstance.get<ApiResponse<PaginatedCourses>>(
     '/courses/by-category',
-    { params }
+    { params: query }
   );
   return response.data.data;
 };
