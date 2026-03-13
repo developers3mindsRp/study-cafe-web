@@ -10,11 +10,11 @@ const Learning = () => {
 
       {/* Center Content */}
       <div className="relative z-10 text-center ">
-        <h2 className="text-white text-[32px] md:text-[40px] font-bold mb-4 px-8">
+        <h2 className="text-white text-[32px] xl:text-[40px] font-bold mb-4 px-8">
           Ready to Start Learning?
         </h2>
 
-        <p className="text-white text-[18px] md:text-[24px] font-normal max-w-xl mx-auto mb-6 px-8">
+        <p className="text-white text-[18px] xl:text-[24px] font-normal max-w-xl mx-auto mb-6 px-8">
         Join thousands of students already learning on StudyCafe
         </p>
 

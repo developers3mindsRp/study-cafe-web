@@ -81,7 +81,7 @@ export default function Footer() {
             <h3 className="text-white font-normal mb-4 text-[24px] ml-0 md:ml-24 flex justify-between items-center md:block">
               Useful Links
               <button
-                className="md:hidden text-white text-[24px] focus:outline-none"
+                className="md:hidden text-white xl:text-[24px] focus:outline-none"
                 aria-expanded={usefulOpen}
                 aria-controls="useful-links-list"
                 onClick={() => setUsefulOpen(prev => !prev)}

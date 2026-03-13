@@ -12,21 +12,21 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative bg-[url('/images/home/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-[800px]"
+      className="relative bg-[url('/images/home/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-auto xl:h-[800px]"
     >
-      <div className="container mx-auto px-4  md:py-24 lg:py-24 flex flex-col lg:flex-row items-center">
+      <div className="container mx-auto px-4  md:py-12 lg:py-24 xl:py-24 2xl:py-24 flex flex-col lg:flex-row items-center">
 
         {/* TEXT CONTENT */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 md:mt-0 ">
-          <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg text-white border border-[#a5aab8]">
+          <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg xl:text-lg text-white border border-[#a5aab8]">
             Welcome to StudyCafe Learning Platform
           </p>
 
-          <h1 className="text-[30px] sm:text-3xl md:text-[40px] lg:text-6xl font-semibold text-white leading-tight md:mb-10">
+          <h1 className="text-[30px] sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-semibold text-white leading-tight md:mb-10">
             Master Your Skills with  Professional Courses
           </h1>
 
-          <p className="mt-4 text-[16px] md:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
+          <p className="mt-4 text-[16px] md:text-[18px] xl:text-[24px] 2xl:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
             Learn from industry experts, get certified, and boost your <br className="hidden" />
             career with our comprehensive online courses
           </p>
@@ -53,11 +53,11 @@ const HeroSection = () => {
         </div>
 
         {/* IMAGE */}
-        <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
+        <div className="md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
           <img
             src="/images/home/home.png"
             alt="Learning illustration"
-            className="px-4 md:w-full  object-contain "
+            className="px-4 md:w-auto xl:w-full 2xl:w-full object-contain "
           />
         </div>
 

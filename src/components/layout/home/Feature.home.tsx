@@ -178,16 +178,16 @@ export default function FeaturedCourses() {
 
   return (
     <section
-      className="md:py-14 "
+      className="xl:py-14 "
     >
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
           <div>
-            <h2 className="text-[36px] md:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
+            <h2 className="text-[36px] xl:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
               Featured Courses
             </h2>
-            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] md:text-[20px] leading-6 text-center px-8 md:px-0">
+            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] xl:text-[20px] leading-6 text-center md:text-left px-8 md:px-0">
               Explore our most popular courses designed by industry experts
             </p>
           </div>
@@ -232,7 +232,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Desktop: inline buttons */}
-          <div className="hidden sm:flex flex-wrap gap-2 md:gap-4 mt-12">
+          <div className="hidden sm:flex md:flex-wrap gap-2 xl:gap-4 mt-12">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -309,7 +309,7 @@ export default function FeaturedCourses() {
                 key={c.id}
                 className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
               >
-                <div className="relative w-full h-[250px] md:h-[250px]">
+                <div className="relative w-full h-[250px] md:h-[200px] xl:h-[250px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
                   <span className="absolute flex  gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
@@ -326,7 +326,7 @@ export default function FeaturedCourses() {
                     </span>
                   </div>
 
-                  <h3 className="text-[22px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2">
+                  <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
                     {c.title}
                   </h3>
 
@@ -336,13 +336,13 @@ export default function FeaturedCourses() {
 
                   <div className="flex justify-between items-center mt-4">
                     <div>
-                      <span className="line-through text-[#AFAFAF] text-[26px]">{c.oldPrice}</span>
-                      <span className="text-[#252525] font-normal text-[22px] md:text-[26px] ml-2">
+                      <span className="line-through text-[#AFAFAF] xl:text-[26px]">{c.oldPrice}</span>
+                      <span className="text-[#252525] font-normal text-[22px] xl:text-[26px] ml-2">
                         {c.newPrice}
                       </span>
                     </div>
                     <button
-                      className="bg-[#09339B]  text-white px-4 py-2 rounded-md text-sm md:text-base"
+                      className="bg-[#09339B]  text-white md:px-2 xl:px-4 md:py-2 xl:py-2 rounded-md text-sm md:text-[14px] xl:text-base"
                       onClick={() => (window.location.href = "/course/1")}
                     >
                       View Course
