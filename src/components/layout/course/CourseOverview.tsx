@@ -122,7 +122,7 @@ export default function CourseOverview() {
           </h3>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 lg:px-32 mt-8 sm:mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
             {bonuses.map((bonus, index) => (
               <div
                 key={index}

@@ -309,7 +309,7 @@ export default function FeaturedCourses() {
                 key={c.id}
                 className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
               >
-                <div className="relative w-full h-[250px] md:h-[200px] xl:h-[250px]">
+                <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
                   <Image src={c.img} alt={c.title} fill className="object-fit" />
                   <span className="absolute flex  gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
@@ -336,13 +336,13 @@ export default function FeaturedCourses() {
 
                   <div className="flex justify-between items-center mt-4">
                     <div>
-                      <span className="line-through text-[#AFAFAF] xl:text-[26px]">{c.oldPrice}</span>
-                      <span className="text-[#252525] font-normal text-[22px] xl:text-[26px] ml-2">
+                      <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{c.oldPrice}</span>
+                      <span className="text-[#252525] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">
                         {c.newPrice}
                       </span>
                     </div>
                     <button
-                      className="bg-[#09339B]  text-white md:px-2 xl:px-4 md:py-2 xl:py-2 rounded-md text-sm md:text-[14px] xl:text-base"
+                      className="bg-[#09339B]  text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base"
                       onClick={() => (window.location.href = "/course/1")}
                     >
                       View Course

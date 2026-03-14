@@ -30,7 +30,7 @@ export default function BannerSection() {
                 <p className="bg-[#DEEBFD] w-[320px] md:w-[360px] p-2 px-4 md:p-4 rounded-[10px] text-[#09339B] text-[14px] md:text-[16px] font-Outfit font-normal">
                   Starts at Thursday November 27, 2025 – 18:00
                 </p>
-                <h1 className="text-[20px] md:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
+                <h1 className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
                   Certification Course On Practical Filing of GSTR-9 & GSTR-9C
                 </h1>
 
@@ -153,11 +153,11 @@ export default function BannerSection() {
                 >
                   <div className="mt-0 md:mt-4 flex flex-col sm:flex-row md:items-start items-center gap-3">
                     {/* Price */}
-                    <p className="text-[30px] sm:text-[26px] lg:text-[30px]">
+                    <p className="text-[30px] md:text-[26px] xl:text-[30px]">
                       <span className="line-through text-[#929292] font-medium mr-2">
                         ₹2,000
                       </span>
-                      <span className="text-black font-bold text-[30px] sm:text-[40px]">
+                      <span className="text-black font-bold text-[30px] xl:text-[40px]">
                         ₹699
                       </span>
                     </p>
@@ -172,9 +172,9 @@ export default function BannerSection() {
                     {/* Buy Now */}
                     <button
                       onClick={handleClick}
-                      className="w-full sm:w-auto py-1 md:py-2 px-2 sm:px-28
+                      className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28
             border-2 border-white rounded-[10px]
-            text-base sm:text-lg font-medium text-white
+            text-base xl:text-lg font-medium text-white
             bg-[#09339B] transition"
                     >
                       Buy Now
@@ -183,10 +183,10 @@ export default function BannerSection() {
                     {/* View Membership */}
                     <Link href="/courses" className="w-full sm:w-auto">
                       <button
-                        className="w-full sm:w-auto py-2 md:py-3 px-2 sm:px-16
+                        className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16
               bg-white text-[#09339B]
               rounded-[10px] flex items-center justify-center gap-2
-              text-base md:text-[20px]
+              text-base xl:text-[20px]
               border border-[#09339B]
               transition font-semibold"
                       >
@@ -240,7 +240,7 @@ export default function BannerSection() {
                     hidden md:flex 
                     gap-3 sm:gap-6
                     justify-center sm:justify-between
-                    text-[8px] sm:text-[13px]
+                    text-[9px] xl:text-[13px]
                     font-bold 
                   "
                 >

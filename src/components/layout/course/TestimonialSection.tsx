@@ -65,7 +65,7 @@ export default function Testimonials_course() {
                     {[...testimonials, ...testimonials].map((item, index) => (
                     <div
                         key={index}
-                        className="min-w-[460px] relative"
+                        className="md:min-w-[350px] xl:min-w-[460px] relative"
                     >
                         <div className="mt-6 relative flex items-center justify-between">
                         {/* Image */}

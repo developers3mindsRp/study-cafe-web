@@ -53,11 +53,11 @@ const HeroSection = () => {
         </div>
 
         {/* IMAGE */}
-        <div className="md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
+        <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
           <img
             src="/images/home/home.png"
             alt="Learning illustration"
-            className="px-4 md:w-auto xl:w-full 2xl:w-full object-contain "
+            className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full object-contain "
           />
         </div>
 
