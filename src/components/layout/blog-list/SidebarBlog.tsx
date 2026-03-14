@@ -59,7 +59,7 @@ export default function SidebarBlog() {
                 className="rounded w-full"
               />
 
-              <p className="text-[15px] font-bold mt-2 md:text-[20px]">
+              <p className="text-[16px] font-bold mt-2 xl:text-[20px] line-clamp-2">
                 {post.title}
               </p>
          <div className="hidden md:block border-b border-[#AFAFAF] p-2 w-full"></div>
@@ -106,7 +106,7 @@ export default function SidebarBlog() {
 
               
 
-              <p className="text-[15px] font-bold mt-2 md:text-[20px]">
+              <p className="text-[15px] font-bold mt-2 md:text-[20px] line-clamp-2">
                 {post.title}
               </p>
              <div className="hidden md:block border-b border-[#AFAFAF] p-2 w-full"></div>
@@ -148,10 +148,10 @@ export default function SidebarBlog() {
       <hr />
 
           {/* Contact Box */}
-          <div className=" rounded px-5 space-y-4">
+          <div className=" rounded xl:px-5 space-y-4">
             <div className="bg-[#09339B] shadow rounded p-5 space-y-3 md:space-y-6 text-white text-center ">
                 <h2 className="text-[20px] font-bold">StudyCafe Membership</h2>
-                <p className="text-[18px] ">For More details about Membership Click Join Membership Button</p>
+                <p className="xl:text-[18px] ">For More details about Membership Click Join Membership Button</p>
                 <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded ">View Membership</button>
             </div>
            

@@ -43,7 +43,7 @@ const Message_about = () => {
                           A Message from Our Founder 
                       </h2>
 
-                      <div className="flex flex-col md:flex-row gap-6 items-start">
+                      <div className="flex flex-col xl:flex-row gap-6 items-start">
 
                           {/* Founder Image */}
                           <div className="bg-white rounded-xl flex-shrink-0 mx-auto ">
@@ -62,7 +62,7 @@ const Message_about = () => {
 
                           {/* Text */}
                           <div>
-                              <p className="text-[15px] leading-relaxed font-regular text-center md:text-left">
+                              <p className="text-[15px] leading-relaxed font-regular text-center xl:text-left">
                                   Studycafe is D2C Edtech Company. Studycafe provides a range of industry-specific modern courses on ChatGPT, AI Tools, CA Practice Automation, How to Grow CA Practice, Business Automation, Power BI, Advance Microsoft Excel, Microsoft PowerPoint, Income Tax, TDS, GST, SAP, and Business Communication, etc. The membership subscription provided by Studycafe helps in availing highly customized and curated services catering to the needs of the member. The platform strives to empower its learning community and open several opportunities for them in the modern market.
                               </p>
 

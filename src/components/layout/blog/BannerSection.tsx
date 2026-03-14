@@ -4,7 +4,7 @@ const BannerSection_blog = () => {
   return (
    <section className='bg-[url("/images/blog_bg.svg")] bg-no-repeat bg-cover bg-center '>
 
-   <div className='container mx-auto pt-4 md:pt-20 pb-12 md:pb-32 w-[100%] md:h-[580px] px-4'>
+   <div className='container mx-auto pt-4 xl:pt-20 pb-12 xl:pb-32 w-[100%] xl:h-[580px] px-4'>
  
       <div className="flex items-center justify-center mb-4 mt-4 md:mt-6">
         <p className="text-[16px] bg-white p-3 rounded-[10px] font-medium">
@@ -14,8 +14,8 @@ const BannerSection_blog = () => {
 
 
     <div className='text-center'>
-        <h1 className='text-[32px] md:text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Blogs</h1>
-        <h3 className='text-[#252525] text-[16px] md:text-[26px] px-4'>Stay updated with the latest insights, tips, and industry trends from our experts</h3>
+        <h1 className='text-[32px] md:text-[40px] xl:text-[62px] font-bold text-[#09339B] mb-4'>Explore Our Blogs</h1>
+        <h3 className='text-[#252525] text-[16px] md:text-[20px] xl:text-[26px] px-4'>Stay updated with the latest insights, tips, and industry trends from our experts</h3>
     
    <div className="mt-6 md:mt-10 w-full max-w-2xl mx-auto">
       <div className="relative">

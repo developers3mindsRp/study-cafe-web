@@ -217,7 +217,7 @@ const countries = countryList.getNames();
             </div>
           </div>
 
-         <div className="flex justify-end items-center mt-6">
+         <div className="flex justify-end items-center mt-6 ">
 
 
 
