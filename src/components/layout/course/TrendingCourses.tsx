@@ -103,7 +103,7 @@ const TrendingCourses = () => {
       <div className="hidden md:grid md:grid-cols-3 gap-6 mt-10 container mx-auto px-4">
         {courses.map((c, i) => (
           <div key={i} className="rounded-xl shadow-md border bg-white overflow-hidden text-left">
-            <div className="relative w-full h-[243px]">
+            <div className="relative w-full md:h-[200px] xl:h-[243px]">
               <Image src={c.img} alt={c.title} fill className="object-fit" />
               <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm shadow">
                 ⭐ {c.rating}
@@ -120,7 +120,7 @@ const TrendingCourses = () => {
                 </span>
               </div>
 
-              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4">
+              <h3 className="font-medium md:text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4">
                 {c.title}
               </h3>
 
@@ -130,12 +130,12 @@ const TrendingCourses = () => {
 
               <div className="flex justify-between items-center">
                 <div>
-                  <span className="line-through text-gray-400 text-[26px]">{c.oldPrice}</span>
-                  <span className="text-[#252525] font-normal text-[26px] ml-2">{c.newPrice}</span>
+                  <span className="line-through text-gray-400 xl:text-[26px]">{c.oldPrice}</span>
+                  <span className="text-[#252525] font-normal xl:text-[26px] ml-2">{c.newPrice}</span>
                 </div>
 
                 <button
-                  className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                  className="text-sm bg-[#09339B] hover:bg-blue-700 text-white md:px-3 xl:px-4 md:py-1 xl:py-2 rounded-md flex items-center gap-2"
                   onClick={() => (window.location.href = "/course/1")}
                 >
                   View Course

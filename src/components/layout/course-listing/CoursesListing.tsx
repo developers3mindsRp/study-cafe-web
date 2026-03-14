@@ -26,7 +26,7 @@ function CourseCard({ c }: { c: Course }) {
 
   return (
     <div className="bg-white shadow-md rounded-md overflow-hidden">
-      <div className="relative w-full h-[200px] md:h-[243px]">
+      <div className="relative w-full h-[200px] xl:h-[243px]">
         <Image src={thumbnail} alt={c.title} fill className="object-cover" />
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
@@ -43,7 +43,7 @@ function CourseCard({ c }: { c: Course }) {
             </span>
           </div>
         )}
-        <h3 className="text-[16px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
+        <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
           {c.title}
         </h3>
         {enrolled && (
@@ -55,14 +55,14 @@ function CourseCard({ c }: { c: Course }) {
         <div className="flex justify-between items-center mt-2 md:mt-4">
           <div>
             {newPrice && (
-              <span className="line-through text-gray-400 text-[26px]">{oldPrice}</span>
+              <span className="line-through text-gray-400 xl:text-[26px]">{oldPrice}</span>
             )}
-            <span className="text-[#252525] font-normal text-[16px] md:text-[26px] ml-2">
+            <span className="text-[#252525] font-normal text-[16px] xl:text-[26px] ml-2">
               {newPrice ?? oldPrice}
             </span>
           </div>
           <Link href={href}>
-            <button className="bg-[#09339B] text-white px-4 py-2 rounded-md">View Course</button>
+            <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2 rounded-md">View Course</button>
           </Link>
         </div>
       </div>
@@ -117,7 +117,6 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
   // ── local state ──
   const [navigating, setNavigating] = useState(false);
 
-  // Show loading overlay when Next.js router is transitioning
   useEffect(() => {
     const start = () => setNavigating(true);
     const end   = () => setNavigating(false);

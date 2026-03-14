@@ -14,13 +14,13 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
   const testimonials = testimonialsProp && testimonialsProp.length > 0 ? testimonialsProp : FALLBACK_TESTIMONIALS;
 
   return (
-    <section className="py-12 md:py-20 bg-white">
+    <section className="py-12 xl:py-20 bg-white">
       <div className=" mx-auto px-4 text-center">
         {/* Heading */}
-        <h2 className="text-[30px] md:text-[40px] font-semibold text-gray-900">
+        <h2 className="text-[30px] xl:text-[40px] font-semibold text-gray-900">
           What Our Students Say
         </h2>
-        <p className="mt-3 text-[#454545] text-[16px] md:text-[24px] px-6 md:px-0">
+        <p className="mt-3 text-[#454545] text-[16px] md:text-[20px] xl:text-[24px] px-6 md:px-0">
           Don't just take our word for it - hear from thousands of <br className="hidden md:block" />
           satisfied students
         </p>
@@ -61,10 +61,10 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
               {[...testimonials, ...testimonials].map((item, index) => (
                 <div
                   key={`${item.id ?? index}-${index}`}
-                  className="marquee-card relative border border-[#17254E] rounded-xl p-6 text-left min-w-[360px] max-w-[400px] flex-shrink-0 flex flex-col justify-between"
+                  className="marquee-card relative border border-[#17254E] rounded-xl p-6 text-left md:min-w-[250px] md:max-w-[350px] xl:min-w-[360px] xl:max-w-[400px] flex-shrink-0 flex flex-col justify-between"
                 >
                   <img src="/images/quote.png" alt="quote" className="absolute -top-6 -left-2 w-14 h-10" />
-                  <p className="text-[#696969] text-[20px] mt-2 leading-relaxed">{item.quote}</p>
+                  <p className="text-[#696969] xl:text-[20px] mt-2 leading-relaxed">{item.quote}</p>
                   <div className="mt-6 flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-gray-900 text-[30px]">{item.authorName}</h4>

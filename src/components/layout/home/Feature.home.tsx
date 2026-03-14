@@ -64,7 +64,7 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
 
   return (
     <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
-      <div className="relative w-full h-[250px]">
+      <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
         <Image src={thumbnail} alt={c.title} fill className="object-cover" />
         {rating && (
           <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
@@ -80,7 +80,7 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
             </span>
           </div>
         )}
-        <h3 className="text-[22px] md:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+        <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
         {enrolled && (
           <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
             <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -88,11 +88,11 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
         )}
         <div className="flex justify-between items-center mt-4">
           <div>
-            {newPrice && <span className="line-through text-[#AFAFAF] text-[26px]">{oldPrice}</span>}
-            <span className="text-[#252525] font-normal text-[22px] md:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
+            {newPrice && <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{oldPrice}</span>}
+            <span className="text-[#252525] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
           </div>
           <Link href={href}>
-            <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm md:text-base">View Course</button>
+            <button className="bg-[#09339B] text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base">View Course</button>
           </Link>
         </div>
       </div>
@@ -109,14 +109,12 @@ export default function FeaturedCourses() {
 
   const catRef = useRef<HTMLDivElement | null>(null);
 
-  // Load categories once
   useEffect(() => {
     getCourseCats()
       .then((rows) => setCats([ALL_TAB, ...rows]))
       .catch(() => {});
   }, []);
 
-  // Load courses on category change
   const fetchCourses = useCallback((slug: string) => {
     setLoading(true);
     setStep(1);
@@ -147,15 +145,15 @@ export default function FeaturedCourses() {
   };
 
   return (
-    <section className="md:py-14">
+    <section className="xl:py-14">
       <div className="container mx-auto px-4">
         {/* Heading + Category Filter */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
           <div>
-            <h2 className="text-[36px] md:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
+            <h2 className="text-[36px] xl:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
               Featured Courses
             </h2>
-            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] md:text-[20px] leading-6 text-center px-8 md:px-0">
+            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] xl:text-[20px] leading-6 text-center md:text-left px-8 md:px-0">
               Explore our most popular courses designed by industry experts
             </p>
           </div>
@@ -185,7 +183,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Desktop: inline buttons */}
-          <div className="hidden sm:flex flex-wrap gap-2 md:gap-4 mt-12">
+          <div className="hidden sm:flex md:flex-wrap gap-2 xl:gap-4 mt-12">
             {cats.map((cat) => (
               <button
                 key={cat.id}

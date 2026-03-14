@@ -16,7 +16,7 @@ const Awards_about = () => {
                      
                   </div>
 
-                  <div className="rounded-lg  bg-white grid grid-cols-2 gap-4">
+                  <div className="rounded-lg  bg-white grid grid-cols-1 md:grid-cols-2 gap-4">
 
                    
                           <div className="flex flex-col  rounded-full mb-4">

@@ -91,10 +91,10 @@ export default function BlogSection() {
     <section
       className="w-full py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center "
     >
-      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
+      <h2 className="text-[30px] xl:text-[40px] font-semibold text-[#1A1A1A]">
         Latest from Our Blog
       </h2>
-      <p className="text-[16px] md:text-[24px] text-gray-600 max-w-md mx-auto mt-2">
+      <p className="text-[16px] md:text-[20px] xl:text-[24px] text-gray-600 max-w-md mx-auto mt-2">
         Stay updated with the latest insights, tips, and industry trends
       </p>
 
@@ -140,7 +140,7 @@ export default function BlogSection() {
       <div className="hidden md:flex gap-6 mt-10 justify-center container mx-auto px-6">
         {visibleBlogs.map((b, i) => (
           <div key={i} className=" rounded-xl shadow-md border bg-white overflow-hidden text-left">
-          <div className="relative w-full h-[233px]">
+          <div className="relative w-full xl:h-[233px]">
               <img
                 src={b.img}
                 alt="blog"
@@ -156,11 +156,11 @@ export default function BlogSection() {
             
    
             <div className="p-4">
-              <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
+              <div className="flex items-center gap-2 md:text-[14px] xl:text-[16px] text-[#AFAFAF] mb-3">
                 <span className="flex gap-1"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
 
               </div>
-              <h3 className="font-medium text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2 ">
+              <h3 className="font-medium md:text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2 ">
                 {b.title}
               </h3>
               <Link href="/blogs/blog-detail">

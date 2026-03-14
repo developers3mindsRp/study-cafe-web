@@ -21,9 +21,9 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
   return (
     <section className=" w-full  py-4 md:py-20 px-4 flex flex-col
       items-center text-center bg-[#FAFBFB] mb-4 md:mb-0">
-      <h2 className="text-[32px] md:text-[40px] font-semibold text-[#1A1A1A]">Frequently
+      <h2 className="text-[32px] xl:text-[40px] font-semibold text-[#1A1A1A]">Frequently
         Asked Questions</h2>
-      <p className="text-[16px] md:text-[24px] text-[#454545] max-w-xl mt-2">
+      <p className="text-[16px] xl:text-[24px] text-[#454545] max-w-xl mt-2">
         Got questions? We've got answers. Find everything you need to
         know about StudyCafe.
       </p>
@@ -35,7 +35,7 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
               className="w-full flex justify-between items-center p-4 transition bg-white"
             >
-              <span className="font-medium text-[20px] text-black text-left bg-white">{index + 1}. {item.question}</span>
+              <span className="font-medium md:text-[18px] xl:text-[20px] text-black text-left bg-white">{index + 1}. {item.question}</span>
               <svg
                 className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
                 fill="none"
@@ -47,7 +47,7 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
               </svg>
             </button>
             {openIndex === index && (
-              <div className="px-4 p-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+              <div className="px-4 p-4 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
                 <div className="prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer }}/>
               </div>
             )}

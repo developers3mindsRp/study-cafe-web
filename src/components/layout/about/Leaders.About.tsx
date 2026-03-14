@@ -6,8 +6,8 @@ const Leader_about = () => {
   return (
 
       <>
-          <section className="py-4">
-              <div className="container mx-auto pt-4  pb-12 w-full px-4 text-left grid grid-cols-1 md:grid-cols-2 gap-8 ">
+          <section className="md:py-4">
+              <div className="container mx-auto md:pt-4  pb-12 w-full px-4 text-left grid grid-cols-1 md:grid-cols-2 gap-8 ">
 
                   <div className='text-center items-center mt-24'>
                       <h1 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-4">
@@ -18,11 +18,11 @@ const Leader_about = () => {
                       </p>
                   </div>
 
-                  <div className="rounded-lg  bg-white grid grid-cols-2 gap-12">
+                  <div className="rounded-lg  bg-white grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mx-auto">
 
                    
                           <div className="flex flex-col  rounded-full mb-4">
-                          <img src="/images/deepak.svg" alt="" className="" />
+                          <img src="/images/deepak.svg" alt="" className="w-[350px] md:w-auto" />
                           <div className='flex justify-between pr-4'>
                               <h1 className='text-[25px] font-medium text-[#454545]'>CA Deepak Gupta</h1>
                               <img src="/images/linkedin.svg" alt="" className='w-4 h-4 mt-4' />
@@ -31,7 +31,7 @@ const Leader_about = () => {
                           </div>
                      
                           <div className="flex flex-col  rounded-full mb-4">
-                          <img src="/images/pratibha.svg" alt="" className="" />
+                          <img src="/images/pratibha.svg" alt="" className="w-[350px] md:w-auto" />
                           <div className='flex justify-between pr-4'>
                               <h1 className='text-[25px] font-medium text-[#454545]'>CA Pratibha Goyal</h1>
                               <img src="/images/linkedin.svg" alt="" className='w-4 h-4 mt-4' />

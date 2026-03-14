@@ -11,13 +11,11 @@ const DEFAULT_STATS = [
 ];
 
 function parseStatValue(raw) {
-  // Strip commas and any trailing non-numeric chars (e.g. "95%" → 95, "12,847" → 12847)
   const n = Number(String(raw).replace(/,/g, '').replace(/[^0-9.]/g, ''));
   return Number.isFinite(n) ? n : 0;
 }
 
 function getSuffix(stat) {
-  // If the DB value itself ends with a non-numeric char use that, else use stat.suffix
   const raw = String(stat.value);
   const trailingNonNum = raw.match(/[^0-9,]+$/);
   if (trailingNonNum) return trailingNonNum[0];
@@ -26,22 +24,21 @@ function getSuffix(stat) {
 
 export default function StatsSection({ stats: statsProp }) {
   const stats = statsProp?.length ? statsProp : DEFAULT_STATS;
-  console.log("stats", stats);
   return (
     <section className="bg-white py-10 md:py-16 px-4 ">
       <div className="container mx-auto px-4 bg-[#09339B] rounded-[10px] md:rounded-full p-6 ">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center px-2">
           {stats.map((stat, i) => (
             <div key={i} className="flex flex-col md:flex-row items-center gap-3">
-              <div className="bg-[#FFFFFF] p-2 md:p-6 rounded-full">
+              <div className="bg-[#FFFFFF] p-2 xl:p-6 rounded-full">
                 <img
                   src={ICONS[i % ICONS.length]}
                   alt={stat.label}
-                  className="w-12 h-12 md:w-16 md:h-16"
+                  className="w-12 h-12 md:w-6 md:h-6 xl:w-16 xl:h-16"
                 />
               </div>
               <div className="md:flex flex-col">
-                <h3 className="text-[15px] md:text-[40px] text-left font-bold text-[#FFFFFF]">
+                <h3 className="text-[15px] xl:text-[40px] text-left font-bold text-[#FFFFFF]">
                   <CountUp
                     end={parseStatValue(stat.value)}
                     duration={2}
