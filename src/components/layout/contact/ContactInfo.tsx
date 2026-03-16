@@ -90,7 +90,7 @@ export default function ContactInfo() {
                         </p>
                     </div>
 
-                    <button className="text-[#09339B] bg-[#F9F9FB] border border-[#09339B] px-5 py-2  xl:px-6 xl:py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition w-full md:w-auto">
+                    <button className="text-[#09339B] bg-[#F9F9FB] border border-[#09339B] md:px-5 py-2  xl:px-6 xl:py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition w-full md:w-auto">
                         Contact Marketing Team
                     </button>
 
@@ -109,7 +109,7 @@ export default function ContactInfo() {
                         </p>
                     </div>
 
-                    <button className="text-[#09339B] bg-[#F9F9FB] border border-[#09339B] px-5 py-2 md:px-6 md:py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition w-full md:w-auto">
+                    <button className="text-[#09339B] bg-[#F9F9FB] border border-[#09339B] px-5 py-2 xl:px-6 md:py-3 rounded-lg hover:bg-[#09339B] hover:text-white transition w-full md:w-auto">
                         Contact Accounting Team
                     </button>
 

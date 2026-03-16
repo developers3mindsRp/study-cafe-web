@@ -73,8 +73,8 @@ export default function EditProfile() {
 const countries = countryList.getNames();
 
   return (
-<div className="w-full md:py-10 px-4 md:px-10">
-  <div className="container md:px-4 mx-auto grid md:grid-cols-3 gap-8 mb-10">
+<div className="w-full xl:py-10 ">
+  <div className="container  mx-auto grid md:grid-cols-3 gap-8 mb-10">
         
        {/* LEFT SIDEBAR */}
       <div className="md:col-span-1 ">
@@ -83,8 +83,8 @@ const countries = countryList.getNames();
 
 
         {/* RIGHT CONTENT */}
-        <div className="md:col-span-2 bg-white  rounded-xl md:p-6 md:mt-36   ">
-             <div className=" border bg-[#F0F2F4] rounded-lg flex overflow-x-auto md:overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
+        <div className="md:col-span-2 bg-white  rounded-xl md:p-6">
+             <div className=" border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
 
         {[
           { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
@@ -96,10 +96,10 @@ const countries = countryList.getNames();
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`md:flex-1 px-0 md:py-3 last:border-none transition-all text-[10px] md:text-[16px]    ${
+            className={`md:flex-1 px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px]  ${
               active === tab.key
-                ? "bg-white text-[#454545] rounded-[15px] m-2  px-2 py-2 "
-                : " text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 "
+                ? "bg-white text-[#454545] rounded-[15px] m-2  px-4 py-2 "
+                : " text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 px-4 "
             }`}
           >
           <div className="flex gap-2 justify-center items-center">
@@ -112,7 +112,7 @@ const countries = countryList.getNames();
             />
 
             {/* Hide text on mobile */}
-            <span className="hidden md:inline whitespace-nowrap">
+            <span className="hidden  xl:inline whitespace-nowrap">
               {tab.label}
             </span>
           </div>
@@ -147,7 +147,7 @@ const countries = countryList.getNames();
                     <div>
                       <label className="block mb-1 font-medium">Mobile Number <span className="text-red-600">*</span></label>
                       <PhoneInput
-                        placeholder="Enter phone number"
+                        placeholder="Enter Mobile number"
                         value={phone}
                         onChange={setPhone}
                         defaultCountry="IN"

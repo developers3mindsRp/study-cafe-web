@@ -72,7 +72,7 @@ const courses = [
                    key={c.id}
                    className="bg-white shadow-md rounded-md overflow-hidden flex flex-col"
                  >
-                   <div className="relative w-full h-[180px] md:h-[180px] lg:h-[250px]">
+                   <div className="relative w-full h-[180px] md:h-[180px] xl:h-[220px]">
                      <Image src={c.img} alt={c.title} fill className="object-fit" />
                      <span className="absolute flex  gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
                        <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
@@ -89,7 +89,7 @@ const courses = [
                        </span>
                      </div>
    
-                     <h3 className="text-[18px] md:text-[22px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
+                     <h3 className="text-[18px] xl:text-[22px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
                        {c.title}
                      </h3>
    
@@ -100,7 +100,7 @@ const courses = [
                      <div className="flex justify-between items-center mt-4">
           
                        <button
-                         className="bg-white border border-[#09339B]  text-[#09339B] px-4 py-2 rounded-md text-sm md:text-base font-medium hover:bg-[#09339B] hover:text-white transition-colors duration-300"
+                         className="bg-white border border-[#09339B]  text-[#09339B] px-4 py-1 md:py-2 rounded-md text-sm md:text-base font-medium hover:bg-[#09339B] hover:text-white transition-colors duration-300"
                          onClick={() => (window.location.href = "/course/1")}
                        >
                          Start Learning

@@ -299,7 +299,7 @@ const visibleCourses = filtered.slice(startIndex, endIndex);
                   <span className="text-[#252525] font-normal text-[16px] xl:text-[26px]
                  ml-2">{c.newPrice}</span>
                 </div>
-                <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2
+                <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2 p-4
                   rounded-md"  onClick={() => window.location.href = "/course/1"}>
                   View Course
                 </button>
