@@ -21,7 +21,12 @@ export const useMemberships = (initialData?: Membership[]) => {
   return useQuery({
     queryKey: queryKeys.platform.memberships(),
     queryFn: () => getMemberships(),
-    initialData,
+    // When initialData is provided from SSR (getServerSideProps), mark it as
+    // fresh so the stale cache from a previous HydrationBoundary (plans page
+    // getStaticProps) doesn't override it and cause a hydration mismatch.
+    ...(initialData !== undefined
+      ? { initialData, initialDataUpdatedAt: Date.now() }
+      : {}),
     staleTime: 10 * 60 * 1000,
   });
 };

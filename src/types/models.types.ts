@@ -272,6 +272,69 @@ export interface Course {
   is_published?: boolean;
 }
 
+/** Recording inside a session */
+export interface CourseRecording {
+  id: number;
+  url: string;
+  source?: string;
+  is_visible?: boolean;
+}
+
+/** A single session (day) within a batch */
+export interface CourseSession {
+  id: number;
+  batch_id: number;
+  day_number: number;
+  title: string;
+  scheduled_at?: string | null;
+  meet_link?: string | null;
+  recordings: CourseRecording[];
+}
+
+/** A batch containing multiple sessions */
+export interface CourseBatch {
+  id: number;
+  name: string;
+  start_date?: string | null;
+  end_date?: string | null;
+  meet_link?: string | null;
+  created_at?: string;
+  sessions: CourseSession[];
+}
+
+/** Full course detail returned by GET /courses/:id */
+export interface CoursePublicDetail {
+  id: number;
+  title: string;
+  short_title?: string | null;
+  slug?: string | null;
+  brief_description?: string | null;
+  description?: string | null;
+  curriculum?: string | null;
+  learn_outcomes?: string | null;
+  requirements?: string | null;
+  terms_conditions?: string | null;
+  price: string | number;
+  sale_price?: string | number | null;
+  enrolled_count?: number;
+  ratings?: string | number | null;
+  rating_users?: number;
+  thumbnail_url?: string | null;
+  youtube_url?: string | null;
+  language?: string | null;
+  course_type?: string | null;
+  keywords?: string | null;
+  faqs?: string | null;
+  feedback?: string | null;
+  includes_info?: string | null;
+  certifications?: string | null;
+  is_published?: boolean;
+  start_date?: string | null;
+  end_date?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
 /** Public article by slug (body = content, related_articles from shortcodes) */
 export interface ArticleBySlug {
   id: number;

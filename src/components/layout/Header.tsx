@@ -112,13 +112,13 @@ export default function Header() {
               {coursesMenuOpen && (
                 <div className="absolute left-0 top-2 mt-2 pt-5">
                   <div className="w-56 bg-white rounded-lg shadow-lg py-2 z-20 border border-gray-100">
-                    <Link
+                    {/* <Link
                       href="/courses"
                       className="block px-4 py-2 text-sm font-medium text-[#09339B] hover:bg-gray-50 border-b border-gray-100"
                       onClick={() => setCoursesMenuOpen(false)}
                     >
                       All Courses
-                    </Link>
+                    </Link> */}
                     {courseCats.map((cat) => (
                       <Link
                         key={cat.id}

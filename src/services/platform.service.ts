@@ -10,6 +10,8 @@ import {
   CourseCat,
   Course,
   PaginatedCourses,
+  CoursePublicDetail,
+  CourseBatch,
 } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -137,6 +139,46 @@ export const getCoursesByCategory = async (params: CourseQueryParams = {}): Prom
     { params: query }
   );
   return response.data.data;
+};
+
+/** Fetch a single published course by its slug */
+export const getCourseBySlug = async (slug: string): Promise<CoursePublicDetail | null> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<CoursePublicDetail>>(
+      `/courses/slug/${encodeURIComponent(slug)}`
+    );
+    return response.data.data ?? null;
+  } catch {
+    return null;
+  }
+};
+
+/** Fetch batches + sessions + recordings for a published course by slug */
+export const getCourseSessionsBySlug = async (slug: string): Promise<CourseBatch[]> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<CourseBatch[]>>(
+      `/courses/slug/${encodeURIComponent(slug)}/sessions`
+    );
+    return response.data.data ?? [];
+  } catch {
+    return [];
+  }
+};
+
+/** @deprecated Use getCourseBySlug instead */
+export const getCourseById = getCourseBySlug as unknown as (id: string | number) => Promise<CoursePublicDetail | null>;
+
+/** @deprecated Use getCourseSessionsBySlug instead */
+export const getCourseSessions = getCourseSessionsBySlug as unknown as (id: string | number) => Promise<CourseBatch[]>;
+
+/** Fetch all published courses (for trending / related sections) */
+export const getPublishedCourses = async (): Promise<Course[]> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<Course[]>>('/courses');
+    return response.data.data ?? [];
+  } catch {
+    return [];
+  }
 };
 
 /**

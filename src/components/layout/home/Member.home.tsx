@@ -1,6 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Membership } from "@/types/models.types";
-import { useMemberships } from "@/hooks/usePlatform";
 
 function formatPrice(price: string | number, currency: string) {
   const num = typeof price === "string" ? parseFloat(price) : price;
@@ -25,7 +24,10 @@ interface MembershipPricingProps {
   memberships?: Membership[];
 }
 
-/** Reorder plans so the popular one is always at the center index. */
+/**
+ * Reorder plans so the popular one sits at the center index.
+ * Only applied client-side after hydration to avoid SSR/client mismatch.
+ */
 function centerPopular(plans: Membership[]): Membership[] {
   if (plans.length === 0) return plans;
   const popularIdx = plans.findIndex((p) => p.is_popular);
@@ -39,11 +41,18 @@ function centerPopular(plans: Membership[]): Membership[] {
 }
 
 export default function MembershipPricing({ memberships: initialData }: MembershipPricingProps) {
-  const { data: rawPlans } = useMemberships(initialData);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const popularCardRef = useRef<HTMLDivElement | null>(null);
 
-  const plans = rawPlans ? centerPopular(rawPlans) : rawPlans;
+  // Render the original SSR order during first paint, then reorder client-side
+  // to put the popular plan at center. Using state avoids a hydration mismatch
+  // because the server always renders in the original order.
+  const [plans, setPlans] = useState<Membership[] | undefined>(initialData);
+  useEffect(() => {
+    if (initialData && initialData.length > 0) {
+      setPlans(centerPopular(initialData));
+    }
+  }, [initialData]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !plans?.length) return;
