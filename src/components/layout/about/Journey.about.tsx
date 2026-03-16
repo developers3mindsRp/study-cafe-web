@@ -6,7 +6,7 @@ const Journey_about = () => {
     return (
 
         <>
-            <section className="md:py-24 ">
+            <section className="">
 
                 <div className="container mx-auto px-4">
 

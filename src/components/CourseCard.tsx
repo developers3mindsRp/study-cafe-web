@@ -6,7 +6,7 @@ export default function CourseCard({ course }: { course: any }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Thumbnail */}
-      <div className="md:h-[250px] w-full overflow-hidden">
+      <div className="xl:h-[220px] w-full overflow-hidden">
         <img
           src={course.image}
           alt={course.title}
@@ -42,7 +42,7 @@ export default function CourseCard({ course }: { course: any }) {
         <div className="flex gap-2">
           {course.completed === course.lessons ? (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-[16px] py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[16px] md:py-2 rounded-md px-1 line-clamp-1">
                 Review Course
               </button>
           <button className="flex items-center justify-center gap-2 flex-1 border border-[#09339B] text-[#09339B] text-[16px] py-2 rounded-md hover:bg-[#f0f4ff] transition">
@@ -53,7 +53,7 @@ export default function CourseCard({ course }: { course: any }) {
             </>
           ) : (
             <>
-              <button className="flex-1 bg-[#09339B] text-white text-[16px] py-2 rounded-md">
+              <button className="flex-1 bg-[#09339B] text-white text-[16px] py-2 rounded-md line-clamp-1">
                 Continue Learning
               </button>
 

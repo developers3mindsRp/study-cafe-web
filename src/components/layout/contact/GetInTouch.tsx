@@ -93,7 +93,7 @@ export default function ContactPage() {
             <div>
               <label className="block mb-1">Mobile Number <span className="text-red-600">*</span></label>
               <PhoneInput
-                placeholder="Enter phone number"
+                placeholder="Enter Mobile number"
                 value={phone}
                 onChange={setPhone}
                 defaultCountry="IN"

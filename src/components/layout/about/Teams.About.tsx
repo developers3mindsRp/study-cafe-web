@@ -73,7 +73,7 @@ const Teams_about = () => {
               <div>
                   <h1 className="text-[25px] font-bold text-center ">Team Members</h1>
 
-                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:gap-6 md:p-6 mt-10 md:mt-6">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6 md:p-6 mt-10 md:mt-6">
 
                       {teamMembers.map((member, index) => (
                           <div key={index} className="flex flex-col border md:p-6 rounded-lg bg-white">

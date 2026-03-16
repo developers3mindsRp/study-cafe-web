@@ -28,7 +28,9 @@ export default function CourseDetail() {
 
   return (
     <PublicLayout>
-      <Breadcrumbs/>
+          <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+             <Breadcrumbs />
+           </div>
     <CourseDetailPage/>
     </PublicLayout>
 

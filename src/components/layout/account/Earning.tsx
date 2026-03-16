@@ -142,19 +142,19 @@ const router = useRouter();
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
 
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-          <h2 className="text-[20px] text-[#AFAFAF]">Total Order</h2>
+          <h2 className="xl:text-[20px] text-[#AFAFAF]">Total Order</h2>
           <h3 className="font-bold">15</h3>
         </div>
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-          <h2 className="text-[20px] text-[#AFAFAF]">Order Value</h2>
+          <h2 className="xl:text-[20px] text-[#AFAFAF]">Order Value</h2>
           <h3 className="font-bold">₹400</h3>
         </div>
         {/* <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
             <h2 className="text-[20px] text-[#AFAFAF]">Estimated Value</h2>
             <h3 className="font-bold">₹400</h3>
         </div> */}
-        <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-            <h2 className="text-[20px] text-[#AFAFAF]">Total Commission</h2>
+        <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg ">
+            <h2 className="xl:text-[20px] text-[#AFAFAF]">Total Commission</h2>
             <h3 className="font-bold">₹136</h3>
         </div>
 
@@ -179,7 +179,7 @@ const router = useRouter();
           <div className="border boder-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
             <img src="/images/home.svg" alt="" />
             <h2 className="font-bold">Homepage</h2>
-            <p>Direct traffic to our main landing page for general visitors.</p>
+            <p className="line-clamp-2">Direct traffic to our main landing page for general visitors.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md">https://studycafe.io/?ref=alexm</p>
             <div className="flex justify-center gap-2 px-4 py-2 w-full  text-[#1F4FBF] border border-[#1F4FBF] rounded-md">
               <img src="/images/copy-b.svg" alt="" /> <button className="">Copy URL</button>
@@ -188,7 +188,7 @@ const router = useRouter();
           <div className="border boder-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
             <img src="/images/member-b.svg" alt="" />
             <h2 className="font-bold">Membership</h2>
-            <p>Direct traffic to our main landing page for general visitors.</p>
+            <p className="line-clamp-2">Direct traffic to our main landing page for general visitors.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md">https://studycafe.io/?ref=alexm</p>
             <div className="flex justify-center gap-2 px-4 py-2 w-full  text-[#1F4FBF] border border-[#1F4FBF] rounded-md">
               <img src="/images/copy-b.svg" alt="" /> <button className="">Copy URL</button>
@@ -210,7 +210,7 @@ const router = useRouter();
               className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg"
             >
               <h2 className="text-[16px] font-bold">{category.title}</h2>
-              <p>{category.description}</p>
+              <p className="line-clamp-2">{category.description}</p>
 
               <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md break-all">
                 {category.url}
@@ -263,7 +263,7 @@ const router = useRouter();
 
                 <button
                   onClick={() => navigator.clipboard.writeText(item.url)}
-                  className="flex justify-center items-center gap-2 px-4 py-2 text-[#1F4FBF] border border-[#1F4FBF] rounded-md md:w-1/4"
+                  className="flex justify-center items-center gap-2 xl:px-4 xl:py-2 text-[#1F4FBF] border border-[#1F4FBF] rounded-md md:w-1/4"
                 >
                   <img src="/images/copy-b.svg" alt="" />
                   Copy URL

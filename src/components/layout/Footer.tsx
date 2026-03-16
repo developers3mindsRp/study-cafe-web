@@ -195,7 +195,7 @@ export default function Footer() {
 
         </div>
 
-        <div className='border-b  md:mt-12 h-px '></div>
+        <div className='border-b md:mt-16  xl:mt-12 h-px '></div>
 
         {/* Bottom Bar */}
         <div className=" mt-6 text-center ">
