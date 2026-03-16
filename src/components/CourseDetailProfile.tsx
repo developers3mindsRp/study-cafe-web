@@ -43,17 +43,17 @@ const [selectedVideo, setSelectedVideo] = useState(1);
       </div>
 
       {/* Header */}
-      <div className="flex justify-between items-start gap-4">
+      <div className="md:flex justify-between items-start gap-4">
         <div>
-          <h1 className="md:text-[40px] font-semibold">
-            Certification Course on Python with AI for <br /> Finance Professionals
+          <h1 className="text-[20px] xl:text-[40px] font-semibold">
+            Certification Course on Python with AI for <br className="hidden xl:block"/> Finance Professionals
           </h1>
           <p className="text-gray-500 mt-1 text-[24px]">
             Instructor: CA Rahul Sharma
           </p>
         </div>
 
-  <div className="flex gap-3">
+  <div className="flex  gap-3 mt-4">
     <button
       className="bg-[#09339B] text-white px-4 py-2 rounded-md"
       onClick={() => setIsReviewOpen(true)}
@@ -112,7 +112,7 @@ const [selectedVideo, setSelectedVideo] = useState(1);
             <img
               src="/images/home/f1.jpg"
               alt="course"
-              className="w-full md:h-[475px] object-fit"
+              className="w-full xl:h-[475px] object-fit"
             />
 
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center ">
@@ -136,23 +136,32 @@ const [selectedVideo, setSelectedVideo] = useState(1);
 
           </div>
 
-          <h2 className="mt-3 font-normal text-[26px]">
-            Certification Course on Python with AI for Finance <br /> Professionals
+          <h2 className="mt-3 font-normal text-[20px] xl:text-[26px]">
+            Certification Course on Python with AI for Finance <br className="hidden md:block"/> Professionals
           </h2>
 
-          <div className="flex gap-3 mt-4 justify-between items-center">
-            <button className="border px-8 py-2 rounded-md text-[20px] text-white bg-[#09339B]  transition flex items-center gap-2 font-medium">
-             <img src="/images/left.svg" alt="" />Previous
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 justify-between items-center">
+
+            {/* Previous Button */}
+            <button className="border px-5 md:px-8 py-2 rounded-md text-[14px] xl:text-[20px] text-white bg-[#09339B] transition flex items-center gap-2 font-medium w-full sm:w-auto justify-center">
+              <img src="/images/left.svg" alt="" className="w-4 md:w-auto" />
+              Previous
             </button>
-            <button className="flex items-center gap-2 border border-[#9FBBFF] px-4 py-2 rounded-md text-[20px] text-[#09339B] hover:bg-[#f0f4ff] transition font-medium">
+
+            {/* Mark as completed */}
+            <button className="flex items-center gap-2 border border-[#9FBBFF] px-4 py-2 rounded-md text-[14px] xl:text-[20px] text-[#09339B] hover:bg-[#f0f4ff] transition font-medium w-full sm:w-auto justify-center">
               <span>Mark as completed</span>
-              <img src="/images/checkmark.png" alt="Checkmark" className="w-6 h-6" />
-            
+              <img src="/images/checkmark.png" alt="Checkmark" className="w-5 h-5 md:w-6 md:h-6" />
             </button>
-            <button className="border px-10 py-2 rounded-md text-[20px] text-white  bg-[#09339B]  transition flex items-center gap-2 font-medium">
-              Next <img src="/images/next.svg" alt="" />
+
+            {/* Next Button */}
+            <button className="border px-5 md:px-10 py-2 rounded-md text-[14px] xl:text-[20px] text-white bg-[#09339B] transition flex items-center gap-2 font-medium w-full sm:w-auto justify-center">
+              Next
+              <img src="/images/next.svg" alt="" className="w-4 md:w-auto" />
             </button>
+
           </div>
+
 
         </div>
 
@@ -167,7 +176,7 @@ const [selectedVideo, setSelectedVideo] = useState(1);
           className="flex justify-between items-center w-full font-medium text-sm"
         >
             
-          <span className="font-semibold text-[20px]">Day 1: Discussion on GSTR-9</span>
+          <span className="font-semibold text-[18px] xl:text-[20px]">Day 1: Discussion on GSTR-9</span>
                     <svg
                 className={`w-5 h-5 transition-transform ${openDay === 1 ? "rotate-180" : "rotate-0"}`}
                 fill="none"
@@ -227,7 +236,7 @@ const [selectedVideo, setSelectedVideo] = useState(1);
           onClick={() => setOpenDay(openDay === 2 ? null : 2)}
           className="flex justify-between items-center w-full font-medium text-sm"
         >
-          <span className="font-semibold text-[20px]">Day 2: Discussion on GSTR-9C</span>
+          <span className="font-semibold text-[18px] xl:text-[20px]">Day 2: Discussion on GSTR-9C</span>
                  {/* Arrow Icon */}
               <svg
                 className={`w-5 h-5 transition-transform ${openDay === 2 ? "rotate-180" : "rotate-0"}`}

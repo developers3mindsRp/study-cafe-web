@@ -55,7 +55,7 @@ export default function LoginPage() {
     <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
       {/* Left branding panel */}
       <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center">
-            <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
+            <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
             
             <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
 
@@ -71,10 +71,10 @@ export default function LoginPage() {
 
       {/* Right form panel */}
       {/* Close (X) */}
-      <div className="md:w-1/3 p-6 flex flex-col justify-center md:mx-auto"> 
+      <div className="xl:w-1/3 p-6 flex flex-col justify-center md:mx-auto"> 
       <button
         onClick={() => router.back()}
-       className="absolute right-4 md:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
+       className="absolute right-4 xl:right-[80px] top-4 text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
         <span className="md:text-[#09339B] ">✕</span>
       </button>

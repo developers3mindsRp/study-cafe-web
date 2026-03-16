@@ -13,7 +13,7 @@ export default function ChangePasswordModal({ onClose }: ChangePasswordModalProp
       />
 
       {/* Modal Box */}
-      <div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-6 z-10">
+      <div className="relative bg-white w-full max-w-[350px] md:max-w-[400px] rounded-xl shadow-lg p-6 z-10">
         {/* Close Button */}
         <button
           onClick={onClose}

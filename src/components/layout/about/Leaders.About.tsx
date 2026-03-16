@@ -24,19 +24,19 @@ const Leader_about = () => {
                           <div className="flex flex-col  rounded-full mb-4">
                           <img src="/images/deepak.svg" alt="" className="w-[350px] md:w-auto" />
                           <div className='flex justify-between pr-4'>
-                              <h1 className='text-[25px] font-medium text-[#454545]'>CA Deepak Gupta</h1>
-                              <img src="/images/linkedin.svg" alt="" className='w-4 h-4 mt-4' />
+                              <h1 className='md:text-[20px] xl:text-[25px] font-medium text-[#454545]'>CA Deepak Gupta</h1>
+                              <img src="/images/linkedin.svg" alt="" className='w-4 h-4 md:mt-2 xl:mt-4' />
                         </div>
-                          <span className='text-[20px] text-[#454545]'>Founder</span>
+                          <span className='xl:text-[20px] text-[#454545]'>Founder</span>
                           </div>
                      
                           <div className="flex flex-col  rounded-full mb-4">
                           <img src="/images/pratibha.svg" alt="" className="w-[350px] md:w-auto" />
                           <div className='flex justify-between pr-4'>
-                              <h1 className='text-[25px] font-medium text-[#454545]'>CA Pratibha Goyal</h1>
-                              <img src="/images/linkedin.svg" alt="" className='w-4 h-4 mt-4' />
+                              <h1 className='md:text-[20px] xl:text-[25px] font-medium text-[#454545]'>CA Pratibha Goyal</h1>
+                              <img src="/images/linkedin.svg" alt="" className='w-4 h-4 md:mt-2 xl:mt-4' />
                           </div>
-                          <span className='text-[20px] text-[#454545]'>Co Founder</span>
+                          <span className='xl:text-[20px] text-[#454545]'>Co Founder</span>
                           </div>
                      
 

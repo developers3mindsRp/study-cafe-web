@@ -74,14 +74,14 @@ const countries = countryList.getNames();
     <div className="h-screen flex flex-col md:flex-row mx-auto  ">
       {/* Left branding panel */}
       <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center ">
-            <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
+            <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
             
             <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
 
             <div className="relative z-10">
                 <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
-                <h1 className="text-[30px] md:text-4xl font-bold mb-4 pt-[12px] md:pb-[18px]">Join Our Learning <br />Community</h1>
-                <p className="text-[18px] md:text-[24px] pb-2 ">Create your account and get access to premium <br className="hidden" /> courses and exclusive content</p>
+                <h1 className="text-[30px] xl:text-4xl font-bold mb-4 pt-[12px] xl:pb-[18px]">Join Our Learning <br />Community</h1>
+                <p className="text-[18px] xl:text-[24px] pb-2 px-4 ">Create your account and get access to premium <br className="hidden" /> courses and exclusive content</p>
             </div>
 
             </div>
@@ -93,14 +93,14 @@ const countries = countryList.getNames();
        {/* Close (X) */}
       <button
         onClick={() => router.push('/')}
-        className="absolute right-[4px] md:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
+        className="absolute right-[4px] md:right-[40px] xl:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
         <span className="md:text-[#09339B]">✕</span>
       </button>
-      <div className="md:h-screen overflow-y-auto md:p-8 scrollbar-thin-custom md:mt-4 ">
+      <div className="md:h-screen overflow-y-auto xl:p-8 scrollbar-thin-custom md:mt-4 ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
-        <h2 className="text-[20px] md:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
-        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
+        <h2 className="text-[20px] xl:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
+        <p className="text-[16px] xl:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
         <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4">
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>  
