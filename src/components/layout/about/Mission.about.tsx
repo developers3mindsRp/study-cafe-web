@@ -22,13 +22,13 @@ const Mission_about = () => {
                   </div>
 
                   {/* Right Cards */}
-                  <div className="grid sm:grid-cols-1 xl:grid-cols-2  gap-4">
+                  <div className="grid sm:grid-cols-1 xl:grid-cols-2  gap-4 xl:h-[150px]">
 
                       {/* Card 1 */}
                       <div className="border border-[#9FBBFF] rounded-xl p-6 xl:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
 
                           <div className="w-12 h-12 md:w-16 md:h-16 mb-4">
-                              <img src="/images/email.png" alt="" className="w-full h-full object-contain" />
+                              <img src="/images/empower.svg" alt="" className="w-full h-full object-contain" />
                           </div>
 
                           <h3 className="text-[16px] md:text-[18px] font-bold text-[#252525] mb-2">
@@ -48,7 +48,7 @@ const Mission_about = () => {
                       <div className="border border-[#9FBBFF] rounded-xl p-6 xl:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
 
                           <div className="w-12 h-12 md:w-16 md:h-16 mb-4">
-                              <img src="/images/email.png" alt="" className="w-full h-full object-contain" />
+                              <img src="/images/growth.svg" alt="" className="w-full h-full object-contain" />
                           </div>
 
                           <h3 className="text-[16px] md:text-[18px] font-bold text-[#252525] mb-2">

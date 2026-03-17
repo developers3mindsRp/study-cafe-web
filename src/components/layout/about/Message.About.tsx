@@ -7,11 +7,11 @@ const Message_about = () => {
 
       <>
           <section className="py-12 ">
-              <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 ">
 
                   {/* Left Card */}
                   <div className="bg-white rounded-xl border p-8 text-center shadow-sm">
-                      <h2 className="text-[25px] font-bold  mb-6">Get In Touch</h2>
+                      <h2 className="text-[25px] font-bold  mb-6 mt-10">Get In Touch</h2>
 
                       {/* Social Icons */}
                       <div className="flex justify-center gap-12 mb-6 flex-wrap">
@@ -39,9 +39,16 @@ const Message_about = () => {
                   {/* Right Card */}
                   <div className="bg-[url('/images/about-bg.svg')] bg-cover bg-no-repeat rounded-xl p-8 text-white relative">
 
-                      <h2 className="text-[26px] font-semibold mb-6 text-center hidden md:block">
-                          A Message from Our Founder 
-                      </h2>
+                      <div className="flex items-center justify-center gap-4 mb-6">
+                          <img src="/images/left-stroke.svg" alt="" />
+
+                          <h2 className="text-[26px] font-semibold text-center hidden md:block">
+                              A Message from Our Founder
+                          </h2>
+
+                          <img src="/images/right-stroke.svg" alt="" />
+                      </div>
+
 
                       <div className="flex flex-col xl:flex-row gap-6 items-start">
 
@@ -75,11 +82,11 @@ const Message_about = () => {
                       </div>
 
                       {/* Linkedin Icon */}
-                      <div className="bg-white rounded-[18px]  w-10 h-10 flex items-center justify-center absolute bottom-14 right-6">
+                      <div className="bg-white rounded-[18px]  w-12 h-12 flex items-center justify-center absolute bottom-14 right-6">
                           <img
                               src="/images/linkedin.svg"
                               alt="Linkedin"
-                              className="w-4 h-4"
+                              className="w-6 h-6"
                           />
                       </div>
 

@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 
 const plans = [
   {
@@ -54,7 +55,7 @@ export default function MembershipPricing() {
         </p>
 
         {/* Prepare refs for mobile slider */}
-   
+
         <div className="mt-10 md:mt-16">
           <div
             ref={containerRef}
@@ -112,35 +113,37 @@ export default function MembershipPricing() {
                       </span>
                     </div>
 
-                    <button
-                      className={`px-5 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition mt-14 ${plan.highlight
-                        ? "bg-white text-[#09339B] hover:bg-blue-50"
-                        : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
-                        }`}
-                        onClick={() => (window.location.href = "/plans/details")}
-                    >
-                      Buy Membership
-                    </button>
+                    <Link href="/plans/premium">
+                      <button
+                        className={`px-5 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition mt-14 ${plan.highlight
+                          ? "bg-white text-[#09339B] hover:bg-blue-50"
+                          : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                          }`}
+
+                      >
+                        Buy Membership
+                      </button>
+                    </Link>
                   </div>
                 </div>
-            {/* DIVIDER (hide on middle card) */}
-            {!plan.highlight && (
-            <div className="-mx-6 h-px bg-black shadow-[0_6px_10px_rgba(0,0,0,0.35)]" />
+                {/* DIVIDER (hide on middle card) */}
+                {!plan.highlight && (
+                  <div className="-mx-6 h-px bg-black shadow-[0_6px_10px_rgba(0,0,0,0.35)]" />
 
 
-            )}
+                )}
 
-            {/* FEATURES */}
-            <ul className="px-6 py-6 space-y-4 text-gray-400 text-[12px] ">
-              {[...Array(5)].map((_, i) => (
-                <li key={i} className="flex gap-3">
-                  <span>
-                    <img src="/images/tick.svg" alt="" />
-                  </span>
-                  Lorem Ipsum is simply dummy text of the printing
-                </li>
-              ))}
-            </ul>
+                {/* FEATURES */}
+                <ul className="px-6 py-6 space-y-4 text-gray-400 text-[12px] ">
+                  {[...Array(5)].map((_, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span>
+                        <img src="/images/tick.svg" alt="" />
+                      </span>
+                      Lorem Ipsum is simply dummy text of the printing
+                    </li>
+                  ))}
+                </ul>
 
               </div>
             ))}
@@ -196,20 +199,20 @@ export default function MembershipPricing() {
 
                     <button
                       className={`mt-14 px-5 py-2 rounded-[10px] xl:text-[20px] font-medium whitespace-nowrap transition ${plan.highlight
-                          ? "bg-white text-[#09339B] hover:bg-blue-50"
-                          : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                        ? "bg-white text-[#09339B] hover:bg-blue-50"
+                        : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
                         }`}
-                        onClick={() => (window.location.href = "/plans/details")}
+                      onClick={() => (window.location.href = "/plans/premium")}
                     >
                       Buy Membership
                     </button>
                   </div>
                 </div>
-                   
-                   {/* DIVIDER (hide on middle card) */}
-              {!plan.highlight && (
-                <div className="-mx-6 h-[1px] bg-black " />
-              )}
+
+                {/* DIVIDER (hide on middle card) */}
+                {!plan.highlight && (
+                  <div className="-mx-6 h-[1px] bg-black " />
+                )}
                 {/* FEATURES */}
                 <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
                   {[...Array(5)].map((_, i) => (
