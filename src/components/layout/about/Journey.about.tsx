@@ -6,11 +6,11 @@ const Journey_about = () => {
     return (
 
         <>
-            <section className="md:py-24 ">
+            <section className="">
 
                 <div className="container mx-auto px-4">
 
-                    <h2 className="text-center text-[40px] font-semibold mb-16">
+                    <h2 className="text-center text-[40px] font-semibold mb-12 xl:mb-16">
                         Our Journey
                     </h2>
 
@@ -59,7 +59,7 @@ const Journey_about = () => {
                         </div>
 
                         {/* Card 2 */}
-                        <div className="relative md:absolute md:top-[120px] md:left-[42%] xl:left-[45%] 2xl:left-[42%] w-[230px] bg-white rounded-lg shadow-lg p-4">
+                        <div className="relative md:absolute md:top-[120px] md:left-[42%] xl:left-[45%] 2xl:left-[42%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                             <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
                             <div className='bg-[#DDE4FF] px-4 py-6 rounded-lg'>
@@ -85,7 +85,7 @@ const Journey_about = () => {
                         </div>
 
                         {/* Card 4 */}
-                        <div className="relative md:absolute md:top-[490px] md:left-[8%] xl:left-[0%] 2xl:left-[6%] w-[230px] bg-white rounded-lg shadow-lg p-4">
+                        <div className="relative md:absolute md:top-[490px] md:left-[0%] xl:left-[0%] 2xl:left-[6%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                             <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
                             <div className='bg-[#DDE4FF] px-4 py-4 rounded-lg'>      <h4 className="font-bold">2021</h4>
@@ -96,7 +96,7 @@ const Journey_about = () => {
                         </div>
 
                         {/* Card 5 */}
-                        <div className="relative md:absolute md:top-[450px] md:left-[40%] xl:left-[38%] 2xl:left-[40%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto">
+                        <div className="relative md:absolute md:top-[450px] md:left-[30%] xl:left-[38%] 2xl:left-[40%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                             <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
                             <div className='bg-[#DDE4FF] px-4 py-4 rounded-lg'>
@@ -109,7 +109,7 @@ const Journey_about = () => {
                         </div>
 
                         {/* Card 6 */}
-                        <div className="relative md:absolute md:top-[520px] md:right-[18%] xl:right-[10%] 2xl:right-[18%] w-[230px] bg-white rounded-lg shadow-lg p-4">
+                        <div className="relative md:absolute md:top-[520px] md:right-[10%] xl:right-[10%] 2xl:right-[18%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                             <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
                             <div className='bg-[#DDE4FF] px-4 py-4 rounded-lg'>
@@ -122,7 +122,7 @@ const Journey_about = () => {
                         </div>
 
                         {/* Card 7 */}
-                        <div className="relative md:absolute md:bottom-[58px] left-[35%]  -translate-x-1/2 xl:bottom-[62px] w-[240px] bg-white rounded-lg shadow-lg p-4 mx-auto">
+                        <div className="relative md:absolute md:bottom-[58px] md:left-[35%]  md:-translate-x-1/2 xl:bottom-[62px] w-[240px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                             <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
                             <div className='bg-[#DDE4FF] px-4  py-6'>

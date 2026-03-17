@@ -27,10 +27,24 @@ export default function Account() {
   return (
   
 
-  <PublicLayout>
-    <EditProfile/>
-    
-  </PublicLayout>
+    <PublicLayout>
+      <div className="container mx-auto p-6">
+
+        <div className="mb-6">
+          <h3 className="text-[30px] md:text-[40px] font-semibold">
+            My Account
+          </h3>
+
+          <p className="text-[18px] md:text-[24px] text-[#454545] md:whitespace-nowrap">
+            Manage your profile, subscription, and learning progress
+          </p>
+        </div>
+
+        <EditProfile />
+
+      </div>
+    </PublicLayout>
+
  
   );
 }

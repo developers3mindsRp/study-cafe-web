@@ -156,7 +156,7 @@ export default function Blog_list() {
                 key={b.title}
                 className="rounded-xl shadow-md border bg-white overflow-hidden text-left"
               >
-                <div className="relative w-full h-[243px]">
+                <div className="relative w-full xl:h-[243px]">
                   <img
                     src={b.img}
                     alt="blog"
@@ -168,8 +168,8 @@ export default function Blog_list() {
                   </span>
                 </div>
 
-                <div className="p-4">
-                  <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
+                <div className="p-3 xl:p-4">
+                  <div className="flex items-center gap-2 md:gap-2 xl:text-[16px] text-[#AFAFAF] mb-3">
                     <span className="flex gap-1">
                       <img src="/images/user.svg" alt="" width="20" height="20" />
                       {b.author}
@@ -180,7 +180,7 @@ export default function Blog_list() {
                     </span>
                   </div>
 
-                  <h3 className="font-medium text-[16px] md:text-[26px] text-[#252525] leading-tight mb-4">
+                  <h3 className="font-medium text-[16px] text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2">
                     {b.title}
                   </h3>
 

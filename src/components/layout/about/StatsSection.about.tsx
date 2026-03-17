@@ -36,14 +36,14 @@ const Stats_about = () => {
                       key={index}
                       className="p-2 md:p-4 bg-[#09339B] rounded-lg text-center flex items-center md:justify-center gap-3  md:gap-8 px-3 "
                   >
-                      <img src={item.icon} alt={item.title} className='w-10 h-10 md:w-auto md:h-auto ' />
+                      <img src={item.icon} alt={item.title} className='w-10 h-10 xl:w-auto xl:h-auto ' />
 
                       <div className="flex flex-col">
                           <h2 className="text-[14px] md:text-[16px] font-regular text-white line-clamp-1">
                               {item.title}
                           </h2>
 
-                          <p className="text-[25px] md:text-[40px] text-white mt-1">
+                          <p className="text-[25px] xl:text-[40px] text-white mt-1">
                               {item.value}
                           </p>
                       </div>

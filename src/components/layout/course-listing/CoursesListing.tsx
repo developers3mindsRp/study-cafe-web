@@ -247,31 +247,27 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
         </div>
       </div>
 
-      {/* ── Results count ── */}
-      <p className="text-sm text-gray-500 px-4 mb-4">
-        {navigating
-          ? "Loading…"
-          : `Showing ${courses.length} of ${total} courses${initialQuery.search ? ` for "${initialQuery.search}"` : ""}`}
-      </p>
 
-      {/* ── Cards grid ── */}
+      {/* Cards Grid */}
       {navigating ? (
         <SkeletonGrid />
       ) : courses.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-lg">
-            No courses found{initialQuery.search ? ` for "${initialQuery.search}"` : ""}.
-          </p>
-          <button
-            onClick={() => router.push({ pathname: "/courses", query: {} })}
-            className="mt-4 text-[#09339B] underline text-sm"
-          >
-            Clear filters
-          </button>
+        <div className="col-span-3 py-20 text-center text-gray-400 text-lg">
+          No courses found.{" "}
+          {hasActiveFilters && (
+            <button
+              className="text-[#09339B] underline ml-1"
+              onClick={() => router.push({ pathname: "/courses", query: {} })}
+            >
+              Clear filters
+            </button>
+          )}
         </div>
       ) : (
-        <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4 mb-5">
-          {courses.map((c) => <CourseCard key={c.id} c={c} />)}
+        <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4">
+          {courses.map((c) => (
+            <CourseCard key={c.id} c={c} />
+          ))}
         </div>
       )}
 

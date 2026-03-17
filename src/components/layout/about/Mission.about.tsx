@@ -12,7 +12,7 @@ const Mission_about = () => {
 
                   {/* Left Content */}
                   <div>
-                      <h1 className="text-[28px] md:text-[40px] lg:text-[56px] font-semibold text-[#252525] mb-4">
+                      <h1 className="text-[28px] xl:text-[40px] lg:text-[56px] font-semibold text-[#252525] mb-4">
                           Our Mission
                       </h1>
 
@@ -22,10 +22,10 @@ const Mission_about = () => {
                   </div>
 
                   {/* Right Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid sm:grid-cols-1 xl:grid-cols-2  gap-4">
 
                       {/* Card 1 */}
-                      <div className="border border-[#9FBBFF] rounded-xl p-6 md:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
+                      <div className="border border-[#9FBBFF] rounded-xl p-6 xl:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
 
                           <div className="w-12 h-12 md:w-16 md:h-16 mb-4">
                               <img src="/images/email.png" alt="" className="w-full h-full object-contain" />
@@ -45,7 +45,7 @@ const Mission_about = () => {
                       </div>
 
                       {/* Card 2 */}
-                      <div className="border border-[#9FBBFF] rounded-xl p-6 md:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
+                      <div className="border border-[#9FBBFF] rounded-xl p-6 xl:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
 
                           <div className="w-12 h-12 md:w-16 md:h-16 mb-4">
                               <img src="/images/email.png" alt="" className="w-full h-full object-contain" />

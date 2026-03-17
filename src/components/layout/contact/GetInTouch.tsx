@@ -10,7 +10,7 @@ export default function ContactPage() {
       {/* Left branding panel */}
       <div className="hidden md:flex w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat text-white p-8 flex-col justify-center max-h-[650px] mt-4">
 
-        <div className="relative border md:w-[548px] h-auto md:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
+        <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
 
           <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
 
@@ -28,8 +28,8 @@ export default function ContactPage() {
             </h1>
 
             <p className="text-[18px] md:text-[24px] pb-2">
-              Have questions? We'd love to hear from you. <br />
-              Send us a message and we'll respond as soon <br />
+              Have questions? We'd love to hear from you. <br className="md:hidden xl:block" />
+              Send us a message and we'll respond as soon <br className="md:hidden xl:block" />
               as possible.
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function ContactPage() {
 
 
       {/* Right Contact Form */}
-      <div className="w-full md:w-1/2 flex justify-center p-8">
+      <div className="w-full md:w-1/2 flex justify-center md:p-4 xl:p-8">
 
         <div className="w-full  p-4 rounded-xl shadow-sm">
 
@@ -49,16 +49,34 @@ export default function ContactPage() {
 
           <form className="space-y-5">
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Full Name <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Name"
-                className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <div className="flex gap-4">
+
+              {/* First Name */}
+              <div className="w-full">
+                <label className="block text-sm font-medium mb-1">
+                  First Name <span className="text-red-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="w-full">
+                <label className="block text-sm font-medium mb-1">
+                  Last Name <span className="text-red-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
             </div>
+
 
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -71,20 +89,19 @@ export default function ContactPage() {
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Mobile Number <span className="text-red-600">*</span>
-              </label>
 
+            <div>
+              <label className="block mb-1">Mobile Number <span className="text-red-600">*</span></label>
               <PhoneInput
-                placeholder="+91 9876543210"
+                placeholder="Enter Mobile number"
                 value={phone}
                 onChange={setPhone}
                 defaultCountry="IN"
-                international
+
                 limitMaxLength={true}
-                className="w-full border px-3 py-2"
+                className="w-full border focus-within:ring-2 focus-within:ring-black px-3 py-1"
               />
+
             </div>
 
             <div>

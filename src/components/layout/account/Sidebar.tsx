@@ -4,13 +4,12 @@ import React from "react";
 export default function Sidebar() {
   return (
     <div className="sticky top-20 space-y-6 ">
-      <div className=" p-6 h-fit"> <div> <h3 className="text-[30px] md:text-[40px] font-semibold">My Account</h3>
-       <p className="text-[18px] md:text-[24px] text-[#454545] md:whitespace-nowrap ">Manage your profile, subscription, and learning progress</p> </div> </div>
+    
       {/* PROFILE BOX */}
       <div className="relative flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
 
         {/* Member Badge */}
-        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 right-6 text-[10px] md:text-[12px]">
+        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
           Free Member
         </p>
 
@@ -18,7 +17,7 @@ export default function Sidebar() {
         <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
 
           {/* Profile Image Wrapper */}
-          <div className="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+          <div className="relative w-32 h-32 xl:w-40 xl:h-40 flex-shrink-0">
 
             {/* Image */}
             <div className="w-full h-full rounded-full overflow-hidden">
