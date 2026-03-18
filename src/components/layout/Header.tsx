@@ -256,14 +256,14 @@ export default function Header() {
                 </button>
 
                 {coursesMobileOpen && (
-                  <div className="mt-2 pl-4 flex flex-col gap-1">
-                    <Link
+                  <div className="mt-2 pl-4 flex flex-col gap-3">
+                    {/* <Link
                       href="/courses"
                       className="text-[#09339B] font-semibold hover:text-blue-700"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       All Courses
-                    </Link>
+                    </Link> */}
                     {courseCats.map((cat) => (
                       <Link
                         key={cat.id}

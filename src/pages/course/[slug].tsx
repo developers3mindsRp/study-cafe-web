@@ -25,12 +25,12 @@ export default function CoursePage({ course, batches, trendingCourses }: CourseP
         <Breadcrumbs />
       </div>
 
-      <BannerSection course={course} />
+      <BannerSection course={course} batches={batches} />
       <CourseTabs />
       <CourseOverview course={course} batches={batches} />
       <ReviewSection />
       <Testimonials_course />
-      <GSTRCoursePage />
+      <GSTRCoursePage  course={course}/>
       <Gallery />
       <TrendingCourses courses={trendingCourses} />
     </PublicLayout>

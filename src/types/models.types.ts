@@ -302,6 +302,15 @@ export interface CourseBatch {
   sessions: CourseSession[];
 }
 
+export interface CourseAuthorProfile {
+  user_id: number;
+  sort_order: number;
+  name: string | null;
+  role: string | null;
+  bio: string | null;
+  image_url: string | null;
+}
+
 /** Full course detail returned by GET /courses/:id */
 export interface CoursePublicDetail {
   id: number;
@@ -333,6 +342,12 @@ export interface CoursePublicDetail {
   end_date?: string | null;
   created_at?: string;
   updated_at?: string;
+  authors?: CourseAuthorProfile[];
+  author_user_id?: number | null;
+  author_name?: string | null;
+  author_role?: string | null;
+  author_bio?: string | null;
+  author_image?: string | null;
 }
 
 /** Public article by slug (body = content, related_articles from shortcodes) */

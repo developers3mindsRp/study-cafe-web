@@ -3,10 +3,11 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import type { CoursePublicDetail } from "@/types/models.types";
+import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
+  batches?: CourseBatch[];
 }
 
 function formatPrice(val?: string | number | null) {
@@ -31,7 +32,21 @@ function formatDate(dateStr?: string | null) {
   }
 }
 
-export default function BannerSection({ course }: BannerSectionProps) {
+/** Returns the nearest future batch start_date, or null if none exist. */
+function getNextUpcomingBatchDate(batches: CourseBatch[]): string | null {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const upcoming = batches
+    .filter((b) => b.start_date)
+    .map((b) => new Date(b.start_date!))
+    .filter((d) => !isNaN(d.getTime()) && d >= now)
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  return upcoming.length > 0 ? upcoming[0].toISOString() : null;
+}
+
+export default function BannerSection({ course, batches = [] }: BannerSectionProps) {
   const router = useRouter();
 
   const title = course?.title ?? "Certification Course On Practical Filing of GSTR-9 & GSTR-9C";
@@ -39,7 +54,7 @@ export default function BannerSection({ course }: BannerSectionProps) {
   const thumbnail = course?.thumbnail_url ?? "/images/c1.png";
   const price = formatPrice(course?.price);
   const salePrice = formatPrice(course?.sale_price);
-  const startDate = formatDate(course?.start_date);
+  const startDate = formatDate(getNextUpcomingBatchDate(batches));
   const enrolledCount = course?.enrolled_count ?? 957;
   const ratings = course?.ratings ? Number(course.ratings).toFixed(1) : "4.8";
   const ratingUsers = course?.rating_users ?? 47;
@@ -84,7 +99,7 @@ export default function BannerSection({ course }: BannerSectionProps) {
               <div className="md:w-1/2">
                 {/* Course Start Time */}
                 {startDate && (
-                  <p className="bg-[#DEEBFD] w-[320px] md:w-[360px] p-2 px-4 md:p-4 rounded-[10px] text-[#09339B] text-[14px] md:text-[16px] font-Outfit font-normal">
+                  <p className="bg-[#DEEBFD] w-fit p-2 px-4 md:p-4 rounded-[10px] text-[#09339B] text-[14px] md:text-[16px] font-Outfit font-normal">
                     Starts at {startDate}
                   </p>
                 )}

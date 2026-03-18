@@ -156,11 +156,17 @@ export const getCourseBySlug = async (slug: string): Promise<CoursePublicDetail 
 /** Fetch batches + sessions + recordings for a published course by slug */
 export const getCourseSessionsBySlug = async (slug: string): Promise<CourseBatch[]> => {
   try {
-    const response = await axiosInstance.get<ApiResponse<CourseBatch[]>>(
+    const response = await axiosInstance.get(
       `/courses/slug/${encodeURIComponent(slug)}/sessions`
     );
-    return response.data.data ?? [];
-  } catch {
+    const body = response.data;
+    // Handle both wrapped { success, data: [...] } and raw array responses
+    if (Array.isArray(body)) return body;
+    if (body && Array.isArray(body.data)) return body.data;
+    console.warn('[getCourseSessionsBySlug] Unexpected response shape:', body);
+    return [];
+  } catch (err) {
+    console.error('[getCourseSessionsBySlug] Failed to fetch sessions for slug:', slug, err);
     return [];
   }
 };
