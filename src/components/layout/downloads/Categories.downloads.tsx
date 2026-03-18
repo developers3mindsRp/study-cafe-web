@@ -1,6 +1,7 @@
 
 
 import React from 'react'
+import Link from 'next/link';
 
 const Categories_downloads = ({ showSearch = true }) => {
     const fileData = [
@@ -46,6 +47,7 @@ const Categories_downloads = ({ showSearch = true }) => {
                   <h2 className='text-[26px] font-normal text-[#252525] mb-4'>Download Categories</h2>
                   <p className='text-[#454545] text-[16px] mb-6'>All Files Grouped by Category</p>
               </div>
+              <Link href="/downloads/accounts">
               <div className="grid md:grid-cols-2 gap-4">
                   {fileData.map((item) => (
                       <div
@@ -53,18 +55,20 @@ const Categories_downloads = ({ showSearch = true }) => {
                           className="flex items-center justify-between border px-4 py-3 rounded-lg hover:shadow-md transition bg-white shadow-md cursor-pointer hover:border-[#9FBBFF]"
                       >
                           {/* Left Section */}
+                         
                           <div className="flex items-center gap-4 ">
                               <img
                                   src="/images/file.svg"
                                   alt="File Icon"
                                   className="w-10 h-10"
                               />
-                              <div>
-                                  <p className="font-medium">{item.title}</p>
-                                  <span className="text-sm text-gray-500">
-                                      Total Files - {item.totalFiles}
-                                  </span>
-                              </div>
+                            
+                                  <div>
+                                      <p className="font-medium">{item.title}</p>
+                                      <span className="text-sm text-gray-500">
+                                          Total Files - {item.totalFiles}
+                                      </span>
+                                  </div>
                           </div>
 
                           {/* Right Arrow */}
@@ -75,7 +79,8 @@ const Categories_downloads = ({ showSearch = true }) => {
                           />
                       </div>
                   ))}
-              </div>
+                  </div>
+              </Link>
 
           </section>
 

@@ -35,7 +35,7 @@ export default function Course() {
     <PublicLayout>
 
       {/* Breadcrumbs banner se pehle */}
-      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+      <div className="text-sm text-[#696969] bg-[#DDDDDD] px-1 p-4  mx-auto">
         <Breadcrumbs />
       </div>
 

@@ -3,8 +3,13 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function BannerSection() {
+  const [showBar, setShowBar] = useState(true);
+
+
+
   const router = useRouter();
 
   const handleClick = () => {
@@ -143,16 +148,46 @@ export default function BannerSection() {
 
 
 
+                
+                {/* 🔼 Floating Arrow (ALWAYS visible when bar is hidden) */}
+                {!showBar && (
+                  <div
+                    onClick={() => setShowBar(true)}
+                    className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 cursor-pointer md:hidden"
+                  >
+                    <div className="bg-white shadow-md px-4 py-2 rounded-full flex items-center gap-2">
+                      <span className="text-sm font-medium">Show</span>
+                    
+                    </div>
+                  </div>
+                )}
 
+                {/* 🔽 Bottom Sticky Bar */}
                 <div
-                  className="
-    fixed bottom-0 left-0 w-full z-50 
-    bg-white md:bg-transparent px-4 py-2 md:py-6 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]
-    sm:static sm:shadow-none sm:p-0 rounded-t-[20px]
-  "
+                  className={`
+          fixed bottom-0 left-0 w-full z-40
+          transition-transform duration-300
+          ${showBar ? "translate-y-0" : "translate-y-full"}
+          
+          bg-white md:bg-transparent px-4 py-2 md:py-6 
+          shadow-[0_-4px_20px_rgba(0,0,0,0.08)]
+          sm:static sm:shadow-none sm:p-0 rounded-t-[20px]
+        `}
                 >
+                  {/* 🔽 Arrow inside (for closing) */}
+                  <div
+                    onClick={() => setShowBar(false)}
+                    className="flex justify-center mb-2 cursor-pointer md:hidden"
+                  >
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-1.5 bg-gray-300 rounded-full"></div>
+         
+                    </div>
+                  </div>
+
+
+                  {/* Content */}
                   <div className="mt-0 md:mt-4 flex flex-col sm:flex-row md:items-start items-center gap-3">
-                    {/* Price */}
                     <p className="text-[30px] md:text-[26px] xl:text-[30px]">
                       <span className="line-through text-[#929292] font-medium mr-2">
                         ₹2,000
@@ -162,26 +197,25 @@ export default function BannerSection() {
                       </span>
                     </p>
 
-                    {/* Offer badge */}
                     <p className="hidden md:block text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-1 md:mt-3">
                       Hurry up, few days left at this price!
                     </p>
                   </div>
 
+                  {/* Buttons */}
                   <div className="mt-3 md:mt-4 mb-2 flex flex-row justify-center lg:justify-start gap-4">
-                    {/* Buy Now */}
-                    <button
-                      onClick={handleClick}
-                      className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28
+                    <Link href="/payment">
+                      <button
+                        onClick={handleClick}
+                        className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28
             border-2 border-white rounded-[10px]
             text-base xl:text-lg font-medium text-white
             bg-[#09339B] transition"
-                    >
-                      Buy Now
-                    </button>
+                      >
+                        Buy Now
+                      </button></Link>
 
-                    {/* View Membership */}
-                    <Link href="/courses" className="w-full sm:w-auto">
+                    <Link href="/plans" className="w-full sm:w-auto">
                       <button
                         className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16
               bg-white text-[#09339B]

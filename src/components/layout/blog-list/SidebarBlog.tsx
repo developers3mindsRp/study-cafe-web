@@ -122,7 +122,7 @@ export default function SidebarBlog() {
    
 
       <Link href="/blogs">
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-6">
           <button className="border border-[#09339B]  text-[#09339B] text-[20px] font-medium w-full p-2 rounded-[10px] hover:bg-[#09339B] hover:text-white">View All</button>
         </div></Link>
 
