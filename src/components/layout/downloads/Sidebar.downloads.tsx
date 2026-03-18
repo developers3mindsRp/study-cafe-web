@@ -32,7 +32,7 @@ const Sidebar_downloads = () => {
                                 <img
                                     src="/images/pdf.svg"
                                     alt="PDF Icon"
-                                    className="w-20 h-20"
+                                    className="w-14 md:w-20 h-14 md:h-20"
                                 />
                                 <div>
                                     <p className="font-normal text-[16px] text-[#454545] line-clamp-2">

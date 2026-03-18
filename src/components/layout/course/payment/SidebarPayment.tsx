@@ -29,7 +29,7 @@ export default function PriceCard() {
             <div className="flex items-center justify-between ">
               <h3>USE CODE :</h3>
               <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
-                <span className="font-medium">STUDY30</span>
+                <span className="font-medium text-sm">STUDY30</span>
                 <div className="bg-white flex gap-2 px-1 rounded-md">
                   <button className="text-sm text-gray-500 bg-white">
                     Copy Code
@@ -47,8 +47,8 @@ export default function PriceCard() {
             <p className="font-semibold text-sm mb-1">GET 25% OFF</p>
             <div className="flex items-center justify-between  rounded-lg p-2">
               <h3>USE CODE :</h3>
-              <div className="border border-dotted border-black rounded-lg p-2 flex gap-4 bg-[#F2F2F2]">
-                <span className="font-medium">LEARN25</span>
+              <div className="border border-dotted border-black rounded-lg p-2 flex gap-2 bg-[#F2F2F2]">
+                <span className="font-medium text-sm">LEARN25</span>
                 <div className="bg-white flex gap-2 px-1 rounded-md">
                   <button className="text-sm text-gray-500 bg-white">
                     Copy Code
@@ -157,7 +157,7 @@ export default function PriceCard() {
 
                 {/* Applied Badge */}
                 {applied && (
-                  <div className="absolute right-24 md:right-44 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
+                  <div className="absolute left-24 md:right-24 xl:right-44 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
                     Applied
                   </div>
                 )}

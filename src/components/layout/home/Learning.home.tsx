@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Learning = () => {
   return (
@@ -18,9 +19,12 @@ const Learning = () => {
         Join thousands of students already learning on StudyCafe
         </p>
 
-        <button className="bg-white text-[#09339B] px-6 py-3 rounded-[15px] hover:bg-[#09339B] hover:text-white transition flex mx-auto">
-          Get Started Today <img src="/images/icons/blue_arrow.png" alt="" />
-        </button>
+        <Link href="/login">
+          <button className="bg-white text-[#09339B] px-6 py-3 rounded-[15px] hover:bg-[#09339B] hover:text-white transition flex mx-auto items-center gap-2">
+            Get Started Today
+            <img src="/images/icons/blue_arrow.png" alt="" />
+          </button>
+        </Link>
       </div>
     </section>
   );

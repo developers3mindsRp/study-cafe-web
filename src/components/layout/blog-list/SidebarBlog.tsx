@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SidebarBlog() {
   const recentPosts = [
@@ -120,9 +121,10 @@ export default function SidebarBlog() {
 
    
 
-          <div className="flex justify-center">
-            <button className="border border-[#09339B]  text-[#09339B] text-[20px] font-medium w-full p-2 rounded-[10px] hover:bg-[#09339B] hover:text-white">View All</button>
-          </div>
+      <Link href="/blogs">
+        <div className="flex justify-center">
+          <button className="border border-[#09339B]  text-[#09339B] text-[20px] font-medium w-full p-2 rounded-[10px] hover:bg-[#09339B] hover:text-white">View All</button>
+        </div></Link>
 
           <div className="bg-white shadow rounded p-3 md:p-5 space-y-3">
            
@@ -152,7 +154,8 @@ export default function SidebarBlog() {
             <div className="bg-[#09339B] shadow rounded p-5 space-y-3 md:space-y-6 text-white text-center ">
                 <h2 className="text-[20px] font-bold">StudyCafe Membership</h2>
                 <p className="xl:text-[18px] ">For More details about Membership Click Join Membership Button</p>
-                <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded ">View Membership</button>
+          <Link href="/plans">
+            <button className="pl-10 pr-10 p-2 bg-white text-[#09339B] text-[20px] rounded mt-6">View Membership</button></Link>
             </div>
            
            

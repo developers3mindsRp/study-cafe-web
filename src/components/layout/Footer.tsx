@@ -130,7 +130,7 @@ export default function Footer() {
                   <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
                   <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
                   <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
-                  <li><Link href="/contact" className="text-[16px] text-white transition-colors"> AI Courses</Link></li>
+                  <li><Link href="/contact" className="text-[16px] text-white transition-colors"> ChatGPT & AI</Link></li>
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Excel Courses</Link></li>
                 </ul>
               </div>
@@ -146,8 +146,8 @@ export default function Footer() {
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Finance</Link></li>
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">GST</Link></li>
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Income Tax</Link></li>
-                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Downloads</Link></li>
-                  <li><Link href="/faq" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
+                  <li><Link href="/downloads" className="text-[16px] text-white transition-colors">Downloads</Link></li>
+                  <li><Link href="/contact-us" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
                 </ul>
               </div>
             </div>

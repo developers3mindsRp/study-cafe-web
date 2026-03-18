@@ -16,40 +16,34 @@ const Feature_about = () => {
                      
                   </div>
 
-                  <div className="rounded-lg  bg-white grid grid-cols-3 md:grid-cols-6  border">
+                  <div className="rounded-lg bg-white grid grid-cols-3 md:grid-cols-6 border">
 
-                   
-                          <div className=" p-4 mx-auto ">
-                          <img src="/images/hc.svg" alt="" className="" />
-                        
-                          </div>
-                     
-                      <div className=" p-4 mx-auto ">
-                          <img src="/images/LT.svg" alt="" className="" />
-                       
-                          </div>
-                      <div className=" p-4 mx-auto mt-2 ">
-                          <img src="/images/ANI.svg" alt="" className="" />
-                       
-                          </div>
-                        <div className=" p-4 mx-auto mt-2">
-                          <img src="/images/the-print.svg" alt="" className="" />
-                       
-                          </div>
-                        <div className=" p-4 mx-auto ">
-                          <img src="/images/zee.svg" alt="" className="" />
-                       
-                          </div>
-                        <div className=" p-4 mx-auto ">
-                          <img src="/images/dailyhunt.svg" alt="" className="" />
-                       
-                          </div>
-                     
+                      <div className="p-4 border-r flex items-center justify-center">
+                          <img src="/images/hc.svg" alt="" />
+                      </div>
 
-                        
-                     
+                      <div className="p-4 border-r flex items-center justify-center">
+                          <img src="/images/LT.svg" alt="" />
+                      </div>
+
+                      <div className="p-4 border-r flex items-center justify-center">
+                          <img src="/images/ANI.svg" alt="" />
+                      </div>
+
+                      <div className="p-4 border-r flex items-center justify-center">
+                          <img src="/images/the-print.svg" alt="" />
+                      </div>
+
+                      <div className="p-4 border-r flex items-center justify-center">
+                          <img src="/images/zee.svg" alt="" />
+                      </div>
+
+                      <div className="p-4 flex items-center justify-center">
+                          <img src="/images/dailyhunt.svg" alt="" />
+                      </div>
 
                   </div>
+
 
               </div>
           </section>

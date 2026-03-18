@@ -76,7 +76,11 @@ const Teams_about = () => {
                   <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6 md:p-6 mt-10 md:mt-6">
 
                       {teamMembers.map((member, index) => (
-                          <div key={index} className="flex flex-col border md:p-6 rounded-lg bg-white">
+                          <div
+                              key={index}
+                              className={`flex flex-col border md:p-6 rounded-lg bg-white
+      ${index === 4 ? "lg:col-start-2" : ""}`}
+                          >
 
                               <img src={member.image} alt={member.name} />
 
@@ -88,13 +92,13 @@ const Teams_about = () => {
                                   {member.social && (
                                       <div className="flex gap-2">
                                           {member.social.instagram && (
-                                              <a href=""> <img src={member.social.instagram} className="w-4 h-4" /></a>
+                                              <a href=""><img src={member.social.instagram} className="w-4 h-4" /></a>
                                           )}
                                           {member.social.twitter && (
                                               <a href=""><img src={member.social.twitter} className="w-4 h-4" /></a>
                                           )}
                                           {member.social.linkedin && (
-                                              <a href=""> <img src={member.social.linkedin} className="w-4 h-4" /></a>
+                                              <a href=""><img src={member.social.linkedin} className="w-4 h-4" /></a>
                                           )}
                                       </div>
                                   )}
@@ -108,6 +112,7 @@ const Teams_about = () => {
                       ))}
 
                   </div>
+
               </div>
 
        
