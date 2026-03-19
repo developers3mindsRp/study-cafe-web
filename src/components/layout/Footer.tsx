@@ -10,7 +10,8 @@ export default function Footer() {
 
   // Optional: refs if you want to manage dynamic height — simpler version uses a fixed max-height
   const usefulRef = useRef<HTMLUListElement>(null);
-  const importantRef = useRef<HTMLUListElement>(null);
+  const importantRef1 = useRef<HTMLUListElement>(null);
+  const importantRef2 = useRef<HTMLUListElement>(null);
 
   // Example: update max-height based on content, to avoid clipping (if needed)
   useEffect(() => {
@@ -24,14 +25,17 @@ export default function Footer() {
   }, [usefulOpen]);
 
   useEffect(() => {
-    if (importantRef.current) {
-      if (importantOpen) {
-        importantRef.current.style.maxHeight = importantRef.current.scrollHeight + 'px';
-      } else {
-        importantRef.current.style.maxHeight = '0px';
+    [importantRef1, importantRef2].forEach((ref) => {
+      if (ref.current) {
+        if (importantOpen) {
+          ref.current.style.maxHeight = ref.current.scrollHeight + 'px';
+        } else {
+          ref.current.style.maxHeight = '0px';
+        }
       }
-    }
+    });
   }, [importantOpen]);
+
 
   return (
     <footer className="bg-[#252525] text-gray-300 " id='footer'>
@@ -122,7 +126,7 @@ export default function Footer() {
               <div>
                 <ul
                   id="important-links-list"
-                  ref={importantRef}
+                  ref={importantRef1}
                   className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
                   style={{ maxHeight: '0px' }}
                 >
@@ -138,8 +142,8 @@ export default function Footer() {
               <div>
                 <ul
                   id="important-links-list"
-                  ref={importantRef}
-                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                  ref={importantRef2}
+                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible mt-4 md:mt-0"
                   style={{ maxHeight: '0px' }}
                 >
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Submit Article</Link></li>

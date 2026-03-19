@@ -263,7 +263,7 @@ const countries = countryList.getNames();
             </select>
           </div>
     <div className="mb-4">
-      <label htmlFor="password" className="block mb-1 md:text-[18px] ">
+      <label htmlFor="password" className="block mb-1 md:text-[16px] ">
         Password <span className="text-red-600">*</span>
       </label>
       <div className="relative w-full">

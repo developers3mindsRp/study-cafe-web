@@ -9,7 +9,7 @@ export default function Sidebar() {
       <div className="relative flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
 
         {/* Member Badge */}
-        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
+        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 right-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
           Free Member
         </p>
 
@@ -44,10 +44,10 @@ export default function Sidebar() {
           </div>
 
           {/* Right Content */}
-          <div className="text-left md:text-center flex-1 md:flex md:flex-col md:items-center md:w-full">
+          <div className="text-left md:text-center flex-1 md:flex md:flex-col md:items-center md:w-full mt-6">
             <h2 className="text-[22px] md:text-[26px] font-normal">Shubham</h2>
 
-            <div className="mt-10 space-y-4 md:self-start md:text-left">
+            <div className="mt-2 md:mt-10 space-y-4 md:self-start md:text-left">
               <div className="flex gap-1 md:gap-2 items-center">
                 <img src="/images/mail.png" alt="" className="w-4 md:w-5 h-4 md:h-5" />
                 <p className="text-[#AFAFAF] text-[14px] md:text-[16px] text-ellipsis overflow-hidden">
