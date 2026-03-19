@@ -126,7 +126,7 @@ const Journey_about = () => {
                             <div className="relative md:absolute   md:bottom-[58px] md:left-[35%]  md:-translate-x-1/2 xl:bottom-[62px] w-[240px] bg-white rounded-lg shadow-lg p-4 mx-auto">
 
                                 <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" />
-                                <div className='bg-[#DDE4FF] px-4  py-6'>
+                                <div className='bg-[#DDE4FF] px-4  py-6 rounded-lg'>
                                     <h4 className="font-bold mt-4">2024</h4>
                                     <h5 className="font-bold text-[18px] ">Lifetime Membership Programmes</h5>
                                     <p className="text-[14px] text-gray-500 mt-4">

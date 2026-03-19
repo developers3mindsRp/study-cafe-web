@@ -36,8 +36,8 @@ const Details_downloads = () => {
                               <img src="/images/pdf.svg" alt="PDF Icon" className="w-16 h-16" />
 
 
-                              <h2 className="text-[16px] md:text-2xl font-bold text-[#252525] mb-4 line-clamp-3 md:line-clamp-0">
-                                  ITAT Deletes Section 270A Penalty as AO Fails <br /> to Specify Misreporting Limb
+                              <h2 className="text-[14px] md:text-2xl font-bold text-[#252525] mb-4 ">
+                                  ITAT Deletes Section 270A Penalty as AO Fails <br className='hidden md:block'/> to Specify Misreporting Limb
                               </h2>
                               </div>
 
