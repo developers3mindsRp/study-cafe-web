@@ -30,6 +30,32 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [phone, setPhone] = useState<string | undefined>(undefined)
+  const professions = [
+    "Accountant",
+    "B.Com",
+    "CA: Business",
+    "CA: Job",
+    "CA: Practice",
+    "CMA",
+    "CS",
+    "CFA",
+    "Finance Professional",
+    "LLB",
+    "M.Com",
+    "MBA",
+    "Student: B.Com",
+    "Student: CA- CPT / Foundation",
+    "Student: CA- Final / Final New",
+    "Student: CA- IPC / IPCC / Inter",
+    "Student: CFA",
+    "Student: CMA",
+    "Student: CS",
+    "Student: MBA",
+    "Student: Others",
+    "Taxpayer",
+    "Others"
+  ];
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -144,19 +170,29 @@ const countries = countryList.getNames();
           
             </div>
 
-          <div>
-            <label htmlFor="profession" className="block mb-1">Profession <span className="text-red-600">*</span></label>
-            <input
+            <div>
+              <label htmlFor="profession" className="block mb-1">
+                Profession <span className="text-red-600">*</span>
+              </label>
+
+            <select
               id="profession"
               name="profession"
-              type="profession"
               value={form.profession}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-1"
-              placeholder="Select"
-            />
-          </div>
+                className="w-full border px-3 py-2 bg-white"
+               
+            >
+              <option value="" className="">Select</option>
+              {professions.map((item, index) => (
+                <option key={index} value={item.toLowerCase()} >
+                  {item}
+                </option>
+              ))}
+              </select>
+              </div>
+
 
           <div>
             <label htmlFor="company" className="block mb-1">Company Name </label>

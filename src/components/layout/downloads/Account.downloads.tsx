@@ -1,6 +1,7 @@
 
 
 import React from 'react'
+import Link from 'next/link';
 
 const Accounts_downloads = () => {
     const fileData = [
@@ -39,6 +40,8 @@ const Accounts_downloads = () => {
                   <h2 className='text-[26px] font-normal text-[#252525] mb-4'>Accounts</h2>
           
               </div>
+              <Link href="/downloads/details">
+           
               <div className="grid md:grid-cols-2 gap-4">
                   {fileData.map((item) => (
                       <div
@@ -68,7 +71,8 @@ const Accounts_downloads = () => {
               
                       </div>
                   ))}
-              </div>
+                  </div>
+              </Link>
 
           </section>
 

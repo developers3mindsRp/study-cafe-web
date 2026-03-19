@@ -100,41 +100,35 @@ export default function Commission() {
       <p className="text-[#252525] text-[16px] md:text-[26px] mb-6">
         Search your affiliate commission orders by date or month.
       </p>
-
       <div className="border border-[#B4C6FF] rounded-xl p-4 shadow-md">
         <div className="flex flex-col md:flex-row gap-6 md:items-end">
 
           {/* From */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <label className="text-[16px]">
               From <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
-              {/* <Calendar
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              /> */}
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full min-w-0 appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
           </div>
 
           {/* To */}
-          <div className="flex-1">
-            <label className="text-[16px] ">
+          <div className="flex-1 min-w-0">
+            <label className="text-[16px]">
               To <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
-          
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full min-w-0 appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
           </div>
@@ -142,13 +136,13 @@ export default function Commission() {
           {/* Button */}
           <button
             onClick={handleSearch}
-            className="flex items-center gap-2 bg-[#09339B] text-white px-8 py-2 rounded-xl hover:bg-[#0F2E75] transition text-[20px] mx-auto"
+            className="flex items-center justify-center gap-2 bg-[#09339B] text-white px-6 py-2 rounded-xl hover:bg-[#0F2E75] transition text-[16px] w-full md:w-auto"
           >
-            <Search size={18} />
             Search
           </button>
         </div>
       </div>
+
   
 
 
