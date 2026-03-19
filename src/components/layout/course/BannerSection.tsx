@@ -204,30 +204,34 @@ export default function BannerSection() {
 
                   {/* Buttons */}
                   <div className="mt-3 md:mt-4 mb-2 flex flex-row justify-center lg:justify-start gap-4">
-                    <Link href="/payment">
+
+                    <Link href="/payment" className="flex-1">
                       <button
                         onClick={handleClick}
-                        className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28
-            border-2 border-white rounded-[10px]
-            text-base xl:text-lg font-medium text-white
-            bg-[#09339B] transition"
+                        className="w-full py-2 px-6
+      border-2 border-white rounded-[10px]
+      text-base xl:text-lg font-medium text-white
+      bg-[#09339B] transition"
                       >
                         Buy Now
-                      </button></Link>
+                      </button>
+                    </Link>
 
-                    <Link href="/plans" className="w-full sm:w-auto">
+                    <Link href="/plans" className="flex-1">
                       <button
-                        className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16
-              bg-white text-[#09339B]
-              rounded-[10px] flex items-center justify-center gap-2
-              text-base xl:text-[20px]
-              border border-[#09339B]
-              transition font-semibold"
+                        className="w-full py-2 px-6
+      bg-white text-[#09339B]
+      rounded-[10px] flex items-center justify-center gap-2
+      text-base xl:text-[20px]
+      border border-[#09339B]
+      transition font-semibold"
                       >
                         View Membership
                       </button>
                     </Link>
+
                   </div>
+
                 </div>
 
 
