@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import PhoneInput from "react-phone-number-input";
+import { useRegister } from "@/hooks/useAuth";
+import type { ApiError } from "@/types/api.types";
 import 'react-phone-number-input/style.css';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
  import IndianStatesList  from "indian-states-cities-list";
@@ -10,8 +13,8 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 
 export default function SignUpPage() {
-    
   const router = useRouter();
+  const register = useRegister();
 
   const [showPwd, setShowPwd] = useState(false);
   const [form, setForm] = useState({
@@ -25,32 +28,36 @@ export default function SignUpPage() {
     state: "",
     country: "",
     password: "",
-    // add more if you need
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [phone, setPhone] = useState<string | undefined>(undefined)
+  const [phone, setPhone] = useState<string | undefined>(undefined);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitting(true);
     setErrors(null);
-
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      setErrors(data.message || "Something went wrong");
-      setSubmitting(false);
+    if (form.password.length < 6) {
+      setErrors("Password must be at least 6 characters.");
       return;
     }
-
-    // success — redirect or show success message
-    router.push("/welcome");  // or wherever
+    if (form.password !== form.confirmPassword) {
+      setErrors("Passwords do not match.");
+      return;
+    }
+    try {
+      await register.mutateAsync({
+        name: form.fullName.trim(),
+        email: form.email.trim(),
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+      });
+    } catch (err: unknown) {
+      const msg =
+        (err as ApiError)?.message ||
+        (err as Error)?.message ||
+        "Registration failed. Try a different email.";
+      setErrors(msg);
+    }
   }
 
        function handleChange(
@@ -259,6 +266,23 @@ const countries = countryList.getNames();
         </button>
       </div>
     </div>
+
+          <div className="mb-4">
+            <label htmlFor="confirmPassword" className="block mb-1 md:text-[18px]">
+              Confirm password <span className="text-red-600">*</span>
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showPwd ? "text" : "password"}
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-1"
+              placeholder="Confirm password"
+              autoComplete="new-password"
+            />
+          </div>
   
             <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#AFAFAF]">
 
@@ -285,15 +309,18 @@ const countries = countryList.getNames();
 
           <button
             type="submit"
-            disabled={submitting}
-            className="w-full bg-[#09339B] text-white py-2 rounded hover:bg-blue-700 "
+            disabled={register.isPending}
+            className="w-full bg-[#09339B] text-white py-2 rounded hover:bg-blue-700 disabled:opacity-60"
           >
-            {submitting ? "Registering…" : "Register"}
+            {register.isPending ? "Registering…" : "Register"}
           </button>
         </form>
 
         <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
-          Already have an account? <a href="/login" className="text-[#09339B]">Sign in</a>
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#09339B]">
+            Sign in
+          </Link>
         </p>
       </div>
       </div>

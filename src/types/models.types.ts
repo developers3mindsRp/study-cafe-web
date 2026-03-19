@@ -1,12 +1,14 @@
-// User Model
+// User Model (auth-service / public site)
 export interface User {
   id: string;
   email: string;
   name: string;
   avatar?: string;
-  role: 'student' | 'instructor' | 'admin';
-  createdAt: string;
-  updatedAt: string;
+  /** e.g. user, admin — from auth-service Role */
+  role: string;
+  permissions?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Course Model
@@ -336,6 +338,8 @@ export interface CoursePublicDetail {
   faqs?: string | null;
   feedback?: string | null;
   includes_info?: string | null;
+  /** JSON [{ image, title }] — banner "This course includes" (not bonuses). */
+  course_includes?: string | null;
   certifications?: string | null;
   is_published?: boolean;
   start_date?: string | null;

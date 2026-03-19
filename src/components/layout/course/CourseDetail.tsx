@@ -25,13 +25,13 @@ export default function CourseSection({
     course?.authors?.[0] ??
     (course?.author_name
       ? {
-          user_id: course.author_user_id ?? 0,
-          sort_order: 0,
-          name: course.author_name,
-          role: course.author_role ?? null,
-          bio: course.author_bio ?? null,
-          image_url: course.author_image ?? null,
-        }
+        user_id: course.author_user_id ?? 0,
+        sort_order: 0,
+        name: course.author_name,
+        role: course.author_role ?? null,
+        bio: course.author_bio ?? null,
+        image_url: course.author_image ?? null,
+      }
       : null);
 
   return (
@@ -85,6 +85,8 @@ export default function CourseSection({
               height={54}
               alt={primaryAuthor?.name || "Author"}
               className="rounded-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={(e) => { e.currentTarget.src = "/images/author.png"; }}
             />
 
             <div className="text-left">
@@ -132,10 +134,9 @@ export default function CourseSection({
                   }
                   className={`
                     w-full flex justify-between items-center p-4 transition
-                    ${
-                      openIndex === index
-                        ? "bg-[#09339B] text-white" // Active
-                        : "bg-white text-[#09339B]"
+                    ${openIndex === index
+                      ? "bg-[#09339B] text-white" // Active
+                      : "bg-white text-[#09339B]"
                     }   // Inactive
                   `}
                 >

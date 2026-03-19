@@ -32,6 +32,39 @@ function formatDate(dateStr?: string | null) {
   }
 }
 
+const FALLBACK_COURSE_INCLUDES = [
+  { image: "/images/icon-video.png", title: "Recording is available for 1 year" },
+  { image: "/images/icon-certiificate.png", title: "Studycafe certificate of completion" },
+  { image: "/images/icon-laptop.png", title: "Access on mobile or computer/laptop" },
+];
+
+function resolveIncludeImageUrl(path?: string | null): string {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("/api/")) {
+    const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
+    const serverRoot = base.replace(/\/api\/?$/, "");
+    return `${serverRoot}${path}`;
+  }
+  return path;
+}
+
+function parseCourseIncludesJson(raw?: string | null): { image: string; title: string }[] {
+  if (!raw?.trim()) return [];
+  try {
+    const p = JSON.parse(raw);
+    if (!Array.isArray(p)) return [];
+    return p
+      .map((x: { image?: string; icon?: string; title?: string }) => ({
+        image: String(x?.image ?? x?.icon ?? ""),
+        title: String(x?.title ?? ""),
+      }))
+      .filter((x) => x.image || x.title);
+  } catch {
+    return [];
+  }
+}
+
 /** Returns the nearest future batch start_date, or null if none exist. */
 function getNextUpcomingBatchDate(batches: CourseBatch[]): string | null {
   const now = new Date();
@@ -61,7 +94,9 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
   const languages = course?.language
     ? (Array.isArray(course.language) ? course.language : [course.language]).join(", ")
     : "English";
-
+  const parsedIncludes = parseCourseIncludesJson(course?.course_includes);
+  const courseIncludes =
+    parsedIncludes.length > 0 ? parsedIncludes : FALLBACK_COURSE_INCLUDES;
   const displayPrice = salePrice ?? price;
   const originalPrice = salePrice ? price : null;
 
@@ -87,6 +122,66 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
       </>
     );
   };
+
+  const handleShare = async (platform: string) => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const encUrl = encodeURIComponent(url);
+    const encTitle = encodeURIComponent(title);
+    const encImage = encodeURIComponent(thumbnail);
+
+    switch (platform) {
+      case "facebook":
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encUrl}`, "_blank");
+        break;
+      case "linkedin":
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`, "_blank");
+        break;
+      case "twitter":
+        window.open(`https://twitter.com/intent/tweet?url=${encUrl}&text=${encTitle}`, "_blank");
+        break;
+      case "pinterest":
+        window.open(`https://pinterest.com/pin/create/button/?url=${encUrl}&media=${encImage}&description=${encTitle}`, "_blank");
+        break;
+      case "print":
+        window.print();
+        break;
+      case "native":
+        if (navigator.share) {
+          try {
+            await navigator.share({ title, url });
+          } catch (err) {
+            console.error("Error sharing", err);
+          }
+        } else {
+          try {
+            await navigator.clipboard.writeText(url);
+            alert("Link copied to clipboard!");
+          } catch (e) {
+            console.error("Clipboard error", e);
+          }
+        }
+        break;
+    }
+  };
+
+  const renderSocialShare = (containerClassName: string) => (
+    <div className={containerClassName}>
+      <div
+        onClick={() => handleShare("native")}
+        className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px] hover:bg-gray-50 transition-colors"
+      >
+        <img src="/images/icon-share.png" alt="Share" />
+        <span className="font-medium text-[20px]">Share</span>
+      </div>
+      <div className="flex gap-3">
+        <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("facebook")} />
+        <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("linkedin")} />
+        <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("twitter")} />
+        <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("pinterest")} />
+        <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("print")} />
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -135,19 +230,7 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
                 </div>
 
                 {/* Mobile social share */}
-                <div className="md:hidden flex items-center gap-4 pt-3">
-                  <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
-                    <img src="/images/icon-share.png" alt="Share" />
-                    <span className="font-medium text-[20px]">Share</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
-                  </div>
-                </div>
+                {renderSocialShare("md:hidden flex flex-wrap items-center gap-4 pt-3")}
 
                 {/* Price + Buy buttons (fixed on mobile, static on desktop) */}
                 <div className="fixed bottom-0 left-0 w-full z-50 bg-white md:bg-transparent px-4 py-2 md:py-6 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:static sm:shadow-none sm:p-0 rounded-t-[20px]">
@@ -185,19 +268,7 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
                 </div>
 
                 {/* Desktop social share */}
-                <div className="hidden md:flex items-center gap-4 pt-3">
-                  <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
-                    <img src="/images/icon-share.png" alt="Share" />
-                    <span className="font-medium text-[20px]">Share</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
-                  </div>
-                </div>
+                {renderSocialShare("hidden md:flex items-center gap-4 pt-3")}
               </div>
 
               {/* Right: Image + stats */}
@@ -224,18 +295,20 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
           <div className="mt-8">
             <h3 className="text-[14px] md:text-[20px] font-medium">This course includes:</h3>
             <div className="flex flex-wrap gap-4 items-center text-[#696969] p-3 text-[12px] md:text-[16px]">
-              <div className="flex gap-2 items-center bg-white p-3">
-                <img src="/images/icon-video.png" alt="" />
-                <span>Recording is available for 1 year</span>
-              </div>
-              <div className="flex gap-2 items-center bg-white p-3">
-                <img src="/images/icon-certiificate.png" alt="" />
-                <span>Studycafe certificate of completion</span>
-              </div>
-              <div className="flex gap-2 items-center bg-white p-3">
-                <img src="/images/icon-laptop.png" alt="" />
-                <span>Access on mobile or computer/laptop</span>
-              </div>
+              {courseIncludes.map((include, idx) => (
+                <div
+                  key={idx}
+                  className="flex gap-2.5 items-center bg-white p-3 rounded-lg"
+                >
+                  {/* Smaller icons than bonus cards (bonus ~36–43px; banner row ~28–32px) */}
+                  <img
+                    src={resolveIncludeImageUrl(include.image)}
+                    alt=""
+                    className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] object-contain flex-shrink-0"
+                  />
+                  <span dangerouslySetInnerHTML={{ __html: include.title }} />
+                </div>
+              ))}
             </div>
           </div>
         </div>

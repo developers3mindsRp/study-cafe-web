@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { getToken, setToken, clearAuthData } from '@/utils/auth.utils';
+import { getToken, getRefreshToken, setToken, clearAuthData } from '@/utils/auth.utils';
 import { ApiError } from '@/types/api.types';
 
 const getApiBaseUrl = (): string => {
@@ -46,51 +46,60 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError<ApiError>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Handle 401 Unauthorized errors
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const url = originalRequest?.url || '';
+    const isAuthRoute =
+      url.includes('/auth/login') ||
+      url.includes('/auth/register') ||
+      url.includes('/auth/refresh');
+
+    // Handle 401 — refresh access token (auth-service expects body.refreshToken)
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isAuthRoute
+    ) {
+      const refresh = getRefreshToken();
+      if (!refresh) {
+        clearAuthData();
+        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       try {
-        // Attempt to refresh the token
-        const response = await axios.post(
+        const response = await axios.post<{ success: boolean; data: { accessToken?: string; token?: string } }>(
           `${getApiBaseUrl()}/auth/refresh`,
-          {},
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            withCredentials: true,
-          }
+          { refreshToken: refresh },
+          { headers: { 'Content-Type': 'application/json' } }
         );
 
-        const { token } = response.data;
-        
-        if (token) {
-          setToken(token);
-          
-          // Retry the original request with new token
+        const accessToken = response.data?.data?.accessToken ?? response.data?.data?.token;
+        if (accessToken) {
+          setToken(accessToken);
           if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           }
-          
           return axiosInstance(originalRequest);
         }
-      } catch (refreshError) {
-        // Refresh failed, clear auth data and redirect to login
+      } catch {
         clearAuthData();
-        
-        // Only redirect on client side
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
           window.location.href = '/login';
         }
-        
-        return Promise.reject(refreshError);
       }
     }
 
     // Transform error for consistent handling
+    const body = error.response?.data as { message?: string; error?: string } | undefined;
     const apiError: ApiError = {
-      message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+      message:
+        body?.message ||
+        body?.error ||
+        error.message ||
+        'An unexpected error occurred',
       code: error.code,
       statusCode: error.response?.status,
       errors: error.response?.data?.errors,

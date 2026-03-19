@@ -4,14 +4,20 @@ import Cookies from 'js-cookie';
 const TOKEN_KEY = 'auth_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
+const cookieOpts = (days: number) => ({
+  expires: days,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict' as const,
+});
+
 // Token storage functions
 export const getToken = (): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
   return Cookies.get(TOKEN_KEY);
 };
 
 export const setToken = (token: string): void => {
-  // Set token with 7 days expiry
-  Cookies.set(TOKEN_KEY, token, { expires: 7, secure: true, sameSite: 'strict' });
+  Cookies.set(TOKEN_KEY, token, cookieOpts(7));
 };
 
 export const removeToken = (): void => {
@@ -19,12 +25,12 @@ export const removeToken = (): void => {
 };
 
 export const getRefreshToken = (): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
   return Cookies.get(REFRESH_TOKEN_KEY);
 };
 
 export const setRefreshToken = (token: string): void => {
-  // Set refresh token with 30 days expiry
-  Cookies.set(REFRESH_TOKEN_KEY, token, { expires: 30, secure: true, sameSite: 'strict' });
+  Cookies.set(REFRESH_TOKEN_KEY, token, cookieOpts(30));
 };
 
 export const removeRefreshToken = (): void => {

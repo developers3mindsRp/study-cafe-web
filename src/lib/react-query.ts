@@ -5,19 +5,19 @@ const queryConfig: DefaultOptions = {
   queries: {
     // Data is considered stale after 5 minutes
     staleTime: 5 * 60 * 1000,
-    
+
     // Cache data for 10 minutes
     gcTime: 10 * 60 * 1000,
-    
+
     // Retry failed requests 1 time
     retry: 1,
-    
+
     // Don't refetch on window focus in development
     refetchOnWindowFocus: process.env.NODE_ENV === 'production',
-    
+
     // Don't refetch on mount if data is fresh
     refetchOnMount: false,
-    
+
     // Don't refetch on reconnect by default
     refetchOnReconnect: false,
   },
@@ -45,7 +45,7 @@ export const queryKeys = {
   auth: {
     currentUser: ['auth', 'currentUser'] as const,
   },
-  
+
   // Course keys
   courses: {
     all: ['courses'] as const,
@@ -62,7 +62,14 @@ export const queryKeys = {
     home: () => [...queryKeys.platform.all, 'home'] as const,
     memberships: () => [...queryKeys.platform.all, 'memberships'] as const,
   },
-  
+
+  // Article/Blog keys
+  articles: {
+    all: ['articles'] as const,
+    list: (filters?: any) => [...queryKeys.articles.all, 'list', { filters }] as const,
+    categories: () => [...queryKeys.articles.all, 'categories'] as const,
+  },
+
   // Purchase/User Course keys
   purchases: {
     all: ['purchases'] as const,
@@ -70,14 +77,14 @@ export const queryKeys = {
     list: (userId?: string) => [...queryKeys.purchases.lists(), { userId }] as const,
     detail: (id: string) => [...queryKeys.purchases.all, 'detail', id] as const,
   },
-  
+
   // User keys
   user: {
     all: ['user'] as const,
     profile: () => [...queryKeys.user.all, 'profile'] as const,
     stats: () => [...queryKeys.user.all, 'stats'] as const,
   },
-  
+
   // Progress keys
   progress: {
     all: ['progress'] as const,

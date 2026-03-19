@@ -2,7 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCurrentUser, useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useAuth";
+import { useAuth } from "@/providers/AuthProvider";
 import { getCourseCats } from "@/services/platform.service";
 import type { CourseCat } from "@/types/models.types";
 
@@ -12,7 +13,7 @@ import type { CourseCat } from "@/types/models.types";
 
 export default function Header() {
   const router = useRouter();
-  const { data: user } = useCurrentUser();
+  const { user, isLoading: authLoading } = useAuth();
   const logout = useLogout();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -175,10 +176,65 @@ export default function Header() {
 
             {/* <Link href="/notify" className="text-gray-700 hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link> */}
 
-            {/* Auth Buttons / User Menu */}
-            {user ? (
+            {authLoading ? (
+              <div className="h-10 w-24 animate-pulse rounded-lg bg-gray-200" aria-hidden />
+            ) : user ? (
               <div className="relative" ref={userRef}>
-                {/* …Your user dropdown code here */}
+                <button
+                  type="button"
+                  onClick={() => setUserMenuOpen((o) => !o)}
+                  className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-left hover:bg-gray-50"
+                  aria-expanded={userMenuOpen}
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#09339B] text-sm font-semibold text-white">
+                    {(user.name || user.email || "?").slice(0, 1).toUpperCase()}
+                  </span>
+                  <span className="max-w-[140px] truncate text-sm font-medium text-gray-900">
+                    {user.name || "Account"}
+                  </span>
+                  <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {userMenuOpen && (
+                  <div className="absolute right-0 top-full z-30 mt-2 w-56 rounded-lg border border-gray-100 bg-white py-2 shadow-lg">
+                    <div className="border-b border-gray-100 px-4 py-2">
+                      <p className="truncate text-sm font-semibold text-gray-900">{user.name}</p>
+                      <p className="truncate text-xs text-gray-500">{user.email}</p>
+                    </div>
+                    <Link
+                      href="/dashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      href="/dashboard/courses"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      My Courses
+                    </Link>
+                    <Link
+                      href="/dashboard/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link
@@ -301,7 +357,9 @@ export default function Header() {
               </Link>
 
               <div className="border-t border-gray-200 pt-4 mt-2">
-                {user ? (
+                {authLoading ? (
+                  <div className="h-10 animate-pulse rounded bg-gray-200" />
+                ) : user ? (
                   <>
                     <div className="mb-4">
                       <p className="text-sm font-semibold text-gray-900">

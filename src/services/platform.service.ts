@@ -113,6 +113,63 @@ export const getArticleBySlug = async (
   }
 };
 
+/** Article listing item shape from API */
+export interface ArticleListItem {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  thumbnail_url: string | null;
+  cover_image_url: string | null;
+  author_id: number | null;
+  author_name: string | null;
+  published_at: string | null;
+  created_at: string;
+  categories: { id: number; name: string; slug: string }[];
+}
+
+export interface PaginatedArticles {
+  data: ArticleListItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface ArticleQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+}
+
+export interface ArticleCategoryItem {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+/** Paginated article listing with optional search / category filter */
+export const getArticles = async (params: ArticleQueryParams = {}): Promise<PaginatedArticles> => {
+  const { page = 1, limit = 6, search = '', category = '' } = params;
+  const query: Record<string, string | number> = { page, limit };
+  if (search.trim()) query.search = search.trim();
+  if (category.trim()) query.category = category.trim();
+  const response = await axiosInstance.get<ApiResponse<PaginatedArticles>>(
+    '/platform/articles',
+    { params: query }
+  );
+  return response.data.data;
+};
+
+/** All article categories (for blog filter tabs) */
+export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => {
+  const response = await axiosInstance.get<ApiResponse<ArticleCategoryItem[]>>(
+    '/platform/article-categories'
+  );
+  return response.data.data;
+};
+
 /** All course categories (for filter tabs) */
 export const getCourseCats = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
