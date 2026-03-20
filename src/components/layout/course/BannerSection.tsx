@@ -219,7 +219,7 @@ export default function BannerSection() {
 
                     <Link href="/plans" className="flex-1">
                       <button
-                        className="w-full py-2 px-6
+                        className="w-full py-2
       bg-white text-[#09339B]
       rounded-[10px] flex items-center justify-center gap-2
       text-base xl:text-[20px]
