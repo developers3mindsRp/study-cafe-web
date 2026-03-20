@@ -5,6 +5,18 @@ const nextConfig = {
   experimental: {
     urlImports: ['https://cdn.skypack.dev'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
   // ... other configs
 };
 

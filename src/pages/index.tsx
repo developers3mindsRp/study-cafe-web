@@ -1,10 +1,4 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
-import { queryKeys } from '@/lib/react-query';
-import * as coursesService from '@/services/courses.service';
+import { GetServerSideProps } from 'next';
 import { PublicLayout } from '@/components/layout';
 import HeroSection from '@/components/layout/home/HeroSection.home';
 import StatsSection from '@/components/layout/home/StaticSection.home';
@@ -14,61 +8,43 @@ import Testimonials from '@/components/layout/home/Testimonial.home';
 import BlogSection from '@/components/layout/home/BlogSection.home';
 import FAQSection from '@/components/layout/home/FaqSection.home';
 import Learning from '@/components/layout/home/Learning.home';
-import GSTRCoursePage from '@/components/layout/course/CourseDetail';
+import { getHomePageData, getMemberships } from '@/services/platform.service';
+import type { HomePageData, Membership } from '@/types/models.types';
 
-/**
- * Home Page - Course Listing
- * 
- * This example shows how to use React Query with SSG (Static Site Generation)
- * for SEO-optimized course listings
- */
+interface HomeProps {
+  homePageData: HomePageData | null;
+  memberships: Membership[] | null;
+}
 
-export default function Home() {
-  const router = useRouter();
-  // Use the hook on the client side - data is already prefetched on the server
-  const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
+export default function Home({ homePageData, memberships }: HomeProps) {
   return (
     <PublicLayout>
-
-      <HeroSection />
-      {/* <OrbitingCircles/> */}
-      <StatsSection />
+      <HeroSection hero={homePageData?.hero} />
+      <StatsSection stats={homePageData?.stats} />
       <FeaturedCourses />
-      <MembershipPricing />
-      <Testimonials/>
+      <MembershipPricing memberships={memberships ?? undefined} />
+      <Testimonials testimonials={homePageData?.testimonials} />
       <BlogSection/>
       <Learning/>
-      <FAQSection/>
-      {/* <GSTRCoursePage/> */}
+      <FAQSection faqs={homePageData?.faqs} />
     </PublicLayout>
   );
 }
 
-/**
- * Static Site Generation (SSG)
- * Prefetch data at build time for SEO and performance
- */
-export const getStaticProps: GetStaticProps = async () => {
-  const queryClient = new QueryClient();
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  let homePageData: HomePageData | null = null;
+  let memberships: Membership[] | null = null;
 
   try {
-    // Prefetch featured courses
-    await queryClient.prefetchQuery({
-      queryKey: [...queryKeys.courses.all, 'featured', 6],
-      queryFn: () => coursesService.getFeaturedCourses(6),
-    });
+    [homePageData, memberships] = await Promise.all([
+      getHomePageData(),
+      getMemberships(),
+    ]);
   } catch (error) {
-    console.error('Error prefetching data:', error);
+    console.error('Error fetching home data:', error);
   }
 
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    // Revalidate every 10 minutes
-    revalidate: 600,
+    props: { homePageData, memberships },
   };
 };

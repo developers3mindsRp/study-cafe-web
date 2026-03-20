@@ -6,10 +6,11 @@
 
 export const appConfig = {
   // Set to true to use mock data, false to use real API
-  useMockApi: true,
+  useMockApi: false,
   
-  // API base URL (used when useMockApi is false)
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
+  // API base URL (used when useMockApi is false). Set NEXT_PUBLIC_API_BASE_URL in .env; gateway runs on 3000.
+  apiBaseUrl:
+    (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL) || 'http://localhost:3000/api',
   
   // Other app-wide settings
   appName: 'StudyCafe',

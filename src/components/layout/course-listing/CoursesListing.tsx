@@ -1,358 +1,335 @@
-// pages/index.jsx
-import React, { useState, useMemo, useEffect } from 'react'
-import Image from 'next/image'
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import type { CourseCat, Course, PaginatedCourses } from "@/types/models.types";
+import type { CourseQueryParams } from "@/services/platform.service";
 
+// ─── helpers ────────────────────────────────────────────────────────────────
 
-const courses = [
-  {
-    id: 1,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f1.jpg",   // UPDATED
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 2,
-    title: "Certification Course on How to Automate Your CA Practice",
-    img: "/images/home/f2.png",   // UPDATED
-    hours: "2+ Hours",
-    lang: "English",
-    students: "957",
-    oldPrice: "₹ 1,999",
-    newPrice: "₹ 99",
-    rating: "4.8",
-  },
-  {
-    id: 3,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f3.png",   // UPDATED
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 4,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f4.jpg", // waiting for upload
-    hours: "3+ Hours",
-    lang: "English",
-    students: "820",
-    oldPrice: "₹ 1,499",
-    newPrice: "₹ 499",
-    rating: "4.8",
-  },
-  {
-    id: 5,
-    title: "Certification Course on How to Automate Your CA Practice",
-    img: "/images/home/f5.png", // waiting for upload
-    hours: "1.5+ Hours",
-    lang: "English",
-    students: "500",
-    oldPrice: "₹ 999",
-    newPrice: "₹ 299",
-    rating: "4.8",
-  },
-  {
-    id: 6,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f6.png", // waiting for upload
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 7,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f6.png", // waiting for upload
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 8,
-    title: "Certification Course on How to Automate Your CA Practice",
-    img: "/images/home/f6.png", // waiting for upload
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 9,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f6.png", // waiting for upload
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-  {
-    id: 10,
-    title: "Practical Filing of GSTR-9 & GSTR-9C Certification Course",
-    img: "/images/home/f6.png", // waiting for upload
-    hours: "4+ Hours",
-    lang: "English",
-    students: "1240",
-    oldPrice: "₹ 2,000",
-    newPrice: "₹ 699",
-    rating: "4.8",
-  },
-];
+function formatPrice(val?: string | number | null) {
+  if (val == null) return null;
+  const n = Number(val);
+  if (!Number.isFinite(n)) return String(val);
+  return `₹ ${n.toLocaleString("en-IN")}`;
+}
 
+// ─── course card ─────────────────────────────────────────────────────────────
 
+function CourseCard({ c }: { c: Course }) {
+  const href = c.slug ? `/course/${c.slug}` : `/course/${c.id}`;
+  const thumbnail = c.thumbnail_url || "/images/home/f1.jpg";
+  const rating = c.ratings ? Number(c.ratings).toFixed(1) : null;
+  const enrolled = c.enrolled_count ? c.enrolled_count.toLocaleString("en-IN") : null;
+  const oldPrice = formatPrice(c.price);
+  const newPrice = formatPrice(c.sale_price);
 
-export default function CoursesPage() {
-  const [itemsPerPage, setItemsPerPage] = useState(9)
-useEffect(() => {
-  const updateItemsPerPage = () => {
-    if (window.innerWidth < 768) {
-      setItemsPerPage(3)
-    } else {
-      setItemsPerPage(9)
-    }
-  }
+  return (
+    <div className="bg-white shadow-md rounded-md overflow-hidden">
+      <div className="relative w-full h-[200px] xl:h-[243px]">
+        <Image src={thumbnail} alt={c.title} fill className="object-cover" />
+        {rating && (
+          <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
+            <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
+          </span>
+        )}
+      </div>
+      <div className="p-3">
+        {c.language && (
+          <div className="flex items-center gap-4 text-[#AFAFAF] text-[14px] md:text-[16px]">
+            <span className="flex items-center gap-1">
+              <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" />
+              {Array.isArray(c.language) ? c.language.join(", ") : c.language}
+            </span>
+          </div>
+        )}
+        <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
+          {c.title}
+        </h3>
+        {enrolled && (
+          <div className="flex items-center gap-2 text-[#AFAFAF] text-[14px] md:text-[16px]">
+            <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />
+            {enrolled} students
+          </div>
+        )}
+        <div className="flex justify-between items-center mt-2 md:mt-4">
+          <div>
+            {newPrice && (
+              <span className="line-through text-gray-400 xl:text-[26px]">{oldPrice}</span>
+            )}
+            <span className="text-[#252525] font-normal text-[16px] xl:text-[26px] ml-2">
+              {newPrice ?? oldPrice}
+            </span>
+          </div>
+          <Link href={href}>
+            <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2 rounded-md">View Course</button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-  updateItemsPerPage()
-  window.addEventListener("resize", updateItemsPerPage)
+// ─── skeleton loader ─────────────────────────────────────────────────────────
 
-  return () => {
-    window.removeEventListener("resize", updateItemsPerPage)
-  }
-}, [])
-  const ITEMS_PER_PAGE = itemsPerPage;
+function SkeletonGrid() {
+  return (
+    <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4">
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div key={i} className="bg-gray-100 animate-pulse rounded-md h-[360px]" />
+      ))}
+    </div>
+  );
+}
 
-  const [categoryFilter, setCategoryFilter] = useState('All Categories')
-  const [levelFilter, setLevelFilter] = useState('All Levels')
-  const [priceFilter, setPriceFilter] = useState('All Prices')
-  const [authorFilter, setAuthorFilter] = useState('All Author/faculty')
-  const [latestFilter, setLatestFilter] = useState('Latest')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [active, setActive] = useState("All Courses");
+// ─── sort label ↔ API value mapping ──────────────────────────────────────────
 
+const SORT_OPTIONS = [
+  { label: "Latest", value: "latest" },
+  { label: "Most Enrolled", value: "latest" },
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+] as const;
 
+const PRICE_OPTIONS = [
+  { label: "All Prices", value: "all" },
+  { label: "Free", value: "free" },
+  { label: "₹0 - ₹500", value: "0-500" },
+  { label: "₹500 - ₹1000", value: "500-1000" },
+  { label: "₹1000+", value: "1000+" },
+] as const;
 
-  const filtered = useMemo(() => {
-    return courses.filter((course: any) => {
-      const matchCategory =
-        categoryFilter === 'All Categories' || course.category === categoryFilter
-      const matchLevel =
-        levelFilter === 'All Levels' || course.level === levelFilter
-      let matchPrice = true
-      if (priceFilter === 'Free') {
-        matchPrice = course.price === 0
-      } else if (priceFilter === '₹0 - ₹500') {
-        matchPrice = course.price > 0 && course.price <= 500
-      } else if (priceFilter === '₹500 - ₹1000') {
-        matchPrice = course.price > 500 && course.price <= 1000
-      } else if (priceFilter === '₹1000+') {
-        matchPrice = course.price > 1000
-      }
-      return matchCategory && matchLevel && matchPrice
-    })
-  }, [categoryFilter, levelFilter, priceFilter])
+// ─── props ───────────────────────────────────────────────────────────────────
 
-const pageCount = Math.ceil(filtered.length / itemsPerPage)
+interface Props {
+  cats: CourseCat[];
+  initialCourses: PaginatedCourses;
+  initialQuery: CourseQueryParams;
+}
 
-  const paginated = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
-    return filtered.slice(start, start + ITEMS_PER_PAGE)
-  }, [filtered, currentPage])
+const ALL_CAT: CourseCat = { id: 0, name: "All Categories", slug: "all" };
 
+// ─── main component ──────────────────────────────────────────────────────────
 
+export default function CoursesPage({ cats = [], initialCourses, initialQuery }: Props) {
+  const router = useRouter();
 
-const startIndex = (currentPage - 1) * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
+  // ── local state ──
+  const [navigating, setNavigating] = useState(false);
 
-// use filtered array (so filters + pagination both work)
-const visibleCourses = filtered.slice(startIndex, endIndex);
+  useEffect(() => {
+    const start = () => setNavigating(true);
+    const end   = () => setNavigating(false);
+    router.events.on("routeChangeStart", start);
+    router.events.on("routeChangeComplete", end);
+    router.events.on("routeChangeError", end);
+    return () => {
+      router.events.off("routeChangeStart", start);
+      router.events.off("routeChangeComplete", end);
+      router.events.off("routeChangeError", end);
+    };
+  }, [router.events]);
 
-  const handlePageClick = (page: number) => {
-    if (page < 1 || page > pageCount) return;
-    setCurrentPage(page);
+  // ── build URL query from current filters ──
+  const buildQuery = (overrides: Partial<CourseQueryParams> & { q?: string } = {}) => {
+    const base: Record<string, string> = {};
+    const cat      = overrides.category  ?? initialQuery.category;
+    const pg       = overrides.page      ?? initialQuery.page ?? 1;
+    const search   = overrides.q         ?? initialQuery.search ?? "";
+    const sort     = overrides.sort      ?? initialQuery.sort ?? "latest";
+    const price    = overrides.price     ?? initialQuery.price ?? "all";
+
+    if (cat && cat !== "all") base.category = cat;
+    if (pg > 1) base.page = String(pg);
+    if (search.trim()) base.q = search.trim();
+    if (sort !== "latest") base.sort = sort;
+    if (price !== "all") base.price = price;
+    return base;
   };
+
+  const navigate = (overrides: Parameters<typeof buildQuery>[0]) => {
+    router.push(
+      { pathname: "/courses", query: buildQuery(overrides) },
+      undefined,
+      { shallow: false }
+    );
+  };
+
+  // ── derived values from SSR data ──
+  const allCats = [ALL_CAT, ...cats];
+  const activeCategory = initialQuery.category ?? "all";
+  const activeCatName  = allCats.find((c) => c.slug === activeCategory)?.name ?? "All Categories";
+  const sortLabel      = SORT_OPTIONS.find((o) => o.value === initialQuery.sort)?.label ?? "Latest";
+  const priceLabel     = PRICE_OPTIONS.find((o) => o.value === initialQuery.price)?.label ?? "All Prices";
+  const currentPage    = initialQuery.page ?? 1;
+
+  const { data: courses, total, pageCount } = initialCourses;
+
+  const hasActiveFilters =
+    (initialQuery.search ?? "").trim() !== "" ||
+    activeCategory !== "all" ||
+    (initialQuery.price ?? "all") !== "all" ||
+    (initialQuery.sort ?? "latest") !== "latest";
+
+  // ─── render ───────────────────────────────────────────────────────────────
 
   return (
     <div className="container px-4 mx-auto">
-      {/* Filter bar */}
-      <div className="filter-bar md:flex  mb-10 mt-10  md:px-4 items-center">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:flex md:gap-4 px-4 md:px-0 ">
+
+      {/* ── Filter bar ── */}
+      <div className="filter-bar mb-10 mt-10 md:px-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:flex md:gap-4 px-4 md:px-0 md:flex-wrap md:items-center">
+
+          {/* Sort */}
           <select
-            value={latestFilter}
-            onChange={e => { setLatestFilter(e.target.value); setCurrentPage(1) }}
-            className='border p-2 m-2 md:m-0 rounded-[10px] md:ml-auto text-sm md:text-base'
+            value={sortLabel}
+            onChange={(e) => {
+              const val = SORT_OPTIONS.find((o) => o.label === e.target.value)?.value ?? "latest";
+              navigate({ sort: val, page: 1 });
+            }}
+            className="border p-2 m-2 md:m-0 rounded-[10px]"
           >
-            <option>Latest</option>
-            <option>Newest</option>
-            <option>Recently added</option>
-            <option>Oldest</option>
+            {SORT_OPTIONS.map((o) => <option key={o.label}>{o.label}</option>)}
           </select>
 
+          {/* Category */}
           <select
-            value={categoryFilter}
-            onChange={e => { setCategoryFilter(e.target.value); setCurrentPage(1) }}
-            className='border p-2 m-2 md:m-0 rounded-[10px] text-sm md:text-base'
+            value={activeCatName}
+            onChange={(e) => {
+              const cat = allCats.find((c) => c.name === e.target.value) ?? ALL_CAT;
+              navigate({ category: cat.slug, page: 1 });
+            }}
+            className="border p-2 m-2 md:m-0 rounded-[10px]"
           >
-            <option>All Categories</option>
-            <option>Accounting</option>
-            <option>AI / Automation</option>
-            {/* aur categories add karo */}
+            {allCats.map((c) => <option key={c.id}>{c.name}</option>)}
           </select>
 
-          <select
-            value={levelFilter}
-            onChange={e => { setLevelFilter(e.target.value); setCurrentPage(1) }}
-            className='border p-2 m-2 md:m-0 rounded-[10px] text-sm md:text-base'
-          >
+          {/* Level — UI only (backend doesn't track level yet) */}
+          <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
             <option>All Levels</option>
             <option>Beginner</option>
             <option>Intermediate</option>
             <option>Advanced</option>
           </select>
 
+          {/* Price */}
           <select
-            value={priceFilter}
-            onChange={e => { setPriceFilter(e.target.value); setCurrentPage(1) }}
-            className='border p-2 m-2 md:m-0 rounded-[10px] text-sm md:text-base'
+            value={priceLabel}
+            onChange={(e) => {
+              const val = PRICE_OPTIONS.find((o) => o.label === e.target.value)?.value ?? "all";
+              navigate({ price: val, page: 1 });
+            }}
+            className="border p-2 m-2 md:m-0 rounded-[10px]"
           >
-            <option>All Prices</option>
-            <option>Free</option>
-            <option>₹0 - ₹500</option>
-            <option>₹500 - ₹1000</option>
-            <option>₹1000+</option>
+            {PRICE_OPTIONS.map((o) => <option key={o.label}>{o.label}</option>)}
           </select>
 
-          <select
-            value={authorFilter}
-            onChange={e => { setAuthorFilter(e.target.value); setCurrentPage(1) }}
-            className='border p-2 m-2 md:m-0 rounded-[10px] w-full md:w-auto text-sm md:text-base'
-
-          >
+          {/* Author — placeholder */}
+          <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
             <option>All Author/faculty</option>
-            <option>Free</option>
-            <option>₹0 - ₹500</option>
-            <option>₹500 - ₹1000</option>
-            <option>₹1000+</option>
           </select>
 
-          <button className='border p-2 m-2 md:m-0 rounded-[10px] text-[#09339B] text-sm md:text-base' onClick={() => {
-            setCategoryFilter('All Categories');
-            setLevelFilter('All Levels');
-            setPriceFilter('All Prices');
-            setAuthorFilter('All Author/faculty');
-            setCurrentPage(1);
-          }}>
-            Clear All Filter X
-          </button>
-
+          {/* Clear button — only when filters active */}
+          {hasActiveFilters && (
+            <button
+              className="border p-2 m-2 md:m-0 rounded-[10px] text-[#09339B] flex items-center gap-2 whitespace-nowrap"
+              onClick={() => router.push({ pathname: "/courses", query: {} })}
+            >
+              Clear All Filter
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="mt-[2px]">
+                <path
+                  d="M8.75 0.75L0.75054 8.74947M8.74947 8.75L0.75 0.750567"
+                  stroke="#09339B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          )}
         </div>
-
-
       </div>
 
 
       {/* Cards Grid */}
-      <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4 ">
-        {visibleCourses.map((c) => (
-          <div key={c.id} className="bg-white shadow-md rounded-md
-   overflow-hidden ">
-             <div className="relative w-full h-[200px] xl:h-[243px]">
-                  <Image src={c.img} alt={c.title} fill className="object-fit" />
-                  <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
-                     <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1"/> {c.rating}
-                  </span>
-                </div>
+      {navigating ? (
+        <SkeletonGrid />
+      ) : courses.length === 0 ? (
+        <div className="col-span-3 py-20 text-center text-gray-400 text-lg">
+          No courses found.{" "}
+          {hasActiveFilters && (
+            <button
+              className="text-[#09339B] underline ml-1"
+              onClick={() => router.push({ pathname: "/courses", query: {} })}
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4">
+          {courses.map((c) => (
+            <CourseCard key={c.id} c={c} />
+          ))}
+        </div>
+      )}
 
-            <div className="p-3">
-              <div className="flex items-center gap-4 text-[#AFAFAF] text-[14px] md:text-[16px] ">
-                <span className="flex items-center gap-1"><img src="/images/icons/clock-light.svg" alt="" width="20" height="20" /> {c.hours}</span>
-                <span className="flex items-center
-   gap-1"><img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.lang}</span>
-              </div>
-
-              <h3 className="text-[16px] xl:text-[26px] font-normal
-   text-[#252525] mt-2 mb-2">{c.title}</h3>
-
-              <div className="flex items-center gap-2 text-[#AFAFAF] text-[14px] md:text-[16px]">
-                <img src="/images/icons/user-light.svg" alt="" width="20" height="20" /> {c.students} students
-              </div>
-
-              <div className="flex justify-between items-center mt-2 md:mt-4">
-                <div>
-                  <span className="line-through
-   text-gray-400 xl:text-[26px]">{c.oldPrice}</span>
-                  <span className="text-[#252525] font-normal text-[16px] xl:text-[26px]
-                 ml-2">{c.newPrice}</span>
-                </div>
-                <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2 p-4
-                  rounded-md"  onClick={() => window.location.href = "/course/1"}>
-                  View Course
-                </button>
-              </div>
-            </div>
-
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center mt-10 gap-2 mb-6">
-        {/* Left Arrow */}
-        <button
-          onClick={() => handlePageClick(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={`w-9 h-9 rounded border  ${currentPage === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full"
-              : "bg-white hover:bg-gray-100 rounded-full"
-            }`}
-        >
-         <img src="/images/f-left.svg" alt="" className='ml-1'/>
-        </button>
-
-        {/* Page Numbers */}
-        {Array.from({ length: pageCount }, (_, i) => (
+      {/* ── Pagination ── */}
+      {pageCount > 1 && (
+        <div className="flex justify-center items-center mt-10 gap-2 mb-6 flex-wrap">
+          {/* Prev */}
           <button
-            key={i}
-            onClick={() => handlePageClick(i + 1)}
-            className={`w-9 h-9 rounded border-2 border-[#EDF1F3] text-sm text-[#454545] shadow-sm ${currentPage === i + 1
-                ? "bg-[#09339B] text-white rounded-full"
-                : "bg-white hover:bg-gray-100 rounded-full text-[#454545]"
-              }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        {/* Right Arrow */}
-        <button
-          onClick={() => handlePageClick(currentPage + 1)}
-          disabled={currentPage === pageCount}
-          className={`w-9 h-9 rounded border ${currentPage === pageCount
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full "
-              : "bg-white hover:bg-gray-100 rounded-full"
+            onClick={() => navigate({ page: currentPage - 1 })}
+            disabled={currentPage <= 1}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border ${
+              currentPage <= 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
             }`}
-        >
-       <img src="/images/f-right.svg" alt="" className='ml-1'/>
-        </button>
-      </div>
+          >
+            <img src="/images/f-left.svg" alt="Previous" className="ml-1" />
+          </button>
 
+          {/* Smart page numbers with ellipsis */}
+          {(() => {
+            const pages: (number | "...")[] = [];
+            if (pageCount <= 7) {
+              for (let i = 1; i <= pageCount; i++) pages.push(i);
+            } else {
+              pages.push(1);
+              if (currentPage > 3) pages.push("...");
+              const start = Math.max(2, currentPage - 1);
+              const end   = Math.min(pageCount - 1, currentPage + 1);
+              for (let i = start; i <= end; i++) pages.push(i);
+              if (currentPage < pageCount - 2) pages.push("...");
+              pages.push(pageCount);
+            }
+            return pages.map((p, idx) =>
+              p === "..." ? (
+                <span key={`e-${idx}`} className="w-9 h-9 flex items-center justify-center text-gray-400 text-sm">…</span>
+              ) : (
+                <button
+                  key={p}
+                  onClick={() => navigate({ page: p as number })}
+                  className={`w-9 h-9 rounded-full border-2 border-[#EDF1F3] text-sm shadow-sm transition-colors ${
+                    currentPage === p
+                      ? "bg-[#09339B] text-white border-[#09339B]"
+                      : "bg-white hover:bg-gray-100 text-[#454545]"
+                  }`}
+                >
+                  {p}
+                </button>
+              )
+            );
+          })()}
 
+          {/* Next */}
+          <button
+            onClick={() => navigate({ page: currentPage + 1 })}
+            disabled={currentPage >= pageCount}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border ${
+              currentPage >= pageCount ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
+            }`}
+          >
+            <img src="/images/f-right.svg" alt="Next" className="ml-1" />
+          </button>
+        </div>
+      )}
     </div>
-  )
+  );
 }

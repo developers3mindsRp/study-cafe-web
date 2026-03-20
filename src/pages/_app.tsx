@@ -5,6 +5,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient as defaultQueryClient } from "@/lib/react-query";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -19,9 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
-        <div className={outfit.className}>
-          <Component {...pageProps} />
-        </div>
+        <AuthProvider>
+          <div className={outfit.className}>
+            <Component {...pageProps} />
+          </div>
+        </AuthProvider>
       </HydrationBoundary>
       {/* Show React Query Devtools in development */}
       {process.env.NODE_ENV === 'development' && (

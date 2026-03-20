@@ -1,23 +1,24 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import * as authService from '@/services/auth.service';
 import { queryKeys } from '@/lib/react-query';
-import { LoginCredentials, RegisterData, User, ChangePasswordData } from '@/types/models.types';
-import { isAuthenticated } from '@/utils/auth.utils';
+import { LoginCredentials, RegisterData, ChangePasswordData } from '@/types/models.types';
+import { useAuth } from '@/providers/AuthProvider';
+import { getToken } from '@/utils/auth.utils';
 
 /**
  * Custom hooks for authentication
  */
 
-// Hook to get current user
+/** @deprecated Prefer useAuth() from @/providers/AuthProvider */
 export const useCurrentUser = () => {
-  return useQuery({
-    queryKey: queryKeys.auth.currentUser,
-    queryFn: authService.getCurrentUser,
-    enabled: isAuthenticated(), // Only fetch if user is authenticated
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: false, // Don't retry if unauthorized
-  });
+  const { user, isLoading, refetchUser } = useAuth();
+  return {
+    data: user,
+    isPending: isLoading,
+    isLoading,
+    refetch: refetchUser,
+  };
 };
 
 // Hook for login mutation
@@ -49,10 +50,8 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: (userData: RegisterData) => authService.register(userData),
     onSuccess: (data) => {
-      // Set user data in cache
       queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
-      
-      // Redirect to dashboard
+      void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
       router.push('/dashboard');
     },
     onError: (error: any) => {
@@ -69,10 +68,8 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
-      // Clear all queries
-      queryClient.clear();
-      
-      // Redirect to home page
+      queryClient.setQueryData(queryKeys.auth.currentUser, null);
+      queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
       router.push('/');
     },
   });
@@ -120,6 +117,6 @@ export const useIsAuthenticated = (): boolean => {
   if (typeof window === 'undefined') {
     return false;
   }
-  return isAuthenticated();
+  return !!getToken();
 };
 

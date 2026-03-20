@@ -3,200 +3,250 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
 
-export default function BannerSection() {
-  const [showBar, setShowBar] = useState(true);
+interface BannerSectionProps {
+  course?: CoursePublicDetail | null;
+  batches?: CourseBatch[];
+}
 
+function formatPrice(val?: string | number | null) {
+  if (val == null) return null;
+  const n = typeof val === "string" ? parseFloat(val) : val;
+  if (isNaN(n)) return null;
+  return `₹${n.toLocaleString("en-IN")}`;
+}
 
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+function formatDate(dateStr?: string | null) {
+  if (!dateStr) return null;
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    // Deterministic format: "Tuesday 24 February, 2026" — same on server and client
+    return `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}, ${d.getFullYear()}`;
+  } catch {
+    return null;
+  }
+}
+
+const FALLBACK_COURSE_INCLUDES = [
+  { image: "/images/icon-video.png", title: "Recording is available for 1 year" },
+  { image: "/images/icon-certiificate.png", title: "Studycafe certificate of completion" },
+  { image: "/images/icon-laptop.png", title: "Access on mobile or computer/laptop" },
+];
+
+function resolveIncludeImageUrl(path?: string | null): string {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("/api/")) {
+    const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
+    const serverRoot = base.replace(/\/api\/?$/, "");
+    return `${serverRoot}${path}`;
+  }
+  return path;
+}
+
+function parseCourseIncludesJson(raw?: string | null): { image: string; title: string }[] {
+  if (!raw?.trim()) return [];
+  try {
+    const p = JSON.parse(raw);
+    if (!Array.isArray(p)) return [];
+    return p
+      .map((x: { image?: string; icon?: string; title?: string }) => ({
+        image: String(x?.image ?? x?.icon ?? ""),
+        title: String(x?.title ?? ""),
+      }))
+      .filter((x) => x.image || x.title);
+  } catch {
+    return [];
+  }
+}
+
+/** Returns the nearest future batch start_date, or null if none exist. */
+function getNextUpcomingBatchDate(batches: CourseBatch[]): string | null {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const upcoming = batches
+    .filter((b) => b.start_date)
+    .map((b) => new Date(b.start_date!))
+    .filter((d) => !isNaN(d.getTime()) && d >= now)
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  return upcoming.length > 0 ? upcoming[0].toISOString() : null;
+}
+
+export default function BannerSection({ course, batches = [] }: BannerSectionProps) {
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push("/plans");
+  const title = course?.title ?? "Certification Course On Practical Filing of GSTR-9 & GSTR-9C";
+  const description = course?.brief_description ?? "In our continuous endeavour to empower more and more finance professionals, this certification course has been designed for you. Detailed 2 Days course has been designed where already more than 2 hrs sessions have been organized. Recording of the Video is valid for 1 Year. This Course contains Videos along with study material and files. Live training on GSTR-9 & GSTR-9C will be given.";
+  const thumbnail = course?.thumbnail_url ?? "/images/c1.png";
+  const price = formatPrice(course?.price);
+  const salePrice = formatPrice(course?.sale_price);
+  const startDate = formatDate(getNextUpcomingBatchDate(batches));
+  const enrolledCount = course?.enrolled_count ?? 957;
+  const ratings = course?.ratings ? Number(course.ratings).toFixed(1) : "4.8";
+  const ratingUsers = course?.rating_users ?? 47;
+  const languages = course?.language
+    ? (Array.isArray(course.language) ? course.language : [course.language]).join(", ")
+    : "English";
+  const parsedIncludes = parseCourseIncludesJson(course?.course_includes);
+  const courseIncludes =
+    parsedIncludes.length > 0 ? parsedIncludes : FALLBACK_COURSE_INCLUDES;
+  const displayPrice = salePrice ?? price;
+  const originalPrice = salePrice ? price : null;
+
+  const statBadges = (size: "sm" | "lg") => {
+    const cls = size === "lg"
+      ? "flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md"
+      : "flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap";
+    const imgCls = size === "lg" ? "w-4 h-4" : "w-4 h-3";
+    return (
+      <>
+        <div className={cls}>
+          <img src="/images/icon-eng.png" alt="Language" className={imgCls} />
+          <span>{languages}</span>
+        </div>
+        <div className={cls}>
+          <img src="/images/icon-user.png" alt="Students" className={imgCls} />
+          <span>{enrolledCount.toLocaleString("en-IN")} students</span>
+        </div>
+        <div className={cls}>
+          <img src="/images/Star.png" alt="Rating" className={imgCls} />
+          <span>{ratings} by {ratingUsers} Users</span>
+        </div>
+      </>
+    );
   };
+
+  const handleShare = async (platform: string) => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const encUrl = encodeURIComponent(url);
+    const encTitle = encodeURIComponent(title);
+    const encImage = encodeURIComponent(thumbnail);
+
+    switch (platform) {
+      case "facebook":
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encUrl}`, "_blank");
+        break;
+      case "linkedin":
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`, "_blank");
+        break;
+      case "twitter":
+        window.open(`https://twitter.com/intent/tweet?url=${encUrl}&text=${encTitle}`, "_blank");
+        break;
+      case "pinterest":
+        window.open(`https://pinterest.com/pin/create/button/?url=${encUrl}&media=${encImage}&description=${encTitle}`, "_blank");
+        break;
+      case "print":
+        window.print();
+        break;
+      case "native":
+        if (navigator.share) {
+          try {
+            await navigator.share({ title, url });
+          } catch (err) {
+            console.error("Error sharing", err);
+          }
+        } else {
+          try {
+            await navigator.clipboard.writeText(url);
+            alert("Link copied to clipboard!");
+          } catch (e) {
+            console.error("Clipboard error", e);
+          }
+        }
+        break;
+    }
+  };
+
+  const renderSocialShare = (containerClassName: string) => (
+    <div className={containerClassName}>
+      <div
+        onClick={() => handleShare("native")}
+        className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px] hover:bg-gray-50 transition-colors"
+      >
+        <img src="/images/icon-share.png" alt="Share" />
+        <span className="font-medium text-[20px]">Share</span>
+      </div>
+      <div className="flex gap-3">
+        <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("facebook")} />
+        <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("linkedin")} />
+        <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("twitter")} />
+        <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("pinterest")} />
+        <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleShare("print")} />
+      </div>
+    </div>
+  );
+
   return (
     <>
-
       <div className="bg-[#F5FAFF]">
-        <div className="py-2  container px-4 mx-auto ">
-
-
-          {/* LEFT CONTENT */}
+        <div className="py-2 container px-4 mx-auto">
           <div className="lg:col-span-2 space-y-6 mt-3 md:mt-6">
-
-
             <div className="md:mt-6 md:flex md:items-start md:gap-8">
-
 
               {/* Left: Banner */}
               <div className="md:w-1/2">
                 {/* Course Start Time */}
-                <p className="bg-[#DEEBFD] w-[320px] md:w-[360px] p-2 px-4 md:p-4 rounded-[10px] text-[#09339B] text-[14px] md:text-[16px] font-Outfit font-normal">
-                  Starts at Thursday November 27, 2025 – 18:00
-                </p>
+                {startDate && (
+                  <p className="bg-[#DEEBFD] w-fit p-2 px-4 md:p-4 rounded-[10px] text-[#09339B] text-[14px] md:text-[16px] font-Outfit font-normal">
+                    Starts at {startDate}
+                  </p>
+                )}
+
                 <h1 className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
-                  Certification Course On Practical Filing of GSTR-9 & GSTR-9C
+                  {title}
                 </h1>
 
-                {/* mobile image */}
-                <div className="block md:hidden ">
-                  <div className=" rounded overflow-hidden shadow mt-4">
+                {/* Mobile image */}
+                <div className="block md:hidden">
+                  <div className="rounded overflow-hidden shadow mt-4">
                     <Image
-                      src="/images/c1.png"
-                      alt="Banner"
+                      src={thumbnail}
+                      alt={title}
                       width={568}
                       height={320}
                       className="w-full object-cover"
                     />
                   </div>
-
-                  {/* Stats */}
-                  <div
-                    className="
-                          mt-3 p-3
-                          md:flex flex-wrap 
-                          gap-3 sm:gap-6
-                          justify-center sm:justify-between
-                          text-[8px] sm:text-[13px]
-                          font-bold hidden
-                        "
-                  >
-                    <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                      <img src="/images/icon-eng.png" alt="Language" className="w-4 h-4" />
-                      <span>English</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-white text-black md:px-3 py-2 rounded-md">
-                      <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-4" />
-                      <span>4 Hours</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                      <img src="/images/icon-user.png" alt="Students" className="w-4 h-4" />
-                      <span>957 students</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                      <img src="/images/Star.png" alt="Rating" className="w-4 h-4" />
-                      <span>4.8 by 47 Users</span>
-                    </div>
+                  <div className="mt-3 p-3 md:flex flex-wrap gap-3 sm:gap-6 justify-center sm:justify-between text-[8px] sm:text-[13px] font-bold hidden">
+                    {statBadges("lg")}
                   </div>
-
-
                 </div>
 
                 {/* Description */}
                 <p className="text-[#929292] text-[16px] leading-[32px] mt-6">
-                  In our continuous endeavour to empower more and more finance professionals,
-                  this certification course has been designed for you. Detailed 2 Days course
-                  has been designed where already more than 2 hrs sessions have been organized.
-                  Recording of the Video is valid for 1 Year. This Course contains Videos along
-                  with study material and files. Live training on GSTR-9 & GSTR-9C will be given.
+                  {description}
                 </p>
 
-                {/* Stats */}
-                <div
-                  className="
-                            mt-3 
-                            flex flex-wrap md:hidden
-                            gap-1
-                            justify-between
-                            text-[10px] 
-                            font-bold
-                          "
-                >
-                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
-                    <img src="/images/icon-eng.png" alt="Language" className="w-4 h-3" />
-                    <span>English</span>
-                  </div>
-
-                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
-                    <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-3" />
-                    <span>4 Hours</span>
-                  </div>
-
-                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap">
-                    <img src="/images/icon-user.png" alt="Students" className="w-4 h-3" />
-                    <span>957 students</span>
-                  </div>
-
-                  <div className="flex items-center gap-1 bg-white text-black px-2 py-2 rounded-md whitespace-nowrap justify-center">
-                    <img src="/images/Star.png" alt="Rating" className="w-4 h-3 " />
-                    <span className="">4.8 by 47 Users</span>
-                  </div>
+                {/* Mobile stats */}
+                <div className="mt-3 flex flex-wrap md:hidden gap-1 justify-between text-[10px] font-bold">
+                  {statBadges("sm")}
                 </div>
 
+                {/* Mobile social share */}
+                {renderSocialShare("md:hidden flex flex-wrap items-center gap-4 pt-3")}
 
-                {/* Social Share */}
-                <div className="md:hidden flex  items-center gap-4 pt-3">
-                  <div className="flex  gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
-                    <img src="/images/icon-share.png" alt="Share" />
-                    <span className="font-medium text-[20px]">Share</span>
-                  </div>
-
-                  <div className="flex gap-3 ">
-                    <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
-                  </div>
-
-                </div>
-
-
-
-
-                
-                {/* 🔼 Floating Arrow (ALWAYS visible when bar is hidden) */}
-                {!showBar && (
-                  <div
-                    onClick={() => setShowBar(true)}
-                    className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 cursor-pointer md:hidden"
-                  >
-                    <div className="bg-white shadow-md px-4 py-2 rounded-full flex items-center gap-2">
-                      <span className="text-sm font-medium">Show</span>
-                    
-                    </div>
-                  </div>
-                )}
-
-                {/* 🔽 Bottom Sticky Bar */}
-                <div
-                  className={`
-          fixed bottom-0 left-0 w-full z-40
-          transition-transform duration-300
-          ${showBar ? "translate-y-0" : "translate-y-full"}
-          
-          bg-white md:bg-transparent px-4 py-2 md:py-6 
-          shadow-[0_-4px_20px_rgba(0,0,0,0.08)]
-          sm:static sm:shadow-none sm:p-0 rounded-t-[20px]
-        `}
-                >
-                  {/* 🔽 Arrow inside (for closing) */}
-                  <div
-                    onClick={() => setShowBar(false)}
-                    className="flex justify-center mb-2 cursor-pointer md:hidden"
-                  >
-                    <div className="flex flex-col items-center">
-                      <div className="w-10 h-1.5 bg-gray-300 rounded-full"></div>
-         
-                    </div>
-                  </div>
-
-
-                  {/* Content */}
+                {/* Price + Buy buttons (fixed on mobile, static on desktop) */}
+                <div className="fixed bottom-0 left-0 w-full z-50 bg-white md:bg-transparent px-4 py-2 md:py-6 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:static sm:shadow-none sm:p-0 rounded-t-[20px]">
                   <div className="mt-0 md:mt-4 flex flex-col sm:flex-row md:items-start items-center gap-3">
                     <p className="text-[30px] md:text-[26px] xl:text-[30px]">
-                      <span className="line-through text-[#929292] font-medium mr-2">
-                        ₹2,000
-                      </span>
-                      <span className="text-black font-bold text-[30px] xl:text-[40px]">
-                        ₹699
-                      </span>
+                      {originalPrice && (
+                        <span className="line-through text-[#929292] font-medium mr-2">
+                          {originalPrice}
+                        </span>
+                      )}
+                      {displayPrice && (
+                        <span className="text-black font-bold text-[30px] xl:text-[40px]">
+                          {displayPrice}
+                        </span>
+                      )}
                     </p>
-
                     <p className="hidden md:block text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-1 md:mt-3">
                       Hurry up, few days left at this price!
                     </p>
@@ -204,132 +254,64 @@ export default function BannerSection() {
 
                   {/* Buttons */}
                   <div className="mt-3 md:mt-4 mb-2 flex flex-row justify-center lg:justify-start gap-4">
-
-                    <Link href="/payment" className="flex-1">
-                      <button
-                        onClick={handleClick}
-                        className="w-full py-2 px-6
-      border-2 border-white rounded-[10px]
-      text-base xl:text-lg font-medium text-white
-      bg-[#09339B] transition"
-                      >
-                        Buy Now
-                      </button>
-                    </Link>
-
-                    <Link href="/plans" className="flex-1">
-                      <button
-                        className="w-full py-2
-      bg-white text-[#09339B]
-      rounded-[10px] flex items-center justify-center gap-2
-      text-base xl:text-[20px]
-      border border-[#09339B]
-      transition font-semibold"
-                      >
+                    <button
+                      onClick={() => router.push("/plans")}
+                      className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28 border-2 border-white rounded-[10px] text-base xl:text-lg font-medium text-white bg-[#09339B] transition"
+                    >
+                      Buy Now
+                    </button>
+                    <Link href="/courses" className="w-full sm:w-auto">
+                      <button className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16 bg-white text-[#09339B] rounded-[10px] flex items-center justify-center gap-2 text-base xl:text-[20px] border border-[#09339B] transition font-semibold">
                         View Membership
                       </button>
                     </Link>
-
                   </div>
-
                 </div>
 
-
-
-
-                {/* Social Share */}
-                <div className="hidden md:flex items-center gap-4 pt-3">
-                  <div className="flex gap-2 items-center bg-white text-black p-2 cursor-pointer border border-[#CCCCCC] rounded-[10px]">
-                    <img src="/images/icon-share.png" alt="Share" />
-                    <span className="font-medium text-[20px]">Share</span>
-                  </div>
-
-                  <div className="flex gap-3 ">
-                    <img src="/images/facebook.svg" alt="Facebook" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/linkedin.svg" alt="LinkedIn" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/twitter.svg" alt="X" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/pinterest.svg" alt="Pinterest" className="w-8 h-8 cursor-pointer" />
-                    <img src="/images/print.svg" alt="Print" className="w-8 h-8 cursor-pointer" />
-                  </div>
-
-                </div>
-
-
-
-
+                {/* Desktop social share */}
+                {renderSocialShare("hidden md:flex items-center gap-4 pt-3")}
               </div>
 
-              {/* Right: Content */}
+              {/* Right: Image + stats */}
               <div className="md:w-1/2 mt-6 md:mt-[95px]">
                 <div className="hidden md:block rounded overflow-hidden shadow">
                   <Image
-                    src="/images/c1.png"
-                    alt="Banner"
+                    src={thumbnail}
+                    alt={title}
                     width={568}
                     height={320}
                     className="w-full object-cover"
                   />
                 </div>
 
-                {/* Stats */}
-                <div
-                  className="
-                    mt-3 p-3
-                    hidden md:flex 
-                    gap-3 sm:gap-6
-                    justify-center sm:justify-between
-                    text-[9px] xl:text-[13px]
-                    font-bold 
-                  "
-                >
-                  <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                    <img src="/images/icon-eng.png" alt="Language" className="w-4 h-4" />
-                    <span>English</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-white text-black md:px-3 py-2 rounded-md">
-                    <img src="/images/icon-clock.png" alt="Duration" className="w-4 h-4" />
-                    <span>4 Hours</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                    <img src="/images/icon-user.png" alt="Students" className="w-4 h-4" />
-                    <span>957 students</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-white text-black px-3 py-2 rounded-md">
-                    <img src="/images/Star.png" alt="Rating" className="w-4 h-4" />
-                    <span>4.8 by 47 Users</span>
-                  </div>
+                {/* Desktop stats */}
+                <div className="mt-3 p-3 hidden md:flex gap-3 sm:gap-6 justify-center sm:justify-between text-[9px] xl:text-[13px] font-bold">
+                  {statBadges("lg")}
                 </div>
-
-
-
-                {/* Title */}
-
               </div>
             </div>
           </div>
 
+          {/* This course includes */}
           <div className="mt-8">
             <h3 className="text-[14px] md:text-[20px] font-medium">This course includes:</h3>
-            <div className="flex flex-wrap gap-4 items-center  text-[#696969]  p-3 text-[12px] md:text-[16px]">
-              <div className="flex gap-2 items-center bg-white  p-3">
-                <img src="/images/icon-video.png" alt="Language" /> <span>Recording is available for 1 year</span>
-              </div>
-              <div className="flex gap-2 items-center bg-white  p-3">
-                <img src="/images/icon-certiificate.png" alt="Duration" /><span>Studycafe certificate of completion</span>
-              </div>
-              <div className="flex gap-2 items-center bg-white  p-3">
-                <img src="/images/icon-laptop.png" alt="Students" /><span>Access on mobile or computer/laptop </span>
-              </div>
-
+            <div className="flex flex-wrap gap-4 items-center text-[#696969] p-3 text-[12px] md:text-[16px]">
+              {courseIncludes.map((include, idx) => (
+                <div
+                  key={idx}
+                  className="flex gap-2.5 items-center bg-white p-3 rounded-lg"
+                >
+                  {/* Smaller icons than bonus cards (bonus ~36–43px; banner row ~28–32px) */}
+                  <img
+                    src={resolveIncludeImageUrl(include.image)}
+                    alt=""
+                    className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] object-contain flex-shrink-0"
+                  />
+                  <span dangerouslySetInnerHTML={{ __html: include.title }} />
+                </div>
+              ))}
             </div>
           </div>
-
-
-
-
         </div>
       </div>
     </>

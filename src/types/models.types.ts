@@ -1,12 +1,14 @@
-// User Model
+// User Model (auth-service / public site)
 export interface User {
   id: string;
   email: string;
   name: string;
   avatar?: string;
-  role: 'student' | 'instructor' | 'admin';
-  createdAt: string;
-  updatedAt: string;
+  /** e.g. user, admin — from auth-service Role */
+  role: string;
+  permissions?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Course Model
@@ -174,21 +176,24 @@ export interface HomePageData {
   hero: HomeHero;
   features?: HomeFeature[];
   stats?: HomeStat[];
-  testimonialHighlight?: Testimonial;
+  testimonials?: Testimonial[];
+  faqs?: FAQ[];
   updatedAt?: string;
 }
 
 /** Membership plan for pricing page */
 export interface Membership {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  price: string;
-  duration: string;
+  slug: string;
+  description?: string;
+  price: string | number;
+  currency: string;
+  duration_days: number;
+  is_lifetime?: boolean;
   features: string[];
-  status: 'Active' | 'Inactive';
-  highlighted?: boolean;
-  order?: number;
+  is_popular?: boolean;
+  sort_order: number;
 }
 
 /** FAQ item */
@@ -236,6 +241,117 @@ export interface RelatedArticle {
   id: number;
   title: string;
   slug: string;
+}
+
+/** Paginated courses response from the server */
+export interface PaginatedCourses {
+  data: Course[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
+/** Course category (for filter tabs) */
+export interface CourseCat {
+  id: number;
+  name: string;
+  slug: string;
+  is_featured?: boolean;
+}
+
+/** Public course card */
+export interface Course {
+  id: number;
+  title: string;
+  slug?: string | null;
+  brief_description?: string | null;
+  price: string | number;
+  sale_price?: string | number | null;
+  thumbnail_url?: string | null;
+  enrolled_count?: number;
+  ratings?: string | number | null;
+  language?: string[] | null;
+  is_published?: boolean;
+}
+
+/** Recording inside a session */
+export interface CourseRecording {
+  id: number;
+  url: string;
+  source?: string;
+  is_visible?: boolean;
+}
+
+/** A single session (day) within a batch */
+export interface CourseSession {
+  id: number;
+  batch_id: number;
+  day_number: number;
+  title: string;
+  scheduled_at?: string | null;
+  meet_link?: string | null;
+  recordings: CourseRecording[];
+}
+
+/** A batch containing multiple sessions */
+export interface CourseBatch {
+  id: number;
+  name: string;
+  start_date?: string | null;
+  end_date?: string | null;
+  meet_link?: string | null;
+  created_at?: string;
+  sessions: CourseSession[];
+}
+
+export interface CourseAuthorProfile {
+  user_id: number;
+  sort_order: number;
+  name: string | null;
+  role: string | null;
+  bio: string | null;
+  image_url: string | null;
+}
+
+/** Full course detail returned by GET /courses/:id */
+export interface CoursePublicDetail {
+  id: number;
+  title: string;
+  short_title?: string | null;
+  slug?: string | null;
+  brief_description?: string | null;
+  description?: string | null;
+  curriculum?: string | null;
+  learn_outcomes?: string | null;
+  requirements?: string | null;
+  terms_conditions?: string | null;
+  price: string | number;
+  sale_price?: string | number | null;
+  enrolled_count?: number;
+  ratings?: string | number | null;
+  rating_users?: number;
+  thumbnail_url?: string | null;
+  youtube_url?: string | null;
+  language?: string | null;
+  course_type?: string | null;
+  keywords?: string | null;
+  faqs?: string | null;
+  feedback?: string | null;
+  includes_info?: string | null;
+  /** JSON [{ image, title }] — banner "This course includes" (not bonuses). */
+  course_includes?: string | null;
+  certifications?: string | null;
+  is_published?: boolean;
+  start_date?: string | null;
+  end_date?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  authors?: CourseAuthorProfile[];
+  author_user_id?: number | null;
+  author_name?: string | null;
+  author_role?: string | null;
+  author_bio?: string | null;
+  author_image?: string | null;
 }
 
 /** Public article by slug (body = content, related_articles from shortcodes) */
