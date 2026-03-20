@@ -4,14 +4,14 @@ import Link from "next/link";
 const Expert_marketing = () => {
     return (
         <section
-            className="relative max-w-[935px] h-[350px] md:h-[209px] flex items-center justify-center
-                 bg-[#FF0000] container mx-auto px-4  md:mt-8 md:rounded-[10px]"
+            className="relative max-w-[935px] h-[150px] md:h-[209px] flex items-center justify-center
+                 bg-[#FF0000] container mx-auto px-4  md:mt-8 md:rounded-[10px] "
         >
 
 
             {/* Center Content */}
             <div className="relative z-10 text-center ">
-                <h2 className="text-white text-[32px] xl:text-[40px] font-semibold mb-2 px-8">
+                <h2 className="text-white text-[20px] xl:text-[40px] font-semibold mb-2 px-8">
                     Become a Certified AI Expert
                 </h2>
 
@@ -20,7 +20,7 @@ const Expert_marketing = () => {
                 </p>
 
                 <Link href="/login">
-                    <button className="bg-white text-black px-6 py-3 rounded-[15px] hover:bg-[#FF0000]  border hover:text-white transition flex mx-auto items-center gap-2">
+                    <button className="bg-white text-black px-6 py-2 md:py-3 rounded-[15px] hover:bg-[#FF0000]  border hover:text-white transition flex mx-auto items-center gap-2">
                         Only at Rs 99
                      
                     </button>

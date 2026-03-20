@@ -53,7 +53,7 @@ export default function Reviews_marketing() {
                         {testimonials.map((item, index) => (
                             <div
                                 key={index}
-                                className="w-[250px] snap-center flex-shrink-0 relative border border-[#17254E] rounded-xl p-4 text-left"
+                                className="w-[250px] snap-center flex-shrink-0 relative border border-[#17254E] rounded-xl p-4 text-left bg-[#292738]"
                             >
                                 {/* Quote */}
                                 <img
@@ -63,7 +63,7 @@ export default function Reviews_marketing() {
                                 />
 
                                 {/* Message */}
-                                <p className="text-[#696969] text-[12px]  mt-2 leading-relaxed ">
+                                <p className="text-white text-[12px]  mt-2 leading-relaxed ">
                                     {item.message}
                                 </p>
 
@@ -71,10 +71,10 @@ export default function Reviews_marketing() {
                                 <div className=" flex items-center justify-between mt-6">
                                     {/* Left: Name & Role */}
                                     <div className="">
-                                        <h4 className="mb-1 font-semibold text-gray-900 text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <h4 className="mb-1 font-semibold  text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
                                             {item.name}
                                         </h4>
-                                        <p className="text-[#09339B] text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <p className=" text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
                                             {item.role}
                                         </p>
                                     </div>

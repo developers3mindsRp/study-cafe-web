@@ -10,7 +10,7 @@ const Timer_marketing = () => {
 
             {/* Center Content */}
             <div className="relative z-10 text-center ">
-                <h2 className="text-white text-[32px] xl:text-[40px] font-semibold mb-2 px-8 uppercase">
+                <h2 className="text-white text-[20px] xl:text-[40px] font-semibold mb-2 px-12 uppercase ">
                     Time is running out. Reserve your seat <span className="text-[#E6B800]">now!</span>
                 </h2>
 
@@ -35,7 +35,7 @@ const Timer_marketing = () => {
                 </div>
 
 
-                    <p className="text-[24px] mt-4">
+                    <p className="text-[24px] mt-4 px-4 mb-10">
                     Fee will <span className="text-[#FFCC00]">increase</span> to <span className="text-[#FFCC00]"> Rs 2,000 </span>once the <span className="text-[#FFCC00]"> timer hits ZERO.</span>
 
                     </p>

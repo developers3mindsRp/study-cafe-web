@@ -15,10 +15,10 @@ const testimonials = [
 
 export default function Testimonials_marketing() {
     return (
-        <section className="   ">
+        <section className=" ">
             <div className="  ">
                 {/* Heading */}
-                <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase text-center">
+                <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase text-center mb-2">
                    Testimonials
                 </h2>
 
@@ -26,11 +26,11 @@ export default function Testimonials_marketing() {
                 {/* Cards */}
                 <div className="">
                     {/* Mobile slider */}
-                    <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden md:mt-4 md:pb-4 px-2 scrollbar-hide">
+                    <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden md:mt-4 md:pb-4 px-2 scrollbar-hide mb-12">
                         {testimonials.map((item, index) => (
                             <div
                                 key={index}
-                                className="w-[250px] snap-center flex-shrink-0 text-left"
+                                className="w-[250px] snap-center flex-shrink-0 text-left "
                             >
 
                                 <div className="mt-6 relative  flex items-center justify-between">

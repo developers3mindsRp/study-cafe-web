@@ -39,7 +39,7 @@ const Faqs_marketing = () => {
 
             {/* FAQ Section */}
             <div className=" mx-auto  md:mt-2">
-                <h2 className="text-center text-[40px] mb-6">FAQ's</h2>
+                <h2 className="text-center text-[30px] md:text-[40px] mb-6">FAQ's</h2>
                 <div className="space-y-4">
                     {faqs.map((item, index) => (
                         <div key={index} className="border rounded-lg overflow-hidden shadow-md">

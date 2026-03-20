@@ -12,6 +12,12 @@ const testimonials = [
     {
         images: "/images/g4.png",
     },
+    {
+        images: "/images/g1.png",
+    },
+    {
+        images: "/images/g2.png",
+    },
 
 ];
 
@@ -20,7 +26,7 @@ export default function Gallery_marketing({ showHeading = true }) {
         <section className=" py-4 mt-4">
             {/* Heading */}
             {showHeading && (
-                <h2 className="text-center text-[40px] uppercase font-semibold">
+                <h2 className="text-center text-[30px] md:text-[40px] uppercase font-semibold">
                     Photo Gallery
                 </h2>
             )}
@@ -39,7 +45,7 @@ export default function Gallery_marketing({ showHeading = true }) {
                                 <img
                                     src={item.images}
                                     alt=""
-                                    className="w-[350px] md:w-[350px] h-[350px] md:h-[350px] object-cover rounded-lg"
+                                    className="w-[350px] md:w-[350px] h-[350px] md:h-[350px] object-cover rounded-lg mb-8"
                                 />
                             </div>
                         ))}

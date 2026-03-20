@@ -46,9 +46,9 @@ export default function Stats_marketing() {
         </div>
           </div>
           
-          <div className="mx-auto mt-12 ml-12">
+          <div className="mx-auto mt-12 md:ml-12">
               {/* Heading */}
-              <h1 className="text-2xl md:text-[40px] font-medium leading-snug ">
+              <h1 className="text-2xl md:text-[40px] font-medium leading-snug  px-12 text-center mb-8">
                   <span className="text-yellow-400">REGISTER </span> BEFORE TODAY'S MIDNIGHT 
                  
               </h1>

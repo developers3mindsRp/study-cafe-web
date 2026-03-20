@@ -18,18 +18,18 @@ export default function BannerSection_digital() {
             <div className="max-w-6xl mx-auto px-4 py-10 text-center">
 
                 {/* Heading */}
-                <h1 className="text-2xl md:text-[40px] font-medium leading-snug">
-                    HOW TO <span className="text-yellow-400">AUTOMATE CA PRACTICE</span> WITH AI <br />
-                    TOOLS TO <span className="text-yellow-400">WORK 10X FASTER</span> & GROW YOUR <br />
+                <h1 className="text-[20px] md:text-[40px] font-medium leading-snug">
+                    HOW TO <span className="text-yellow-400">AUTOMATE CA PRACTICE</span> WITH AI <br className="hidden md:block" />
+                    TOOLS TO <span className="text-yellow-400">WORK 10X FASTER</span> & GROW YOUR <br className="hidden md:block" />
                     PRACTICE UP TO 10X, <span className="text-yellow-400">GUARANTEED !!</span>
                 </h1>
 
-                <p className="text-sm text-gray-300 mt-2">
+                <p className="text-[16px] text-white mt-4">
                     (No Need of Any Prior AI, Coding or MS Office Knowledge)
                 </p>
 
                 {/* Card Section */}
-                <div className="mt-8 rounded-xl px-24">
+                <div className="mt-8 rounded-xl md:px-24">
 
                     <div className="relative rounded-lg overflow-hidden">
 
