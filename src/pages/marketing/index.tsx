@@ -23,6 +23,7 @@ import Gallery from '@/components/layout/course/Gallerysection';
 import Gallery_marketing from '@/components/layout/marketing/Gallery';
 import Google_review from '@/components/layout/marketing/Google_review';
 import Faqs_marketing from '@/components/layout/marketing/Faqs';
+import Trainer_marketing from '@/components/layout/marketing/Trainer';
 
 /**
  * Home Page - Course Listing
@@ -55,6 +56,7 @@ export default function marketing() {
                 <Testimonials_marketing />
                 <Expert_marketing />
                 <Alumini_marketing />
+                <Trainer_marketing/>
                <Gallery_marketing/>
                 <Expert_marketing />
                 <Google_review />

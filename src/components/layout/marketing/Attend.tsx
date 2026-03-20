@@ -17,9 +17,9 @@ const features = [
 const Attend_marketing = () => {
     return (
         <>
-            <h2 className="text-[40px] uppercase text-center font-semibold">Who Can Attend?</h2>
+            <h2 className="text-[20px] md:text-[40px] uppercase text-center font-semibold">Who Can Attend?</h2>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container  mx-auto py-4" id="features">
+            <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto py-4 " id="features">
     
 
 

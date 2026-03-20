@@ -28,20 +28,20 @@ const Bonus_marketing = () => {
     ];
     return (
         <section
-            className="container px-4 mx-auto"
+            className="container px-4 mx-auto mt-12"
         >
 
             {/* Heading */}
-            <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[40px] font-bold  mt-8 uppercase">
-                <span className="text-[#FFCC00]">Register </span> before Today's Midnight 
+            <h3 className="text-center text-[20px] sm:text-[28px] lg:text-[40px] font-bold px-8 mt-8 uppercase">
+                <span className="text-[#FFCC00]">Register </span> before <br className="block md:hidden"/> Today's Midnight 
             </h3>
-            <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[24px] font-regular  mt-8 ">
+            <h3 className="text-center text-[20px] sm:text-[28px] lg:text-[24px] font-regular  mt-8 px-12 ">
                 To Unlock All Bonuses worth Rs 12,000
             </h3>
        
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12 pb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-8 px-4 sm:px-8 xl:px-32 mt-10 sm:mt-12 pb-12">
 
                 {bonuses.map((bonus, index) => (
                     <div
@@ -68,7 +68,7 @@ const Bonus_marketing = () => {
 
                         {/* Worth */}
                         <div className="mt-6">
-                            <span className="absolute  text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
+                            <span className="relative top-6 md:absolute  text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
                                 Worth {bonus.worth}
                             </span>
                         </div>

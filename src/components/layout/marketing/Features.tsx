@@ -16,7 +16,7 @@ const features = [
 
 const Features_marketing = () => {
     return (
-        <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container  mx-auto" id="features">
+        <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto" id="features">
      
     
             {features.map((feature, index) => (

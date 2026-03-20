@@ -56,20 +56,16 @@ export default function Google_review() {
   
   return (
 
-    <section className="container px-4 mx-auto py-6 md:py-12 ">
+    <section className="container px-4 mx-auto py-6 md:py-12 mt-4 ">
 
-      <h2 className="          text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
-            px-4 py-3 text-white
-           
-            bg-gradient-to-r from-[#253D8E] to-transparent
-            md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="reviews">Google Reviews</h2>
+      <h2 className="text-center text-[30px] md:text-[40px] uppercase font-semibold mb-8" id="reviews">Google Reviews</h2>
 
       {/* Mobile slider */}
-      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 md:pb-4 px-2 scrollbar-hide">
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 md:pb-4 px-2 scrollbar-hide  ">
         {testimonials.map((item, index) => (
           <div
             key={index}
-            className="w-[320px] sm:w-[280px] snap-center flex-shrink-0 relative border border-[#AFAFAF] rounded-xl p-4 text-left"
+            className="w-[320px] sm:w-[280px] snap-center flex-shrink-0 relative border border-[#AFAFAF] rounded-xl p-4 text-left bg-white"
           >
             {/* User + Rating Row */}
             <div className="flex flex-col gap-3">
@@ -83,7 +79,7 @@ export default function Google_review() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-[16px] sm:text-base">
+                    <h4 className="font-semibold text-black  text-[16px] sm:text-base">
                       {item.name}
                     </h4>
                     <p className="text-[#302A2A99] font-medium text-[16px] sm:text-sm">
