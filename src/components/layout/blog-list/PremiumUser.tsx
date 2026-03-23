@@ -373,7 +373,7 @@ export default function Premium_user() {
 
             <button
               className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2 mt-6 w-full md:w-auto justify-center"
-              onClick={() => (window.location.href = "/blog")}
+              onClick={() => (window.location.href = "/blogs/blog-detail")}
             >
               View All Posts
               <img src="/images/arrow-left.svg" alt="" />

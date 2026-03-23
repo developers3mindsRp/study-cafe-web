@@ -8,7 +8,7 @@ const Description_about = () => {
       <>
           <section className=''>
 
-              <div className='container mx-auto pt-4 md:pt-6 pb-12  w-[100%]  px-4 text-left grid grid-cols-1 md:grid-cols-2 gap-8'>
+              <div className='container mx-auto pt-4 md:pt-6 md:pb-12  w-[100%]  px-4 text-left grid grid-cols-1 md:grid-cols-2 gap-8'>
                   <div>
 
                       <h1 className='text-[30px] md:text-[40px] font-semibold text-[#252525] mb-4'>StudyCafe</h1>
@@ -19,9 +19,13 @@ const Description_about = () => {
                   </div>
 
                   <div>
-                      <img src="" alt="" className="border border-[#C4C4C4] w-full h-full" />
-
+                      <img
+                          src="/images/bg-about.svg"
+                          alt=""
+                          className="w-full h-auto object-contain p-4"
+                      />
                   </div>
+
 
 
               </div>

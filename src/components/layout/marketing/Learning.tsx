@@ -6,8 +6,8 @@ import { useState } from "react";
 
 const Learning_marketing = () => {
     return (
-        <div className="bg-[#06152B] py-10 container md:px-32 mx-auto ">
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 container px-4 mx-auto">
+        <div className="py-10 container md:px-32 mx-auto ">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 container px-4 mx-auto ">
 
                 {[
                     { img: "/images/setting.svg", text: "Learn About How To Automate Your CA Practice" },
@@ -22,8 +22,8 @@ const Learning_marketing = () => {
                         key={index}
                         className="bg-[#F3F4F6] border border-green-400 rounded-xl 
                    flex flex-col items-center justify-center text-center 
-                   p-2 md:p-8 aspect-[1.2/1] 
-                   hover:shadow-xl transition duration-300 "
+                   p-2 md:p-8 aspect-[1.2/1] h-[150px] md:h-[200px] xl:h-auto
+                   hover:shadow-xl transition duration-300"
                     >
 
                         {/* Icon */}

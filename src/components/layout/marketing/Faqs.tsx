@@ -49,7 +49,7 @@ const Faqs_marketing = () => {
                                 className={`
       w-full flex justify-between items-center p-4 transition
       ${openIndex === index
-                                        ? "bg-[#09339B] text-white"    // Active
+                                    ? "bg-white text-black"    // Active
                                         : "bg-white text-black"}   // Inactive
     `}
                             >

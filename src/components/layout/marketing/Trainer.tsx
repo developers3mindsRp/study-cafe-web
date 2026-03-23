@@ -44,10 +44,10 @@ export default function Trainer_marketing() {
                                 <div
                                     key={index}
                                     className="flex items-center gap-2 border border-green-400 
-                         rounded-lg px-3 py-2 md:px-4 md:py-2 bg-white"
+                         rounded-lg px-3 py-2 xl:px-4 xl:py-2 bg-white"
                                 >
                                     <img src="/images/tick1.png" alt="" className="w-5 h-5" />
-                                    <p className="text-[14px] md:text-[16px] font-semibold">
+                                    <p className="text-[14px] xl:text-[16px] font-semibold">
                                         {item}
                                     </p>
                                 </div>
@@ -57,7 +57,7 @@ export default function Trainer_marketing() {
 
                         {/* Description */}
                         <ul className="space-y-3 md:space-y-4 text-black 
-                       text-[14px] md:text-[16px] lg:text-[18px] 
+                       text-[14px] md:text-[14px] xl:text-[18px] 
                        leading-relaxed list-disc pl-5">
 
                             <li>

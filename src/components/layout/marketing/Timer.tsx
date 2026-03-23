@@ -20,16 +20,16 @@ const Timer_marketing = () => {
                   w-20 h-20 md:w-18 md:h-24 
                   flex flex-col items-center justify-center 
                   rounded-lg">
-                        <span className="text-[20px] md:text-[40px] leading-none mb-2">15</span>
-                        <span className="text-[12px] md:text-[18px] uppercase">Min</span>
+                        <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">15</span>
+                        <span className="text-[18px] md:text-[18px] uppercase">Min</span>
                     </div>
 
                     <div className="bg-[#FFCC00] text-black font-bold 
                   w-20 h-20 md:w-18 md:h-24 
                   flex flex-col items-center justify-center 
                   rounded-lg">
-                        <span className="text-[20px] md:text-[40px] leading-none mb-2">00</span>
-                        <span className="text-[12px] md:text-[18px] uppercase">Sec</span>
+                        <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">00</span>
+                        <span className="text-[18px] md:text-[18px] uppercase">Sec</span>
                     </div>
 
                 </div>

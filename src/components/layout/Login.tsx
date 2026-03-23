@@ -48,6 +48,8 @@ export default function LoginPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+  const [showForgot, setShowForgot] = useState(false);
+
 
 
 
@@ -152,9 +154,40 @@ export default function LoginPage() {
             Remember me
         </label>
 
-        <a href="#" className="text-[16px] text-[#09339B]">
-            Forgot Password ?
-        </a>
+            <a
+              onClick={() => setShowForgot(true)}
+              className="text-[16px] text-[#09339B] cursor-pointer"
+            >
+              Forgot Password ?
+            </a>
+
+            {showForgot && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-lg w-[90%] max-w-md">
+
+                  <h2 className="text-xl font-bold mb-3">Forgot Password</h2>
+
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full border px-3 py-2 rounded mb-4"
+                  />
+
+                  <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
+                    Send Reset Link
+                  </button>
+
+                  <button
+                    onClick={() => setShowForgot(false)}
+                    className="w-full text-gray-500"
+                  >
+                    Cancel
+                  </button>
+
+                </div>
+              </div>
+            )}
+
         </div>
 
             {errors && <p className="text-red-600">{errors}</p>}

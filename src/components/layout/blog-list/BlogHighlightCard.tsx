@@ -2,6 +2,9 @@
 import { useState } from "react";
 
 import Image from "next/image";
+import { useRouter } from "next/router";
+
+
 
 type BlogHighlightCardProps = {
   title: string;
@@ -16,7 +19,7 @@ export default function BlogHighlightCard({
   subDescription,
 }: BlogHighlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
   return (
 
     <div className=" container px-4 mx-auto">
@@ -78,8 +81,12 @@ export default function BlogHighlightCard({
                 </p>
 
                 <div className="flex flex-col mx-auto md:px-32 gap-4 mt-6">
+
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      setIsOpen(false);
+                      router.push("/payment"); // your route
+                    }}
                     className="bg-[#09339B] text-white px-6 py-2 rounded-md"
                   >
                     Upgrade to Premium

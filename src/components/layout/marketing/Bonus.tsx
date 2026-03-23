@@ -68,7 +68,7 @@ const Bonus_marketing = () => {
 
                         {/* Worth */}
                         <div className="mt-6">
-                            <span className="relative top-6 md:absolute  text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
+                            <span className="relative top-8 absolute  text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
                                 Worth {bonus.worth}
                             </span>
                         </div>

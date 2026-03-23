@@ -145,7 +145,7 @@ const countries = countryList.getNames();
                     </div>
 
                     <div>
-                      <label className="block mb-1 font-medium">Mobile Number <span className="text-red-600">*</span></label>
+                      <label className="text-sm block mb-1 font-medium">Mobile Number <span className="text-red-600">*</span></label>
                       <PhoneInput
                         placeholder="Enter Mobile number"
                         value={phone}
