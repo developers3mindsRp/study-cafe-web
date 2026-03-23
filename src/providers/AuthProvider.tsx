@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,8 +27,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
-  const hasToken =
-    typeof window !== "undefined" ? !!getToken() : false;
+  // Defer reading localStorage until after mount so SSR + first client paint match (avoids hydration mismatch).
+  const [hasToken, setHasToken] = useState(false);
+  useEffect(() => {
+    setHasToken(!!getToken());
+  }, []);
 
   const {
     data: user,

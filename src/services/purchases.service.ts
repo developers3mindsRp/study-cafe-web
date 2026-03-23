@@ -31,8 +31,9 @@ export const getUserPurchases = async (): Promise<UserCourse[]> => {
     return mockPurchasesApi.getUserPurchases();
   }
   
+  /** BFF: order-service enriches rows with course titles (see studycafe-ms GET /orders/my-purchases) */
   const response = await axiosInstance.get<ApiResponse<UserCourse[]>>(
-    '/purchases/my-purchases'
+    '/orders/my-purchases'
   );
   
   return response.data.data;

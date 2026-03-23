@@ -5,6 +5,12 @@ const nextConfig = {
   experimental: {
     urlImports: ['https://cdn.skypack.dev'],
   },
+  async redirects() {
+    return [
+      { source: "/account", destination: "/dashboard/profile", permanent: false },
+      { source: "/account/:path*", destination: "/dashboard/profile", permanent: false },
+    ];
+  },
   images: {
     remotePatterns: [
       {

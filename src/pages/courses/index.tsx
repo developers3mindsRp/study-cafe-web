@@ -20,6 +20,7 @@ export default function Courses({ cats, initialCourses, initialQuery }: Props) {
       </div>
       <HeroSection_courses />
       <CoursesPage cats={cats} initialCourses={initialCourses} initialQuery={initialQuery} />
+      <div className='h-[50px]'/>
     </PublicLayout>
   );
 }
