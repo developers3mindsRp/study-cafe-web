@@ -405,7 +405,7 @@ export const mockPlatformApi = {
 
   getMemberships: async (): Promise<Membership[]> => {
     await delay(300);
-    return mockMemberships.filter(m => m.status === 'Active');
+    return mockMemberships.filter((m: any) => m.status === 'Active');
   },
 
   getFaq: async (): Promise<FAQ[]> => {

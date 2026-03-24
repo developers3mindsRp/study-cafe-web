@@ -1,8 +1,8 @@
-import { 
-  User, 
-  Course, 
+import {
+  User,
+  Course,
   CourseDetail,
-  UserCourse, 
+  UserCourse,
   Purchase,
   DashboardStats,
   CourseModule,
@@ -12,7 +12,7 @@ import {
   Testimonial,
   PageContent,
   SeoMetadata,
-  
+
 } from '@/types/models.types';
 
 /**
@@ -378,33 +378,41 @@ export const mockMemberships: Membership[] = [
   {
     id: 'mem-1',
     name: 'Lifetime Ultimate',
+    slug: 'lifetime-ultimate',
     description: 'Full access to all courses and resources',
-    price: '₹12,999',
-    duration: 'Lifetime',
+    price: '12999',
+    currency: 'INR',
+    duration_days: 3650,
+    is_lifetime: true,
     features: ['All courses', 'Certificates', 'Support', 'Updates'],
-    status: 'Active',
-    highlighted: true,
-    order: 1,
+    is_popular: true,
+    sort_order: 1,
   },
   {
     id: 'mem-2',
     name: 'Annual Pro',
+    slug: 'annual-pro',
     description: 'One year access to CA, CS, CWA courses',
-    price: '₹4,999',
-    duration: '12 months',
+    price: '4999',
+    currency: 'INR',
+    duration_days: 365,
+    is_lifetime: false,
     features: ['All courses', 'Articles', 'Support'],
-    status: 'Active',
-    order: 2,
+    is_popular: false,
+    sort_order: 2,
   },
   {
     id: 'mem-3',
     name: 'Monthly Basic',
+    slug: 'monthly-basic',
     description: 'Monthly access to selected courses',
-    price: '₹499',
-    duration: '1 month',
+    price: '499',
+    currency: 'INR',
+    duration_days: 30,
+    is_lifetime: false,
     features: ['Selected courses'],
-    status: 'Active',
-    order: 3,
+    is_popular: false,
+    sort_order: 3,
   },
 ];
 

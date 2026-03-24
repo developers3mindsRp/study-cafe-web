@@ -1,7 +1,32 @@
 import Image from "next/image";
 import React from "react";
+import { useAuth, useInvalidateSession } from "@/providers/AuthProvider";
+import { useDashboardStats } from "@/hooks/usePurchases";
+import { useRouter } from "next/router";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+
+function formatDate(dateStr?: string | null) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function Sidebar() {
+  const { user } = useAuth();
+  const invalidateSession = useInvalidateSession();
+  const router = useRouter();
+  const { data: stats } = useDashboardStats({ enabled: !!user });
+
+  const avatarSrc = resolveApiAssetUrl(user?.avatar) || "/images/profile.png";
+
+  function handleLogout() {
+    invalidateSession();
+    router.push("/");
+  }
+
   return (
     <div className="sticky top-20 space-y-6 ">
     
@@ -10,7 +35,7 @@ export default function Sidebar() {
 
         {/* Member Badge */}
         <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 right-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
-          Free Member
+          {user?.role === "admin" ? "Admin" : "Free Member"}
         </p>
 
         {/* Mobile: Image left + content right */}
@@ -22,11 +47,14 @@ export default function Sidebar() {
             {/* Image */}
             <div className="w-full h-full rounded-full overflow-hidden">
               <Image
-                src="/images/profile.png"
+                src={avatarSrc}
                 alt="Profile"
                 width={160}
                 height={160}
                 className="object-cover w-full h-full"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/images/profile.png";
+                }}
               />
             </div>
 
@@ -45,29 +73,34 @@ export default function Sidebar() {
 
           {/* Right Content */}
           <div className="text-left md:text-center flex-1 md:flex md:flex-col md:items-center md:w-full mt-6">
-            <h2 className="text-[22px] md:text-[26px] font-normal">Shubham</h2>
+            <h2 className="text-[22px] md:text-[26px] font-normal">{user?.name || "—"}</h2>
 
             <div className="mt-2 md:mt-10 space-y-4 md:self-start md:text-left">
               <div className="flex gap-1 md:gap-2 items-center">
                 <img src="/images/mail.png" alt="" className="w-4 md:w-5 h-4 md:h-5" />
                 <p className="text-[#AFAFAF] text-[14px] md:text-[16px] text-ellipsis overflow-hidden">
-                  Shubham87548@gmail.com
+                  {user?.email || "—"}
                 </p>
               </div>
 
-              <div className="flex gap-1 md:gap-2 items-center">
-                <img src="/images/phone.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
-                <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">
-                  +91 9584784584
-                </p>
-              </div>
+              {stats && (
+                <div className="flex gap-1 md:gap-2 items-center">
+                  <img src="/images/course.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
+                  <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">
+                    {stats.totalCourses} Course{stats.totalCourses !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Buttons */}
         <div className="w-full mt-4 flex gap-3 md:flex-col">
-          <button className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition"
+          >
             <img src="/images/logout.png" alt="Logout icon" className="w-5 h-5" />
             <span className="font-medium">Logout</span>
           </button>
@@ -81,50 +114,53 @@ export default function Sidebar() {
       <div className="p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
         <h3 className="text-[20px] md:text-[26px] font-normal mb-2">Subscription Status</h3>
       
-        <p className="text-[16px] text-gray-600">Premium Membership</p>
-          <p className="text-2xl text-[#09339B]">₹7,999</p>
+        <p className="text-[16px] text-gray-600">
+          {user?.role === "admin" ? "Admin Access" : "Free Member"}
+        </p>
 
-    <div className="mt-3 text-[16px] text-[#454545] space-y-2">
-      {/* Days Remaining Row */}
-      <div className="flex justify-between">
-        <span>Days Remaining:</span>
-        <span className="">30 Days</span>
-      </div>
+    {stats && (
+      <div className="mt-3 text-[16px] text-[#454545] space-y-2">
+        <div className="flex justify-between">
+          <span>Courses Enrolled:</span>
+          <span>{stats.totalCourses}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Completed:</span>
+          <span>{stats.completedCourses}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>In Progress:</span>
+          <span>{stats.inProgressCourses}</span>
+        </div>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
-        <div className="h-full bg-[#09339B]" style={{ width: `30%` }}></div>
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mt-2">
+          <div
+            className="h-full bg-[#09339B]"
+            style={{ width: `${stats.averageProgress ?? 0}%` }}
+          ></div>
+        </div>
+        <p className="text-[14px] text-[#929292] text-right">{Math.round(stats.averageProgress ?? 0)}% avg progress</p>
       </div>
+    )}
 
-      {/* Dates Row */}
-      <div className="flex justify-between text-[16px] text-[#929292]">
-        <span>01 Jan 2024</span>
-        <span className="">31 Dec 2024</span>
+    {!stats && (
+      <div className="mt-3 text-[16px] text-[#454545] space-y-2">
+        <div className="flex justify-between">
+          <span>Days Remaining:</span>
+          <span className="">—</span>
+        </div>
+        <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+          <div className="h-full bg-[#09339B]" style={{ width: `0%` }}></div>
+        </div>
       </div>
-    </div>
+    )}
 
     <div className="border-b border-[#696969] w-full mt-6"></div>
 
       <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
-
-      <span className="font-medium">Upgrade Plan</span>
+        <span className="font-medium">Upgrade Plan</span>
       </button>
-
-
-        {/* <button className="mt-4 text-[20px] w-full border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
-          Renew Now
-        </button>
-        <button className="mt-2 w-full text-[20px] border bg-[#F9F9FB] text-[#454545] py-2 rounded-md">
-          Change Plan
-        </button>
-          <a
-      href="/invoice.pdf"
-      download
-      className="mt-2 text-[20px] w-full flex items-center justify-center border bg-[#F9F9FB] text-[#454545] py-2 rounded-md"
-    >
-      <img src="/images/download.png" alt="Download" className="mr-2" />
-      Download Invoice
-    </a> */}
 
       </div>
     </div>

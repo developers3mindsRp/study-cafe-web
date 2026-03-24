@@ -1,97 +1,76 @@
+import { GetStaticProps } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useUserCourses, useDashboardStats } from '@/hooks/usePurchases';
-import { DashboardLayout } from '@/components/layout';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { useFeaturedCourses } from '@/hooks/useCourses';
+import { queryKeys } from '@/lib/react-query';
+import * as coursesService from '@/services/courses.service';
+import { PublicLayout } from '@/components/layout';
+import SignUpPage from '@/components/layout/Register';
+import LoginPage from '@/components/layout/Login';
+import EditProfile from '@/components/layout/account/EditProfile';
 
 /**
- * Dashboard Page
+ * Home Page - Course Listing
  * 
- * This is a protected route that shows user's dashboard with purchased courses
- * Uses client-side data fetching with React Query
+ * This example shows how to use React Query with SSG (Static Site Generation)
+ * for SEO-optimized course listings
  */
 
-export default function DashboardPage() {
+export default function Account() {
   const router = useRouter();
-  
-  // Fetch user's courses
-  const { data: userCourses, isLoading: coursesLoading } = useUserCourses();
-  
-  // Fetch dashboard stats
-  const { data: stats, isLoading: statsLoading } = useDashboardStats();
+  // Use the hook on the client side - data is already prefetched on the server
+  const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
 
-  if (coursesLoading || statsLoading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">Loading dashboard...</h2>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
+
 
   return (
-    <DashboardLayout>
-      {/* Welcome Message */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back!</h2>
-        <p className="text-gray-600">Continue your learning journey</p>
-      </div>
+  
 
-      {/* Stats Cards */}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="text-sm text-gray-600 mb-1">Total Courses</div>
-              <div className="text-3xl font-bold text-blue-600">{stats.totalCourses}</div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="text-sm text-gray-600 mb-1">Completed</div>
-              <div className="text-3xl font-bold text-green-600">{stats.completedCourses}</div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="text-sm text-gray-600 mb-1">In Progress</div>
-              <div className="text-3xl font-bold text-orange-600">{stats.inProgressCourses}</div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="text-sm text-gray-600 mb-1">Learning Hours</div>
-              <div className="text-3xl font-bold text-purple-600">{stats.totalLearningHours}</div>
-          </div>
+    <PublicLayout>
+      <div className="container mx-auto p-6">
+
+        <div className="mb-6">
+          <h3 className="text-[30px] md:text-[40px] font-semibold">
+            My Account
+          </h3>
+
+          <p className="text-[18px] md:text-[24px] text-[#454545] md:whitespace-nowrap">
+            Manage your profile, subscription, and learning progress
+          </p>
         </div>
-      )}
 
+        <EditProfile />
 
-      {/* Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <button
-            onClick={() => router.push('/dashboard/profile')}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-          >
-            <h3 className="text-xl font-semibold mb-2">Profile Settings</h3>
-            <p className="text-gray-600 text-sm">Update your profile and preferences</p>
-          </button>
-          
-          <button
-            onClick={() => router.push('/dashboard/courses')}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-          >
-            <h3 className="text-xl font-semibold mb-2">All My Courses</h3>
-            <p className="text-gray-600 text-sm">View and manage your enrolled courses</p>
-          </button>
-          
-          <button
-            onClick={() => router.push('/')}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-          >
-            <h3 className="text-xl font-semibold mb-2">Browse Courses</h3>
-          <p className="text-gray-600 text-sm">Discover new courses to learn</p>
-        </button>
       </div>
-    </DashboardLayout>
+    </PublicLayout>
+
+ 
   );
 }
 
+/**
+ * Static Site Generation (SSG)
+ * Prefetch data at build time for SEO and performance
+ */
+export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient();
+
+  try {
+    // Prefetch featured courses
+    await queryClient.prefetchQuery({
+      queryKey: [...queryKeys.courses.all, 'featured', 6],
+      queryFn: () => coursesService.getFeaturedCourses(6),
+    });
+  } catch (error) {
+    console.error('Error prefetching data:', error);
+  }
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+    // Revalidate every 10 minutes
+    revalidate: 600,
+  };
+};

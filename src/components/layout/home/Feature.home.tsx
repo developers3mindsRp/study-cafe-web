@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { getCourseCats, getCoursesByCategory } from "@/services/platform.service";
-import type { CourseCat, Course } from "@/types/models.types";
+import type { CourseCat, PublicCourse } from "@/types/models.types";
 
 const ALL_TAB: CourseCat = { id: 0, name: "Top Selling", slug: "all" };
 const PAGE_SIZE = 6;
@@ -15,7 +15,7 @@ function formatPrice(val?: string | number | null) {
   return `₹ ${n.toLocaleString("en-IN")}`;
 }
 
-function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
+function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
   const href = c.slug ? `/course/${c.slug}` : `/course/${c.id}`;
   const thumbnail = c.thumbnail_url || "/images/home/f1.jpg";
   const rating = c.ratings ? Number(c.ratings).toFixed(1) : null;
@@ -103,7 +103,7 @@ function CourseCard({ c, size }: { c: Course; size: "sm" | "lg" }) {
 export default function FeaturedCourses() {
   const [cats, setCats] = useState<CourseCat[]>([ALL_TAB]);
   const [activeSlug, setActiveSlug] = useState<string>("all");
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<PublicCourse[]>([]);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
 
@@ -112,7 +112,7 @@ export default function FeaturedCourses() {
   useEffect(() => {
     getCourseCats()
       .then((rows) => setCats([ALL_TAB, ...rows]))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const fetchCourses = useCallback((slug: string) => {
@@ -171,9 +171,8 @@ export default function FeaturedCourses() {
                   key={cat.id}
                   role="option"
                   aria-selected={activeSlug === cat.slug}
-                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${
-                    activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
-                  }`}
+                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                    }`}
                   onClick={() => handleCatClick(cat.slug)}
                 >
                   {cat.name}
@@ -187,9 +186,8 @@ export default function FeaturedCourses() {
             {cats.map((cat) => (
               <button
                 key={cat.id}
-                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${
-                  activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
-                }`}
+                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                  }`}
                 onClick={() => handleCatClick(cat.slug)}
               >
                 {cat.name}

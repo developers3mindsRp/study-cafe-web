@@ -8,6 +8,7 @@ import {
   SeoMetadata,
   ArticleBySlug,
   CourseCat,
+  PublicCourse,
   Course,
   PaginatedCourses,
   CoursePublicDetail,
@@ -235,9 +236,9 @@ export const getCourseById = getCourseBySlug as unknown as (id: string | number)
 export const getCourseSessions = getCourseSessionsBySlug as unknown as (id: string | number) => Promise<CourseBatch[]>;
 
 /** Fetch all published courses (for trending / related sections) */
-export const getPublishedCourses = async (): Promise<Course[]> => {
+export const getPublishedCourses = async (): Promise<PublicCourse[]> => {
   try {
-    const response = await axiosInstance.get<ApiResponse<Course[]>>('/courses');
+    const response = await axiosInstance.get<ApiResponse<PublicCourse[]>>('/courses');
     return response.data.data ?? [];
   } catch {
     return [];

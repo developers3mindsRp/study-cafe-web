@@ -1,43 +1,47 @@
 "use client";
 
 import { useState } from "react";
+import { useUserPurchases } from "@/hooks/usePurchases";
+
+function formatDate(dateStr?: string | null) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatAmount(val?: string | number | null) {
+  if (val == null) return "—";
+  const num = typeof val === "string" ? parseFloat(val) : val;
+  if (isNaN(num)) return String(val);
+  return `₹${num.toLocaleString("en-IN")}`;
+}
 
 export default function PaymentHistory() {
   const [query, setQuery] = useState("");
+  const { data: purchases, isLoading, isError, error } = useUserPurchases();
 
-  const data = [
-    {
-      date: "12 Mar 2025",
-      orderID: "ORD-72619",
-      item: "Premium Membership",
-      amount: "₹7,999",
-      gst: "₹0.00",
-      method: "Razorpay",
-      status: "Paid",
-    },
-    {
-      date: "12 Mar 2025",
-      orderID: "ORD-72619",
-      item: "Premium Membership",
-      amount: "₹7,999",
-      gst: "₹0.00",
-      method: "Razorpay",
-      status: "Paid",
-    },
-    {
-      date: "12 Mar 2025",
-      orderID: "ORD-72619",
-      item: "Premium Membership",
-      amount: "₹7,999",
-      gst: "₹0.00",
-      method: "Razorpay",
-      status: "Paid",
-    },
-  ];
+  const data = (purchases ?? []).map((p) => ({
+    date: formatDate(p.purchaseDate),
+    orderID: p.transactionId ?? p.id ?? "—",
+    item: p.course?.title ?? "Purchase",
+    amount: formatAmount(p.price),
+    gst: "₹0.00",
+    method: p.paymentMethod ?? "—",
+    status: p.status === "completed" ? "Paid" : p.status ?? "—",
+    rawStatus: p.status,
+  }));
 
   const filtered = data.filter((row) =>
-    row.orderID.toLowerCase().includes(query.toLowerCase())
+    row.orderID.toLowerCase().includes(query.toLowerCase()) ||
+    row.item.toLowerCase().includes(query.toLowerCase())
   );
+
+  const hasRows = filtered.length > 0;
+  const emptyNoPurchases = !isLoading && !isError && data.length === 0;
+  const emptySearch = !isLoading && !isError && data.length > 0 && filtered.length === 0;
 
   return (
     <section className="p-6 max-w-5xl mx-auto border bg-white rounded-lg shadow-sm  border-[#9FBBFF]">
@@ -76,7 +80,30 @@ export default function PaymentHistory() {
             </div>
 
 
-      {/* Table */}
+      {isLoading && (
+        <div className="text-center py-8 text-gray-400">Loading payment history…</div>
+      )}
+
+      {isError && (
+        <div className="text-center py-8 text-red-600 text-sm">
+          {error instanceof Error ? error.message : "Could not load payment history. Please try again."}
+        </div>
+      )}
+
+      {emptyNoPurchases && (
+        <div className="text-center py-12 text-gray-400">
+          No payment history yet. Purchases will appear here after you complete a transaction.
+        </div>
+      )}
+
+      {emptySearch && (
+        <div className="text-center py-8 text-gray-400">
+          No orders match your search. Try a different order ID or item name.
+        </div>
+      )}
+
+      {/* Table — only when we have rows to show (avoids duplicate empty messages) */}
+      {hasRows && (
       <div className="hidden md:block overflow-x-auto ">
         <table className="w-full bg-white rounded-lg shadow-sm divide-y divide-gray-200 border border-gray-200">
           <thead className="bg-gray-50  text-[16px] ">
@@ -102,7 +129,7 @@ export default function PaymentHistory() {
                 <td className="px-4 py-3">{row.gst}</td>
                 <td className="px-4 py-3">{row.method}</td>
                 <td className="px-4 py-3">
-                  <span className="bg-[#34C759] text-white px-3 py-2 rounded-[10px] text-xs font-medium ">
+                  <span className={`px-3 py-2 rounded-[10px] text-xs font-medium text-white ${row.rawStatus === "completed" ? "bg-[#34C759]" : row.rawStatus === "failed" || row.rawStatus === "refunded" ? "bg-red-500" : "bg-yellow-500"}`}>
                     {row.status}
                   </span>
                 </td>
@@ -126,15 +153,11 @@ export default function PaymentHistory() {
             ))}
           </tbody>
         </table>
-
-        {filtered.length === 0 && (
-          <p className="text-center text-gray-400 mt-4">
-            No orders found.
-          </p>
-        )}
       </div>
+      )}
 
       {/* Mobile View */}
+  {hasRows && (
   <div className="md:hidden space-y-4">
   {filtered.map((row, i) => (
     <div
@@ -143,7 +166,7 @@ export default function PaymentHistory() {
     >
       <div className="flex justify-between items-center mb-2">
         <p className="font-medium">{row.item}</p>
-        <span className="bg-[#34C759] text-white px-3 py-1 rounded-full text-xs">
+        <span className={`px-3 py-1 rounded-full text-xs text-white ${row.rawStatus === "completed" ? "bg-[#34C759]" : row.rawStatus === "failed" || row.rawStatus === "refunded" ? "bg-red-500" : "bg-yellow-500"}`}>
           {row.status}
         </span>
       </div>
@@ -188,6 +211,7 @@ export default function PaymentHistory() {
     </div>
   ))}
 </div>
+  )}
 
     </section>
   );

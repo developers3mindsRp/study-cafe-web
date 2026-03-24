@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { HomeHero } from "@/types/models.types";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 const DEFAULT_HERO: HomeHero = {
   title: "Master Your Skills with Professional Courses",
@@ -73,7 +74,11 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
         {/* IMAGE */}
         <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
           <img
-            src={h.imageUrl || "/images/home/home.png"}
+            src={
+              h.imageUrl
+                ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
+                : "/images/home/home.png"
+            }
             alt="Learning illustration"
             className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full object-contain "
           />

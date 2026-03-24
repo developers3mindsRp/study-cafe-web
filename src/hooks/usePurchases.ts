@@ -18,11 +18,12 @@ export const useUserPurchases = () => {
 };
 
 // Hook to get user's enrolled courses
-export const useUserCourses = () => {
+export const useUserCourses = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [...queryKeys.user.all, 'courses'],
     queryFn: userService.getUserCourses,
     staleTime: 2 * 60 * 1000,
+    enabled: options?.enabled ?? true,
   });
 };
 
@@ -133,11 +134,12 @@ export const useOverallProgress = () => {
 };
 
 // Hook to get dashboard stats
-export const useDashboardStats = () => {
+export const useDashboardStats = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: queryKeys.user.stats(),
     queryFn: userService.getDashboardStats,
     staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true,
   });
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { CourseCat, Course, PaginatedCourses } from "@/types/models.types";
+import type { CourseCat, PublicCourse, PaginatedCourses } from "@/types/models.types";
 import type { CourseQueryParams } from "@/services/platform.service";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ function formatPrice(val?: string | number | null) {
 
 // ─── course card ─────────────────────────────────────────────────────────────
 
-function CourseCard({ c }: { c: Course }) {
+function CourseCard({ c }: { c: PublicCourse }) {
   const href = c.slug ? `/course/${c.slug}` : `/course/${c.id}`;
   const thumbnail = c.thumbnail_url || "/images/home/f1.jpg";
   const rating = c.ratings ? Number(c.ratings).toFixed(1) : null;
@@ -119,7 +119,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
 
   useEffect(() => {
     const start = () => setNavigating(true);
-    const end   = () => setNavigating(false);
+    const end = () => setNavigating(false);
     router.events.on("routeChangeStart", start);
     router.events.on("routeChangeComplete", end);
     router.events.on("routeChangeError", end);
@@ -133,11 +133,11 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
   // ── build URL query from current filters ──
   const buildQuery = (overrides: Partial<CourseQueryParams> & { q?: string } = {}) => {
     const base: Record<string, string> = {};
-    const cat      = overrides.category  ?? initialQuery.category;
-    const pg       = overrides.page      ?? initialQuery.page ?? 1;
-    const search   = overrides.q         ?? initialQuery.search ?? "";
-    const sort     = overrides.sort      ?? initialQuery.sort ?? "latest";
-    const price    = overrides.price     ?? initialQuery.price ?? "all";
+    const cat = overrides.category ?? initialQuery.category;
+    const pg = overrides.page ?? initialQuery.page ?? 1;
+    const search = overrides.q ?? initialQuery.search ?? "";
+    const sort = overrides.sort ?? initialQuery.sort ?? "latest";
+    const price = overrides.price ?? initialQuery.price ?? "all";
 
     if (cat && cat !== "all") base.category = cat;
     if (pg > 1) base.page = String(pg);
@@ -158,10 +158,10 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
   // ── derived values from SSR data ──
   const allCats = [ALL_CAT, ...cats];
   const activeCategory = initialQuery.category ?? "all";
-  const activeCatName  = allCats.find((c) => c.slug === activeCategory)?.name ?? "All Categories";
-  const sortLabel      = SORT_OPTIONS.find((o) => o.value === initialQuery.sort)?.label ?? "Latest";
-  const priceLabel     = PRICE_OPTIONS.find((o) => o.value === initialQuery.price)?.label ?? "All Prices";
-  const currentPage    = initialQuery.page ?? 1;
+  const activeCatName = allCats.find((c) => c.slug === activeCategory)?.name ?? "All Categories";
+  const sortLabel = SORT_OPTIONS.find((o) => o.value === initialQuery.sort)?.label ?? "Latest";
+  const priceLabel = PRICE_OPTIONS.find((o) => o.value === initialQuery.price)?.label ?? "All Prices";
+  const currentPage = initialQuery.page ?? 1;
 
   const { data: courses, total, pageCount } = initialCourses;
 
@@ -278,9 +278,8 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           <button
             onClick={() => navigate({ page: currentPage - 1 })}
             disabled={currentPage <= 1}
-            className={`w-9 h-9 flex items-center justify-center rounded-full border ${
-              currentPage <= 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
-            }`}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border ${currentPage <= 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
+              }`}
           >
             <img src="/images/f-left.svg" alt="Previous" className="ml-1" />
           </button>
@@ -294,7 +293,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
               pages.push(1);
               if (currentPage > 3) pages.push("...");
               const start = Math.max(2, currentPage - 1);
-              const end   = Math.min(pageCount - 1, currentPage + 1);
+              const end = Math.min(pageCount - 1, currentPage + 1);
               for (let i = start; i <= end; i++) pages.push(i);
               if (currentPage < pageCount - 2) pages.push("...");
               pages.push(pageCount);
@@ -306,11 +305,10 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
                 <button
                   key={p}
                   onClick={() => navigate({ page: p as number })}
-                  className={`w-9 h-9 rounded-full border-2 border-[#EDF1F3] text-sm shadow-sm transition-colors ${
-                    currentPage === p
+                  className={`w-9 h-9 rounded-full border-2 border-[#EDF1F3] text-sm shadow-sm transition-colors ${currentPage === p
                       ? "bg-[#09339B] text-white border-[#09339B]"
                       : "bg-white hover:bg-gray-100 text-[#454545]"
-                  }`}
+                    }`}
                 >
                   {p}
                 </button>
@@ -322,9 +320,8 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           <button
             onClick={() => navigate({ page: currentPage + 1 })}
             disabled={currentPage >= pageCount}
-            className={`w-9 h-9 flex items-center justify-center rounded-full border ${
-              currentPage >= pageCount ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
-            }`}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border ${currentPage >= pageCount ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-100"
+              }`}
           >
             <img src="/images/f-right.svg" alt="Next" className="ml-1" />
           </button>

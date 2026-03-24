@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import type { Course } from '@/types/models.types';
+import type { PublicCourse } from '@/types/models.types';
 
 interface TrendingCoursesProps {
-  courses?: Course[];
+  courses?: PublicCourse[];
 }
 
 const FALLBACK_COURSES = [

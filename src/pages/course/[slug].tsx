@@ -17,13 +17,13 @@ import {
 import type {
   CoursePublicDetail,
   CourseBatch,
-  Course,
+  PublicCourse,
 } from "@/types/models.types";
 
 interface CoursePageProps {
   course: CoursePublicDetail | null;
   batches: CourseBatch[];
-  trendingCourses: Course[];
+  trendingCourses: PublicCourse[];
 }
 
 export default function CoursePage({

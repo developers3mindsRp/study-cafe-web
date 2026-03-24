@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css';
  import IndianStatesList  from "indian-states-cities-list";
@@ -11,8 +13,39 @@ import Sidebar from "./Sidebar";
 import ChangePasswordModal from "@/components/ChangePassword";
 import MembershipCourses from "./MembershipCourses";
 import Earning from "./Earning";
+import {
+  type AccountTabKey,
+  TAB_TO_PATH,
+  PATH_TO_TAB,
+} from "./accountRoutes";
+import { useAuth } from "@/providers/AuthProvider";
 
-export default function EditProfile() {
+const TABS: {
+  key: AccountTabKey;
+  label: string;
+  icon: string;
+  activeIcon: string;
+}[] = [
+  { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
+  { key: "Payment", label: "Payment History", icon: "/images/credit-card.png", activeIcon: "/images/credit-card-active.svg" },
+  { key: "Course", label: "Purchased Course", icon: "/images/course.png", activeIcon: "/images/course-active.svg" },
+  { key: "Membership", label: "Membership course", icon: "/images/crown.svg", activeIcon: "/images/crown-active.svg" },
+  { key: "Earning", label: "My Earning", icon: "/images/earning.svg", activeIcon: "/images/earning-active.svg" },
+];
+
+export interface EditProfileProps {
+  /** Default tab when using public /account-style navigation */
+  initialTab?: AccountTabKey;
+  /** When true, tab bar navigates to /dashboard/* routes (deep-linkable sections) */
+  useDashboardRoutes?: boolean;
+}
+
+export default function EditProfile({
+  initialTab = "Profile",
+  useDashboardRoutes = false,
+}: EditProfileProps) {
+  const router = useRouter();
+  const { user } = useAuth();
     const [open, setOpen] = useState(false);
       const [progress, setProgress] = useState(0);
         const [form, setForm] = useState({
@@ -26,8 +59,18 @@ export default function EditProfile() {
     state: "",
     country: "",
     password: "",
-    // add more if you need
   });
+
+  // Pre-fill form once user data is available
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        fullName: user.name ?? "",
+        email: user.email ?? "",
+      }));
+    }
+  }, [user?.id]);
 
   // Change these dates as needed
   const startDate = new Date("2024-01-01");
@@ -55,9 +98,16 @@ export default function EditProfile() {
       }, [startDate, endDate, today]);
 
 
-     const [active, setActive] = useState("Profile");
-     
-     
+  const [active, setActive] = useState<AccountTabKey>(initialTab);
+
+  useEffect(() => {
+    setActive(initialTab);
+  }, [initialTab]);
+
+  const currentTab: AccountTabKey = useDashboardRoutes
+    ? PATH_TO_TAB[router.pathname] ?? initialTab
+    : active;
+
       function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
       ) {
@@ -73,7 +123,7 @@ export default function EditProfile() {
 const countries = countryList.getNames();
 
   return (
-<div className="w-full xl:py-10 ">
+<div className={`w-full ${useDashboardRoutes ? "xl:py-4" : "xl:py-10"}`}>
   <div className="container  mx-auto grid md:grid-cols-3 gap-8 mb-10">
         
        {/* LEFT SIDEBAR */}
@@ -86,42 +136,46 @@ const countries = countryList.getNames();
         <div className="md:col-span-2 bg-white  rounded-xl md:p-6">
              <div className=" border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
 
-        {[
-          { key: "Profile", label: "Profile Settings", icon: "/images/user.svg", activeIcon: "/images/user-active.png" },
-          { key: "Payment", label: "Payment History" ,icon: "/images/credit-card.png", activeIcon: "/images/credit-card-active.svg"},
-          { key: "Course", label: "Purchased Course", icon: "/images/course.png", activeIcon: "/images/course-active.svg" },
-          { key: "Membership", label: "Membership course", icon: "/images/crown.svg", activeIcon: "/images/crown-active.svg" },
-          { key: "Earning", label: "My Earning", icon: "/images/earning.svg", activeIcon: "/images/earning-active.svg" },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActive(tab.key)}
-            className={`md:flex-1 px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px]  ${
-              active === tab.key
-                ? "bg-white text-[#454545] rounded-[15px] m-2  px-4 py-2 "
-                : " text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 px-4 "
-            }`}
-          >
-          <div className="flex gap-2 justify-center items-center">
-            <Image
-                src={active === tab.key ? tab.activeIcon : tab.icon}
-              alt={tab.label}
-              width={18}
-              height={18}
-              className="object-contain"
-            />
-
-            {/* Hide text on mobile */}
-            <span className="hidden  xl:inline whitespace-nowrap">
-              {tab.label}
-            </span>
-          </div>
-
-          </button>
-        ))}
+        {TABS.map((tab) => {
+          const isOn = currentTab === tab.key;
+          const tabClass = `md:flex-1 px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px] ${
+            isOn
+              ? "bg-white text-[#454545] rounded-[15px] m-2  px-4 py-2 "
+              : " text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 px-4 "
+          }`;
+          const inner = (
+            <div className="flex gap-2 justify-center items-center">
+              <Image
+                src={isOn ? tab.activeIcon : tab.icon}
+                alt={tab.label}
+                width={18}
+                height={18}
+                className="object-contain"
+              />
+              <span className="hidden xl:inline whitespace-nowrap">{tab.label}</span>
+            </div>
+          );
+          if (useDashboardRoutes) {
+            return (
+              <Link key={tab.key} href={TAB_TO_PATH[tab.key]} className={tabClass} scroll={false}>
+                {inner}
+              </Link>
+            );
+          }
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActive(tab.key)}
+              className={tabClass}
+            >
+              {inner}
+            </button>
+          );
+        })}
              </div>
 
-         {active === "Profile" && (
+         {currentTab === "Profile" && (
           <>
                   <div className=" mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm ">
           <p className=" text-[20px] md:text-[26px]">Edit Profile</p>
@@ -130,7 +184,14 @@ const countries = countryList.getNames();
           <div className="grid md:grid-cols-1 gap-4 mt-2">
             <div>
               <label className="text-sm font-medium">Full Name<span className="text-red-600">*</span></label>
-              <input type="text" className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1" placeholder="Name" />
+              <input
+                type="text"
+                name="fullName"
+                value={form.fullName}
+                onChange={handleChange}
+                className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                placeholder="Name"
+              />
             </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -139,6 +200,9 @@ const countries = countryList.getNames();
                       </label>
                       <input
                         type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
                         className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
                         placeholder="Enter Email"
                       />
@@ -241,23 +305,23 @@ const countries = countryList.getNames();
           )}
 
 
-          {active === "Payment" && (
+          {currentTab === "Payment" && (
             <div className="mt-8">
              <PaymentHistory/>
             </div>
           )}
-          {active === "Course" && (
+          {currentTab === "Course" && (
             <div className="mt-8">
              <MyCourses/>
             </div>
           )}
-          {active === "Membership" && (
+          {currentTab === "Membership" && (
             <div className="mt-8">
               <MembershipCourses/>
             
             </div>
           )}
-          {active === "Earning" && (
+          {currentTab === "Earning" && (
             <div className="mt-8">
               <Earning/>
             

@@ -183,7 +183,7 @@ export interface HomePageData {
 
 /** Membership plan for pricing page */
 export interface Membership {
-  id: number;
+  id: string | number;
   name: string;
   slug: string;
   description?: string;
@@ -245,7 +245,7 @@ export interface RelatedArticle {
 
 /** Paginated courses response from the server */
 export interface PaginatedCourses {
-  data: Course[];
+  data: PublicCourse[];
   total: number;
   page: number;
   pageCount: number;
@@ -260,7 +260,7 @@ export interface CourseCat {
 }
 
 /** Public course card */
-export interface Course {
+export interface PublicCourse {
   id: number;
   title: string;
   slug?: string | null;
