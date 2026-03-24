@@ -41,6 +41,12 @@ export default function BannerSection_digital() {
                             height={400}
                             className="w-full h-auto object-cover rounded-lg"
                         />
+                        {/* Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center rounded-lg">
+                            <button className="bg-black w-16 h-16 flex items-center justify-center rounded-full">
+                                <span className="text-white text-[30px]">▶</span>
+                            </button>
+                        </div>
 
        
                     </div>

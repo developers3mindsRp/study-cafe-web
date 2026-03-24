@@ -5,7 +5,7 @@ const Expert_marketing = () => {
     return (
         <section
             className="relative max-w-[935px] h-[150px] md:h-[209px] flex items-center justify-center
-bg-[url('/images/red-bg.svg')] bg-cover bg-no-repeat
+bg-[url('/images/red-bg.png')] bg-cover bg-no-repeat
 container mx-auto px-4 md:mt-8 md:rounded-[10px]"
 
         >

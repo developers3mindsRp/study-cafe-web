@@ -1,4 +1,4 @@
-const testimonials = [
+const Gallery = [
     {
         images: "/images/g1.png",
 
@@ -37,7 +37,7 @@ export default function Gallery_marketing({ showHeading = true }) {
                 <div className="marquee-wrapper mt-6 md:mt-10">
                     <div className="marquee gap-6">
                         {/* duplicate array for seamless loop */}
-                        {[...testimonials, ...testimonials].map((item, index) => (
+                        {[...Gallery, ...Gallery].map((item, index) => (
                             <div
                                 key={index}
                                 className="flex-shrink-0"
