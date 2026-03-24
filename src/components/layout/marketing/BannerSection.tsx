@@ -58,14 +58,22 @@ export default function BannerSection_digital() {
                         Masterclass is Starting on
                     </p>
 
-                    <div className="flex justify-center gap-4 mt-3 flex-wrap">
-                        <div className="text-[#FFCC00] px-4 py-2 rounded-md text-sm border flex gap-2 items-center ">
-                           <img src="/images/y-calendar.svg" alt="" />  Jan 11, 2026 Sunday
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-3  px-4 md:px-12">
+
+                        <div className="bg-[#292738] text-[#FFCC00] px-3 py-2 rounded-md text-[13px] border  flex gap-2 items-center justify-center w-fit ">
+                            <img src="/images/y-calendar.svg" alt="" className="w-4 h-4" />
+                            Jan 11, 2026 Sunday
                         </div>
-                        <div className="text-[#FFCC00] px-4 py-2 rounded-md text-sm border flex gap-2 items-center ">
-                            <img src="/images/y-clock.svg" alt="" /> 11 AM to 2 PM
+
+                        <div className="bg-[#292738] text-[#FFCC00] px-8 py-2 rounded-md text-[13px] border   flex gap-2 items-center justify-center w-fit ">
+                            <img src="/images/y-clock.svg" alt="" className="w-4 h-4" />
+                            11 AM to 2 PM
                         </div>
+
                     </div>
+
+
+
                 </div>
 
             </div>

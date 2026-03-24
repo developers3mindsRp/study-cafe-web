@@ -39,7 +39,7 @@ const Message_about = () => {
                   {/* Right Card */}
                   <div className="bg-[url('/images/about-bg.svg')] bg-cover bg-no-repeat rounded-xl p-8 text-white relative">
 
-                      <div className="flex items-center justify-center gap-4 mb-6">
+                      <div className="hidden md:block flex items-center justify-center gap-4 mb-6">
                           <img src="/images/left-stroke.svg" alt="" />
 
                           <h2 className="text-[26px] font-semibold text-center hidden md:block">

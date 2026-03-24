@@ -38,6 +38,8 @@ export default function LoginPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+  const [showForgot, setShowForgot] = useState(false);
+
 
   return (
     <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
@@ -130,15 +132,47 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex justify-between items-center mt-4 pb-5">
-            <label className="flex items-center gap-2 text-[16px] text-[#AFAFAF]">
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <span className="text-[16px] text-[#09339B] cursor-not-allowed opacity-70">
+        <div className="flex justify-between items-center mt-4 pb-5">
+        <label className="flex items-center gap-2 text-[16px] text-[#AFAFAF]">
+            <input type="checkbox" />
+            Remember me
+        </label>
+
+            <a
+              onClick={() => setShowForgot(true)}
+              className="text-[16px] text-[#09339B] cursor-pointer"
+            >
               Forgot Password ?
-            </span>
-          </div>
+            </a>
+
+            {showForgot && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-lg w-[90%] max-w-md">
+
+                  <h2 className="text-xl font-bold mb-3">Forgot Password</h2>
+
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full border px-3 py-2 rounded mb-4"
+                  />
+
+                  <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
+                    Send Reset Link
+                  </button>
+
+                  <button
+                    onClick={() => setShowForgot(false)}
+                    className="w-full text-gray-500"
+                  >
+                    Cancel
+                  </button>
+
+                </div>
+              </div>
+            )}
+
+        </div>
 
           {errors && <p className="text-red-600 text-sm">{errors}</p>}
 

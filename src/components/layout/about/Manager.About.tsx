@@ -52,41 +52,82 @@ const Manager_about = () => {
               <div>
                   <h1 className="text-[25px] font-bold text-center">Managers</h1>
 
-                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6 md:p-6 mt-10 md:mt-6">
+                  <div className="mt-10 md:mt-6 md:p-6">
 
-                      {managers.map((member, index) => (
-                          <div key={index} className="flex flex-col border md:p-6 rounded-lg bg-white">
+                      {/* 📱 Mobile Slider */}
+                      <div className="flex overflow-x-auto gap-4 md:hidden pb-2 snap-x snap-mandatory scrollbar-hide">
+                          {managers.map((member, index) => (
+                              <div
+                                  key={index}
+                                  className="min-w-[75%] snap-start flex-shrink-0 border p-4 rounded-lg bg-white"
+                              >
+                                  <img src={member.image} alt={member.name} />
 
-                              <img src={member.image} alt={member.name} />
+                                  <div className="flex justify-between items-center mt-2">
+                                      <h1 className="text-[16px] font-bold text-[#111318]">
+                                          {member.name}
+                                      </h1>
 
-                              <div className="flex justify-between items-center mt-2">
-                                  <h1 className="xl:text-[18px] font-bold text-[#111318]">
-                                      {member.name}
-                                  </h1>
+                                      {member.social && (
+                                          <div className="flex gap-2">
+                                              {member.social.instagram && (
+                                                  <a href="#"><img src={member.social.instagram} className="w-4 h-4" /></a>
+                                              )}
+                                              {member.social.twitter && (
+                                                  <a href="#"><img src={member.social.twitter} className="w-4 h-4" /></a>
+                                              )}
+                                              {member.social.linkedin && (
+                                                  <a href="#"><img src={member.social.linkedin} className="w-4 h-4" /></a>
+                                              )}
+                                          </div>
+                                      )}
+                                  </div>
 
-                                  {member.social && (
-                                      <div className="flex gap-2">
-                                          {member.social.instagram && (
-                                              <a href=""> <img src={member.social.instagram} className="w-4 h-4" /></a>
-                                          )}
-                                          {member.social.twitter && (
-                                              <a href=""><img src={member.social.twitter} className="w-4 h-4" /></a>
-                                          )}
-                                          {member.social.linkedin && (
-                                              <a href=""> <img src={member.social.linkedin} className="w-4 h-4" /></a>
-                                          )}
-                                      </div>
-                                  )}
+                                  <span className="text-[14px] text-[#616F89] mt-2">
+                                      {member.role}
+                                  </span>
                               </div>
+                          ))}
+                      </div>
 
-                              <span className="text-[14px] text-[#616F89] mt-2">
-                                  {member.role}
-                              </span>
+                      {/* 💻 Desktop Grid (unchanged) */}
+                      <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
+                          {managers.map((member, index) => (
+                              <div
+                                  key={index}
+                                  className="flex flex-col border p-6 rounded-lg bg-white"
+                              >
+                                  <img src={member.image} alt={member.name} />
 
-                          </div>
-                      ))}
+                                  <div className="flex justify-between items-center mt-2">
+                                      <h1 className="xl:text-[18px] font-bold text-[#111318]">
+                                          {member.name}
+                                      </h1>
+
+                                      {member.social && (
+                                          <div className="flex gap-2">
+                                              {member.social.instagram && (
+                                                  <a href="#"><img src={member.social.instagram} className="w-4 h-4" /></a>
+                                              )}
+                                              {member.social.twitter && (
+                                                  <a href="#"><img src={member.social.twitter} className="w-4 h-4" /></a>
+                                              )}
+                                              {member.social.linkedin && (
+                                                  <a href="#"><img src={member.social.linkedin} className="w-4 h-4" /></a>
+                                              )}
+                                          </div>
+                                      )}
+                                  </div>
+
+                                  <span className="text-[14px] text-[#616F89] mt-2">
+                                      {member.role}
+                                  </span>
+                              </div>
+                          ))}
+                      </div>
 
                   </div>
+
               </div>
 
 

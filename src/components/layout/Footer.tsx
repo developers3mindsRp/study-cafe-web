@@ -131,7 +131,7 @@ export default function Footer() {
                   style={{ maxHeight: '0px' }}
                 >
 
-                  <li><Link href="/about" className="text-[16px] text-white transition-colors">All Courses</Link></li>
+                  <li><Link href="/courses" className="text-[16px] text-white transition-colors">All Courses</Link></li>
                   <li><Link href="/careers" className="text-[16px] text-white transition-colors">GST Courses</Link></li>
                   <li><Link href="/blog" className="text-[16px] text-white transition-colors">Income Tax Courses</Link></li>
                   <li><Link href="/contact" className="text-[16px] text-white transition-colors"> ChatGPT & AI</Link></li>

@@ -41,7 +41,7 @@ export default function marketing() {
 
     return (
         <>
-            <div className='bg-[#06152B] text-white'>
+            <div className='bg-[#000A1F] text-white'>
                 <BannerSection_digital />
                 <Expert_marketing />
                 <Features_marketing />

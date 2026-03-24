@@ -76,7 +76,7 @@ export default function ContactInfo() {
 
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:gap-6 mt-10 px-4 md:px-2 xl:px-12 bg-white">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:gap-6 mt-10 px-4 sm:px-12 md:px-8 xl:px-12 bg-white">
 
                 {/* Box 1 */}
                 <div className="border border-[#9FBBFF] rounded-lg p-5 xl:p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">

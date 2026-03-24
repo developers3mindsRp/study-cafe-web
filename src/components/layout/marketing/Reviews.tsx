@@ -110,13 +110,13 @@ export default function Reviews_marketing() {
 
                                     <div className="mt-6 flex items-center justify-between">
                                         <div>
-                                            <h4 className="font-semibold  text-[30px]">
+                                            <h4 className="font-semibold  text-[28px]">
                                                 {item.name}
                                             </h4>
                                             <p className=" text-[17px]">{item.role}</p>
                                         </div>
 
-                                        <div className="flex gap-1 mt-10">
+                                        <div className="flex gap-1 mt-10  bg-[#4E4B65] p-2 rounded-full">
                                             {Array(item.rating)
                                                 .fill(0)
                                                 .map((_, i) => (

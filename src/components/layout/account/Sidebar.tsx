@@ -6,7 +6,7 @@ export default function Sidebar() {
     <div className="sticky top-20 space-y-6 ">
     
       {/* PROFILE BOX */}
-      <div className="relative flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
+      <div className="relative  flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
 
         {/* Member Badge */}
         <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 right-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
@@ -66,7 +66,7 @@ export default function Sidebar() {
         </div>
 
         {/* Buttons */}
-        <div className="w-full mt-8 flex gap-3 md:flex-col">
+        <div className="w-full mt-4 flex gap-3 md:flex-col">
           <button className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
             <img src="/images/logout.png" alt="Logout icon" className="w-5 h-5" />
             <span className="font-medium">Logout</span>

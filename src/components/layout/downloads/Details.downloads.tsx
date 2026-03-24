@@ -54,7 +54,7 @@ const Details_downloads = () => {
 
                           <div>
                               <p className="text-[#929292] mb-1">File Name</p>
-                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-1 rounded-md inline-block ">Sas-fashion.pdf</p>
+                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-2 rounded-md inline-block ">Sas-fashion.pdf</p>
                           </div>
 
                           <div>
