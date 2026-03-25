@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { HomeHero } from "@/types/models.types";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import Image from "next/image";
 
 const DEFAULT_HERO: HomeHero = {
   title: "Master Your Skills with Professional Courses",
@@ -21,7 +22,7 @@ interface HeroSectionProps {
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
-
+  console.log(h);
   const handleClick = () => {
     router.push(h.ctaLink || "/plans");
   };
@@ -73,7 +74,9 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
 
         {/* IMAGE */}
         <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
-          <img
+          <Image
+            width={1000}
+            height={1000}
             src={
               h.imageUrl
                 ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
