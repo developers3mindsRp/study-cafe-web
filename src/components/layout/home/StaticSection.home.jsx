@@ -17,7 +17,7 @@ export default function StatsSection() {
               <h3 className="text-[15px] xl:text-[40px] font-bold text-[#FFFFFF]">
                 <CountUp end={10000} duration={2} separator="," />+
               </h3>
-              <p className="text-[#FFFFFF] text-[14px] md:text-[16px]">Active Students</p>
+              <p className="text-[#FFFFFF] text-[14px] md:text-[16px] text-left">Active Students</p>
             </div>
           </div>
 

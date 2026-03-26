@@ -35,7 +35,7 @@ export default function BannerSection_digital() {
 
                         {/* Background Image */}
                         <Image
-                            src="/images/c1.png" // replace with your image
+                            src="/images/c1.png" 
                             alt="Course"
                             width={800}
                             height={400}
@@ -84,17 +84,7 @@ export default function BannerSection_digital() {
 
             </div>
 
-            {/* Marquee Animation */}
-            <style jsx>{`
-        .animate-marquee {
-          display: inline-block;
-          animation: marquee 12s linear infinite;
-        }
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-      `}</style>
+
         </div>
     );
 }
