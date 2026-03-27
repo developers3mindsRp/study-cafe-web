@@ -118,17 +118,30 @@ interface PlanCardProps {
   mobile?: boolean;
 }
 
+const normalizeFeatures = (features: any): string[] => {
+  if (!features) return [];
+
+  if (Array.isArray(features)) {
+    return features.map((f) => String(f).trim()).filter(Boolean);
+  }
+
+  if (typeof features === 'object') {
+    return [
+      ...(features.included || []),
+      ...(features.excluded || [])
+    ]
+      .map((f) => String(f).trim())
+      .filter(Boolean);
+  }
+  return [];
+};
+
 const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
   ({ plan, mobile }, ref) => {
     const highlight = !!plan.is_popular;
     const priceStr = formatPrice(plan.price, plan.currency);
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
-    const features = (plan.features ?? []).flatMap((f) => {
-      if (!f.includes('<')) return [f.trim()].filter(Boolean);
-      const plain = f.replace(/<\/p>/gi, '\n').replace(/<\/li>/gi, '\n').replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
-      return plain.split('\n').map((l) => l.trim()).filter(Boolean);
-    });
+    const features = normalizeFeatures(plan.features);
 
     if (mobile) {
       return (

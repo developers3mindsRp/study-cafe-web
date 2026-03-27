@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   } catch (error) {
     console.error('Error fetching home data:', error);
   }
-  console.log("homePageData", homePageData);
+  console.log("homePageData", homePageData, memberships);
 
   return {
     props: { homePageData, memberships },
