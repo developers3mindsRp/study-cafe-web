@@ -1,5 +1,6 @@
 import CourseCard from "../../CourseCard";
 import Image from "next/image";
+import Link from "next/link";
 
 
 export default function MembershipCourses() {
@@ -112,9 +113,10 @@ const courses = [
              </div>
 
              <div className="flex justify-center mt-6 ">
-              <button className="px-4 py-2 bg-[#09339B] text-white rounded-md text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
-                View All
-              </button>
+        <Link href="/All-courses">
+          <button className="px-4 py-2 bg-[#09339B] text-white rounded-md text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300">
+            View All
+          </button></Link>
              </div>
  
     </section>
