@@ -74,7 +74,7 @@ const Faqs_marketing = () => {
 
                             {/* Answer */}
                             {openIndex === index && (
-                                <div className="px-4 pb-4 text-[16px] text-[#6C6C6C] leading-[28px] border-t p-4">
+                                <div className="px-4 pb-4 text-[16px] text-[#454545] bg-white leading-[28px] border-t p-4">
                                     {item.a}
                                 </div>
                             )}

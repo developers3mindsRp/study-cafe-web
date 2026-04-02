@@ -26,7 +26,7 @@ export default function Stats_marketing() {
               <h3 className="text-[18px] xl:text-[40px] font-bold text-[#FFFFFF]">
                 <CountUp end={150} duration={2} />+
               </h3>
-                          <p className="text-[#FFFFFF] text-[12px] md:text-[16px] line-clamp-1">Prefered By AI Experts</p>
+                          <p className="text-[#FFFFFF] text-[12px] md:text-[16px] ">Prefered By AI Experts</p>
             </div>
  
 
