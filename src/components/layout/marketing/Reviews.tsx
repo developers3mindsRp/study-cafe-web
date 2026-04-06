@@ -38,7 +38,7 @@ const testimonials = [
 
 export default function Reviews_marketing() {
     return (
-        <section className="py-12 xl:py-20 ">
+        <section className="py-4 xl:py-20 ">
             <div className=" mx-auto px-4 text-center">
                 {/* Heading */}
                 <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase">

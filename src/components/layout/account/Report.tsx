@@ -113,9 +113,10 @@ export default function Commission() {
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full min-w-0 appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full min-w-0 h-[48px] appearance-none px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
+
           </div>
 
           {/* To */}
@@ -128,7 +129,7 @@ export default function Commission() {
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full min-w-0 appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                className="w-full min-w-0 h-[48px] appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
             </div>
           </div>

@@ -44,7 +44,7 @@ export default function StickyCTA() {
                     </div>
 
                     {/* CTA BOX */}
-                    <div className="bg-red-600 rounded-xl px-5 py-4 flex items-center justify-between">
+                    <div className="bg-[url('/images/red-bg.png')] bg-cover bg-no-repeat rounded-xl px-5 py-4 flex items-center justify-between">
 
                         {/* LEFT */}
                         <div>
