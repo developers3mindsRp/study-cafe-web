@@ -258,7 +258,7 @@ export default function CourseOverview() {
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto" id="certificate">Certificate</h2>
       <p className=" text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">Certificate to be provided to all the participants.</p>
-      <img src="/images/certificate1.svg" alt="" className="mx-auto" />
+      <img src="/images/certificatee.svg" alt="" className="mx-auto" />
 
 
     </section>
