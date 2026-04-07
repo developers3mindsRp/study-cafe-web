@@ -8,6 +8,7 @@ import * as coursesService from '@/services/courses.service';
 import { PublicLayout } from '@/components/layout';
 import CourseDetailPage from '@/components/CourseDetailProfile';
 import PaymemtDetail from '@/components/PaymentDetail';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 
 
@@ -28,6 +29,9 @@ export default function CourseDetail() {
 
   return (
     <PublicLayout>
+         <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+              <Breadcrumbs />
+            </div>
     <PaymemtDetail/>
     </PublicLayout>
 

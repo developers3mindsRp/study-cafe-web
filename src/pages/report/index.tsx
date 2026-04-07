@@ -10,6 +10,7 @@ import SignUpPage from '@/components/layout/Register';
 import LoginPage from '@/components/layout/Login';
 import EditProfile from '@/components/layout/account/EditProfile';
 import Commission from '@/components/layout/account/Report';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 /**
  * Home Page - Course Listing
@@ -28,7 +29,10 @@ export default function Account() {
   return (
   
 
-  <PublicLayout>
+    <PublicLayout>
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs />
+      </div>
     <Commission/>
     
   </PublicLayout>

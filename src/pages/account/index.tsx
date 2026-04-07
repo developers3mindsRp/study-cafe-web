@@ -9,6 +9,7 @@ import { PublicLayout } from '@/components/layout';
 import SignUpPage from '@/components/layout/Register';
 import LoginPage from '@/components/layout/Login';
 import EditProfile from '@/components/layout/account/EditProfile';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 /**
  * Home Page - Course Listing
@@ -28,7 +29,11 @@ export default function Account() {
   
 
     <PublicLayout>
+      <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
+        <Breadcrumbs />
+      </div>
       <div className="container mx-auto p-6">
+             
 
         <div className="mb-6">
           <h3 className="text-[30px] md:text-[40px] font-semibold">

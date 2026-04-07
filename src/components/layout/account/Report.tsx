@@ -113,8 +113,10 @@ export default function Commission() {
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full min-w-0 h-[48px] appearance-none px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
+                style={{ WebkitAppearance: 'none' }}
+                className="w-full min-w-0 h-[48px] px-4 border border-gray-300 rounded-xl bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
+
             </div>
 
           </div>
@@ -143,13 +145,6 @@ export default function Commission() {
           </button>
         </div>
       </div>
-
-  
-
-
- 
-
- 
 
  
 
