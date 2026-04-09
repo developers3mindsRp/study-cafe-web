@@ -181,6 +181,20 @@ export interface HomePageData {
   updatedAt?: string;
 }
 
+/** Structured features for membership plans */
+export interface MembershipFeatures {
+  mrp: number;
+  included: string[];
+  excluded: string[];
+}
+
+/** A single feature row from the plan comparison table */
+export interface ComparisonFeature {
+  id: number;
+  name: string;
+  available: boolean;
+}
+
 /** Membership plan for pricing page */
 export interface Membership {
   id: string | number;
@@ -191,7 +205,8 @@ export interface Membership {
   currency: string;
   duration_days: number;
   is_lifetime?: boolean;
-  features: string[];
+  features: MembershipFeatures | string[];
+  comparison_features?: ComparisonFeature[];
   is_popular?: boolean;
   sort_order: number;
 }

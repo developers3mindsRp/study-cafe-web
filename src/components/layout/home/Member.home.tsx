@@ -118,21 +118,20 @@ interface PlanCardProps {
   mobile?: boolean;
 }
 
-const normalizeFeatures = (features: any): string[] => {
+/** Bullets on the pricing card: only included lines (not comparison table, not excluded). */
+const normalizeFeatures = (features: unknown): string[] => {
   if (!features) return [];
 
   if (Array.isArray(features)) {
     return features.map((f) => String(f).trim()).filter(Boolean);
   }
 
-  if (typeof features === 'object') {
-    return [
-      ...(features.included || []),
-      ...(features.excluded || [])
-    ]
-      .map((f) => String(f).trim())
-      .filter(Boolean);
+  if (typeof features === "object" && features !== null && "included" in features) {
+    const inc = (features as { included?: unknown }).included;
+    if (!Array.isArray(inc)) return [];
+    return inc.map((f) => String(f).trim()).filter(Boolean);
   }
+
   return [];
 };
 
@@ -205,25 +204,18 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
             <div className="-mx-6 h-px bg-black shadow-[0_6px_10px_rgba(0,0,0,0.35)]" />
           )}
 
-          <ul className="px-6 py-6 space-y-4 text-gray-400 text-[12px]">
-            {features.length > 0
-              ? features.map((f, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span>
-                      <img src="/images/tick.svg" alt="" />
-                    </span>
-                    {f}
-                  </li>
-                ))
-              : [...Array(5)].map((_, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span>
-                      <img src="/images/tick.svg" alt="" />
-                    </span>
-                    Lorem Ipsum is simply dummy text of the printing
-                  </li>
-                ))}
-          </ul>
+          {features.length > 0 && (
+            <ul className="px-6 py-6 space-y-4 text-gray-400 text-[12px]">
+              {features.map((f, i) => (
+                <li key={i} className="flex gap-3">
+                  <span>
+                    <img className="shrink-0" src="/images/tick.svg" alt="" />
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       );
     }
@@ -288,25 +280,18 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
 
         {!highlight && <div className="-mx-6 h-[1px] bg-black" />}
 
-        <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
-          {features.length > 0
-            ? features.map((f, i) => (
-                <li key={i} className="flex gap-3">
-                  <span>
-                    <img src="/images/tick.svg" alt="" />
-                  </span>
-                  {f}
-                </li>
-              ))
-            : [...Array(5)].map((_, i) => (
-                <li key={i} className="flex gap-3">
-                  <span>
-                    <img src="/images/tick.svg" alt="" />
-                  </span>
-                  Lorem Ipsum is simply dummy text of the printing
-                </li>
-              ))}
-        </ul>
+        {features.length > 0 && (
+          <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
+            {features.map((f, i) => (
+              <li key={i} className="flex gap-3">
+                <span>
+                  <img className="shrink-0" src="/images/tick.svg" alt="" />
+                </span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     );
   }

@@ -13,7 +13,7 @@ export default function Membership({ memberships }: PlansPageProps) {
   return (
     <PublicLayout>
       <MembershipPricing memberships={memberships ?? undefined} />
-      <PlansComparisonTable />
+      <PlansComparisonTable memberships={memberships ?? undefined} />
     </PublicLayout>
   );
 }
