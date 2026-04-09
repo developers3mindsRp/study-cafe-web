@@ -17,19 +17,19 @@ const Timer_marketing = () => {
                 <div className="flex justify-center gap-4 mt-4">
 
                     <div className="bg-[#FFCC00] text-black font-bold 
-                  w-20 h-20 md:w-18 md:h-24 
+                  w-20 h-24 md:w-18 md:h-24 
                   flex flex-col items-center justify-center 
                   rounded-lg">
                         <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">15</span>
-                        <span className="text-[18px] md:text-[18px] uppercase">Min</span>
+                        <span className="text-[18px] md:text-[18px] ">Min</span>
                     </div>
 
                     <div className="bg-[#FFCC00] text-black font-bold 
-                  w-20 h-20 md:w-18 md:h-24 
+                  w-20 h-24 md:w-18 md:h-24 
                   flex flex-col items-center justify-center 
                   rounded-lg">
                         <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">00</span>
-                        <span className="text-[18px] md:text-[18px] uppercase">Sec</span>
+                        <span className="text-[18px] md:text-[18px] ">Sec</span>
                     </div>
 
                 </div>

@@ -9,7 +9,7 @@ const Paymentsection = () => {
   <div className="lg:col-span-2 space-y-6">
 
     {/* Course Start Time */}
-    <p className="bg-[#F9F9FB] w-[340px] sm:max-w-[379px] p-2 text-[#454545] text-[15px] px-1">
+    <p className="bg-[#F9F9FB] w-[340px] sm:max-w-[379px] p-2 text-[#454545] text-[15px] px-4">
       Starts at Thursday November 27, 2025 – 18:00
     </p>
 

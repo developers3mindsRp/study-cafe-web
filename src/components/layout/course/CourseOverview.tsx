@@ -426,7 +426,7 @@ export default function CourseOverview({
       <p className="text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">
         Certificate to be provided to all the participants.
       </p>
-      <img src="/images/certificate1.svg" alt="" className="mx-auto" />
+      <img src="/images/certificatee.svg" alt="" className="mx-auto" />
     </section>
   );
 }

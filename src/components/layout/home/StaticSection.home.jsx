@@ -46,7 +46,7 @@ export default function StatsSection({ stats: statsProp }) {
                   />
                   {getSuffix(stat)}
                 </h3>
-                <p className="text-[#FFFFFF] text-[14px] md:text-[16px]">{stat.label}</p>
+                <p className="text-[#FFFFFF] text-[14px] md:text-[16px] text-left">{stat.label}</p>
               </div>
             </div>
           ))}

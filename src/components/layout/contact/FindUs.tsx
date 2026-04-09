@@ -1,6 +1,6 @@
 export default function MapSection() {
   return (
-    <section className="bg-white md:py-14 py-4 px-4">
+    <section className="bg-white  py-4 px-4">
       <div className="container px-4 mx-auto">
         
         {/* Heading */}

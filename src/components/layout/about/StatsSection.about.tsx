@@ -39,7 +39,7 @@ const Stats_about = () => {
                       <img src={item.icon} alt={item.title} className='w-10 h-10 xl:w-auto xl:h-auto ' />
 
                       <div className="flex flex-col">
-                          <h2 className="text-[14px] md:text-[16px] font-regular text-white line-clamp-1">
+                          <h2 className="text-[14px] md:text-[16px] font-regular text-white xl:w-[110px] whitespace-nowrap">
                               {item.title}
                           </h2>
 

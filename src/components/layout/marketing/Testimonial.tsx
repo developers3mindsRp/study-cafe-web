@@ -15,10 +15,10 @@ const testimonials = [
 
 export default function Testimonials_marketing() {
     return (
-        <section className=" ">
+        <section className=" py-4 md:py-0">
             <div className="  ">
                 {/* Heading */}
-                <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase text-center mb-2">
+                <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase text-center mb-4">
                    Testimonials
                 </h2>
 
@@ -85,6 +85,9 @@ export default function Testimonials_marketing() {
                     </div>
                 </div>
             </div>
+            
         </section>
+
+        
     );
 }
