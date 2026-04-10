@@ -22,7 +22,13 @@ interface HeroSectionProps {
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
-  console.log(h);
+  const heroSrc = h.imageUrl
+    ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
+    : "/images/home/home.png";
+  /** CMS/API URLs: load in the browser directly. Avoids optimizer fetch failures (remotePatterns, SSR egress, etc.). */
+  const heroImageUnoptimized =
+    heroSrc.startsWith("http://") || heroSrc.startsWith("https://");
+
   const handleClick = () => {
     router.push(h.ctaLink || "/plans");
   };
@@ -77,11 +83,8 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           <Image
             width={1000}
             height={1000}
-            src={
-              h.imageUrl
-                ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
-                : "/images/home/home.png"
-            }
+            src={heroSrc}
+            unoptimized={heroImageUnoptimized}
             alt="Learning illustration"
             className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full object-contain "
           />

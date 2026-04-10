@@ -265,7 +265,7 @@ export default function CourseOverview({
                 <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
                   Bonus {index + 1}
                 </span>
-                <div className="flex items-start gap-3 mt-4">
+                <div className="flex items-start items-center gap-3 mt-4">
                   <img
                     src={resolveImageUrl(bonus.image)}
                     alt=""
