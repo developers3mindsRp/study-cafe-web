@@ -22,10 +22,11 @@ interface HeroSectionProps {
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
+
   const heroSrc = h.imageUrl
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
     : "/images/home/home.png";
-  /** CMS/API URLs: load in the browser directly. Avoids optimizer fetch failures (remotePatterns, SSR egress, etc.). */
+  console.log("her image url", h);
   const heroImageUnoptimized =
     heroSrc.startsWith("http://") || heroSrc.startsWith("https://");
 
@@ -34,11 +35,8 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
   };
 
   return (
-    <section
-      className="relative bg-[url('/images/home/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-auto xl:h-[800px]"
-    >
+    <section className="relative bg-[url('/images/home/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-auto xl:h-[800px]">
       <div className="container mx-auto px-4  md:py-12 lg:py-24 xl:py-24 2xl:py-24 flex flex-col lg:flex-row items-center">
-
         {/* TEXT CONTENT */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 md:mt-0 ">
           {h.badge && (
@@ -80,16 +78,15 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
 
         {/* IMAGE */}
         <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
-          <Image
+          <img
             width={1000}
             height={1000}
             src={heroSrc}
-            unoptimized={heroImageUnoptimized}
+            crossOrigin="anonymous"
             alt="Learning illustration"
             className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full object-contain "
           />
         </div>
-
       </div>
     </section>
   );
