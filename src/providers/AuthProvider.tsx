@@ -19,6 +19,10 @@ export type AuthContextValue = {
   user: User | undefined;
   isLoading: boolean;
   isAuthenticated: boolean;
+  /** Convenience: active membership from /auth/me */
+  hasActiveMembership: boolean;
+  /** Site admin roles (not the same as admin panel operator unless role matches) */
+  isAdminRole: boolean;
   refetchUser: () => void;
 };
 
@@ -62,6 +66,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       isLoading,
       isAuthenticated,
+      hasActiveMembership: !!user?.hasActiveMembership,
+      isAdminRole: user ? ["admin", "super_admin"].includes(user.role) : false,
       refetchUser: () => refetch(),
     }),
     [user, isLoading, isAuthenticated, refetch]

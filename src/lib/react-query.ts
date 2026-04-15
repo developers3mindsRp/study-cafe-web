@@ -68,6 +68,9 @@ export const queryKeys = {
     all: ['articles'] as const,
     list: (filters?: any) => [...queryKeys.articles.all, 'list', { filters }] as const,
     categories: () => [...queryKeys.articles.all, 'categories'] as const,
+    detail: (slug: string) => [...queryKeys.articles.all, 'detail', slug] as const,
+    spotlight: (filters?: Record<string, unknown>) =>
+      [...queryKeys.articles.all, 'spotlight', filters ?? {}] as const,
   },
 
   // Purchase/User Course keys

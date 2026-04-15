@@ -20,7 +20,7 @@ interface PublicLayoutProps {
 export default function PublicLayout({ children, showFooter = true }: PublicLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      {/* <Header /> */}
 
 
       <main className="flex-1">

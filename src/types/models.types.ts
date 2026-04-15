@@ -4,9 +4,11 @@ export interface User {
   email: string;
   name: string;
   avatar?: string;
-  /** e.g. user, admin — from auth-service Role */
+  /** e.g. user, admin, super_admin — from auth-service Role */
   role: string;
   permissions?: string[];
+  /** Active membership window in user_memberships (from /auth/me & login). */
+  hasActiveMembership?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -227,14 +229,18 @@ export interface Testimonial {
   order?: number;
 }
 
-/** CMS page content (about, contact, privacy, etc.) */
+/** CMS page row from GET /platform/cms-pages/:slug (about, contact, privacy, etc.) */
 export interface PageContent {
   slug: string;
-  title: string;
-  content: string;
+  title: string | null;
+  content: string | null;
+  meta?: Record<string, unknown> | null;
+  /** Legacy client fields (optional) */
   metaTitle?: string;
   metaDescription?: string;
   updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 /** SEO metadata for a page */
@@ -251,11 +257,19 @@ export interface SeoMetadata {
   ogImageUrl?: string;
 }
 
-/** Resolved "Also Read" article from [related id="..."] in legacy article content */
+/** Resolved "Also Read" / category suggestions */
 export interface RelatedArticle {
   id: number;
   title: string;
   slug: string;
+  thumbnail_url?: string | null;
+  cover_image_url?: string | null;
+  excerpt?: string | null;
+  sub_heading?: string | null;
+  author_name?: string | null;
+  published_at?: string | null;
+  updated_at?: string | null;
+  description_preview?: string | null;
 }
 
 /** Paginated courses response from the server */
@@ -369,19 +383,83 @@ export interface CoursePublicDetail {
   author_image?: string | null;
 }
 
-/** Public article by slug (body = content, related_articles from shortcodes) */
+/** List / spotlight card (public); `access` reflects optional JWT + membership. */
+export interface ArticleAccessMeta {
+  can_read_full: boolean;
+  reason: string;
+  show_read_more_cta?: boolean;
+  can_download?: boolean;
+}
+
+export interface BlogSpotlightArticleCard {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  sub_heading?: string | null;
+  thumbnail_url?: string | null;
+  cover_image_url?: string | null;
+  author_id?: number | null;
+  author_name?: string | null;
+  published_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  blog_access_tier?: 'free' | 'premium';
+  access?: ArticleAccessMeta;
+  categories?: { id: number; name: string; slug: string }[];
+  /** Plain-text intro for hero (server-computed). */
+  description_preview?: string;
+}
+
+export interface BlogSpotlightAuthor {
+  id: number;
+  display_name?: string | null;
+  name?: string | null;
+  profession?: string | null;
+  designation?: string | null;
+  company?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  profile_pic_url?: string | null;
+  published_article_count?: number;
+}
+
+export interface BlogSpotlightTag {
+  id: number;
+  name: string;
+  slug?: string | null;
+  article_count: number;
+}
+
+export interface BlogSpotlightFeed {
+  hero: BlogSpotlightArticleCard | null;
+  recent_posts: BlogSpotlightArticleCard[];
+  all_posts: BlogSpotlightArticleCard[];
+  author: BlogSpotlightAuthor | null;
+  author_recent_articles: BlogSpotlightArticleCard[];
+  popular_tags: BlogSpotlightTag[];
+}
+
+/** Public article by slug (body = content; membership may truncate premium posts) */
 export interface ArticleBySlug {
   id: number;
   title: string;
   slug: string;
   excerpt?: string | null;
+  sub_heading?: string | null;
   body: string;
+  thumbnail_url?: string | null;
   cover_image_url?: string | null;
-  author_name?: number | null;
+  author_name?: string | number | null;
   published_at?: string | null;
   meta_title?: string | null;
   meta_description?: string | null;
   created_at?: string;
   updated_at?: string;
+  blog_access_tier?: 'free' | 'premium';
+  access?: ArticleAccessMeta;
+  /** Category-based suggestions when premium content is locked */
   related_articles?: RelatedArticle[];
+  download_url?: string | null;
 }

@@ -1,14 +1,9 @@
 import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
 import { queryKeys } from '@/lib/react-query';
 import * as coursesService from '@/services/courses.service';
+import { getPageContent } from '@/services/platform.service';
 import { PublicLayout } from '@/components/layout';
-import SignUpPage from '@/components/layout/Register';
-import LoginPage from '@/components/layout/Login';
-import EditProfile from '@/components/layout/account/EditProfile';
 import HeroSection_about from '@/components/layout/about/Banner.About';
 import Description_about from '@/components/layout/about/Description.About';
 import Stats_about from '@/components/layout/about/StatsSection.about';
@@ -21,65 +16,55 @@ import Awards_about from '@/components/layout/about/Awards.About';
 import Gallery from '@/components/layout/course/Gallerysection';
 import Feature_about from '@/components/layout/about/Feature.About';
 import Message_about from '@/components/layout/about/Message.About';
+import { AboutPageProvider } from '@/contexts/AboutPageContext';
+import { mergeAboutPageFromCms } from '@/lib/about-page-data';
+import type { AboutPageData } from '@/types/about-page.types';
 
-/**
- * Home Page - Course Listing
- * 
- * This example shows how to use React Query with SSG (Static Site Generation)
- * for SEO-optimized course listings
- */
+type AboutPageProps = {
+  aboutData: AboutPageData;
+};
 
-export default function About() {
-    const router = useRouter();
-    // Use the hook on the client side - data is already prefetched on the server
-    const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
-    return (
-
-
-        <PublicLayout>
-            <HeroSection_about />
-            <Description_about />
-            <Stats_about />
-            <Mission_about />
-            <Journey_about />
-            <Leader_about />
-            <Manager_about/>
-            <Teams_about />
-            <Awards_about />
-            <Gallery showHeading={false} />
-            <Feature_about />
-            <Message_about/>
-
-        </PublicLayout>
-
-    );
+export default function About({ aboutData }: AboutPageProps) {
+  return (
+    <AboutPageProvider value={aboutData}>
+      <PublicLayout>
+        <HeroSection_about />
+        <Description_about />
+        <Stats_about />
+        <Mission_about />
+        <Journey_about />
+        <Leader_about />
+        <Manager_about />
+        <Teams_about />
+        <Awards_about />
+        <Gallery showHeading={false} images={aboutData.gallery.images} />
+        <Feature_about />
+        <Message_about />
+      </PublicLayout>
+    </AboutPageProvider>
+  );
 }
 
-/**
- * Static Site Generation (SSG)
- * Prefetch data at build time for SEO and performance
- */
-export const getStaticProps: GetStaticProps = async () => {
-    const queryClient = new QueryClient();
+export const getStaticProps: GetStaticProps<AboutPageProps> = async () => {
+  const queryClient = new QueryClient();
 
-    try {
-        // Prefetch featured courses
-        await queryClient.prefetchQuery({
-            queryKey: [...queryKeys.courses.all, 'featured', 6],
-            queryFn: () => coursesService.getFeaturedCourses(6),
-        });
-    } catch (error) {
-        console.error('Error prefetching data:', error);
-    }
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: [...queryKeys.courses.all, 'featured', 6],
+      queryFn: () => coursesService.getFeaturedCourses(6),
+    });
+  } catch (error) {
+    console.error('Error prefetching data:', error);
+  }
 
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient),
-        },
-        // Revalidate every 10 minutes
-        revalidate: 600,
-    };
+  const cmsRow = await getPageContent('about');
+  const aboutData = mergeAboutPageFromCms(cmsRow);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      aboutData,
+    },
+    revalidate: 600,
+  };
 };

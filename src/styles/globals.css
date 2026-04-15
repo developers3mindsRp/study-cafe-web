@@ -187,4 +187,142 @@
   background: transparent;
 }
 
+/* --- CMS article body (.prose / .article-rich-text) ---
+   Prevent rogue layout (flex/grid from pasted AI HTML) from breaking vertical flow.
+   Tailwind Typography is not installed; explicit rules preserve <strong>, links, headings,
+   and inline styles from TipTap / WordPress.
+*/
+.prose div,
+.prose section,
+.prose article,
+.article-rich-text div,
+.article-rich-text section,
+.article-rich-text article {
+  display: block !important;
+  flex: none !important;
+  grid: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  gap: 0 !important;
+  position: static !important;
+}
+
+.prose p,
+.article-rich-text p:not(.related-heading) {
+  margin-bottom: 1.25em !important;
+}
+
+.article-rich-text {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #454545;
+  font-weight: 400;
+  max-width: 100%;
+}
+
+.article-rich-text > *:first-child {
+  margin-top: 0;
+}
+
+.article-rich-text p {
+  margin-top: 0;
+}
+
+.article-rich-text strong,
+.article-rich-text b {
+  font-weight: 700;
+  color: #252525;
+}
+
+.article-rich-text em,
+.article-rich-text i {
+  font-style: italic;
+}
+
+.article-rich-text u {
+  text-decoration: underline;
+}
+
+.article-rich-text mark {
+  background-color: #fef08a;
+  padding: 0 0.125em;
+}
+
+.article-rich-text a {
+  color: #09339b;
+  text-decoration: underline;
+}
+
+.article-rich-text h1,
+.article-rich-text h2,
+.article-rich-text h3 {
+  font-weight: 700;
+  color: #252525;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+.article-rich-text h1 {
+  font-size: 1.75rem;
+}
+
+.article-rich-text h2 {
+  font-size: 1.5rem;
+}
+
+.article-rich-text h3 {
+  font-size: 1.25rem;
+}
+
+.article-rich-text ul,
+.article-rich-text ol {
+  margin: 0 0 1.25em 0;
+  padding-left: 1.5em;
+}
+
+.article-rich-text blockquote {
+  border-left: 4px solid #d4d4d8;
+  margin: 1em 0;
+  padding-left: 1em;
+  color: #52525b;
+}
+
+.article-rich-text img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Server-side [related] → embed (platform-service) + client ArticleBody fallback */
+.article-rich-text .related-article-inline,
+.article-rich-text.related-article-inline {
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.article-rich-text .related-heading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #252525;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+}
+
+.article-rich-text .related-link {
+  display: block;
+  color: #09339b;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.article-rich-text .related-link:hover {
+  text-decoration: underline;
+}
+
 

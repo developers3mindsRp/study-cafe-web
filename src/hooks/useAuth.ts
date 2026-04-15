@@ -29,12 +29,16 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
     onSuccess: (data) => {
-      // Set user data in cache
       queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
-      
-      // Redirect to dashboard or intended page
-      const redirectTo = (router.query.redirect as string) || '/dashboard';
-      router.push(redirectTo);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
+
+      const next = router.query.next as string | undefined;
+      const redirectLegacy = router.query.redirect as string | undefined;
+      const redirectTo =
+        (next && next.startsWith("/") ? next : null) ||
+        (redirectLegacy && redirectLegacy.startsWith("/") ? redirectLegacy : null) ||
+        "/dashboard";
+      void router.push(redirectTo);
     },
     onError: (error: any) => {
       console.error('Login failed:', error);
@@ -52,7 +56,10 @@ export const useRegister = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
       void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
-      router.push('/dashboard');
+      void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
+      const next = router.query.next as string | undefined;
+      const redirectTo = next && next.startsWith("/") ? next : "/dashboard";
+      void router.push(redirectTo);
     },
     onError: (error: any) => {
       console.error('Registration failed:', error);

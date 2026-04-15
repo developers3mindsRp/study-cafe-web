@@ -29,17 +29,19 @@ type AuthPayload = {
     name: string;
     role: string;
     permissions?: string[];
+    has_active_membership?: boolean;
   };
   expiresIn?: number;
 };
 
-function toUser(u: AuthPayload['user']): User {
+function toUser(u: AuthPayload['user'] & { has_active_membership?: boolean }): User {
   return {
     id: String(u.id),
     email: u.email,
     name: u.name || '',
     role: u.role || 'user',
     permissions: u.permissions ?? [],
+    hasActiveMembership: !!u.has_active_membership,
   };
 }
 
@@ -105,6 +107,7 @@ export const getCurrentUser = async (): Promise<User> => {
       name: string;
       role: string;
       permissions?: string[];
+      has_active_membership?: boolean;
     }>
   >('/auth/me');
 
@@ -115,6 +118,7 @@ export const getCurrentUser = async (): Promise<User> => {
     name: d.name || '',
     role: d.role || 'user',
     permissions: d.permissions ?? [],
+    hasActiveMembership: !!d.has_active_membership,
   };
   setUserData(user);
   return user;

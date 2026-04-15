@@ -2,7 +2,7 @@
 
 import type { RelatedArticle } from '@/types/models.types';
 
-const RELATED_SHORTCODE_REGEX = /\[related\s+id="(\d+)"\]/gi;
+const RELATED_SHORTCODE_REGEX = /\[related\s+id=['"](\d+)['"]\]/gi;
 
 interface ArticleBodyProps {
   /** Article body (HTML or TipTap JSON string). Legacy content may contain [related id="123"]. */
@@ -34,7 +34,7 @@ export default function ArticleBody({
   if (!hasShortcode) {
     return (
       <div
-        className={`prose prose-sm max-w-none ${className}`}
+        className={`article-rich-text max-w-none text-[15px] text-[#454545] md:text-base ${className}`}
         dangerouslySetInnerHTML={{ __html: body }}
       />
     );
@@ -55,31 +55,22 @@ export default function ArticleBody({
       parts.push(
         <div
           key={`html-${key++}`}
-          className="prose prose-sm max-w-none"
+          className="article-rich-text max-w-none text-[15px] text-[#454545] md:text-base"
           dangerouslySetInnerHTML={{ __html: before }}
         />
       );
     }
     const article = mapById.get(id);
+    const slug = article?.slug != null ? String(article.slug) : String(id);
     const href = articleUrlBase
-      ? `${articleUrlBase}/blogs/${article?.slug ?? id}`
-      : `/blogs/${article?.slug ?? id}`;
+      ? `${articleUrlBase}/blogs/${encodeURIComponent(slug)}`
+      : `/blogs/${encodeURIComponent(slug)}`;
     parts.push(
-      <div
-        key={`related-${key++}`}
-        className="my-6 rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4"
-      >
-        <div className="flex items-start gap-2">
-          <span className="shrink-0 font-semibold text-blue-700">
-            Also Read:
-          </span>
-          <a
-            href={href}
-            className="font-medium text-blue-600 underline hover:text-blue-800"
-          >
-            {article?.title ?? `Article #${id}`}
-          </a>
-        </div>
+      <div key={`related-${key++}`} className="related-article-inline my-6">
+        <p className="related-heading">Also Read</p>
+        <a href={href} className="related-link">
+          {article?.title ?? `Article #${id}`}
+        </a>
       </div>
     );
     lastIndex = RELATED_SHORTCODE_REGEX.lastIndex;
@@ -90,11 +81,11 @@ export default function ArticleBody({
     parts.push(
       <div
         key={`html-${key++}`}
-        className="prose prose-sm max-w-none"
+        className="article-rich-text max-w-none text-[15px] text-[#454545] md:text-base"
         dangerouslySetInnerHTML={{ __html: tail }}
       />
     );
   }
 
-  return <div className={className}>{parts}</div>;
+  return <div className={`article-rich-text max-w-none ${className}`}>{parts}</div>;
 }

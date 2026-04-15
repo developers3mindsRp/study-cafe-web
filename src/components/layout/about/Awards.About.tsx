@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react';
+import { useAboutPage } from '@/contexts/AboutPageContext';
 
 const Awards_about = () => {
+  const { awards } = useAboutPage();
+  const imgs = awards.images.length > 0 ? awards.images : ['/images/certificates1.svg', '/images/certificates1.svg'];
+
   return (
     <>
       <section className="">
         <div className="container mx-auto pt-4 w-full px-4 text-left gap-8 ">
           <div className="text-center">
-            <h1 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-6">
-              Awards & Recognition
-            </h1>
+            <h1 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-6">{awards.sectionTitle}</h1>
           </div>
 
           <div className="rounded-lg  bg-white grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col  rounded-full mb-4">
-              <img src="/images/certificates1.svg" alt="" className="" />
-            </div>
-
-            <div className="flex flex-col  rounded-full mb-4">
-              <img src="/images/certificates1.svg" alt="" className="" />
-            </div>
+            {imgs.slice(0, 2).map((src, i) => (
+              <div key={`${src}-${i}`} className="flex flex-col  rounded-full mb-4">
+                <img src={src} alt="" className="" />
+              </div>
+            ))}
           </div>
         </div>
       </section>

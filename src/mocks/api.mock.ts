@@ -417,10 +417,12 @@ export const mockPlatformApi = {
     await delay(300);
     const list = [...mockTestimonials].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     return limit != null ? list.slice(0, limit) : list;
-  },  getPageContent: async (slug: string): Promise<PageContent> => {
+  },
+
+  getPageContent: async (slug: string): Promise<PageContent | null> => {
     await delay(300);
     const page = mockPageContent[slug];
-    if (!page) throw new Error(`Page not found: ${slug}`);
+    if (!page) return null;
     return page;
   },
 
@@ -432,5 +434,17 @@ export const mockPlatformApi = {
   getArticleBySlug: async (_slug: string): Promise<import('@/types/models.types').ArticleBySlug | null> => {
     await delay(200);
     return null;
+  },
+
+  getBlogSpotlightFeed: async (): Promise<import('@/types/models.types').BlogSpotlightFeed> => {
+    await delay(200);
+    return {
+      hero: null,
+      recent_posts: [],
+      all_posts: [],
+      author: null,
+      author_recent_articles: [],
+      popular_tags: [],
+    };
   },
 };

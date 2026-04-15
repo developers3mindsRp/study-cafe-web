@@ -7,6 +7,7 @@ import {
   PageContent,
   SeoMetadata,
   ArticleBySlug,
+  BlogSpotlightFeed,
   CourseCat,
   PublicCourse,
   Course,
@@ -70,14 +71,18 @@ export const getTestimonials = async (limit?: number): Promise<Testimonial[]> =>
 };
 
 /** Single CMS page by slug (e.g. about, contact, privacy-policy, terms-of-use) */
-export const getPageContent = async (slug: string): Promise<PageContent> => {
+export const getPageContent = async (slug: string): Promise<PageContent | null> => {
   if (shouldUseMock()) {
     return mockPlatformApi.getPageContent(slug);
   }
-  const response = await axiosInstance.get<ApiResponse<PageContent>>(
-    `/platform/page/${encodeURIComponent(slug)}`
-  );
-  return response.data.data;
+  try {
+    const response = await axiosInstance.get<ApiResponse<PageContent>>(
+      `/platform/cms-pages/${encodeURIComponent(slug)}`
+    );
+    return response.data.data ?? null;
+  } catch {
+    return null;
+  }
 };
 
 /** SEO metadata for a page (for meta tags, OG, etc.) */
@@ -112,6 +117,51 @@ export const getArticleBySlug = async (
   } catch {
     return null;
   }
+};
+
+export interface BlogSpotlightQueryParams {
+  /** Scope sidebar / author to this slug (article detail); omits `hero` in response. */
+  current_slug?: string;
+  recent_limit?: number;
+  all_limit?: number;
+  author_recent_limit?: number;
+  tag_limit?: number;
+}
+
+/** Hero + sidebar recent/all lists + author + tags for blog landing (premium page). */
+export const getBlogSpotlightFeed = async (
+  params: BlogSpotlightQueryParams = {}
+): Promise<BlogSpotlightFeed> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getBlogSpotlightFeed?.() ?? {
+      hero: null,
+      recent_posts: [],
+      all_posts: [],
+      author: null,
+      author_recent_articles: [],
+      popular_tags: [],
+    };
+  }
+  const query: Record<string, string | number> = {};
+  if (params.current_slug?.trim()) query.current_slug = params.current_slug.trim();
+  if (params.recent_limit != null) query.recent_limit = params.recent_limit;
+  if (params.all_limit != null) query.all_limit = params.all_limit;
+  if (params.author_recent_limit != null) query.author_recent_limit = params.author_recent_limit;
+  if (params.tag_limit != null) query.tag_limit = params.tag_limit;
+  const response = await axiosInstance.get<ApiResponse<BlogSpotlightFeed>>(
+    '/platform/articles/blog-spotlight',
+    { params: query }
+  );
+  return (
+    response.data.data ?? {
+      hero: null,
+      recent_posts: [],
+      all_posts: [],
+      author: null,
+      author_recent_articles: [],
+      popular_tags: [],
+    }
+  );
 };
 
 /** Article listing item shape from API */
