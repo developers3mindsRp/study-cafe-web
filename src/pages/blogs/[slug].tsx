@@ -1,14 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
-import BlogArticlePremiumLayout from '@/components/layout/blog/BlogArticlePremiumLayout';
 import type { ArticleBySlug, BlogSpotlightFeed } from '@/types/models.types';
 import {
-  fetchArticleBySlugSSR,
-  fetchBlogSpotlightSSR,
-  bearerFromCookieHeader,
-} from '@/lib/serverArticle';
+  getArticleBySlug,
+  getBlogSpotlightFeed,
+} from '@/services/platform.service';
+
+const BlogArticlePremiumLayout = dynamic(
+  () => import('@/components/layout/blog/BlogArticlePremiumLayout'),
+  { ssr: false },
+);
 
 interface BlogDetailProps {
   slug: string;
@@ -43,21 +47,15 @@ export default function BlogDetail({ slug, article, spotlight }: BlogDetailProps
 
 /**
  * Server-Side Rendering (SSR)
- * Fetches the article (full or preview based on membership) and sidebar data.
- * The auth_token cookie is forwarded to the API so the backend can determine
- * whether the viewer has an active membership.
+ * Fetches the article and sidebar data using platform service methods.
  */
-export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ params, req }) => {
+export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ params }) => {
   const slug = String(params?.slug || '');
   if (!slug) return { notFound: true };
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
-  const token = bearerFromCookieHeader(req.headers.cookie);
-
   const [article, spotlight] = await Promise.all([
-    fetchArticleBySlugSSR(slug, { baseUrl, token }),
-    fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),
+    getArticleBySlug(slug),
+    getBlogSpotlightFeed({ current_slug: slug }),
   ]);
 
   if (!article) return { notFound: true };

@@ -303,6 +303,7 @@ export default function Premium_user({
 
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545] md:text-[17px]"
+                    suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: article.body }}
                   />
 
@@ -344,6 +345,7 @@ export default function Premium_user({
                   <h2 className="text-[20px] font-bold text-[#252525]">{article.title}</h2>
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545]"
+                    suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: article.body }}
                   />
 
