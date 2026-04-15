@@ -19,6 +19,7 @@ import {
   PATH_TO_TAB,
 } from "./accountRoutes";
 import { useAuth } from "@/providers/AuthProvider";
+import { useUpdateProfile } from "@/hooks/usePurchases";
 
 const TABS: {
   key: AccountTabKey;
@@ -46,11 +47,13 @@ export default function EditProfile({
 }: EditProfileProps) {
   const router = useRouter();
   const { user } = useAuth();
+  const updateProfile = useUpdateProfile();
     const [open, setOpen] = useState(false);
       const [progress, setProgress] = useState(0);
         const [form, setForm] = useState({
     fullName: "",
     email: "",
+    bio: "",
     number: "",
     profession: "",
     company: "",
@@ -68,9 +71,10 @@ export default function EditProfile({
         ...prev,
         fullName: user.name ?? "",
         email: user.email ?? "",
+        bio: user.bio ?? "",
       }));
     }
-  }, [user?.id]);
+  }, [user?.id, user?.bio]);
 
   // Change these dates as needed
   const startDate = new Date("2024-01-01");
@@ -109,7 +113,7 @@ export default function EditProfile({
     : active;
 
       function handleChange(
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
       ) {
         const { name, value } = e.target;
 
@@ -191,6 +195,17 @@ const countries = countryList.getNames();
                 onChange={handleChange}
                 className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
                 placeholder="Name"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Bio</label>
+              <textarea
+                name="bio"
+                value={form.bio}
+                onChange={handleChange}
+                rows={4}
+                className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1 text-sm resize-y min-h-[96px]"
+                placeholder="A short introduction about yourself"
               />
             </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -288,7 +303,20 @@ const countries = countryList.getNames();
       {/* MODAL */}
         {open && <ChangePasswordModal onClose={() => setOpen(false)} />}
 
-            <button className="bg-[#09339B] px-5 py-2 text-white rounded-md">Save Changes</button>
+            <button
+              type="button"
+              disabled={updateProfile.isPending}
+              onClick={() => {
+                updateProfile.mutate({
+                  name: form.fullName.trim(),
+                  email: form.email.trim(),
+                  bio: form.bio.trim() ? form.bio.trim() : null,
+                });
+              }}
+              className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60"
+            >
+              {updateProfile.isPending ? "Saving…" : "Save Changes"}
+            </button>
           </div>
           </div>
           

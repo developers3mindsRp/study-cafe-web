@@ -15,7 +15,11 @@ import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 function authorLocation(a: BlogSpotlightAuthor) {
@@ -96,7 +100,11 @@ function PremiumModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="bg-white md:max-w-xl w-full rounded-lg p-12 relative shadow-lg">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <img src="/images/lock1.png" alt="Premium Content" className="w-6 h-6" />
+          <img
+            src="/images/lock1.png"
+            alt="Premium Content"
+            className="w-6 h-6"
+          />
           <h4 className="text-[#929292] text-center text-sm font-medium">
             Premium Content
           </h4>
@@ -112,13 +120,19 @@ function PremiumModal({
 
         <div className="flex flex-col mx-auto md:px-32 gap-4 mt-6">
           <button
-            onClick={() => { onClose(); router.push("/login"); }}
+            onClick={() => {
+              onClose();
+              router.push("/login");
+            }}
             className="border border-[#09339B] text-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#09339B] hover:text-white transition"
           >
             Login
           </button>
           <button
-            onClick={() => { onClose(); router.push("/payment"); }}
+            onClick={() => {
+              onClose();
+              router.push("/payment");
+            }}
             className="bg-[#09339B] text-white px-6 py-2 rounded-md"
           >
             Upgrade to Premium
@@ -200,11 +214,16 @@ function PostListBlock({
         {title}
       </h3>
       {posts.length === 0 ? (
-        <p className="text-sm text-[#6C6C6C] py-2">{emptyText ?? "No posts available."}</p>
+        <p className="text-sm text-[#6C6C6C] py-2">
+          {emptyText ?? "No posts available."}
+        </p>
       ) : (
         <ul className="space-y-3">
           {posts.map((post) => (
-            <li key={post.id} className="border border-[#AFAFAF] rounded-[10px] p-3">
+            <li
+              key={post.id}
+              className="border border-[#AFAFAF] rounded-[10px] p-3"
+            >
               <Link
                 href={`/blogs/${encodeURIComponent(post.slug)}`}
                 className="inline-flex flex-wrap items-center gap-2 text-[#09339B] text-[15px] md:text-[17px] font-medium hover:underline"
@@ -225,7 +244,11 @@ function PostListBlock({
 }
 
 /* ─── Inline Tags ────────────────────────────────────────────────── */
-function TagsBlock({ tags }: { tags: import("@/types/models.types").BlogSpotlightTag[] }) {
+function TagsBlock({
+  tags,
+}: {
+  tags: import("@/types/models.types").BlogSpotlightTag[];
+}) {
   return (
     <div className="mt-8">
       <h3 className="font-medium text-[20px] md:text-[26px] mb-4 bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0">
@@ -299,7 +322,9 @@ export default function Premium_user({
                       Premium
                     </span>
                   )}
-                  <h2 className="text-[15px] md:text-[20px] font-bold text-[#252525]">{article.title}</h2>
+                  <h2 className="text-[15px] md:text-[20px] font-bold text-[#252525]">
+                    {article.title}
+                  </h2>
 
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545] md:text-[17px]"
@@ -329,9 +354,10 @@ export default function Premium_user({
                   <SocialButtons />
                 </div>
 
-                {article.related_articles && article.related_articles.length > 0 && (
-                  <AlsoReadBlock related={article.related_articles} />
-                )}
+                {article.related_articles &&
+                  article.related_articles.length > 0 && (
+                    <AlsoReadBlock related={article.related_articles} />
+                  )}
               </>
             ) : (
               /* ──────────── UNLOCKED STATE (Full content) ──────────── */
@@ -342,7 +368,9 @@ export default function Premium_user({
                       Premium
                     </span>
                   )}
-                  <h2 className="text-[20px] font-bold text-[#252525]">{article.title}</h2>
+                  <h2 className="text-[20px] font-bold text-[#252525]">
+                    {article.title}
+                  </h2>
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545]"
                     suppressHydrationWarning
@@ -358,9 +386,10 @@ export default function Premium_user({
                     />
                   )}
 
-                  {article.related_articles && article.related_articles.length > 0 && (
-                    <AlsoReadBlock related={article.related_articles} />
-                  )}
+                  {article.related_articles &&
+                    article.related_articles.length > 0 && (
+                      <AlsoReadBlock related={article.related_articles} />
+                    )}
 
                   <SocialButtons />
                 </div>
@@ -368,7 +397,9 @@ export default function Premium_user({
             )}
           </>
         ) : (
-          <p className="text-center text-[#6C6C6C] py-8">Article content is not available.</p>
+          <p className="text-center text-[#6C6C6C] py-8">
+            Article content is not available.
+          </p>
         )}
       </div>
 
@@ -395,7 +426,9 @@ export default function Premium_user({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={
-                    resolveBlogImageSrc(authorSpotlight?.profile_pic_url?.trim()) || "/images/author.png"
+                    resolveBlogImageSrc(
+                      authorSpotlight?.profile_pic_url?.trim(),
+                    ) || "/images/author.png"
                   }
                   width={54}
                   height={54}
@@ -408,7 +441,9 @@ export default function Premium_user({
                     {fallbackAuthorName}
                   </h3>
                   {authorSpotlight && (
-                    <h3 className="text-[#09339B] text-[16px] md:text-[20px]">{authorHeadline(authorSpotlight)}</h3>
+                    <h3 className="text-[#09339B] text-[16px] md:text-[20px]">
+                      {authorHeadline(authorSpotlight)}
+                    </h3>
                   )}
                 </div>
               </div>
@@ -416,19 +451,36 @@ export default function Premium_user({
                 <div className="flex flex-wrap items-center gap-3 mt-4 ml-6 pb-4">
                   {authorSpotlight.company ? (
                     <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 bg-[#0C479C] text-white rounded-[10px]">
-                      <img src="/images/building.png" alt="" className="w-3 md:w-5 h-3 md:h-5" />
-                      <span className="text-[12px] md:text-[16px] font-medium">{authorSpotlight.company}</span>
+                      <img
+                        src="/images/building.png"
+                        alt=""
+                        className="w-3 md:w-5 h-3 md:h-5"
+                      />
+                      <span className="text-[12px] md:text-[16px] font-medium">
+                        {authorSpotlight.company}
+                      </span>
                     </div>
                   ) : null}
                   {authorLocation(authorSpotlight) ? (
                     <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 bg-[#0C479C] text-white rounded-[10px]">
-                      <img src="/images/location-w.png" alt="" className="w-3 md:w-5 h-3 md:h-5" />
-                      <span className="text-[12px] md:text-[16px] font-medium">{authorLocation(authorSpotlight)}</span>
+                      <img
+                        src="/images/location-w.png"
+                        alt=""
+                        className="w-3 md:w-5 h-3 md:h-5"
+                      />
+                      <span className="text-[12px] md:text-[16px] font-medium">
+                        {authorLocation(authorSpotlight)}
+                      </span>
                     </div>
                   ) : null}
-                  {typeof authorSpotlight.published_article_count === "number" ? (
+                  {typeof authorSpotlight.published_article_count ===
+                  "number" ? (
                     <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 bg-[#0C479C] text-white rounded-[10px]">
-                      <img src="/images/file.png" alt="" className="w-3 md:w-5 h-3 md:h-5" />
+                      <img
+                        src="/images/file.png"
+                        alt=""
+                        className="w-3 md:w-5 h-3 md:h-5"
+                      />
                       <span className="text-[12px] md:text-[16px] font-medium">
                         {authorSpotlight.published_article_count}
                       </span>
@@ -450,8 +502,14 @@ export default function Premium_user({
 
           <ul className="space-y-4 text-[#09339B] text-[15px] md:text-[20px] font-medium">
             {authorRecent.map((row) => (
-              <li key={row.id} className="border border-[#AFAFAF] p-3 rounded-[10px]">
-                <Link href={`/blogs/${row.slug}`} className="inline-flex flex-wrap items-center gap-2">
+              <li
+                key={row.id}
+                className="border border-[#AFAFAF] p-3 rounded-[10px]"
+              >
+                <Link
+                  href={`/blogs/${row.slug}`}
+                  className="inline-flex flex-wrap items-center gap-2"
+                >
                   {row.title}
                   {row.blog_access_tier === "premium" && (
                     <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">

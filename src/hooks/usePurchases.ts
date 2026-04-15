@@ -150,10 +150,11 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: userService.updateProfile,
     onSuccess: (updatedUser) => {
-      // Update user in cache
-      queryClient.setQueryData(queryKeys.auth.currentUser, updatedUser);
+      queryClient.setQueryData(queryKeys.auth.currentUser, (prev: any) =>
+        prev && typeof prev === 'object' ? { ...prev, ...updatedUser } : updatedUser
+      );
       queryClient.setQueryData(queryKeys.user.profile(), updatedUser);
-      
+
       console.log('Profile updated successfully');
     },
   });

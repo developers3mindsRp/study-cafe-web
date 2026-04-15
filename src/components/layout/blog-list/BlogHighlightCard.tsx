@@ -1,22 +1,34 @@
 "use client";
 import { useState } from "react";
 
-import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-
-
+import type { BlogSpotlightArticleCard } from "@/types/models.types";
+import { cardThumb } from "@/components/layout/blog-list/blogImage";
 
 type BlogHighlightCardProps = {
   title: string;
   description: string;
   subDescription?: string;
   readMoreLink?: string;
+  /** When set (including `[]` after fetch), renders the “Up Next” rail with API-driven suggestions. */
+  upNextPosts?: BlogSpotlightArticleCard[];
 };
+
+function excerptPlain(text: string | null | undefined, max = 160) {
+  const t = String(text || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!t) return "";
+  return t.length > max ? `${t.slice(0, max)}…` : t;
+}
 
 export default function BlogHighlightCard({
   title,
   description,
   subDescription,
+  upNextPosts,
 }: BlogHighlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -130,16 +142,58 @@ export default function BlogHighlightCard({
 
 
 
-      <div className="flex items-center gap-4 my-6">
-        <span className="flex-1 h-px bg-[#000000]" />
-        <span className="text-[#09339B] text-[20px] font-medium whitespace-nowrap">
-          Up Next
-        </span>
-        <span className="flex-1 h-px bg-[#000000]" />
-      </div>
-
-
-
+      {upNextPosts !== undefined ? (
+        <>
+          <div className="flex items-center gap-4 my-6">
+            <span className="flex-1 h-px bg-[#000000]" />
+            <span className="text-[#09339B] text-[20px] font-medium whitespace-nowrap">
+              Up Next
+            </span>
+            <span className="flex-1 h-px bg-[#000000]" />
+          </div>
+          {upNextPosts.length === 0 ? (
+            <p className="text-sm text-[#6C6C6C] text-center py-2">No further articles to suggest.</p>
+          ) : (
+            <ul className="space-y-3">
+              {upNextPosts.map((post) => (
+                <li key={post.id}>
+                  <Link
+                    href={`/blogs/${encodeURIComponent(post.slug)}`}
+                    className="flex gap-3 rounded-lg border border-[#E5E5E5] p-3 hover:border-[#09339B] transition"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={cardThumb(post.thumbnail_url || post.cover_image_url)}
+                      alt=""
+                      width={96}
+                      height={58}
+                      className="rounded object-cover w-[96px] h-[58px] shrink-0"
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[14px] md:text-[16px] font-semibold text-[#252525] line-clamp-2">
+                          {post.title}
+                        </span>
+                        {post.blog_access_tier === "premium" ? (
+                          <span className="text-[10px] font-semibold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
+                            Premium
+                          </span>
+                        ) : null}
+                      </div>
+                      {post.excerpt ? (
+                        <p className="text-xs text-[#6C6C6C] mt-1 line-clamp-2">{excerptPlain(post.excerpt)}</p>
+                      ) : null}
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      ) : null}
 
     </div>
 

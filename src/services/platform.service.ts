@@ -7,6 +7,7 @@ import {
   PageContent,
   SeoMetadata,
   ArticleBySlug,
+  BlogSpotlightArticleCard,
   BlogSpotlightFeed,
   CourseCat,
   PublicCourse,
@@ -45,6 +46,18 @@ export const getMemberships = async (): Promise<Membership[]> => {
     '/platform/memberships'
   );
   return response.data.data;
+};
+
+/** Single membership plan by slug (for plan detail / checkout page) */
+export const getMembershipBySlug = async (slug: string): Promise<Membership | null> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<Membership>>(
+      `/platform/plans/${encodeURIComponent(slug)}`
+    );
+    return response.data.data;
+  } catch {
+    return null;
+  }
 };
 
 /** FAQ list (for FAQ page or accordion) */
@@ -117,6 +130,31 @@ export const getArticleBySlug = async (
   } catch {
     return null;
   }
+};
+
+export interface ArticleUpNextQueryParams {
+  /** Min 3, max 10; omit for server default (6). */
+  limit?: number;
+}
+
+/**
+ * Suggested next reads for an article (same category → same author → latest).
+ * Optional auth cookie / JWT affects `access` on premium cards.
+ */
+export const getArticleUpNext = async (
+  slug: string,
+  params: ArticleUpNextQueryParams = {}
+): Promise<BlogSpotlightArticleCard[]> => {
+  if (shouldUseMock()) {
+    return [];
+  }
+  const query: Record<string, number> = {};
+  if (params.limit != null) query.limit = Math.min(10, Math.max(3, params.limit));
+  const response = await axiosInstance.get<ApiResponse<BlogSpotlightArticleCard[]>>(
+    `/platform/articles/${encodeURIComponent(slug)}/up-next`,
+    Object.keys(query).length ? { params: query } : undefined
+  );
+  return Array.isArray(response.data.data) ? response.data.data : [];
 };
 
 export interface BlogSpotlightQueryParams {

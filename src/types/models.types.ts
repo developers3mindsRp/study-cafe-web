@@ -3,6 +3,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  /** Short about text from users.bio */
+  bio?: string | null;
   avatar?: string;
   /** e.g. user, admin, super_admin — from auth-service Role */
   role: string;
@@ -128,6 +130,7 @@ export interface UpdateProfileData {
   name?: string;
   email?: string;
   avatar?: string;
+  bio?: string | null;
 }
 
 export interface ChangePasswordData {
@@ -397,6 +400,7 @@ export interface BlogSpotlightArticleCard {
   slug: string;
   excerpt?: string | null;
   sub_heading?: string | null;
+  meta_description?: string | null;
   thumbnail_url?: string | null;
   cover_image_url?: string | null;
   author_id?: number | null;

@@ -27,6 +27,7 @@ type AuthPayload = {
     id: string | number;
     email: string;
     name: string;
+    bio?: string | null;
     role: string;
     permissions?: string[];
     has_active_membership?: boolean;
@@ -39,6 +40,7 @@ function toUser(u: AuthPayload['user'] & { has_active_membership?: boolean }): U
     id: String(u.id),
     email: u.email,
     name: u.name || '',
+    bio: u.bio != null && String(u.bio).trim() !== '' ? String(u.bio) : undefined,
     role: u.role || 'user',
     permissions: u.permissions ?? [],
     hasActiveMembership: !!u.has_active_membership,
@@ -105,6 +107,7 @@ export const getCurrentUser = async (): Promise<User> => {
       id: string | number;
       email: string;
       name: string;
+      bio?: string | null;
       role: string;
       permissions?: string[];
       has_active_membership?: boolean;
@@ -116,6 +119,7 @@ export const getCurrentUser = async (): Promise<User> => {
     id: String(d.id),
     email: d.email,
     name: d.name || '',
+    bio: d.bio != null && String(d.bio).trim() !== '' ? String(d.bio) : undefined,
     role: d.role || 'user',
     permissions: d.permissions ?? [],
     hasActiveMembership: !!d.has_active_membership,

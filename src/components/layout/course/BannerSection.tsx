@@ -255,7 +255,10 @@ export default function BannerSection({ course, batches = [] }: BannerSectionPro
                   {/* Buttons */}
                   <div className="mt-3 md:mt-4 mb-2 flex flex-row justify-center lg:justify-start gap-4">
                     <button
-                      onClick={() => router.push("/plans")}
+                      onClick={() => {
+                        const slug = course?.slug;
+                        if (slug) router.push(`/payment?course=${encodeURIComponent(slug)}`);
+                      }}
                       className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28 border-2 border-white rounded-[10px] text-base xl:text-lg font-medium text-white bg-[#09339B] transition"
                     >
                       Buy Now

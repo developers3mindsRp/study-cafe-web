@@ -25,6 +25,7 @@ export const mockUser: User = {
   id: 'user-1',
   email: 'john.doe@example.com',
   name: 'John Doe',
+  bio: 'Tax professional and lifelong learner.',
   avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff',
   role: 'user',
   permissions: [],

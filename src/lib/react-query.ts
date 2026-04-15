@@ -71,6 +71,8 @@ export const queryKeys = {
     detail: (slug: string) => [...queryKeys.articles.all, 'detail', slug] as const,
     spotlight: (filters?: Record<string, unknown>) =>
       [...queryKeys.articles.all, 'spotlight', filters ?? {}] as const,
+    upNext: (slug: string, limit?: number) =>
+      [...queryKeys.articles.all, 'up-next', slug, limit ?? 'default'] as const,
   },
 
   // Purchase/User Course keys

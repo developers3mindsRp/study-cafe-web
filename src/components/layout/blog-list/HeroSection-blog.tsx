@@ -3,7 +3,7 @@ import { resolveBlogImageSrc } from "./blogImage";
 type HeroSectionBlogProps = {
   title: string;
   subtitle?: string;
-  description: string;
+  description?: string;
   para1?: string;
   para2?: string;
   author: string;
@@ -43,18 +43,26 @@ const HeroSection_blog = ({
     <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white pb-4">
       {/* Title */}
       <h1 className="text-[20px] md:text-[30px] xl:text-[40px] font-medium text-gray-900 leading-snug pt-4">
-        {title}: <br className="hidden md:block" /> {subtitle}
+        {subtitle ? (
+          <>
+            {title}: <br className="hidden md:block" /> {subtitle}
+          </>
+        ) : (
+          title
+        )}
       </h1>
 
       {/* Banner Image (mobile first) */}
       <div className="order-first md:order-none rounded-[10px] overflow-hidden block md:hidden">{heroBanner()}</div>
 
       {/* Description */}
-      <p className="text-[#6C6C6C] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-normal ">
-        {description}
-      </p>
-      <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para1}</p>
-      <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para2}</p>
+      {description ? (
+        <p className="text-[#6C6C6C] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-normal ">
+          {description}
+        </p>
+      ) : null}
+      {para1 ? <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para1}</p> : null}
+      {para2 ? <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para2}</p> : null}
 
       {/* Author + Date */}
       <div

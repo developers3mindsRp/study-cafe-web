@@ -7,20 +7,9 @@ import type { ArticleBySlug, BlogSpotlightFeed } from "@/types/models.types";
 import HeroSection_blog from "@/components/layout/blog-list/HeroSection-blog";
 import SidebarBlog from "@/components/layout/blog-list/SidebarBlog";
 import Premium_user from "@/components/layout/blog-list/PremiumUser";
+import ArticleUpNextSection from "@/components/layout/blog-list/ArticleUpNextSection";
 import { cardThumb } from "@/components/layout/blog-list/blogImage";
-
-function stripTags(html: string) {
-  return String(html || "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function descriptionPreview(article: ArticleBySlug) {
-  const ex = stripTags(article.excerpt || "");
-  if (ex) return ex.slice(0, 560);
-  return stripTags(article.body || "").slice(0, 560);
-}
+import { articleTeaserPlain } from "@/components/layout/blog-list/articleTeaserPlain";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -64,7 +53,7 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
           <HeroSection_blog
             title={article.title}
             subtitle={article.sub_heading || ""}
-            description={descriptionPreview(article)}
+            description={articleTeaserPlain(article, 560)}
             author={String(article.author_name ?? "Editor")}
             date={formatDate(article.published_at)}
             update={formatDate(article.updated_at)}
@@ -79,6 +68,8 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
             allPosts={spotlight?.all_posts ?? []}
             popularTags={spotlight?.popular_tags ?? []}
           />
+
+          <ArticleUpNextSection slug={slug} />
 
           <div className="block lg:hidden">
             <SidebarBlog

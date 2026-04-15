@@ -106,7 +106,8 @@ axiosInstance.interceptors.response.use(
           typeof window !== 'undefined' &&
           !window.location.pathname.startsWith('/login')
         ) {
-          window.location.href = '/login';
+          const returnPath = window.location.pathname + window.location.search;
+          window.location.href = `/login?next=${encodeURIComponent(returnPath)}`;
         }
         return Promise.reject(error);
       }
@@ -146,7 +147,8 @@ axiosInstance.interceptors.response.use(
           typeof window !== 'undefined' &&
           !window.location.pathname.startsWith('/login')
         ) {
-          window.location.href = '/login';
+          const returnPath = window.location.pathname + window.location.search;
+          window.location.href = `/login?next=${encodeURIComponent(returnPath)}`;
         }
       }
     }

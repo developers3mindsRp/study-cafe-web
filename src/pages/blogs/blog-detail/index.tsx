@@ -1,12 +1,9 @@
 import { GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
 import { queryKeys } from '@/lib/react-query';
 import * as coursesService from '@/services/courses.service';
-import { Header, PublicLayout } from '@/components/layout';
+import { PublicLayout } from '@/components/layout';
 import HeroSection_blog from '@/components/layout/blog-list/HeroSection-blog';
-import BlogDesc from '@/components/layout/blog-list/BlogDesc';
 import SidebarBlog from '@/components/layout/blog-list/SidebarBlog';
 import Breadcrumbs from '@/components/Breadcrumb';
 import BlogHighlightCard from '@/components/layout/blog-list/BlogHighlightCard';
@@ -91,15 +88,7 @@ export const blogData = [
   },
 ];
 
-
-
 export default function Blog_detail() {
-  const router = useRouter();
-  // Use the hook on the client side - data is already prefetched on the server
-  const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
   return (
 
     <PublicLayout>
@@ -139,9 +128,6 @@ export default function Blog_detail() {
                   title={card.title}
                   description={card.description}
                   subDescription={card.subDescription}
-                // showUpNext={cardIndex !== (blog.cards?.length ?? 0) - 1}
-
-
                 />
               ))}
               {/* Show Sidebar *after first blog* on mobile */}
