@@ -8,11 +8,29 @@ import { useAuth } from "@/providers/AuthProvider";
 import {
   getCouponsForCourse,
   applyCoupon as applyCouponApi,
+  createOrder,
+  verifyOrder,
   type CouponInfo,
   type ApplyCouponResponse,
 } from "@/services/order.service";
+import { getReferralCode } from "@/utils/auth.utils";
 
 const GST_RATE = 0.18;
+
+declare global {
+  interface Window { Razorpay: any; }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 function parseNum(val?: string | number | null): number {
   if (val == null) return 0;
@@ -30,7 +48,7 @@ interface Props {
 
 export default function PriceCard({ course }: Props) {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const price = parseNum(course?.sale_price) || parseNum(course?.price);
   const originalPrice = course?.sale_price ? parseNum(course.price) : 0;
@@ -43,6 +61,7 @@ export default function PriceCard({ course }: Props) {
   const [openCoupon, setOpenCoupon] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState<CouponInfo[]>([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const discount = appliedCoupon?.discount ?? 0;
   const afterDiscount = price - discount;
@@ -289,19 +308,73 @@ export default function PriceCard({ course }: Props) {
 
         <div className="border-t border-[#AFAFAF] mt-4" />
 
-        {/* Buy Now — requires login */}
+        {/* Buy Now */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (!isAuthenticated) {
               const returnPath = window.location.pathname + window.location.search;
               router.push(`/login?next=${encodeURIComponent(returnPath)}`);
               return;
             }
-            // TODO: Razorpay integration — create order then open checkout
+            if (!course?.id || paymentLoading) return;
+            setPaymentLoading(true);
+            try {
+              const loaded = await loadRazorpayScript();
+              if (!loaded) { alert("Failed to load payment gateway. Please try again."); return; }
+
+              const refCode = getReferralCode() || undefined;
+              const orderData = await createOrder({
+                type: "course",
+                entityId: course.id,
+                couponCode: appliedCoupon?.coupon.code || undefined,
+                referralCode: refCode,
+              });
+
+              const options = {
+                key: orderData.key,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "Studycafe",
+                description: course.title || "Course Purchase",
+                order_id: orderData.razorpayOrderId,
+                handler: async (response: any) => {
+                  try {
+                    await verifyOrder({
+                      orderId: orderData.orderId,
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_signature: response.razorpay_signature,
+                    });
+                    router.push(`/payment-success?orderId=${orderData.orderId}`);
+                  } catch {
+                    alert("Payment verification failed. Please contact support.");
+                  }
+                },
+                prefill: {
+                  name: orderData.prefill?.name || user?.name || "",
+                  email: orderData.prefill?.email || user?.email || "",
+                  contact: orderData.prefill?.contact || user?.phone || "",
+                },
+                theme: { color: "#09339B" },
+                modal: { ondismiss: () => setPaymentLoading(false) },
+              };
+
+              const rzp = new window.Razorpay(options);
+              rzp.on("payment.failed", () => {
+                setPaymentLoading(false);
+                router.push(`/payment-success?orderId=${orderData.orderId}`);
+              });
+              rzp.open();
+            } catch (err: any) {
+              alert(err?.message || "Failed to create order. Please try again.");
+            } finally {
+              setPaymentLoading(false);
+            }
           }}
-          className="w-full bg-[#09339B] text-white rounded-lg py-3 mt-5 font-medium text-[16px]"
+          disabled={paymentLoading}
+          className="w-full bg-[#09339B] text-white rounded-lg py-3 mt-5 font-medium text-[16px] disabled:opacity-60"
         >
-          Buy Now
+          {paymentLoading ? "Processing…" : "Buy Now"}
         </button>
       </div>
     </div>

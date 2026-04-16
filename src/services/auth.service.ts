@@ -14,6 +14,7 @@ import {
   setUserData,
   clearAuthData,
   getRefreshToken,
+  getReferralCode,
 } from '@/utils/auth.utils';
 import { shouldUseMock } from '@/config/app.config';
 import { mockAuthApi } from '@/mocks/api.mock';
@@ -28,32 +29,62 @@ type AuthPayload = {
     email: string;
     name: string;
     bio?: string | null;
+    avatar?: string | null;
+    phone?: string | null;
     role: string;
     permissions?: string[];
     has_active_membership?: boolean;
+    referral_code?: string | null;
+    profession?: string | null;
+    company?: string | null;
+    designation?: string | null;
+    city?: string | null;
+    state?: string | null;
+    country?: string | null;
   };
   expiresIn?: number;
 };
 
-function toUser(u: AuthPayload['user'] & { has_active_membership?: boolean }): User {
+function toUser(u: AuthPayload['user']): User {
   return {
     id: String(u.id),
     email: u.email,
     name: u.name || '',
     bio: u.bio != null && String(u.bio).trim() !== '' ? String(u.bio) : undefined,
+    avatar: u.avatar || undefined,
+    phone: u.phone || null,
+    profession: u.profession || null,
+    company: u.company || null,
+    designation: u.designation || null,
+    city: u.city || null,
+    state: u.state || null,
+    country: u.country || null,
     role: u.role || 'user',
     permissions: u.permissions ?? [],
     hasActiveMembership: !!u.has_active_membership,
+    referralCode: u.referral_code || null,
   };
 }
 
-function persistAuth(payload: AuthPayload): AuthResponse {
+async function persistAuth(payload: AuthPayload): Promise<AuthResponse> {
   const access = payload.accessToken ?? payload.token;
   if (!access) throw new Error('No access token in auth response');
-  const user = toUser(payload.user);
+
+  // Store the token first so the /auth/me call can authenticate
   setToken(access);
   if (payload.refreshToken) setRefreshToken(payload.refreshToken);
-  setUserData(user);
+
+  // Fetch the full user profile (includes avatar, phone, all profile fields)
+  // This ensures localStorage always has the complete, up-to-date user object
+  let user: User;
+  try {
+    user = await getCurrentUser();
+  } catch {
+    // Fallback to login payload fields if /auth/me fails for any reason
+    user = toUser(payload.user);
+    setUserData(user);
+  }
+
   return {
     user,
     token: access,
@@ -74,7 +105,7 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
     '/auth/login',
     credentials
   );
-  return persistAuth(response.data.data);
+  return await persistAuth(response.data.data);
 };
 
 export const register = async (userData: RegisterData): Promise<AuthResponse> => {
@@ -87,12 +118,14 @@ export const register = async (userData: RegisterData): Promise<AuthResponse> =>
   }
 
   const { email, password, name } = userData;
+  const referralCode = getReferralCode() || undefined;
   const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/register', {
     email,
     password,
     name: name?.trim() || undefined,
+    referralCode,
   });
-  return persistAuth(response.data.data);
+  return await persistAuth(response.data.data);
 };
 
 export const getCurrentUser = async (): Promise<User> => {
@@ -108,11 +141,24 @@ export const getCurrentUser = async (): Promise<User> => {
       email: string;
       name: string;
       bio?: string | null;
+      phone?: string | null;
       role: string;
       permissions?: string[];
       has_active_membership?: boolean;
+      referral_code?: string | null;
+      avatar?: string | null;
+      profession?: string | null;
+      company?: string | null;
+      designation?: string | null;
+      city?: string | null;
+      state?: string | null;
+      country?: string | null;
     }>
-  >('/auth/me');
+  >('/auth/me', {
+    // Prevent browser caching — ensures we always get fresh data after profile/avatar updates
+    headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
+    params: { _t: Date.now() },
+  });
 
   const d = response.data.data;
   const user: User = {
@@ -120,9 +166,18 @@ export const getCurrentUser = async (): Promise<User> => {
     email: d.email,
     name: d.name || '',
     bio: d.bio != null && String(d.bio).trim() !== '' ? String(d.bio) : undefined,
+    avatar: d.avatar || undefined,
+    phone: d.phone || null,
+    profession: d.profession || null,
+    company: d.company || null,
+    designation: d.designation || null,
+    city: d.city || null,
+    state: d.state || null,
+    country: d.country || null,
     role: d.role || 'user',
     permissions: d.permissions ?? [],
     hasActiveMembership: !!d.has_active_membership,
+    referralCode: d.referral_code || null,
   };
   setUserData(user);
   return user;

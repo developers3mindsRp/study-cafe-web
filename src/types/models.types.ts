@@ -11,6 +11,14 @@ export interface User {
   permissions?: string[];
   /** Active membership window in user_memberships (from /auth/me & login). */
   hasActiveMembership?: boolean;
+  phone?: string | null;
+  profession?: string | null;
+  company?: string | null;
+  designation?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  referralCode?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -131,6 +139,41 @@ export interface UpdateProfileData {
   email?: string;
   avatar?: string;
   bio?: string | null;
+  phone?: string;
+  profession?: string;
+  company?: string;
+  designation?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
+export interface UserSubscription {
+  hasActiveMembership: boolean;
+  membershipType?: string | null;
+  startsAt?: string | null;
+  expiresAt?: string | null;
+}
+
+export interface MembershipCourseItem {
+  id: number;
+  title: string;
+  slug: string;
+  brief_description?: string | null;
+  thumbnail_url?: string | null;
+  price?: number;
+  sale_price?: number | null;
+  category?: string | null;
+  cat_slug?: string | null;
+}
+
+export interface MembershipPlanCourses {
+  membershipId: number;
+  planSlug: string;
+  planName: string;
+  startsAt: string | null;
+  expiresAt: string | null;
+  courses: MembershipCourseItem[];
 }
 
 export interface ChangePasswordData {

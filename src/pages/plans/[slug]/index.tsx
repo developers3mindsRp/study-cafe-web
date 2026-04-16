@@ -83,10 +83,10 @@ export default function MembershipDetailPage() {
           </div>
         </div>
       ) : (
-        <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6 container">
-          <div className="lg:col-span-2 space-y-10">
+        <div className="mx-auto min-h-[calc(100vh-200px)] gap-8 px-4 pb-10 mt-6 container">
+          {/* <div className="lg:col-span-2 space-y-10">
             <MemberDetail plan={plan} />
-          </div>
+          </div> */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24">
               <MemberPrice plan={plan} />

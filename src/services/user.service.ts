@@ -1,5 +1,5 @@
 import axiosInstance from '@/lib/axios';
-import { User, UpdateProfileData, DashboardStats, UserCourse } from '@/types/models.types';
+import { User, UpdateProfileData, DashboardStats, UserCourse, UserSubscription, MembershipPlanCourses } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockUserApi } from '@/mocks/api.mock';
@@ -95,5 +95,25 @@ export const deleteAccount = async (): Promise<void> => {
   }
   
   await axiosInstance.delete('/user/account');
+};
+
+export const getSubscriptionStatus = async (): Promise<UserSubscription> => {
+  if (shouldUseMock()) {
+    return { hasActiveMembership: false };
+  }
+  const response = await axiosInstance.get<ApiResponse<UserSubscription>>(
+    '/user/subscription'
+  );
+  return response.data.data;
+};
+
+export const getMembershipCourses = async (): Promise<MembershipPlanCourses[]> => {
+  if (shouldUseMock()) {
+    return [];
+  }
+  const response = await axiosInstance.get<ApiResponse<MembershipPlanCourses[]>>(
+    '/user/membership-courses'
+  );
+  return response.data.data;
 };
 

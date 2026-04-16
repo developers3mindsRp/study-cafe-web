@@ -8,11 +8,29 @@ import { useAuth } from "@/providers/AuthProvider";
 import {
   getCouponsForMembership,
   applyCouponForMembership,
+  createOrder,
+  verifyOrder,
   type CouponInfo,
   type ApplyCouponResponse,
 } from "@/services/order.service";
+import { getReferralCode } from "@/utils/auth.utils";
 
 const GST_RATE = 0.18;
+
+declare global {
+  interface Window { Razorpay: any; }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 function parseNum(val?: string | number | null): number {
   if (val == null) return 0;
@@ -43,19 +61,23 @@ interface Props {
 
 export default function MemberPrice({ plan }: Props) {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const price = parseNum(plan?.price);
-  const durationStr = plan ? formatDuration(plan.duration_days, plan.is_lifetime) : "";
+  const durationStr = plan
+    ? formatDuration(plan.duration_days, plan.is_lifetime)
+    : "";
 
   const [couponInput, setCouponInput] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<ApplyCouponResponse | null>(null);
+  const [appliedCoupon, setAppliedCoupon] =
+    useState<ApplyCouponResponse | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
   const [couponLoading, setCouponLoading] = useState(false);
 
   const [openCoupon, setOpenCoupon] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState<CouponInfo[]>([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const discount = appliedCoupon?.discount ?? 0;
   const afterDiscount = price - discount;
@@ -112,64 +134,86 @@ export default function MemberPrice({ plan }: Props) {
   if (openCoupon) {
     return (
       <div className="w-full max-w-sm mx-auto">
-        <div className="bg-[#F9F9FB] rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => setOpenCoupon(false)}
-              className="w-8 h-8 rounded-[10px] bg-white border flex items-center justify-center"
-            >
-              <img src="/images/arrow-left-b.png" alt="Back" />
-            </button>
-            <h3 className="font-medium text-[20px]">Offers for you</h3>
+        {/* flex-col so the scrollable list and the pinned footer stack vertically */}
+        <div className="bg-[#F9F9FB] rounded-xl flex flex-col h-[calc(100vh-200px)]">
+
+          {/* Sticky header */}
+          <div className="px-6 pt-6 pb-0 flex-shrink-0">
+            <div className="flex items-center gap-3 mb-4">
+              <button
+                onClick={() => setOpenCoupon(false)}
+                className="w-8 h-8 rounded-[10px] bg-white border flex items-center justify-center"
+              >
+                <img src="/images/arrow-left-b.png" alt="Back" />
+              </button>
+              <h3 className="font-medium text-[20px]">Offers for you</h3>
+            </div>
+            <div className="border-t border-[#AFAFAF] mb-6" />
           </div>
-          <div className="border-t border-[#AFAFAF] mb-6" />
 
-          {couponsLoading ? (
-            <p className="text-sm text-[#929292] py-4 text-center">Loading coupons…</p>
-          ) : availableCoupons.length === 0 ? (
-            <p className="text-sm text-[#929292] py-4 text-center">No coupons available right now.</p>
-          ) : (
-            availableCoupons.map((c, idx) => (
-              <div key={c.id}>
-                {idx > 0 && <div className="border-t border-black mb-4" />}
-                <div className="pb-4 mb-4">
-                  <p className="font-semibold text-sm mb-1">
-                    {c.type?.toLowerCase() === "percentage"
-                      ? `GET ${c.value}% OFF`
-                      : `GET ₹${c.value} OFF`}
-                    {c.max_discount > 0 && c.type?.toLowerCase() === "percentage" && (
-                      <span className="text-xs font-normal text-[#929292] ml-1">
-                        (up to ₹{c.max_discount})
-                      </span>
+          {/* Scrollable coupon list — takes all remaining space */}
+          <div className="flex-1 overflow-y-auto scrollbar-hide px-6">
+            {couponsLoading ? (
+              <p className="text-sm text-[#929292] py-4 text-center">
+                Loading coupons…
+              </p>
+            ) : availableCoupons.length === 0 ? (
+              <p className="text-sm text-[#929292] py-4 text-center">
+                No coupons available right now.
+              </p>
+            ) : (
+              availableCoupons.map((c, idx) => (
+                <div key={c.id}>
+                  {idx > 0 && <div className="border-t border-black mb-4" />}
+                  <div className="pb-4 mb-4">
+                    <p className="font-semibold text-sm mb-1">
+                      {c.type?.toLowerCase() === "percentage"
+                        ? `GET ${c.value}% OFF`
+                        : `GET ₹${c.value} OFF`}
+                      {c.max_discount > 0 &&
+                        c.type?.toLowerCase() === "percentage" && (
+                          <span className="text-xs font-normal text-[#929292] ml-1">
+                            (up to ₹{c.max_discount})
+                          </span>
+                        )}
+                    </p>
+                    {c.description && (
+                      <p className="text-xs text-[#929292] mb-2">
+                        {c.description}
+                      </p>
                     )}
-                  </p>
-                  {c.description && (
-                    <p className="text-xs text-[#929292] mb-2">{c.description}</p>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">USE CODE :</span>
-                    <div className="border border-dotted border-black rounded-lg p-2 flex gap-2 bg-[#F2F2F2]">
-                      <span className="font-medium text-sm">{c.code}</span>
-                      <button
-                        onClick={() => handleCopyAndApply(c.code)}
-                        className="bg-white flex gap-1 px-2 rounded-md text-sm text-gray-500 items-center"
-                        disabled={couponLoading || !c.canApply}
-                      >
-                        Apply
-                        <img src="/images/copy.png" alt="" className="w-4 h-4" />
-                      </button>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">USE CODE :</span>
+                      <div className="border border-dotted border-black rounded-lg p-2 flex gap-2 bg-[#F2F2F2]">
+                        <span className="font-medium text-sm">{c.code}</span>
+                        <button
+                          onClick={() => handleCopyAndApply(c.code)}
+                          className="bg-white flex gap-1 px-2 rounded-md text-sm text-gray-500 items-center"
+                          disabled={couponLoading || !c.canApply}
+                        >
+                          Apply
+                          <img
+                            src="/images/copy.png"
+                            alt=""
+                            className="w-4 h-4"
+                          />
+                        </button>
+                      </div>
                     </div>
+                    {!c.canApply && c.inactiveReason && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {c.inactiveReason}
+                      </p>
+                    )}
                   </div>
-                  {!c.canApply && c.inactiveReason && (
-                    <p className="text-xs text-red-500 mt-1">{c.inactiveReason}</p>
-                  )}
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
 
-          <div className="border-t border-black mb-4" />
-          <div className="mt-4">
+          {/* Pinned coupon input — always visible at the bottom */}
+          <div className="flex-shrink-0 px-6 pb-4 bg-[#F9F9FB] rounded-b-xl">
+            <div className="border-t border-black mb-4" />
             <p className="text-sm mb-2">Apply Coupon</p>
             <div className="flex gap-2">
               <input
@@ -187,8 +231,11 @@ export default function MemberPrice({ plan }: Props) {
                 {couponLoading ? "…" : "Apply"}
               </button>
             </div>
-            {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
+            {couponError && (
+              <p className="text-xs text-red-500 mt-1">{couponError}</p>
+            )}
           </div>
+
         </div>
       </div>
     );
@@ -209,7 +256,9 @@ export default function MemberPrice({ plan }: Props) {
 
         {/* Summary */}
         <div className="mt-6 space-y-2 text-sm">
-          <h2 className="text-[20px] text-[#252525] font-medium mb-4">Summary</h2>
+          <h2 className="text-[20px] text-[#252525] font-medium mb-4">
+            Summary
+          </h2>
           <div className="flex justify-between">
             <span>Amount</span>
             <span>{fmt(price)}</span>
@@ -233,7 +282,9 @@ export default function MemberPrice({ plan }: Props) {
         <div className="border-t border-[#AFAFAF] mt-4" />
 
         <div className="pt-3 flex justify-between font-semibold text-[17px]">
-          <span className="text-[20px] text-[#252525] font-medium">Grand Total</span>
+          <span className="text-[20px] text-[#252525] font-medium">
+            Grand Total
+          </span>
           <span>{fmt(grandTotal)}</span>
         </div>
 
@@ -253,7 +304,9 @@ export default function MemberPrice({ plan }: Props) {
 
         {/* Coupon input inline */}
         <div className="mt-4">
-          <label className="text-sm font-semibold text-gray-700">Coupon Code</label>
+          <label className="text-sm font-semibold text-gray-700">
+            Coupon Code
+          </label>
           <div className="relative mt-2">
             <input
               type="text"
@@ -262,6 +315,7 @@ export default function MemberPrice({ plan }: Props) {
                 setCouponInput(e.target.value.toUpperCase());
                 setCouponError(null);
               }}
+              disabled={couponLoading || !!appliedCoupon?.coupon.id}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleApplyCoupon(couponInput);
               }}
@@ -270,7 +324,7 @@ export default function MemberPrice({ plan }: Props) {
             />
             {appliedCoupon ? (
               <>
-                <div className="absolute left-24 xl:right-24 2xl:right-44 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
+                <div className="absolute right-10 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
                   Applied
                 </div>
                 <button
@@ -290,24 +344,81 @@ export default function MemberPrice({ plan }: Props) {
               </button>
             ) : null}
           </div>
-          {couponError && <p className="text-xs text-red-500 mt-2">{couponError}</p>}
+          {couponError && (
+            <p className="text-xs text-red-500 mt-2">{couponError}</p>
+          )}
         </div>
 
         <div className="border-t border-[#AFAFAF] mt-4" />
 
-        {/* Buy Now — requires login */}
+        {/* Buy Membership */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (!isAuthenticated) {
-              const returnPath = window.location.pathname + window.location.search;
+              const returnPath =
+                window.location.pathname + window.location.search;
               router.push(`/login?next=${encodeURIComponent(returnPath)}`);
               return;
             }
-            // TODO: Razorpay integration — create order then open checkout
+            if (!plan?.id || paymentLoading) return;
+            setPaymentLoading(true);
+            try {
+              const loaded = await loadRazorpayScript();
+              if (!loaded) { alert("Failed to load payment gateway. Please try again."); return; }
+
+              const refCode = getReferralCode() || undefined;
+              const orderData = await createOrder({
+                type: "membership",
+                entityId: plan.id,
+                couponCode: appliedCoupon?.coupon.code || undefined,
+                referralCode: refCode,
+              });
+
+              const options = {
+                key: orderData.key,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "Studycafe",
+                description: plan.name || "Membership Plan",
+                order_id: orderData.razorpayOrderId,
+                handler: async (response: any) => {
+                  try {
+                    await verifyOrder({
+                      orderId: orderData.orderId,
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_signature: response.razorpay_signature,
+                    });
+                    router.push(`/payment-success?orderId=${orderData.orderId}`);
+                  } catch {
+                    alert("Payment verification failed. Please contact support.");
+                  }
+                },
+                prefill: {
+                  name: orderData.prefill?.name || user?.name || "",
+                  email: orderData.prefill?.email || user?.email || "",
+                  contact: orderData.prefill?.contact || user?.phone || "",
+                },
+                theme: { color: "#09339B" },
+                modal: { ondismiss: () => setPaymentLoading(false) },
+              };
+
+              const rzp = new window.Razorpay(options);
+              rzp.on("payment.failed", () => {
+                setPaymentLoading(false);
+                router.push(`/payment-success?orderId=${orderData.orderId}`);
+              });
+              rzp.open();
+            } catch (err: any) {
+              alert(err?.message || "Failed to create order. Please try again.");
+            } finally {
+              setPaymentLoading(false);
+            }
           }}
-          className="w-full bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border border-[#09339B] rounded-lg py-3 mt-5 font-medium text-[16px] transition"
+          disabled={paymentLoading}
+          className="w-full bg-[#09339B] hover:bg-white text-white hover:text-[#09339B] border border-[#09339B] rounded-lg py-3 mt-5 font-medium text-[16px] transition disabled:opacity-60"
         >
-          Buy Membership
+          {paymentLoading ? "Processing…" : "Buy Membership"}
         </button>
       </div>
     </div>

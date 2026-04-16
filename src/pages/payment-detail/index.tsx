@@ -1,66 +1,14 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
-import { queryKeys } from '@/lib/react-query';
-import * as coursesService from '@/services/courses.service';
 import { PublicLayout } from '@/components/layout';
-import CourseDetailPage from '@/components/CourseDetailProfile';
-import PaymemtDetail from '@/components/PaymentDetail';
+import PaymentDetail from '@/components/PaymentDetail';
 import Breadcrumbs from '@/components/Breadcrumb';
 
-
-
-
-/**
- * Home Page - Course Listing
- * 
- * This example shows how to use React Query with SSG (Static Site Generation)
- * for SEO-optimized course listings
- */
-
-export default function CourseDetail() {
-  const router = useRouter();
-  // Use the hook on the client side - data is already prefetched on the server
-  const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
+export default function PaymentDetailPage() {
   return (
     <PublicLayout>
-         <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
-              <Breadcrumbs />
-            </div>
-    <PaymemtDetail/>
+      <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
+        <Breadcrumbs />
+      </div>
+      <PaymentDetail />
     </PublicLayout>
-
-
   );
 }
-
-/**
- * Static Site Generation (SSG)
- * Prefetch data at build time for SEO and performance
- */
-export const getStaticProps: GetStaticProps = async () => {
-  const queryClient = new QueryClient();
-
-  try {
-    // Prefetch featured courses
-    await queryClient.prefetchQuery({
-      queryKey: [...queryKeys.courses.all, 'featured', 6],
-      queryFn: () => coursesService.getFeaturedCourses(6),
-    });
-  } catch (error) {
-    console.error('Error prefetching data:', error);
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    // Revalidate every 10 minutes
-    revalidate: 600,
-  };
-};

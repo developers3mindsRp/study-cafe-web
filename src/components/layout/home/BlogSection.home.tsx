@@ -1,96 +1,147 @@
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getArticles } from "@/services/platform.service";
+import { queryKeys } from "@/lib/react-query";
 
+const PLACEHOLDER_IMGS = ["/images/b1.jpg", "/images/b2.png", "/images/b3.png"];
+
+function formatDate(dateStr?: string | null) {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function BlogCard({
+  img,
+  tag,
+  author,
+  date,
+  title,
+  slug,
+  size = "desktop",
+}: {
+  img: string;
+  tag: string;
+  author: string;
+  date: string;
+  title: string;
+  slug: string;
+  size?: "mobile" | "desktop";
+}) {
+  const isMobile = size === "mobile";
+  return (
+    <div
+      className={
+        isMobile
+          ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left"
+      }
+    >
+      <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>
+        <img src={img} alt={title} className="w-full h-full object-fit" />
+        <span className="absolute top-4 left-4 bg-white text-[#252525] text-[10px] md:text-[14px] font-normal px-2 py-1 rounded-[14px]">
+          {tag}
+        </span>
+      </div>
+
+      <div className="p-4">
+        <div
+          className={`flex items-center gap-2 text-[#AFAFAF] mb-3 ${
+            isMobile ? "text-[12px]" : "md:text-[14px] xl:text-[16px]"
+          }`}
+        >
+          <span className="flex gap-1">
+            <img src="/images/user.svg" alt="" width={isMobile ? 10 : 20} height={isMobile ? 10 : 20} />
+            {author}
+          </span>
+          <span className="flex gap-1 md:gap-2">
+            <img src="/images/calendar.svg" alt="" width={isMobile ? 10 : 20} height={10} />
+            {date}
+          </span>
+        </div>
+
+        <h3
+          className={`font-medium text-[#252525] leading-tight mb-4 line-clamp-2 ${
+            isMobile ? "text-[14px]" : "md:text-[20px] xl:text-[26px]"
+          }`}
+        >
+          {title}
+        </h3>
+
+        <Link href={`/blogs/${slug}`}>
+          <button className="text-[12px] md:text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 md:py-2 rounded-md flex items-center gap-2">
+            Read More
+            <img src="/images/arrow-left.svg" alt="" />
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function BlogCardSkeleton({ size = "desktop" }: { size?: "mobile" | "desktop" }) {
+  const isMobile = size === "mobile";
+  return (
+    <div
+      className={
+        isMobile
+          ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left animate-pulse"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left animate-pulse"
+      }
+    >
+      <div className={`bg-gray-200 w-full ${isMobile ? "h-[200px]" : "xl:h-[233px] h-[160px]"}`} />
+      <div className="p-4 space-y-3">
+        <div className="flex gap-3">
+          <div className="h-3 bg-gray-200 rounded w-24" />
+          <div className="h-3 bg-gray-200 rounded w-24" />
+        </div>
+        <div className="h-5 bg-gray-200 rounded w-full" />
+        <div className="h-5 bg-gray-200 rounded w-3/4" />
+        <div className="h-7 bg-gray-200 rounded w-24 mt-2" />
+      </div>
+    </div>
+  );
+}
 
 export default function BlogSection() {
-  const blogs = [
-    {
-      img: "/images/b1.jpg",
-      tag: "Income Tax",
-      author: "Meetu Kumari",
-      date: "Nov 18, 2025",
-      title: "Income tax: Delhi HC remands back reopening of case to...",
-    },
-    {
-      img: "/images/b2.png",
-      tag: "Finance",
-      author: "Sakshi Kumari",
-      date: "Nov 17, 2025",
-      title: "UAE finalises new sugar-based tax model for sweetened...",
-    },
-    {
-      img: "/images/b3.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "Delhi HC slams GST Dept for Ex-Parte Order, Reopens...",
-    },
-    {
-      img: "/images/b3.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "Delhi HC slams GST Dept for Ex-Parte Order, Reopens...",
-    },
-    {
-      img: "/images/b3.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "UAE finalises new sugar-based tax model for sweetened...",
-    },
-    {
-      img: "/images/b2.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "Delhi HC slams GST Dept for Ex-Parte Order, Reopens...",
-    },
-    {
-      img: "/images/b1.jpg",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "UAE finalises new sugar-based tax model for sweetened...",
-    },
-    {
-      img: "/images/b2.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "Delhi HC slams GST Dept for Ex-Parte Order, Reopens...",
-    },
-    {
-      img: "/images/b3.png",
-      tag: "GST",
-      author: "Meetu Kumari",
-      date: "Nov 16, 2025",
-      title: "UAE finalises new sugar-based tax model for sweetened ",
-    },
-  ];
-
-  const totalSteps = Math.ceil(blogs.length / 3);
   const [step, setStep] = useState(1);
 
-  const next = () => {
-    if (step < totalSteps) setStep(step + 1);
-  };
+  const { data, isLoading } = useQuery({
+    queryKey: queryKeys.articles.list({ limit: 9 }),
+    queryFn: () => getArticles({ page: 1, limit: 9 }),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  const prev = () => {
-    if (step > 1) setStep(step - 1);
-  };
+  const blogs = (data?.data ?? []).map((article, i) => ({
+    img: article.thumbnail_url || PLACEHOLDER_IMGS[i % PLACEHOLDER_IMGS.length],
+    tag: article.categories?.[0]?.name || "Blog",
+    author: article.author_name || "Studycafe",
+    date: formatDate(article.published_at || article.created_at),
+    title: article.title,
+    slug: article.slug,
+  }));
 
+  // Use skeletons while loading
+  const skeletons = Array.from({ length: 9 });
+  const hasData = blogs.length > 0;
+
+  const totalSteps = hasData ? Math.ceil(blogs.length / 3) : Math.ceil(skeletons.length / 3);
+  const startIndex = (step - 1) * 3;
+  const visibleBlogs = hasData ? blogs.slice(startIndex, startIndex + 3) : [];
+  const visibleSkeletons = isLoading ? skeletons.slice(startIndex, startIndex + 3) : [];
+
+  const next = () => { if (step < totalSteps) setStep(step + 1); };
+  const prev = () => { if (step > 1) setStep(step - 1); };
   const progress = (step / totalSteps) * 100;
 
-  // Calculate which blogs to show for current step
-  const startIndex = (step - 1) * 3;
-  const endIndex = startIndex + 3;
-  const visibleBlogs = blogs.slice(startIndex, endIndex);
-
   return (
-    <section
-      className="w-full py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center "
-    >
+    <section className="w-full py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center">
       <h2 className="text-[30px] xl:text-[40px] font-semibold text-[#1A1A1A]">
         Latest from Our Blog
       </h2>
@@ -98,98 +149,37 @@ export default function BlogSection() {
         Stay updated with the latest insights, tips, and industry trends
       </p>
 
-      {/* Mobile Slider (unchanged) */}
-      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2 scrollbar-hide
-">
-        {blogs.map((b, i) => (
-          <div
-            key={i}
-            className="min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
-          >
-            {/* <img src={b.img} alt="blog" className="w-full h-[200px] object-fit" /> */}
-                <div className="relative w-full h-[200px]">
-              <img
-                src={b.img}
-                alt="blog"
-                className="w-full h-full object-fit"
-              />
-
-              {/* Right Corner Tag */}
-              <span className="absolute top-4 left-4 bg-white text-[#252525] text-[10px] font-normal px-2 py-1 rounded-[14px] ">
-                {b.tag}
-              </span>
-            </div>
-
-            <div className="p-4">
-              <div className="flex items-center gap-2 text-[12px] text-[#AFAFAF] mb-3">
-                <span className="flex gap-1"> <img src="/images/user.svg" alt="" width="10" height="10" /> {b.author}</span>  <span className="flex gap-1 md:gap-2"><img src="/images/calendar.svg" alt="" width="10" height="10" />{b.date}</span>
-              </div>
-              <h3 className="font-medium text-[14px] text-[#252525] leading-tight mb-4 line-clamp-2">
-                {b.title}
-              </h3>
-              <button className="text-[12px] bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 rounded-md flex items-center gap-2">
-                Read More
-                <img src="/images/arrow-left.svg" alt="" />
-              </button>
-            </div>
-          </div>
-        ))}
+      {/* Mobile — horizontal scroll through all */}
+      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden mt-10 pb-4 px-2 scrollbar-hide">
+        {isLoading
+          ? skeletons.map((_, i) => <BlogCardSkeleton key={i} size="mobile" />)
+          : blogs.map((b, i) => <BlogCard key={i} {...b} size="mobile" />)}
       </div>
 
-      {/* Desktop Slider (updated) */}
+      {/* Desktop — paginated 3 at a time */}
       <div className="hidden md:flex gap-6 mt-10 justify-center container mx-auto px-6">
-        {visibleBlogs.map((b, i) => (
-          <div key={i} className=" rounded-xl shadow-md border bg-white overflow-hidden text-left">
-          <div className="relative w-full xl:h-[233px]">
-              <img
-                src={b.img}
-                alt="blog"
-                className="w-full h-full object-fit"
-              />
-
-              {/* Right Corner Tag */}
-              <span className="absolute top-4 left-4 bg-white text-[#252525] text-[14px] font-normal px-2 py-1 rounded-[14px] ">
-                {b.tag}
-              </span>
-            </div>
-
-            
-   
-            <div className="p-4">
-              <div className="flex items-center gap-2 md:text-[14px] xl:text-[16px] text-[#AFAFAF] mb-3">
-                <span className="flex gap-1"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
-
-              </div>
-              <h3 className="font-medium md:text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2 ">
-                {b.title}
-              </h3>
-              <Link href="/blogs/blog-detail">
-                <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                  Read More
-                  <img src="/images/arrow-left.svg" alt="" />
-                </button>
-              </Link>
-            </div>
-          </div>
-        ))}
+        {isLoading
+          ? visibleSkeletons.map((_, i) => <BlogCardSkeleton key={i} size="desktop" />)
+          : visibleBlogs.map((b, i) => <BlogCard key={i} {...b} size="desktop" />)}
       </div>
 
-      {/* Bottom Navigation (unchanged) */}
-      <div className=" flex items-center container mx-auto mt-10 px-4">
-        {/* Left Buttons */}
+      {/* Bottom Navigation */}
+      <div className="flex items-center container mx-auto mt-10 px-4">
+        {/* Prev / Next */}
         <div className="hidden md:flex gap-3">
           <button
             onClick={prev}
-            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow "
+            disabled={step <= 1}
+            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow disabled:opacity-40"
           >
-             <img src="/images/f-left.svg" alt="" />
+            <img src="/images/f-left.svg" alt="previous" />
           </button>
-
           <button
             onClick={next}
-            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow"
+            disabled={step >= totalSteps}
+            className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white shadow disabled:opacity-40"
           >
-             <img src="/images/f-right.svg" alt="" />
+            <img src="/images/f-right.svg" alt="next" />
           </button>
         </div>
 
@@ -198,10 +188,10 @@ export default function BlogSection() {
           <div
             className="h-full bg-[#09339B] rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
-          ></div>
+          />
         </div>
 
-        {/* Right Button */}
+        {/* View All */}
         <div className="w-full flex justify-center md:w-auto md:justify-end">
           <Link href="/blogs">
             <button className="text-sm text-[#09339B] font-medium flex items-center gap-1 p-2 pl-4 pr-4 bg-white rounded-[10px] shadow">
@@ -210,7 +200,6 @@ export default function BlogSection() {
             </button>
           </Link>
         </div>
-
       </div>
     </section>
   );

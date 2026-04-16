@@ -1,96 +1,43 @@
-import { useState } from "react";
-import CourseCard from "../../CourseCard";
-import Image from "next/image";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import {
+  getMyCommissionOrders,
+  type AffiliateHistoryItem,
+} from "@/services/order.service";
 
-
-import { Calendar, Search } from "lucide-react";
-
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function Commission() {
-
   const router = useRouter();
-  const ordersData = [
-  {
-    id: 1,
-    orderId: "202520210",
-    date: "14 Feb 2026",
-    name: "Sneha Gupta",
-      email: "sn***@gmail.com",
-      phone: "+91 70***543",
-    course: "Income Tax Course",
-    amount: 3499,
-    commission: 350,
-  },
-  {
-    id: 2,
-    orderId: "202520211",
-    date: "15 Feb 2026",
-    name: "Deepak Joshi",
-    email: "de***@gmail.com",
-    phone: "+91 88***321",
-    course: "Microsoft Excel Course",
-    amount: 2999,
-    commission: 300,
-  },
-];
+  const [orders, setOrders] = useState<AffiliateHistoryItem[]>([]);
+  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-
-
-// const membershipData = [
-//   {
-//     id: 1,
-//     orderNumber: "Order- 202520210",
-//     name: "Sneha Gupta",
-//     description: "Courses focusing on generative AI and automation tools for business.",
-   
-//     url: "https://studycafe.io/?ref=alexm",
-//   },
-//   {
-//     id: 2,
-//     orderNumber: "Order- 202520211",
-//     name: "Deepak Joshi",
-//     description: "Courses focusing on generative AI and automation tools for business.",
-//     originalPrice: 3999,
-//     discountedPrice: 29999,
-//     url: "https://studycafe.io/?ref=alexm",
-//   },
-//   {
-//     id: 3,
-//     orderNumber: "Order- 202520212",
-//     name: "Alex Johnson",
-//     description: "Courses focusing on generative AI and automation tools for business.",
-//     originalPrice: 3999,
-//     discountedPrice: 29999,
-//     url: "https://studycafe.io/?ref=alexm",
-//   },
-//   {
-//     id: 4,
-//     orderNumber: "Order- 202520213",
-//     name: "Sarah Williams",
-//     description: "Courses focusing on generative AI and automation tools for business.",
-//     originalPrice: 3999,
-//     discountedPrice: 29999,
-//     url: "https://studycafe.io/?ref=alexm",
-//   },
-// ];
-
-
-
-
-  // Calculate which blogs to show for current step
-  const startIndex = 0;
-  const endIndex = 4;
-  // const visibleBCourses = courses.slice(startIndex, endIndex);
-    const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] =useState("");
-
-  const handleSearch = () => {
-    console.log(fromDate, toDate);
-  };
+  const handleSearch = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getMyCommissionOrders(fromDate || undefined, toDate || undefined);
+      setOrders(data);
+      setSearched(true);
+    } catch (err) {
+      console.error("Failed to fetch commission orders:", err);
+      setOrders([]);
+      setSearched(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [fromDate, toDate]);
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto  bg-white px-6">
+    <section className="md:p-6 max-w-6xl mx-auto bg-white px-6">
       <div className="text-[16px] text-[#09339B] mb-3 cursor-pointer" onClick={() => router.back()}>
          ← Back to Affiliate Dashboard
       </div>
@@ -102,8 +49,6 @@ export default function Commission() {
       </p>
       <div className="border border-[#B4C6FF] rounded-xl p-4 shadow-md">
         <div className="flex flex-col md:flex-row gap-6 md:items-end">
-
-          {/* From */}
           <div className="flex-1 min-w-0">
             <label className="text-[16px]">
               From <span className="text-red-500">*</span>
@@ -116,12 +61,9 @@ export default function Commission() {
                 style={{ WebkitAppearance: 'none' }}
                 className="w-full min-w-0 h-[48px] px-4 border border-gray-300 rounded-xl bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#09339B]"
               />
-
             </div>
-
           </div>
 
-          {/* To */}
           <div className="flex-1 min-w-0">
             <label className="text-[16px]">
               To <span className="text-red-500">*</span>
@@ -136,72 +78,69 @@ export default function Commission() {
             </div>
           </div>
 
-          {/* Button */}
           <button
             onClick={handleSearch}
-            className="flex items-center justify-center gap-2 bg-[#09339B] text-white px-6 py-2 rounded-xl hover:bg-[#0F2E75] transition text-[16px] w-full md:w-auto"
+            disabled={loading}
+            className="flex items-center justify-center gap-2 bg-[#09339B] text-white px-6 py-2 rounded-xl hover:bg-[#0F2E75] transition text-[16px] w-full md:w-auto disabled:opacity-60"
           >
-            Search
+            {loading ? "Searching…" : "Search"}
           </button>
         </div>
       </div>
 
- 
-
-      {/* All courses---------- */}
       <div className="py-4">
-        <div className="flex flex-col md:flex-row  mt-4 px-2">
-          <h2 className="font-regular text-[20px] mb-2">2 Orders Found</h2>
-          <div className="md:ml-auto flex  gap-4">
-            <button className="md:ml-auto text-[#09339B] hover:text-[#0F2E75] border border-[#09339B] px-4 md:px-4 py-1 rounded-lg font-medium">
-              Download Excel
-            </button>
-            <button className="md:ml-auto text-[#09339B] hover:text-[#0F2E75] border border-[#09339B] px-4 md:px-4 py-1 rounded-lg font-medium">
-              Download PDF
-            </button>
-         </div>
-        </div>
+        {searched && (
+          <div className="flex flex-col md:flex-row mt-4 px-2">
+            <h2 className="font-regular text-[20px] mb-2">
+              {orders.length} Order{orders.length !== 1 ? "s" : ""} Found
+            </h2>
+          </div>
+        )}
 
-     {ordersData.map((order) => (
-       <div
-         key={order.id}
-         className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-4 md:px-6 md:mx-2 "
-       >
-         <div className="flex justify-between md:text-[20px] ">
-           <p className="font-bold">Order - {order.orderId}</p>
-           <p>{order.date}</p>
-         </div>
+        {!searched && !loading && (
+          <p className="text-center text-gray-400 py-8">
+            Select a date range and click Search to view commission orders.
+          </p>
+        )}
 
-         <p className="font-regular">{order.name}</p>
-         <ul className="text-sm text-gray-600 flex flex-wrap gap-2 list-disc marker:text-[#D9D9D9] mb-4">
-           <span>{order.email}</span>
-           <li className="ml-4"><span>{order.phone}</span></li>
-         </ul>
+        {searched && orders.length === 0 && (
+          <p className="text-center text-gray-400 py-8">
+            No commission orders found for the selected period.
+          </p>
+        )}
 
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-4 md:px-6 md:mx-2"
+          >
+            <div className="flex justify-between md:text-[20px]">
+              <p className="font-bold">Order - {order.order_id}</p>
+              <p>{formatDate(order.created_at)}</p>
+            </div>
 
+            <p className="font-regular">{order.buyer_name}</p>
+            <ul className="text-sm text-gray-600 flex flex-wrap gap-2 list-disc marker:text-[#D9D9D9] mb-4">
+              <span>{order.buyer_email}</span>
+              {order.buyer_phone && (
+                <li className="ml-4"><span>{order.buyer_phone}</span></li>
+              )}
+            </ul>
 
-         <div className="border-t border-[#AFAFAF]"></div>
+            <div className="border-t border-[#AFAFAF]"></div>
 
-         <div className="flex  justify-between items-start ">
-           <div className="flex flex-col">
-             <p className="font-medium mt-4 whitespace-nowrap">{order.course}</p>
-             <p className="mt-1">Amount: <span className="font-semibold">₹{order.amount}</span> </p>
-        </div>
-
-         
- 
-
-           <p className="bg-[#C5FFD4] px-2  md:px-6 py-1 rounded-lg text-[#275934] font-medium mt-6 text-[14px] md:text-[16px] whitespace-nowrap">
-               ₹{order.commission} Commission
-             </p>
-         
-         </div>
-       </div>
-))}
-
-
+            <div className="flex justify-between items-start">
+              <div className="flex flex-col">
+                <p className="font-medium mt-4 whitespace-nowrap">{order.item_title}</p>
+                <p className="mt-1">Amount: <span className="font-semibold">₹{parseFloat(order.order_amount).toLocaleString("en-IN")}</span></p>
+              </div>
+              <p className="bg-[#C5FFD4] px-2 md:px-6 py-1 rounded-lg text-[#275934] font-medium mt-6 text-[14px] md:text-[16px] whitespace-nowrap">
+                ₹{parseFloat(order.commission_amount).toLocaleString("en-IN")} Commission
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
-
     </section>
   );
 }

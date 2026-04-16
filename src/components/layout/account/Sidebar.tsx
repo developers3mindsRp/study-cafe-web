@@ -1,7 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import { useAuth, useInvalidateSession } from "@/providers/AuthProvider";
-import { useDashboardStats } from "@/hooks/usePurchases";
+import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
+import { useDashboardStats, useSubscriptionStatus } from "@/hooks/usePurchases";
 import { useRouter } from "next/router";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
@@ -14,37 +15,77 @@ function formatDate(dateStr?: string | null) {
   });
 }
 
-export default function Sidebar() {
-  const { user } = useAuth();
-  const invalidateSession = useInvalidateSession();
+interface SidebarProps {
+  onAvatarClick?: () => void;
+}
+
+export default function Sidebar({ onAvatarClick }: SidebarProps) {
+  const { user, logout } = useAuth();
   const router = useRouter();
   const { data: stats } = useDashboardStats({ enabled: !!user });
+  const { data: subscription } = useSubscriptionStatus({ enabled: !!user });
 
   const avatarSrc = resolveApiAssetUrl(user?.avatar) || "/images/profile.png";
 
   function handleLogout() {
-    invalidateSession();
+    logout();
     router.push("/");
   }
 
-  return (
-    <div className="sticky top-20 space-y-6 ">
-    
-      {/* PROFILE BOX */}
-      <div className="relative  flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
+  const badgeText = subscription?.hasActiveMembership
+    ? subscription.membershipType || "Premium Member"
+    : user?.role === "admin"
+    ? "Admin"
+    : "Free Member";
 
+  const badgeBg = subscription?.hasActiveMembership ? "bg-green-600" : "bg-[#09339B]";
+
+  const membershipType = subscription?.membershipType?.toLowerCase() ?? "";
+
+  // A plan is "lifetime" if its slug contains lifetime/ultimate/forever keywords
+  // OR if the expiry date is more than 50 years away (100-year lifetime plans)
+  const LIFETIME_KEYWORDS = ["lifetime", "ultimate", "forever", "permanent", "unlimited"];
+  const isLifetimeBySlug = LIFETIME_KEYWORDS.some((kw) => membershipType.includes(kw));
+  const isLifetimeByDate = !!subscription?.expiresAt &&
+    (new Date(subscription.expiresAt).getFullYear() - new Date().getFullYear()) >= 50;
+  const isLifetime = isLifetimeBySlug || isLifetimeByDate;
+
+  // Plan tier: higher number = higher plan. Lifetime is the top — no upgrade exists.
+  const PLAN_TIER: Record<string, number> = { basic: 1, premium: 2, lifetime: 3, ultimate: 3 };
+  const currentTier = isLifetime
+    ? 3
+    : Object.entries(PLAN_TIER).reduce((acc, [key, val]) => {
+        return membershipType.includes(key) ? Math.max(acc, val) : acc;
+      }, 0);
+  // Show upgrade button: if no membership OR if on basic/premium (not lifetime/ultimate)
+  const showUpgradeButton = !subscription?.hasActiveMembership || currentTier < 3;
+
+  const daysRemaining = subscription?.expiresAt
+    ? Math.max(0, Math.ceil((new Date(subscription.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0;
+
+  const totalDays =
+    subscription?.startsAt && subscription?.expiresAt
+      ? Math.max(1, Math.ceil((new Date(subscription.expiresAt).getTime() - new Date(subscription.startsAt).getTime()) / (1000 * 60 * 60 * 24)))
+      : 1;
+
+  const subscriptionProgress = subscription?.hasActiveMembership
+    ? Math.min(100, ((totalDays - daysRemaining) / totalDays) * 100)
+    : 0;
+
+  return (
+    <div className="sticky top-20 space-y-6">
+      {/* PROFILE BOX */}
+      <div className="relative flex flex-col items-start text-left mt-6 p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm md:items-center md:text-center md:h-[440px] px-4">
         {/* Member Badge */}
-        <p className="bg-[#09339B] text-white font-medium px-2 py-1 rounded-lg absolute top-6 right-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]">
-          {user?.role === "admin" ? "Admin" : "Free Member"}
+        <p className={`${badgeBg} text-white capitalize font-medium px-2 py-1 rounded-lg absolute top-6 right-6 md:right-2 xl:right-6 text-[10px] xl:text-[12px]`}>
+          {badgeText}
         </p>
 
         {/* Mobile: Image left + content right */}
         <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
-
           {/* Profile Image Wrapper */}
           <div className="relative w-32 h-32 xl:w-40 xl:h-40 flex-shrink-0">
-
-            {/* Image */}
             <div className="w-full h-full rounded-full overflow-hidden">
               <Image
                 src={avatarSrc}
@@ -60,6 +101,7 @@ export default function Sidebar() {
 
             {/* Camera button */}
             <button
+              onClick={onAvatarClick}
               aria-label="Change profile photo"
               className="absolute -right-1 -bottom-1 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white border border-gray-200 shadow flex items-center justify-center hover:bg-gray-50"
             >
@@ -83,14 +125,16 @@ export default function Sidebar() {
                 </p>
               </div>
 
-              {stats && (
-                <div className="flex gap-1 md:gap-2 items-center">
-                  <img src="/images/course.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
-                  <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">
-                    {stats.totalCourses} Course{stats.totalCourses !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              )}
+              <div className="flex gap-1 md:gap-2 items-center">
+                <img src="/images/phone.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
+                <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">
+                  {user?.phone
+                    ? user.phone.startsWith("+91")
+                      ? "+91 " + user.phone.slice(3)
+                      : user.phone
+                    : "—"}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -105,63 +149,66 @@ export default function Sidebar() {
             <span className="font-medium">Logout</span>
           </button>
         </div>
-
       </div>
-
-
 
       {/* SUBSCRIPTION BOX */}
       <div className="p-5 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
         <h3 className="text-[20px] md:text-[26px] font-normal mb-2">Subscription Status</h3>
-      
-        <p className="text-[16px] text-gray-600">
-          {user?.role === "admin" ? "Admin Access" : "Free Member"}
-        </p>
 
-    {stats && (
-      <div className="mt-3 text-[16px] text-[#454545] space-y-2">
-        <div className="flex justify-between">
-          <span>Courses Enrolled:</span>
-          <span>{stats.totalCourses}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Completed:</span>
-          <span>{stats.completedCourses}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>In Progress:</span>
-          <span>{stats.inProgressCourses}</span>
-        </div>
+        {subscription?.hasActiveMembership ? (
+          <>
+            {/* <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+              Active
+            </span> */}
+            <p className="text-[16px] text-gray-600 mt-2 font-medium capitalize">
+              {subscription.membershipType || "Premium Membership"}
+            </p>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mt-2">
-          <div
-            className="h-full bg-[#09339B]"
-            style={{ width: `${stats.averageProgress ?? 0}%` }}
-          ></div>
-        </div>
-        <p className="text-[14px] text-[#929292] text-right">{Math.round(stats.averageProgress ?? 0)}% avg progress</p>
-      </div>
-    )}
+            {/* Lifetime — no dates or progress bar needed */}
+            {!isLifetime && (
+              <div className="mt-3 text-[14px] text-[#454545] space-y-2">
+                <div className="flex justify-between">
+                  <span>Start Date:</span>
+                  <span>{formatDate(subscription.startsAt)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Expiry Date:</span>
+                  <span>{formatDate(subscription.expiresAt)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Days Remaining:</span>
+                  <span className="font-medium">{daysRemaining}</span>
+                </div>
+                <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mt-2">
+                  <div
+                    className="h-full bg-[#09339B] rounded-full transition-all"
+                    style={{ width: `${subscriptionProgress}%` }}
+                  />
+                </div>
+                <p className="text-[13px] text-[#929292] text-right">
+                  {Math.round(subscriptionProgress)}% elapsed
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-[14px] text-gray-500 mt-2">
+            You don&apos;t have an active membership plan.
+          </p>
+        )}
 
-    {!stats && (
-      <div className="mt-3 text-[16px] text-[#454545] space-y-2">
-        <div className="flex justify-between">
-          <span>Days Remaining:</span>
-          <span className="">—</span>
-        </div>
-        <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
-          <div className="h-full bg-[#09339B]" style={{ width: `0%` }}></div>
-        </div>
-      </div>
-    )}
-
-    <div className="border-b border-[#696969] w-full mt-6"></div>
-
-      <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition">
-        <span className="font-medium">Upgrade Plan</span>
-      </button>
-
+        {showUpgradeButton && (
+          <>
+            <div className="border-b border-[#696969] w-full mt-6"></div>
+            <Link href="/plans">
+              <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-full hover:bg-[#f0f4ff] transition">
+                <span className="font-medium">
+                  {subscription?.hasActiveMembership ? "Upgrade Plan" : "Buy Membership"}
+                </span>
+              </button>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

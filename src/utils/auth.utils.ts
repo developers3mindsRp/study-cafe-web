@@ -74,3 +74,34 @@ export const removeUserData = (): void => {
   }
 };
 
+const REFERRAL_KEY = 'ref_code';
+const REFERRAL_TS_KEY = 'ref_ts';
+const REFERRAL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
+export const setReferralCode = (code: string): void => {
+  if (typeof window === 'undefined') return;
+  const existing = localStorage.getItem(REFERRAL_KEY);
+  if (existing) return;
+  localStorage.setItem(REFERRAL_KEY, code);
+  localStorage.setItem(REFERRAL_TS_KEY, String(Date.now()));
+};
+
+export const getReferralCode = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  const code = localStorage.getItem(REFERRAL_KEY);
+  const ts = localStorage.getItem(REFERRAL_TS_KEY);
+  if (!code || !ts) return null;
+  if (Date.now() - Number(ts) > REFERRAL_WINDOW_MS) {
+    localStorage.removeItem(REFERRAL_KEY);
+    localStorage.removeItem(REFERRAL_TS_KEY);
+    return null;
+  }
+  return code;
+};
+
+export const clearReferralCode = (): void => {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(REFERRAL_KEY);
+  localStorage.removeItem(REFERRAL_TS_KEY);
+};
+

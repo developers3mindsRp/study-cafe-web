@@ -12,7 +12,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query";
 import * as authService from "@/services/auth.service";
-import { getToken, clearAuthData } from "@/utils/auth.utils";
+import { getToken, getRefreshToken, clearAuthData, getUserData, setUserData } from "@/utils/auth.utils";
 import type { User } from "@/types/models.types";
 
 export type AuthContextValue = {
@@ -24,6 +24,7 @@ export type AuthContextValue = {
   /** Site admin roles (not the same as admin panel operator unless role matches) */
   isAdminRole: boolean;
   refetchUser: () => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -31,10 +32,26 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
-  // Defer reading localStorage until after mount so SSR + first client paint match (avoids hydration mismatch).
+  // Always start false/null so SSR and first client render produce identical HTML.
+  // useEffect runs only on the client after hydration — no mismatch.
+  const [mounted, setMounted] = useState(false);
   const [hasToken, setHasToken] = useState(false);
+
   useEffect(() => {
-    setHasToken(!!getToken());
+    // Runs once after hydration. Read cookies + localStorage here.
+    const token = !!getToken();
+    const saved = getUserData() as User | null;
+
+    setHasToken(token);
+
+    // Seed the React Query cache with the persisted user so the dashboard
+    // renders immediately without a loading flash on every page reload.
+    if (token && saved) {
+      queryClient.setQueryData(queryKeys.auth.currentUser, saved);
+    }
+
+    setMounted(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -45,32 +62,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   } = useQuery({
     queryKey: queryKeys.auth.currentUser,
     queryFn: authService.getCurrentUser,
-    enabled: hasToken,
+    // Don't run until we've read the token from cookies on the client
+    enabled: mounted && hasToken,
     staleTime: 10 * 60 * 1000,
-    retry: false,
+    retry: 1,
+    placeholderData: (prev) => prev,
   });
 
   useEffect(() => {
     if (!isError) return;
+    // Only clear session if there is truly no refresh token left.
+    // The axios interceptor handles 401s when a refresh token exists.
+    if (!getRefreshToken()) {
+      clearAuthData();
+      queryClient.setQueryData(queryKeys.auth.currentUser, null);
+      queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
+      setHasToken(false);
+    }
+  }, [isError, queryClient]);
+
+  const logout = useCallback(() => {
     clearAuthData();
     queryClient.setQueryData(queryKeys.auth.currentUser, null);
     queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
-  }, [isError, queryClient]);
+    setHasToken(false);
+  }, [queryClient]);
 
-  /** Session resolving (token present, /auth/me not finished) */
-  const isLoading = hasToken && isPending && !user;
-  const isAuthenticated = !!user;
+  // While not yet mounted (SSR / first paint) treat as loading if we will have a token.
+  // After mount, isLoading only while we're waiting for /auth/me with no cached data.
+  const cachedUser = !mounted
+    ? undefined
+    : (queryClient.getQueryData(queryKeys.auth.currentUser) as User | undefined);
+
+  const resolvedUser = user ?? cachedUser;
+  const isLoading = !mounted || (hasToken && isPending && !resolvedUser);
+  const isAuthenticated = !!resolvedUser;
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      user,
+      user: resolvedUser,
       isLoading,
       isAuthenticated,
-      hasActiveMembership: !!user?.hasActiveMembership,
-      isAdminRole: user ? ["admin", "super_admin"].includes(user.role) : false,
-      refetchUser: () => refetch(),
+      hasActiveMembership: !!resolvedUser?.hasActiveMembership,
+      isAdminRole: resolvedUser ? ["admin", "super_admin"].includes(resolvedUser.role) : false,
+      refetchUser: () => {
+        refetch().then(({ data }) => {
+          if (data) setUserData(data);
+        });
+      },
+      logout,
     }),
-    [user, isLoading, isAuthenticated, refetch]
+    [resolvedUser, isLoading, isAuthenticated, refetch, logout]
   );
 
   return (

@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as purchasesService from '@/services/purchases.service';
 import * as userService from '@/services/user.service';
+import * as authService from '@/services/auth.service';
 import { queryKeys } from '@/lib/react-query';
+import { setUserData } from '@/utils/auth.utils';
 
 /**
  * Custom hooks for purchases and user courses
@@ -149,13 +151,17 @@ export const useUpdateProfile = () => {
 
   return useMutation({
     mutationFn: userService.updateProfile,
-    onSuccess: (updatedUser) => {
-      queryClient.setQueryData(queryKeys.auth.currentUser, (prev: any) =>
-        prev && typeof prev === 'object' ? { ...prev, ...updatedUser } : updatedUser
-      );
-      queryClient.setQueryData(queryKeys.user.profile(), updatedUser);
-
-      console.log('Profile updated successfully');
+    onSuccess: async () => {
+      // Re-fetch from /auth/me so the cache gets the correctly shaped User object
+      // (with hasActiveMembership, referralCode etc.) rather than the raw /user/profile shape.
+      try {
+        const freshUser = await authService.getCurrentUser();
+        queryClient.setQueryData(queryKeys.auth.currentUser, freshUser);
+        setUserData(freshUser);
+      } catch {
+        // Fallback: just invalidate so it refetches on next render
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+      }
     },
   });
 };
@@ -166,13 +172,34 @@ export const useUploadAvatar = () => {
 
   return useMutation({
     mutationFn: (file: File) => userService.uploadAvatar(file),
-    onSuccess: (avatarUrl) => {
-      // Invalidate user queries to refetch with new avatar
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
-      queryClient.invalidateQueries({ queryKey: queryKeys.user.profile() });
-      
-      console.log('Avatar uploaded:', avatarUrl);
+    onSuccess: async () => {
+      // Re-fetch /auth/me with cache-busting so the new avatar URL is picked up
+      try {
+        const freshUser = await authService.getCurrentUser();
+        queryClient.setQueryData(queryKeys.auth.currentUser, freshUser);
+        setUserData(freshUser);
+      } catch {
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+      }
     },
+  });
+};
+
+export const useSubscriptionStatus = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [...queryKeys.user.all, 'subscription'],
+    queryFn: userService.getSubscriptionStatus,
+    staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true,
+  });
+};
+
+export const useMembershipCourses = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [...queryKeys.user.all, 'membership-courses'],
+    queryFn: userService.getMembershipCourses,
+    staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true,
   });
 };
 
