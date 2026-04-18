@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/providers/AuthProvider";
 import { queryKeys } from "@/lib/react-query";
 import { getArticleBySlug, getBlogSpotlightFeed } from "@/services/platform.service";
 import type { ArticleBySlug, BlogSpotlightFeed } from "@/types/models.types";
@@ -28,7 +30,9 @@ type Props = {
  * sidebar + author lists are scoped to this slug via `blog-spotlight?current_slug=`.
  */
 export default function BlogArticlePremiumLayout({ slug, initialArticle, initialSpotlight }: Props) {
-  const { data: article = initialArticle } = useQuery({
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+
+  const { data: article = initialArticle, refetch } = useQuery({
     queryKey: queryKeys.articles.detail(slug),
     queryFn: async () => {
       const a = await getArticleBySlug(slug);
@@ -36,8 +40,32 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
       return a;
     },
     initialData: initialArticle,
+    // Treat the server-rendered payload as fresh: a premature client-side auto-fetch
+    // would fire before the auth cookie hydrates and overwrite the access flags.
+    initialDataUpdatedAt: () => Date.now(),
     staleTime: 60 * 1000,
+    refetchOnMount: false,
   });
+
+  useEffect(() => {
+    if (authLoading) return;
+    // Any active membership (or admin role) should unlock the full article.
+    // Refetch with the now-hydrated bearer token so premium-locked SSR payloads
+    // get replaced with the unlocked body.
+    const shouldUnlock =
+      isAuthenticated &&
+      (user?.hasActiveMembership || ["admin", "super_admin"].includes(user?.role ?? ""));
+    if (shouldUnlock && !article.access?.can_read_full) {
+      refetch();
+    }
+  }, [
+    authLoading,
+    isAuthenticated,
+    user?.hasActiveMembership,
+    user?.role,
+    article.access?.can_read_full,
+    refetch,
+  ]);
 
   const { data: spotlight = initialSpotlight } = useQuery({
     queryKey: queryKeys.articles.spotlight({ current_slug: slug }),

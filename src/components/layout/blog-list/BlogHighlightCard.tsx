@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/providers/AuthProvider";
 import type { BlogSpotlightArticleCard } from "@/types/models.types";
 import { cardThumb } from "@/components/layout/blog-list/blogImage";
 
@@ -32,6 +33,7 @@ export default function BlogHighlightCard({
 }: BlogHighlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
   return (
 
     <div className=" container px-4 mx-auto">
@@ -90,22 +92,39 @@ export default function BlogHighlightCard({
 
                 <p className="text-[#929292] leading-7 text-center text-[16px]">
                   This article is available exclusively for <strong className="text-black">Premium Members</strong>.
+                  {isAuthenticated && user?.hasActiveMembership && (
+                    <span className="block mt-2 text-sm text-red-500">Your current plan does not grant access to this article.</span>
+                  )}
                 </p>
 
                 <div className="flex flex-col mx-auto md:px-32 gap-4 mt-6">
 
+                  {!isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        const currentPath = window.location.pathname;
+                        router.push(`/login?next=${encodeURIComponent(currentPath)}`);
+                      }}
+                      className="border border-[#09339B] text-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#09339B] hover:text-white transition"
+                    >
+                      Login
+                    </button>
+                  )}
+                  
                   <button
                     onClick={() => {
                       setIsOpen(false);
-                      router.push("/payment"); // your route
+                      router.push("/plans");
                     }}
-                    className="bg-[#09339B] text-white px-6 py-2 rounded-md"
+                    className="bg-[#09339B] text-white px-6 py-2 rounded-md hover:bg-[#07287A] transition"
                   >
-                    Upgrade to Premium
+                    {isAuthenticated && user?.hasActiveMembership ? "View Membership Plans" : "Upgrade to Premium"}
                   </button>
+                  
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="text-[#09339B] border border-[#09339B] bg-white px-6 py-2 rounded-md"
+                    className="text-[#09339B] border border-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#f4f7ff] transition"
                   >
                     Maybe Later
                   </button>

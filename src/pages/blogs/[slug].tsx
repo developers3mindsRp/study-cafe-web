@@ -4,10 +4,12 @@ import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
 import type { ArticleBySlug, BlogSpotlightFeed } from '@/types/models.types';
+import { appConfig } from '@/config/app.config';
 import {
-  getArticleBySlug,
-  getBlogSpotlightFeed,
-} from '@/services/platform.service';
+  bearerFromCookieHeader,
+  fetchArticleBySlugSSR,
+  fetchBlogSpotlightSSR,
+} from '@/lib/serverArticle';
 
 const BlogArticlePremiumLayout = dynamic(
   () => import('@/components/layout/blog/BlogArticlePremiumLayout'),
@@ -47,15 +49,20 @@ export default function BlogDetail({ slug, article, spotlight }: BlogDetailProps
 
 /**
  * Server-Side Rendering (SSR)
- * Fetches the article and sidebar data using platform service methods.
+ * Forwards the viewer's `auth_token` cookie so the article body + access flags
+ * reflect the logged-in user's membership on first paint (no locked-content flash
+ * for paying members).
  */
-export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ params, req }) => {
   const slug = String(params?.slug || '');
   if (!slug) return { notFound: true };
 
+  const baseUrl = appConfig.apiBaseUrl;
+  const token = bearerFromCookieHeader(req.headers.cookie);
+
   const [article, spotlight] = await Promise.all([
-    getArticleBySlug(slug),
-    getBlogSpotlightFeed({ current_slug: slug }),
+    fetchArticleBySlugSSR(slug, { baseUrl, token }),
+    fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),
   ]);
 
   if (!article) return { notFound: true };

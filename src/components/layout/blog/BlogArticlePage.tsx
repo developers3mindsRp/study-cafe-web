@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/providers/AuthProvider";
 import { getArticleBySlug } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
 import type { ArticleBySlug } from "@/types/models.types";
@@ -19,7 +21,9 @@ export default function BlogArticlePage({
   slug: string;
   initialArticle: ArticleBySlug;
 }) {
-  const { data } = useQuery({
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+
+  const { data, refetch } = useQuery({
     queryKey: queryKeys.articles.detail(slug),
     queryFn: async () => {
       const a = await getArticleBySlug(slug);
@@ -27,9 +31,28 @@ export default function BlogArticlePage({
       return a;
     },
     initialData: initialArticle,
+    initialDataUpdatedAt: () => Date.now(),
     staleTime: 60 * 1000,
+    refetchOnMount: false,
   });
   const article = data ?? initialArticle;
+
+  useEffect(() => {
+    if (authLoading) return;
+    const shouldUnlock =
+      isAuthenticated &&
+      (user?.hasActiveMembership || ["admin", "super_admin"].includes(user?.role ?? ""));
+    if (shouldUnlock && !article.access?.can_read_full) {
+      refetch();
+    }
+  }, [
+    authLoading,
+    isAuthenticated,
+    user?.hasActiveMembership,
+    user?.role,
+    article.access?.can_read_full,
+    refetch,
+  ]);
 
   const access = article.access;
   const showCta = access?.show_read_more_cta && !access?.can_read_full;
@@ -66,19 +89,30 @@ export default function BlogArticlePage({
         <div className="rounded-xl border border-[#09339B]/30 bg-[#F4F7FF] p-6 text-center">
           <p className="mb-4 text-[#252525]">
             Unlock the full article with an active StudyCafe membership.
+            {isAuthenticated && user?.hasActiveMembership && (
+              <span className="block mt-1 text-red-500 font-medium text-sm">
+                Your current plan does not grant access to this article.
+              </span>
+            )}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/login"
-              className="rounded-md bg-[#09339B] px-5 py-2 text-sm font-medium text-white hover:bg-blue-800"
-            >
-              Log in
-            </Link>
+            {!isAuthenticated && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  const currentPath = window.location.pathname;
+                  window.location.href = `/login?next=${encodeURIComponent(currentPath)}`;
+                }}
+                className="rounded-md bg-[#09339B] px-5 py-2 text-sm font-medium text-white hover:bg-blue-800 transition"
+              >
+                Log in
+              </button>
+            )}
             <Link
               href="/plans"
-              className="rounded-md border border-[#09339B] px-5 py-2 text-sm font-medium text-[#09339B] hover:bg-white"
+              className="rounded-md border border-[#09339B] px-5 py-2 text-sm font-medium text-[#09339B] hover:bg-white transition"
             >
-              View memberships
+              {isAuthenticated && user?.hasActiveMembership ? "View Membership Plans" : "View memberships"}
             </Link>
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/providers/AuthProvider";
 import type {
   ArticleBySlug,
   BlogSpotlightArticleCard,
@@ -96,6 +97,8 @@ function PremiumModal({
   description = "This article is available exclusively for",
 }: PremiumModalProps) {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="bg-white md:max-w-xl w-full rounded-lg p-12 relative shadow-lg">
@@ -116,30 +119,38 @@ function PremiumModal({
 
         <p className="text-[#929292] leading-7 text-center text-[16px]">
           {description} <strong className="text-black">Premium Members</strong>.
+          {isAuthenticated && user?.hasActiveMembership && (
+            <span className="block mt-2 text-sm text-red-500">Your current plan does not grant access to this article.</span>
+          )}
         </p>
 
         <div className="flex flex-col mx-auto md:px-32 gap-4 mt-6">
+          {!isAuthenticated && (
+            <button
+              onClick={() => {
+                onClose();
+                const currentPath = window.location.pathname;
+                router.push(`/login?next=${encodeURIComponent(currentPath)}`);
+              }}
+              className="border border-[#09339B] text-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#09339B] hover:text-white transition"
+            >
+              Login
+            </button>
+          )}
+          
           <button
             onClick={() => {
               onClose();
-              router.push("/login");
+              router.push("/plans");
             }}
-            className="border border-[#09339B] text-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#09339B] hover:text-white transition"
+            className="bg-[#09339B] text-white px-6 py-2 rounded-md hover:bg-[#07287A] transition"
           >
-            Login
+            {isAuthenticated && user?.hasActiveMembership ? "View Membership Plans" : "Upgrade to Premium"}
           </button>
-          <button
-            onClick={() => {
-              onClose();
-              router.push("/payment");
-            }}
-            className="bg-[#09339B] text-white px-6 py-2 rounded-md"
-          >
-            Upgrade to Premium
-          </button>
+          
           <button
             onClick={onClose}
-            className="text-[#09339B] border border-[#09339B] bg-white px-6 py-2 rounded-md"
+            className="text-[#09339B] border border-[#09339B] bg-white px-6 py-2 rounded-md hover:bg-[#f4f7ff] transition"
           >
             Maybe Later
           </button>
