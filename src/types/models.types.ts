@@ -27,6 +27,8 @@ export interface User {
 export interface Course {
   id: string;
   title: string;
+  /** Public course URL segment when present. */
+  slug?: string | null;
   description: string;
   thumbnail: string;
   price: number;
@@ -74,6 +76,18 @@ export interface CourseDetail extends Course {
   totalLessons: number;
 }
 
+/** Live cohort tied to a course purchase (from order-service my-purchases). */
+export type EnrolledBatchPhase = 'upcoming' | 'live' | 'completed';
+
+export interface EnrolledBatchInfo {
+  batchId: number;
+  name?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  meetLink?: string | null;
+  phase: EnrolledBatchPhase;
+}
+
 // Purchase/Enrollment Model
 export interface Purchase {
   id: string;
@@ -85,6 +99,10 @@ export interface Purchase {
   paymentMethod?: string;
   transactionId?: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';
+  /** Order row batch lock-in (numeric id). */
+  batchId?: number | null;
+  /** Enriched batch schedule + phase for My Courses UI. */
+  enrolledBatch?: EnrolledBatchInfo | null;
 }
 
 // User's purchased course with progress
@@ -357,12 +375,19 @@ export interface CourseRecording {
   is_visible?: boolean;
 }
 
-/** A single session (day) within a batch */
+/** A single session (day or sub-section of a day) within a batch */
 export interface CourseSession {
   id: number;
   batch_id: number;
   day_number: number;
+  /** 0-based index of the sub-section inside the day. 0 when the day has no subsections. */
+  section_index?: number;
+  /** Day-level title (same across all sub-sections of the same day). */
   title: string;
+  /** Subsection title. Null when the day has no subsections. */
+  section_title?: string | null;
+  /** Duration in minutes (optional). */
+  duration?: number | null;
   scheduled_at?: string | null;
   meet_link?: string | null;
   recordings: CourseRecording[];

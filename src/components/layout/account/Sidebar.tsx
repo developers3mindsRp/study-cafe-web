@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useDashboardStats, useSubscriptionStatus } from "@/hooks/usePurchases";
@@ -25,7 +25,12 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
   const { data: stats } = useDashboardStats({ enabled: !!user });
   const { data: subscription } = useSubscriptionStatus({ enabled: !!user });
 
-  const avatarSrc = resolveApiAssetUrl(user?.avatar) || "/images/profile.png";
+  const resolvedAvatar = resolveApiAssetUrl(user?.avatar) || "/images/profile.png";
+  const [avatarSrc, setAvatarSrc] = useState(resolvedAvatar);
+
+  useEffect(() => {
+    setAvatarSrc(resolveApiAssetUrl(user?.avatar) || "/images/profile.png");
+  }, [user?.avatar]);
 
   function handleLogout() {
     logout();
@@ -93,9 +98,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
                 width={160}
                 height={160}
                 className="object-cover w-full h-full"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = "/images/profile.png";
-                }}
+                onError={() => setAvatarSrc("/images/profile.png")}
               />
             </div>
 

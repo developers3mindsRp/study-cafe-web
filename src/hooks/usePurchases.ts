@@ -11,11 +11,12 @@ import { setUserData } from '@/utils/auth.utils';
  */
 
 // Hook to get user's purchased courses
-export const useUserPurchases = () => {
+export const useUserPurchases = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: queryKeys.purchases.list(),
     queryFn: purchasesService.getUserPurchases,
     staleTime: 2 * 60 * 1000, // 2 minutes
+    enabled: options?.enabled ?? true,
   });
 };
 
@@ -198,7 +199,8 @@ export const useMembershipCourses = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [...queryKeys.user.all, 'membership-courses'],
     queryFn: userService.getMembershipCourses,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     enabled: options?.enabled ?? true,
   });
 };

@@ -28,15 +28,29 @@ function formatDate(dateStr?: string | null) {
   }
 }
 
-function getNextUpcomingBatchDate(batches: CourseBatch[]): string | null {
+function resolveDisplayBatch(
+  batches: CourseBatch[]
+): { date: string; label: "upcoming" | "completed" } | null {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
+
   const upcoming = batches
     .filter((b) => b.start_date)
-    .map((b) => new Date(b.start_date!))
-    .filter((d) => !isNaN(d.getTime()) && d >= now)
-    .sort((a, b) => a.getTime() - b.getTime());
-  return upcoming.length > 0 ? upcoming[0].toISOString() : null;
+    .map((b) => ({ d: new Date(b.start_date!) }))
+    .filter(({ d }) => !isNaN(d.getTime()) && d >= now)
+    .sort((a, b) => a.d.getTime() - b.d.getTime());
+  if (upcoming.length > 0)
+    return { date: upcoming[0].d.toISOString(), label: "upcoming" };
+
+  const completed = batches
+    .filter((b) => b.end_date)
+    .map((b) => ({ d: new Date(b.end_date!) }))
+    .filter(({ d }) => !isNaN(d.getTime()) && d < now)
+    .sort((a, b) => b.d.getTime() - a.d.getTime());
+  if (completed.length > 0)
+    return { date: completed[0].d.toISOString(), label: "completed" };
+
+  return null;
 }
 
 export default function Paymentsection({ course, batches = [] }: Props) {
@@ -49,7 +63,10 @@ export default function Paymentsection({ course, batches = [] }: Props) {
   }
 
   const thumbnail = course.thumbnail_url ?? "/images/c1.png";
-  const startDate = formatDate(getNextUpcomingBatchDate(batches));
+  const displayBatch = resolveDisplayBatch(batches);
+  const startDate = formatDate(displayBatch?.date ?? null);
+  const dateLabel =
+    displayBatch?.label === "completed" ? "Last batch ended on" : "Starts at";
   const enrolledCount = course.enrolled_count ?? 0;
   const ratings = course.ratings ? Number(course.ratings).toFixed(1) : null;
   const ratingUsers = course.rating_users ?? 0;
@@ -62,7 +79,7 @@ export default function Paymentsection({ course, batches = [] }: Props) {
       <div className="lg:col-span-2 space-y-6">
         {startDate && (
           <p className="bg-[#F9F9FB] w-fit max-w-full p-2 text-[#454545] text-[15px] px-4">
-            Starts at {startDate}
+            {dateLabel} {startDate}
           </p>
         )}
 

@@ -112,66 +112,77 @@ export default function CourseOverview({
   const contentItems: { title: string; duration: string; bullets: string[] }[] =
     [];
 
+  // ── Curriculum rendering rule ──────────────────────────────────────────────
+  // For each day:
+  //   - if it has `sections[]` (subsections) → bullets are the subsection TITLES ONLY.
+  //   - else fall back to `points[]` or the day-level description.
   if (course?.curriculum) {
     try {
       const parsed = JSON.parse(course.curriculum);
       if (Array.isArray(parsed)) {
         parsed.forEach((item: any) => {
-          const points = Array.isArray(item.points)
-            ? item.points
-            : typeof item.description === "string"
-              ? item.description
-                  .split(/\r?\n+/)
-                  .map((line: any) => line.replace(/<[^>]*>/g, "").trim())
-                  .filter(Boolean)
-              : [];
+          const sections = Array.isArray(item.sections) ? item.sections : [];
+
+          let bullets: string[];
+          if (sections.length > 0) {
+            bullets = sections
+              .map((sec: any) => String(sec?.title ?? "").trim())
+              .filter(Boolean);
+          } else if (Array.isArray(item.points)) {
+            bullets = item.points.map(String).filter(Boolean);
+          } else if (typeof item.description === "string") {
+            bullets = item.description
+              .split(/\r?\n+/)
+              .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
+              .filter(Boolean);
+          } else {
+            bullets = [];
+          }
 
           contentItems.push({
             title: item.title ?? "",
             duration:
               item.duration ?? (item.minutes ? `${item.minutes} min` : ""),
-            bullets: points,
+            bullets,
           });
         });
       }
     } catch {
       /* ignore */
     }
+  }
 
-    // Fallback to schedule data only when curriculum parsing yields nothing.
-    if (contentItems.length === 0 && batches.length > 0) {
-      const seenSessionKeys = new Set<string>();
-      batches.forEach((batch) => {
-        batch.sessions.forEach((session) => {
-          const key = `${session.day_number}-${(session.title ?? "").trim().toLowerCase()}`;
-          if (seenSessionKeys.has(key)) return;
-          seenSessionKeys.add(key);
-
-          const time = formatSessionTime(session.scheduled_at);
-          contentItems.push({
-            title: session.title || `Day ${session.day_number}`,
-            duration: time ? time : "",
-            bullets: [],
-          });
-        });
-      });
-    }
-  } else if (batches.length > 0) {
-    const seenSessionKeys = new Set<string>();
+  // Fallback: derive content from live session rows (grouped by day, subsection titles as bullets)
+  if (contentItems.length === 0 && batches.length > 0) {
+    const byDay = new Map<
+      number,
+      { title: string; bullets: string[]; time: string }
+    >();
     batches.forEach((batch) => {
       batch.sessions.forEach((session) => {
-        const key = `${session.day_number}-${(session.title ?? "").trim().toLowerCase()}`;
-        if (seenSessionKeys.has(key)) return;
-        seenSessionKeys.add(key);
-
-        const time = formatSessionTime(session.scheduled_at);
-        contentItems.push({
-          title: session.title || `Day ${session.day_number}`,
-          duration: time ? time : "",
-          bullets: [],
-        });
+        const day = session.day_number || 1;
+        const dayBucket =
+          byDay.get(day) ?? {
+            title: session.title || `Day ${day}`,
+            bullets: [],
+            time: formatSessionTime(session.scheduled_at) ?? "",
+          };
+        if (!byDay.has(day)) byDay.set(day, dayBucket);
+        const subtitle = (session.section_title ?? "").trim();
+        if (subtitle && !dayBucket.bullets.includes(subtitle)) {
+          dayBucket.bullets.push(subtitle);
+        }
       });
     });
+    Array.from(byDay.entries())
+      .sort((a, b) => a[0] - b[0])
+      .forEach(([, v]) => {
+        contentItems.push({
+          title: v.title,
+          duration: v.time,
+          bullets: v.bullets,
+        });
+      });
   }
 
   // Fallback static content if nothing from API

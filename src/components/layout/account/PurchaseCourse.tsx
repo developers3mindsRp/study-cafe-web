@@ -1,17 +1,22 @@
 import CourseCard from "../../CourseCard";
 import { useUserPurchases } from "@/hooks/usePurchases";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import type { MyCourseCardModel } from "@/components/CourseCard";
 
 export default function MyCourses() {
   const { data: purchases, isLoading, error } = useUserPurchases();
 
-  const courses = (purchases ?? []).map((p) => ({
-    image: resolveApiAssetUrl((p.course as any)?.thumbnail || (p.course as any)?.thumbnail_url) || "/images/home/f1.jpg",
+  const courses: MyCourseCardModel[] = (purchases ?? []).map((p) => ({
+    image:
+      resolveApiAssetUrl((p.course as any)?.thumbnail || (p.course as any)?.thumbnail_url) ||
+      "/images/home/f1.jpg",
     title: p.course?.title ?? "Untitled Course",
     lessons: (p.course as any)?.totalLessons ?? 0,
     completed: p.completedLessons?.length ?? 0,
     progress: p.progress ?? 0,
     courseId: p.courseId,
+    slug: p.course?.slug ?? null,
+    enrolledBatch: p.enrolledBatch ?? null,
   }));
 
   return (
