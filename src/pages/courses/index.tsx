@@ -3,6 +3,7 @@ import { PublicLayout } from '@/components/layout';
 import HeroSection_courses from '@/components/layout/course-listing/HeroSection.course';
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Breadcrumbs from '@/components/Breadcrumb';
+import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { getCourseCats, getCoursesByCategory, CourseQueryParams } from '@/services/platform.service';
 import type { CourseCat, PaginatedCourses } from '@/types/models.types';
 
@@ -25,7 +26,9 @@ export default function Courses({ cats, initialCourses, initialQuery }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  return runWithServerApiBase(ctx.req, async () => {
+  const { query } = ctx;
   // Parse all filter/pagination params from the URL
   // Use null (not undefined) for absent values — Next.js cannot serialize undefined in props
   const category = typeof query.category === 'string' && query.category ? query.category : null;
@@ -62,4 +65,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
       },
     };
   }
+  });
 };

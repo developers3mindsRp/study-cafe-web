@@ -1,18 +1,44 @@
-import Image from "next/image";
 import Link from "next/link";
-import { useMembershipCourses, useSubscriptionStatus } from "@/hooks/usePurchases";
-import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import {
+  useMembershipCourses,
+  useSubscriptionStatus,
+  useOverallProgress,
+} from "@/hooks/usePurchases";
 import type { MembershipCourseItem } from "@/types/models.types";
+import CourseCard, { type MyCourseCardModel } from "@/components/CourseCard";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import type { OverallProgressRow } from "@/services/progress.service";
+import Image from "next/image";
 
-function CourseCard({ course }: { course: MembershipCourseItem }) {
-  const img =
-    resolveApiAssetUrl(course.thumbnail_url ?? "") ||
-    "/images/home/f1.jpg";
+function membershipToCardModel(
+  course: MembershipCourseItem,
+  prog?: OverallProgressRow
+): MyCourseCardModel {
+  return {
+    image: resolveApiAssetUrl(course.thumbnail_url ?? "") || "/images/home/f1.jpg",
+    title: course.title,
+    lessons: prog?.totalSessions ?? 0,
+    completed: prog?.completedSessions ?? 0,
+    progress: prog?.percent ?? 0,
+    courseId: String(course.id),
+    slug: course.slug ?? String(course.id),
+    enrolledBatch: null,
+  };
+}
 
+function hasStarted(prog?: OverallProgressRow) {
+  if (!prog) return false;
+  if (prog.percent > 0) return true;
+  return prog.status === "in_progress" || prog.status === "completed";
+}
+
+function MembershipStartCard({ course }: { course: MembershipCourseItem }) {
+  const img = resolveApiAssetUrl(course.thumbnail_url ?? "") || "/images/home/f1.jpg";
   return (
     <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
       <div className="relative w-full h-[180px] md:h-[180px] xl:h-[220px]">
-        <Image src={img} alt={course.title} fill className="object-cover" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <Image fill src={img} alt={course.title} className="h-full w-full object-cover" />
         {course.category && (
           <span className="absolute top-2 left-3 bg-[#09339B] text-white px-2 py-0.5 rounded text-xs font-medium mt-4">
             {course.category}
@@ -25,8 +51,11 @@ function CourseCard({ course }: { course: MembershipCourseItem }) {
           {course.title}
         </h3>
         <div className="flex justify-between items-center mt-auto">
-          <Link href={`/course/${course.slug || course.id}`}>
-            <button className="bg-white border border-[#09339B] text-[#09339B] px-4 py-1 md:py-2 rounded-md text-sm md:text-base font-medium hover:bg-[#09339B] hover:text-white transition-colors duration-300">
+          <Link href={`/learn/${encodeURIComponent(course.slug || String(course.id))}`}>
+            <button
+              type="button"
+              className="bg-white border border-[#09339B] text-[#09339B] px-4 py-1 md:py-2 rounded-md text-sm md:text-base font-medium hover:bg-[#09339B] hover:text-white transition-colors duration-300"
+            >
               Start Learning
             </button>
           </Link>
@@ -39,6 +68,7 @@ function CourseCard({ course }: { course: MembershipCourseItem }) {
 export default function MembershipCourses() {
   const { data: planGroups, isLoading } = useMembershipCourses();
   const { data: subscription, isLoading: subLoading } = useSubscriptionStatus();
+  const { data: overall } = useOverallProgress();
 
   const loading = isLoading || subLoading;
   const hasMembership = subscription?.hasActiveMembership;
@@ -92,6 +122,11 @@ export default function MembershipCourses() {
 
   const groups = planGroups ?? [];
 
+  const progressById = new Map<string, OverallProgressRow>();
+  for (const row of overall ?? []) {
+    progressById.set(String(row.courseId), row);
+  }
+
   // Flatten all courses across all plans for the "no courses" check
   const totalCourses = groups.reduce((acc, g) => acc + g.courses.length, 0);
 
@@ -129,9 +164,17 @@ export default function MembershipCourses() {
                 </p>
               ) : (
                 <div className="sm:grid grid-cols-2 md:grid-cols-2 gap-8">
-                  {group.courses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
-                  ))}
+                  {group.courses.map((course) => {
+                    const prog = progressById.get(String(course.id));
+                    if (hasStarted(prog)) {
+                      return (
+                        <CourseCard key={course.id} course={membershipToCardModel(course, prog)} />
+                      );
+                    }
+                    return (
+                      <MembershipStartCard key={course.id} course={course} />
+                    );
+                  })}
                 </div>
               )}
             </div>

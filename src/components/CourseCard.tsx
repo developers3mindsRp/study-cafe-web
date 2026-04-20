@@ -1,7 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback } from "react";
 import type { EnrolledBatchInfo } from "@/types/models.types";
+import { downloadCertificate } from "@/services/progress.service";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import Image from "next/image";
 
 export type MyCourseCardModel = {
   image: string;
@@ -12,6 +16,8 @@ export type MyCourseCardModel = {
   courseId?: string;
   slug?: string | null;
   enrolledBatch?: EnrolledBatchInfo | null;
+  /** Default "Continue learning"; use "Start learning" for membership courses not yet opened */
+  primaryCtaLabel?: string;
 };
 
 function formatDisplayDate(d?: string | null) {
@@ -28,14 +34,29 @@ function formatDisplayDate(d?: string | null) {
   }
 }
 
-function courseHref(course: MyCourseCardModel) {
+function sellingPageHref(course: MyCourseCardModel) {
   const seg = course.slug?.trim() || course.courseId;
   if (!seg) return "/courses";
   return `/course/${encodeURIComponent(seg)}`;
 }
 
+function learnHref(course: MyCourseCardModel) {
+  const seg = course.slug?.trim() || course.courseId;
+  if (!seg) return "/courses";
+  return `/learn/${encodeURIComponent(seg)}`;
+}
+
 export default function CourseCard({ course }: { course: MyCourseCardModel }) {
-  const href = courseHref(course);
+  const detailHref = sellingPageHref(course);
+  const learningHref = learnHref(course);
+  const onCertDownload = useCallback(async () => {
+    if (!course.courseId) return;
+    try {
+      await downloadCertificate(course.courseId);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [course.courseId]);
   const phase = course.enrolledBatch?.phase;
   const isUpcomingLive = phase === "upcoming";
   const isLiveCohort = phase === "live";
@@ -45,13 +66,20 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
   const isFullyComplete =
     course.lessons > 0 && course.completed >= course.lessons;
 
+  const imageSrc =
+    resolveApiAssetUrl(course.image) || "/images/home/f1.jpg";
+
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-      <div className="xl:h-[220px] w-full overflow-hidden">
-        <img
-          src={course.image}
+      <div className="relative h-[180px] w-full overflow-hidden md:h-[200px] xl:h-[220px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <Image
+          fill
+          src={imageSrc}
           alt={course.title}
           className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -123,7 +151,7 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
           {isUpcomingLive ? (
             <>
               <Link
-                href={href}
+                href={detailHref}
                 className="flex-1 rounded-md bg-[#09339B] px-2 py-2 text-center text-[16px] font-medium text-white hover:bg-[#072a7a] md:py-2"
               >
                 View course & schedule
@@ -139,7 +167,7 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
                 </a>
               ) : (
                 <Link
-                  href={href}
+                  href={detailHref}
                   className="flex flex-1 items-center justify-center rounded-md border border-[#09339B] px-2 py-2 text-center text-[15px] font-medium text-[#09339B] hover:bg-[#f0f4ff]"
                 >
                   Details
@@ -149,13 +177,14 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
           ) : isFullyComplete ? (
             <>
               <Link
-                href={href}
+                href={learningHref}
                 className="line-clamp-1 flex-1 rounded-md bg-[#09339B] px-1 py-2 text-center text-[16px] text-white md:py-2"
               >
                 Review course
               </Link>
               <button
                 type="button"
+                onClick={onCertDownload}
                 className="flex flex-1 items-center justify-center gap-2 rounded-md border border-[#09339B] py-2 text-[16px] text-[#09339B] transition hover:bg-[#f0f4ff]"
               >
                 <img src="/images/download-1.png" alt="" className="h-4 w-4" />
@@ -165,13 +194,13 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
           ) : (
             <>
               <Link
-                href={href}
+                href={learningHref}
                 className="line-clamp-1 flex-1 rounded-md bg-[#09339B] py-2 text-center text-[16px] text-white"
               >
-                Continue learning
+                {course.primaryCtaLabel ?? "Continue learning"}
               </Link>
               <Link
-                href={href}
+                href={detailHref}
                 className="flex-1 rounded-md border border-[#09339B] py-2 text-center text-[16px] text-[#09339B]"
               >
                 Details

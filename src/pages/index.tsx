@@ -8,6 +8,7 @@ import Testimonials from '@/components/layout/home/Testimonial.home';
 import BlogSection from '@/components/layout/home/BlogSection.home';
 import FAQSection from '@/components/layout/home/FaqSection.home';
 import Learning from '@/components/layout/home/Learning.home';
+import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { getHomePageData, getMemberships } from '@/services/platform.service';
 import type { HomePageData, Membership } from '@/types/models.types';
 
@@ -31,21 +32,25 @@ export default function Home({ homePageData, memberships }: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  let homePageData: HomePageData | null = null;
-  let memberships: Membership[] | null = null;
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (
+  ctx
+) => {
+  return runWithServerApiBase(ctx.req, async () => {
+    let homePageData: HomePageData | null = null;
+    let memberships: Membership[] | null = null;
 
-  try {
-    [homePageData, memberships] = await Promise.all([
-      getHomePageData(),
-      getMemberships(),
-    ]);
-  } catch (error) {
-    console.error('Error fetching home data:', error);
-  }
-  console.log("homePageData", homePageData, memberships);
+    try {
+      [homePageData, memberships] = await Promise.all([
+        getHomePageData(),
+        getMemberships(),
+      ]);
+    } catch (error) {
+      console.error('Error fetching home data:', error);
+    }
+    console.log("homePageData", homePageData, memberships);
 
-  return {
-    props: { homePageData, memberships },
-  };
+    return {
+      props: { homePageData, memberships },
+    };
+  });
 };

@@ -10,9 +10,16 @@ import {
   clearAuthData,
 } from '@/utils/auth.utils';
 import { ApiError } from '@/types/api.types';
+import { getServerApiBaseFromContext } from '@/lib/apiBase';
 
 // ================= BASE URL =================
 const getApiBaseUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    return '/api';
+  }
+  const fromSsrContext = getServerApiBaseFromContext();
+  if (fromSsrContext) return fromSsrContext;
+
   if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL)
     return process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -39,6 +46,8 @@ const axiosInstance: AxiosInstance = axios.create({
 // ================= REQUEST INTERCEPTOR =================
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    config.baseURL = getApiBaseUrl();
+
     const token = getToken();
 
     if (token && config.headers) {

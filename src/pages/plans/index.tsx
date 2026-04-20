@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import { PublicLayout } from "@/components/layout";
 import MembershipPricing from "@/components/layout/home/Member.home";
 import PlansComparisonTable from "@/components/layout/membership/PlanCompare";
+import { runWithServerApiBase } from "@/lib/serverApiContext";
 import { getMemberships } from "@/services/platform.service";
 import type { Membership } from "@/types/models.types";
 
@@ -18,12 +19,16 @@ export default function Membership({ memberships }: PlansPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<PlansPageProps> = async () => {
-  let memberships: Membership[] | null = null;
-  try {
-    memberships = await getMemberships();
-  } catch (error) {
-    console.error("Error fetching memberships:", error);
-  }
-  return { props: { memberships } };
+export const getServerSideProps: GetServerSideProps<PlansPageProps> = async (
+  ctx
+) => {
+  return runWithServerApiBase(ctx.req, async () => {
+    let memberships: Membership[] | null = null;
+    try {
+      memberships = await getMemberships();
+    } catch (error) {
+      console.error("Error fetching memberships:", error);
+    }
+    return { props: { memberships } };
+  });
 };

@@ -5,6 +5,7 @@ import { PublicLayout } from '@/components/layout';
 import BannerSection_blog from '@/components/layout/blog/BannerSection';
 import Blog_list from '@/components/layout/blog/BlogList';
 import Breadcrumbs from '@/components/Breadcrumb';
+import { runWithServerApiBase } from '@/lib/serverApiContext';
 import {
   getArticles,
   getArticleCategories,
@@ -93,40 +94,45 @@ export default function Blogs({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<BlogsPageProps> = async ({ query }) => {
-  const page = Math.max(1, parseInt(String(query.page || '1'), 10));
-  const search = query.search ? String(query.search).trim() : '';
-  const category = query.category ? String(query.category).trim() : '';
+export const getServerSideProps: GetServerSideProps<BlogsPageProps> = async (
+  ctx
+) => {
+  return runWithServerApiBase(ctx.req, async () => {
+    const { query } = ctx;
+    const page = Math.max(1, parseInt(String(query.page || '1'), 10));
+    const search = query.search ? String(query.search).trim() : '';
+    const category = query.category ? String(query.category).trim() : '';
 
-  try {
-    const [articlesData, categoriesData] = await Promise.all([
-      getArticles({ page, limit: 6, search: search || undefined, category: category || undefined }),
-      getArticleCategories(),
-    ]);
+    try {
+      const [articlesData, categoriesData] = await Promise.all([
+        getArticles({ page, limit: 6, search: search || undefined, category: category || undefined }),
+        getArticleCategories(),
+      ]);
 
-    return {
-      props: {
-        articles: articlesData.data || [],
-        categories: categoriesData || [],
-        currentPage: articlesData.page || page,
-        totalPages: articlesData.totalPages || 1,
-        total: articlesData.total || 0,
-        search,
-        category,
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching blogs data:', error);
-    return {
-      props: {
-        articles: [],
-        categories: [],
-        currentPage: 1,
-        totalPages: 1,
-        total: 0,
-        search,
-        category,
-      },
-    };
-  }
+      return {
+        props: {
+          articles: articlesData.data || [],
+          categories: categoriesData || [],
+          currentPage: articlesData.page || page,
+          totalPages: articlesData.totalPages || 1,
+          total: articlesData.total || 0,
+          search,
+          category,
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching blogs data:', error);
+      return {
+        props: {
+          articles: [],
+          categories: [],
+          currentPage: 1,
+          totalPages: 1,
+          total: 0,
+          search,
+          category,
+        },
+      };
+    }
+  });
 };

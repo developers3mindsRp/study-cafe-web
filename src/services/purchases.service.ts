@@ -1,5 +1,5 @@
 import axiosInstance from '@/lib/axios';
-import { Purchase, UserCourse, CourseProgress, LessonProgress } from '@/types/models.types';
+import { Purchase, UserCourse } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockPurchasesApi } from '@/mocks/api.mock';
@@ -53,81 +53,14 @@ export const getPurchaseDetails = async (id: string): Promise<Purchase> => {
   return response.data.data;
 };
 
-// Check if user has purchased a course
+/** True if user may access course content (purchase or membership). Uses GET /access/check. */
 export const checkPurchaseStatus = async (courseId: string): Promise<boolean> => {
-  // Use mock API if configured
   if (shouldUseMock()) {
     return mockPurchasesApi.checkPurchaseStatus(courseId);
   }
-  
-  const response = await axiosInstance.get<ApiResponse<{ purchased: boolean }>>(
-    `/purchases/check/${courseId}`
+  const response = await axiosInstance.get<ApiResponse<{ allowed: boolean }>>(
+    `/access/check?courseId=${encodeURIComponent(courseId)}`
   );
-  
-  return response.data.data.purchased;
-};
-
-// Get course progress
-export const getCourseProgress = async (courseId: string): Promise<CourseProgress> => {
-  // Use mock API if configured
-  if (shouldUseMock()) {
-    return mockPurchasesApi.getCourseProgress(courseId);
-  }
-  
-  const response = await axiosInstance.get<ApiResponse<CourseProgress>>(
-    `/progress/course/${courseId}`
-  );
-  
-  return response.data.data;
-};
-
-// Update lesson progress
-export const updateLessonProgress = async (
-  lessonId: string,
-  watchTime: number
-): Promise<LessonProgress> => {
-  // Use mock API if configured
-  if (shouldUseMock()) {
-    return mockPurchasesApi.updateLessonProgress(lessonId, watchTime);
-  }
-  
-  const response = await axiosInstance.post<ApiResponse<LessonProgress>>(
-    '/progress/lesson',
-    {
-      lessonId,
-      watchTime,
-    }
-  );
-  
-  return response.data.data;
-};
-
-// Mark lesson as complete
-export const markLessonComplete = async (lessonId: string): Promise<LessonProgress> => {
-  // Use mock API if configured
-  if (shouldUseMock()) {
-    return mockPurchasesApi.markLessonComplete(lessonId);
-  }
-  
-  const response = await axiosInstance.post<ApiResponse<LessonProgress>>(
-    '/progress/lesson/complete',
-    { lessonId }
-  );
-  
-  return response.data.data;
-};
-
-// Get overall user progress
-export const getOverallProgress = async (): Promise<CourseProgress[]> => {
-  // Use mock API if configured
-  if (shouldUseMock()) {
-    return mockPurchasesApi.getOverallProgress();
-  }
-  
-  const response = await axiosInstance.get<ApiResponse<CourseProgress[]>>(
-    '/progress/overall'
-  );
-  
-  return response.data.data;
+  return response.data.data?.allowed ?? false;
 };
 

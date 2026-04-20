@@ -9,9 +9,10 @@ import GSTRCoursePage from "@/components/layout/course/CourseDetail";
 import Gallery from "@/components/layout/course/Gallerysection";
 import TrendingCourses from "@/components/layout/course/TrendingCourses";
 import Breadcrumbs from "@/components/Breadcrumb";
+import { runWithServerApiBase } from "@/lib/serverApiContext";
 import {
-  getCourseBySlug,
-  getCourseSessionsBySlug,
+  getCourseBySlugOrId,
+  getCourseSessionsForResolvedCourse,
   getPublishedCourses,
 } from "@/services/platform.service";
 import type {
@@ -59,28 +60,42 @@ export default function CoursePage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<CoursePageProps> = async ({
-  params,
-}) => {
-  const slug = params?.slug as string;
+export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
+  ctx
+) => {
+  return runWithServerApiBase(ctx.req, async () => {
+    const segment = ctx.params?.slug as string;
+    if (!segment) return { notFound: true };
 
-  const [course, allCourses] = await Promise.all([
-    getCourseBySlug(slug),
-    getPublishedCourses(),
-  ]);
+    const course = await getCourseBySlugOrId(segment);
+    if (!course) return { notFound: true };
 
-  const batches = course ? await getCourseSessionsBySlug(slug) : [];
+    const isNumericSegment = /^\d+$/.test(segment);
+    const canonical = course.slug?.trim();
+    if (isNumericSegment && canonical) {
+      return {
+        redirect: {
+          destination: `/course/${encodeURIComponent(canonical)}`,
+          permanent: false,
+        },
+      };
+    }
 
-  // Exclude the current course from trending
-  const trendingCourses = allCourses
-    .filter((c) => String(c.id) !== String(course?.id))
-    .slice(0, 6);
+    const [batches, allCourses] = await Promise.all([
+      getCourseSessionsForResolvedCourse(course),
+      getPublishedCourses(),
+    ]);
 
-  return {
-    props: {
-      course,
-      batches,
-      trendingCourses,
-    },
-  };
+    const trendingCourses = allCourses
+      .filter((c) => String(c.id) !== String(course?.id))
+      .slice(0, 6);
+
+    return {
+      props: {
+        course,
+        batches,
+        trendingCourses,
+      },
+    };
+  });
 };

@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
 import Image from "next/image";
-type CertifyModalProps = {
-  onClose?: () => void
-}
 
-export default function Certificate({ onClose }: CertifyModalProps) {
+type CertifyModalProps = {
+  onClose?: () => void;
+  onDownload?: () => void | Promise<void>;
+};
+
+export default function Certificate({ onClose, onDownload }: CertifyModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -45,8 +46,11 @@ export default function Certificate({ onClose }: CertifyModalProps) {
 
             <div className="flex justify-center gap-3 pt-3 ">
             <button
-              type="submit"
+              type="button"
               className="px-4 py-2 bg-[#09339B] text-white rounded"
+              onClick={() => {
+                void onDownload?.();
+              }}
             >
               Download
             </button>

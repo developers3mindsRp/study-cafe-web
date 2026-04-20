@@ -299,6 +299,28 @@ export const getCourseBySlug = async (slug: string): Promise<CoursePublicDetail 
   }
 };
 
+/** Fetch a single published course by numeric database id */
+export const getCourseById = async (id: string | number): Promise<CoursePublicDetail | null> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<CoursePublicDetail>>(
+      `/courses/${encodeURIComponent(String(id))}`
+    );
+    return response.data.data ?? null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Resolve a URL segment: all digits → GET /courses/:id, otherwise → GET /courses/slug/:slug
+ */
+export const getCourseBySlugOrId = async (segment: string): Promise<CoursePublicDetail | null> => {
+  const s = String(segment || "").trim();
+  if (!s) return null;
+  if (/^\d+$/.test(s)) return getCourseById(s);
+  return getCourseBySlug(s);
+};
+
 /** Fetch batches + sessions + recordings for a published course by slug */
 export const getCourseSessionsBySlug = async (slug: string): Promise<CourseBatch[]> => {
   try {
@@ -317,8 +339,14 @@ export const getCourseSessionsBySlug = async (slug: string): Promise<CourseBatch
   }
 };
 
-/** @deprecated Use getCourseBySlug instead */
-export const getCourseById = getCourseBySlug as unknown as (id: string | number) => Promise<CoursePublicDetail | null>;
+/** Sessions for marketing page — requires a slug; courses without slug return []. */
+export async function getCourseSessionsForResolvedCourse(
+  course: CoursePublicDetail
+): Promise<CourseBatch[]> {
+  const slug = course.slug?.trim();
+  if (!slug) return [];
+  return getCourseSessionsBySlug(slug);
+}
 
 /** @deprecated Use getCourseSessionsBySlug instead */
 export const getCourseSessions = getCourseSessionsBySlug as unknown as (id: string | number) => Promise<CourseBatch[]>;

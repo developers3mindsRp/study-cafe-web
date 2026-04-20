@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as purchasesService from '@/services/purchases.service';
 import * as userService from '@/services/user.service';
+export {
+  useCourseProgress,
+  useOverallProgress,
+  useHeartbeat,
+  useMarkSessionComplete,
+} from '@/hooks/useProgress';
 import * as authService from '@/services/auth.service';
 import { queryKeys } from '@/lib/react-query';
 import { setUserData } from '@/utils/auth.utils';
@@ -68,71 +74,6 @@ export const usePurchaseDetails = (id: string) => {
     queryKey: queryKeys.purchases.detail(id),
     queryFn: () => purchasesService.getPurchaseDetails(id),
     enabled: !!id,
-  });
-};
-
-// Hook to get course progress
-export const useCourseProgress = (courseId: string) => {
-  return useQuery({
-    queryKey: queryKeys.progress.course(courseId),
-    queryFn: () => purchasesService.getCourseProgress(courseId),
-    enabled: !!courseId,
-    staleTime: 1 * 60 * 1000, // 1 minute
-  });
-};
-
-// Hook to update lesson progress
-export const useUpdateProgress = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ lessonId, watchTime }: { lessonId: string; watchTime: number }) =>
-      purchasesService.updateLessonProgress(lessonId, watchTime),
-    onSuccess: (data) => {
-      // Invalidate course progress to reflect the update
-      queryClient.invalidateQueries({ 
-        queryKey: queryKeys.progress.course(data.courseId) 
-      });
-      queryClient.invalidateQueries({ 
-        queryKey: queryKeys.purchases.lists() 
-      });
-    },
-  });
-};
-
-// Hook to mark lesson as complete with optimistic update
-export const useMarkComplete = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (lessonId: string) => purchasesService.markLessonComplete(lessonId),
-    onMutate: async (lessonId) => {
-      // Optionally show celebration UI before API call completes
-      console.log('Marking lesson complete:', lessonId);
-    },
-    onSuccess: (data) => {
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({ 
-        queryKey: queryKeys.progress.course(data.courseId) 
-      });
-      queryClient.invalidateQueries({ 
-        queryKey: queryKeys.purchases.lists() 
-      });
-      queryClient.invalidateQueries({ 
-        queryKey: queryKeys.user.stats() 
-      });
-      
-      console.log('Lesson marked complete!');
-    },
-  });
-};
-
-// Hook to get overall user progress
-export const useOverallProgress = () => {
-  return useQuery({
-    queryKey: [...queryKeys.progress.all, 'overall'],
-    queryFn: purchasesService.getOverallProgress,
-    staleTime: 2 * 60 * 1000,
   });
 };
 
