@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { changePassword } from "@/services/auth.service";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 type ChangePasswordModalProps = {
   onClose?: () => void;
@@ -14,6 +15,11 @@ export default function ChangePasswordModal({ onClose }: ChangePasswordModalProp
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+ 
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,37 +67,66 @@ export default function ChangePasswordModal({ onClose }: ChangePasswordModalProp
           </div>
         ) : (
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="text-sm font-medium">Current Password</label>
-              <input
-                type="password"
-                value={current}
-                onChange={(e) => setCurrent(e.target.value)}
-                className="w-full mt-1 px-3 py-2 border rounded"
-                placeholder="********"
-              />
-            </div>
+              <div>
+                <label className="text-sm font-medium">Current Password</label>
+
+                <div className="relative mt-1">
+                  <input
+                    type={showCurrent ? "text" : "password"}
+                    value={current}
+                    onChange={(e) => setCurrent(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border rounded"
+                    placeholder="Enter your current password"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrent(!showCurrent)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {showCurrent ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
 
             <div>
               <label className="text-sm font-medium">New Password</label>
-              <input
-                type="password"
-                value={newPw}
-                onChange={(e) => setNewPw(e.target.value)}
-                className="w-full mt-1 px-3 py-2 border rounded"
-                placeholder="Minimum 8 characters"
-              />
+                <div className="relative mt-2">
+                  <input
+                    type={showNew ? "text" : "password"}  
+                    value={newPw}
+                    onChange={(e) => setNewPw(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border rounded"
+                    placeholder="Minimum 8 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNew(!showNew)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {showNew ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
+                  </button>
+    </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Confirm New Password</label>
-              <input
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                className="w-full mt-1 px-3 py-2 border rounded"
-                placeholder="Re-enter new password"
-              />
+                <div className="relative mt-1">
+                  <label className="text-sm font-medium">Confirm New Password</label>
+                  <input
+                    type={showConfirm ? "text" : "password"}  
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border rounded"
+                    placeholder="Re-enter new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    className="absolute right-3 top-1/2 -translate-y-0 text-gray-500"
+                  >
+                    {showConfirm ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
+                  </button>
+      </div>
             </div>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}

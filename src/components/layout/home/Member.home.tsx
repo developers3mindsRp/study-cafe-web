@@ -146,9 +146,8 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
       return (
         <div
           ref={ref}
-          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl h-[480px] p-2 ${
-            highlight ? "scale-110 z-10" : ""
-          }`}
+          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl  min-h-[480px] p-2 ${highlight ? "scale-110 z-10" : ""
+            }`}
         >
           {highlight && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[#09339B] text-[16px] font-bold px-4 py-1">
@@ -157,42 +156,37 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
           )}
 
           <div
-            className={`${
-              highlight
-                ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-8 rounded-[10px] p-4"
-                : "bg-white p-6"
-            }`}
+            className={`${highlight
+              ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-8 rounded-[10px] p-4"
+              : "bg-white p-6"
+              }`}
           >
             <div className="flex items-center justify-between">
               <div>
                 <h3
-                  className={`text-[26px] font-semibold ${
-                    highlight ? "text-white" : "text-[#1F2937]"
-                  }`}
+                  className={`text-[26px] font-semibold ${highlight ? "text-white" : "text-[#1F2937]"
+                    }`}
                 >
                   {plan.name}
                 </h3>
                 <p
-                  className={`text-[21px] font-bold leading-tight mt-1 ${
-                    highlight ? "text-white" : "text-black"
-                  }`}
+                  className={`text-[21px] font-bold leading-tight mt-1 ${highlight ? "text-white" : "text-black"
+                    }`}
                 >
                   {priceStr}
                 </p>
                 <span
-                  className={`text-sm ${
-                    highlight ? "text-blue-100" : "text-gray-500"
-                  }`}
+                  className={`text-sm ${highlight ? "text-blue-100" : "text-gray-500"
+                    }`}
                 >
                   {durationStr}
                 </span>
               </div>
               <button
-                className={`px-5 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition mt-14 ${
-                  highlight
-                    ? "bg-white text-[#09339B] hover:bg-blue-50"
-                    : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
-                }`}
+                className={`px-5 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition mt-14 ${highlight
+                  ? "bg-white text-[#09339B] hover:bg-blue-50"
+                  : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                  }`}
                 onClick={() => (window.location.href = `/plans/${plan.slug}`)}
               >
                 Buy Membership
@@ -205,11 +199,15 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
           )}
 
           {features.length > 0 && (
-            <ul className="px-6 py-6 space-y-4 text-gray-400 text-[12px]">
+            <ul className="px-6 py-6 space-y-2 text-gray-400 text-[12px]">
               {features.map((f, i) => (
                 <li key={i} className="flex gap-3">
                   <span>
-                    <img className="shrink-0" src="/images/tick.svg" alt="" />
+                    <img
+                      className="w-6 h-6 min-w-[24px] min-h-[24px] object-contain flex-shrink-0"
+                      src="/images/tick.svg"
+                      alt=""
+                    />
                   </span>
                   {f}
                 </li>
@@ -224,9 +222,8 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     return (
       <div
         ref={ref}
-        className={`flex flex-col h-full relative rounded-2xl overflow-hidden bg-white shadow-xl p-2 ${
-          highlight ? "-mt-4 scale-105 z-10" : ""
-        }`}
+        className={`flex flex-col h-full relative rounded-2xl overflow-hidden bg-white shadow-xl p-2 ${highlight ? "-mt-4 scale-105 z-10" : ""
+          }`}
       >
         {highlight && (
           <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[#09339B] text-[18px] xl:text-[24px] font-bold px-4 py-1">
@@ -235,42 +232,37 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
         )}
 
         <div
-          className={`${
-            highlight
-              ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10 rounded-[10px] p-4"
-              : "bg-white p-6"
-          } flex-shrink-0`}
+          className={`${highlight
+            ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10 rounded-[10px] p-4"
+            : "bg-white p-6"
+            } flex-shrink-0`}
         >
           <div className="flex items-center justify-between">
             <div>
               <h3
-                className={`text-[26px] font-semibold ${
-                  highlight ? "text-white" : "text-[#1F2937]"
-                }`}
+                className={`text-[26px] font-semibold ${highlight ? "text-white" : "text-[#1F2937]"
+                  }`}
               >
                 {plan.name}
               </h3>
               <p
-                className={`xl:text-[32px] font-bold leading-tight mt-1 ${
-                  highlight ? "text-white" : "text-black"
-                }`}
+                className={`xl:text-[32px] font-bold leading-tight mt-1 ${highlight ? "text-white" : "text-black"
+                  }`}
               >
                 {priceStr}
               </p>
               <span
-                className={`text-sm ${
-                  highlight ? "text-blue-100" : "text-gray-500"
-                }`}
+                className={`text-sm ${highlight ? "text-blue-100" : "text-gray-500"
+                  }`}
               >
                 {durationStr}
               </span>
             </div>
             <button
-              className={`mt-14 px-5 py-2 rounded-[10px] xl:text-[20px] font-medium whitespace-nowrap transition ${
-                highlight
-                  ? "bg-white text-[#09339B] hover:bg-blue-50"
-                  : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
-              }`}
+              className={`mt-14 px-5 py-2 rounded-[10px] xl:text-[20px] font-medium whitespace-nowrap transition ${highlight
+                ? "bg-white text-[#09339B] hover:bg-blue-50"
+                : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
+                }`}
               onClick={() => (window.location.href = `/plans/${plan.slug}`)}
             >
               Buy Membership
@@ -285,9 +277,14 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
             {features.map((f, i) => (
               <li key={i} className="flex gap-3">
                 <span>
-                  <img className="shrink-0" src="/images/tick.svg" alt="" />
+                  <img
+                    className="w-6 h-6 min-w-[24px] min-h-[24px] object-contain flex-shrink-0"
+                    src="/images/tick.svg"
+                    alt=""
+                  />
+
                 </span>
-                {f}
+                <p className="text-md"> {f}</p>
               </li>
             ))}
           </ul>
