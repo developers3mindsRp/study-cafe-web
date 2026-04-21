@@ -16,7 +16,9 @@ export default function SignUpPage() {
   const router = useRouter();
   const register = useRegister();
 
-  const [showPwd, setShowPwd] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -277,7 +279,7 @@ const countries = countryList.getNames();
         <input
           id="password"
           name="password"
-          type={showPwd ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
           value={form.password}
           onChange={handleChange}
           required
@@ -286,10 +288,10 @@ const countries = countryList.getNames();
         />
         <button
           type="button"
-          onClick={() => setShowPwd((prev) => !prev)}
+                  onClick={() => setShowPassword((prev) => !prev)}
           className="absolute inset-y-0 right-3 flex items-center text-gray-500"
         >
-          {showPwd ? (
+                  {showPassword ? (
              <EyeIcon className="w-5 h-5"  />
           
           ) : (
@@ -297,27 +299,45 @@ const countries = countryList.getNames();
            
           )}
           <span className="sr-only">
-            {showPwd ? "Hide password" : "Show password"}
+                    {showPassword ? "Hide password" : "Show password"}
           </span>
         </button>
       </div>
     </div>
 
           <div className="mb-4">
-            <label htmlFor="confirmPassword" className="block mb-1 md:text-[18px]">
+            <label htmlFor="confirmPassword" className="block mb-1 md:text-[16px]">
               Confirm password <span className="text-red-600">*</span>
             </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showPwd ? "text" : "password"}
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
-              placeholder="Confirm password"
-              autoComplete="new-password"
-            />
+              <div className="relative w-full">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full border px-3 py-1"
+                  placeholder="Confirm password"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeIcon className="w-5 h-5" />
+
+                  ) : (
+                    <EyeSlashIcon className="w-5 h-5" />
+
+                  )}
+                  <span className="sr-only">
+                    {showConfirmPassword ? "Hide password" : "Show password"}
+                  </span>
+                </button>
+         </div>
           </div>
   
             <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#AFAFAF]">
