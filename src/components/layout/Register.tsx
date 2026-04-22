@@ -9,7 +9,8 @@ import type { ApiError } from "@/types/api.types";
 import 'react-phone-number-input/style.css';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
  import IndianStatesList  from "indian-states-cities-list";
- import countryList from "country-list";
+import countryList from "country-list";
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 
 export default function SignUpPage() {
@@ -34,6 +35,12 @@ export default function SignUpPage() {
   });
   const [errors, setErrors] = useState<string | null>(null);
   const [phone, setPhone] = useState<string | undefined>(undefined);
+  const handlePhoneChange = (value: string | undefined) => {
+    setForm(prev => ({
+      ...prev,
+      phone: value || "",
+    }));
+  };
   const professions = [
     "Accountant",
     "B.Com",
@@ -169,8 +176,8 @@ const countries = countryList.getNames();
             <label className="block mb-1">Mobile Number <span className="text-red-600">*</span></label>
             <PhoneInput
                 placeholder="Enter Mobile number"
-                value={phone}
-                onChange={setPhone}
+                value={form.phone}
+                onChange={handlePhoneChange}
                 defaultCountry="IN"
                 
                 limitMaxLength={true} 

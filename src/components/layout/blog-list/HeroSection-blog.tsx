@@ -42,10 +42,10 @@ const HeroSection_blog = ({
   return (
     <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white pb-4">
       {/* Title */}
-      <h1 className="text-[20px] md:text-[30px] xl:text-[40px] font-medium text-gray-900 leading-snug pt-4">
+      <h1 className="text-[20px] md:text-[24px] xl:text-[28px] font-medium text-gray-900 leading-snug pt-4">
         {subtitle ? (
           <>
-            {title}: <br className="hidden md:block" /> {subtitle}
+            {title}: <br className="hidden xl:block" /> {subtitle}
           </>
         ) : (
           title
