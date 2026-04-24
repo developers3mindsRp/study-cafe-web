@@ -8,10 +8,37 @@ import { useRegister } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
 import 'react-phone-number-input/style.css';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
- import IndianStatesList  from "indian-states-cities-list";
+import IndianStatesList  from "indian-states-cities-list";
 import countryList from "country-list";
 import { isValidPhoneNumber } from 'react-phone-number-input';
 
+const FIELD_ERR_CLASS = "border border-red-500";
+const INPUT_CLASS = "w-full border border-gray-300 px-3 py-1";
+const labelCls = (hasErr: boolean) => (hasErr ? `${INPUT_CLASS} ${FIELD_ERR_CLASS}` : INPUT_CLASS);
+
+type FieldName =
+  | "fullName" | "email" | "phone" | "profession" | "company" | "designation"
+  | "city" | "state" | "country" | "password" | "confirmPassword" | "terms";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function mapServerFieldToForm(field: string): FieldName | null {
+  if (field === "name" || field.endsWith(".name")) return "fullName";
+  const simple = field.includes(".") ? (field.split(".").pop() as string) : field;
+  if (simple === "name") return "fullName";
+  const map: Partial<Record<string, FieldName>> = {
+    email: "email",
+    phone: "phone",
+    profession: "profession",
+    company: "company",
+    designation: "designation",
+    city: "city",
+    state: "state",
+    country: "country",
+    password: "password",
+  };
+  return map[simple] ?? null;
+}
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -19,6 +46,7 @@ export default function SignUpPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -33,13 +61,146 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
   });
-  const [errors, setErrors] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handlePhoneChange = (value: string | undefined) => {
-    setForm(prev => ({
-      ...prev,
-      phone: value || "",
-    }));
+    setForm((prev) => ({ ...prev, phone: value || "" }));
+    setFieldErrors((e) => {
+      if (!e.phone) return e;
+      const n = { ...e };
+      delete n.phone;
+      return n;
+    });
   };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setFieldErrors((err) => {
+      const k = name as FieldName;
+      if (!err[k]) return err;
+      const next = { ...err };
+      delete next[k];
+      return next;
+    });
+    setFormError(null);
+  };
+
+  const validateClient = (): boolean => {
+    const err: Partial<Record<FieldName, string>> = {};
+    const t = (s: string) => s.trim();
+
+    if (!t(form.fullName) || t(form.fullName).length < 2) {
+      err.fullName = "Please enter your full name (at least 2 characters).";
+    }
+    if (!t(form.email) || !EMAIL_RE.test(t(form.email))) {
+      err.email = "Please enter a valid email address.";
+    }
+    if (!form.phone) {
+      err.phone = "Mobile number is required.";
+    } else if (!isValidPhoneNumber(form.phone)) {
+      err.phone = "Please enter a valid phone number (with country code).";
+    }
+    if (!form.profession) {
+      err.profession = "Please select your profession.";
+    }
+    if (t(form.company).length > 200) {
+      err.company = "Company name must be at most 200 characters.";
+    }
+    if (t(form.designation).length > 200) {
+      err.designation = "Designation must be at most 200 characters.";
+    }
+    if (!t(form.city)) {
+      err.city = "Please enter your city.";
+    }
+    if (!form.state) {
+      err.state = "Please select your state.";
+    }
+    if (!form.country) {
+      err.country = "Please select your country.";
+    }
+    if (form.password.length < 6) {
+      err.password = "Password must be at least 6 characters.";
+    } else if (form.password.length > 128) {
+      err.password = "Password must be at most 128 characters.";
+    }
+    if (form.password !== form.confirmPassword) {
+      err.confirmPassword = "Passwords do not match.";
+    }
+    if (!acceptedTerms) {
+      err.terms = "You must accept the Terms & Conditions and Privacy Policy.";
+    }
+
+    setFieldErrors(err);
+    return Object.keys(err).length === 0;
+  }
+
+  function applyServerDetails(details?: { field: string; message: string }[]) {
+    if (!details?.length) return;
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      for (const d of details) {
+        const key = mapServerFieldToForm(d.field) ?? mapServerFieldToForm(d.field.split(".").pop() || "");
+        if (key) next[key] = d.message.replace(/^"|"$/g, "");
+      }
+      return next;
+    });
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError(null);
+    if (!validateClient()) return;
+    setFieldErrors({});
+
+    try {
+      await register.mutateAsync({
+        name: form.fullName.trim(),
+        email: form.email.trim(),
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        phone: form.phone,
+        profession: form.profession,
+        company: form.company.trim() || undefined,
+        designation: form.designation.trim() || undefined,
+        city: form.city.trim(),
+        state: form.state,
+        country: form.country,
+      });
+    } catch (err: unknown) {
+      const api = err as ApiError;
+      if (api.details?.length) {
+        applyServerDetails(api.details);
+      }
+      const msg =
+        api?.message ||
+        (err as Error)?.message ||
+        "Registration failed. Try a different email.";
+      if (api.statusCode === 409 || String(msg).toLowerCase().includes("duplicate")) {
+        const lower = String(msg).toLowerCase();
+        if (lower.includes("phone") || lower.includes("number")) {
+          setFieldErrors((prev) => ({
+            ...prev,
+            phone: "This phone number is already registered. Sign in or use a different number.",
+          }));
+        } else {
+          setFieldErrors((prev) => ({
+            ...prev,
+            email: "This email is already registered. Try signing in.",
+          }));
+        }
+        setFormError(null);
+        return;
+      }
+      if (!api.details?.length) {
+        setFormError(msg);
+      }
+    }
+  }
+
   const professions = [
     "Accountant",
     "B.Com",
@@ -66,73 +227,26 @@ export default function SignUpPage() {
     "Others"
   ];
 
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setErrors(null);
-    if (form.password.length < 6) {
-      setErrors("Password must be at least 6 characters.");
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setErrors("Passwords do not match.");
-      return;
-    }
-    try {
-      await register.mutateAsync({
-        name: form.fullName.trim(),
-        email: form.email.trim(),
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      });
-    } catch (err: unknown) {
-      const msg =
-        (err as ApiError)?.message ||
-        (err as Error)?.message ||
-        "Registration failed. Try a different email.";
-      setErrors(msg);
-    }
-  }
-
-       function handleChange(
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-      ) {
-        const { name, value } = e.target;
-
-        setForm(prev => ({
-          ...prev,
-          [name]: value,
-        }));
-      }
-
   const states = IndianStatesList.STATES_OBJECT.map(s => s.value);
-const countries = countryList.getNames();
+  const countries = countryList.getNames();
 
-
-
-
+  const fe = fieldErrors;
   return (
     <div className="h-screen flex flex-col md:flex-row mx-auto  ">
-      {/* Left branding panel */}
       <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center ">
             <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
-            
             <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
-
             <div className="relative z-10">
                 <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
                 <h1 className="text-[30px] xl:text-4xl font-bold mb-4 pt-[12px] xl:pb-[18px]">Join Our Learning <br />Community</h1>
                 <p className="text-[18px] xl:text-[24px] pb-2 px-4 ">Create your account and get access to premium <br className="hidden" /> courses and exclusive content</p>
             </div>
-
             </div>
-
       </div>
 
-      {/* Right form panel */}
       <div className="md:w-1/2 p-6 md:p-12 flex flex-col justify-center mx-auto">
-       {/* Close (X) */}
       <button
+        type="button"
         onClick={() => router.push('/')}
         className="absolute right-[4px] md:right-[40px] xl:right-[80px] top-4  text-gray-500 hover:text-gray-800 text-xl font-bold z-20 md:border border-[#09339B] rounded-[10px] w-10 h-10 "
       >
@@ -142,19 +256,20 @@ const countries = countryList.getNames();
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[20px] xl:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
         <p className="text-[16px] xl:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
-        <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4" noValidate>
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>  
             <input
               id="fullName"
               name="fullName"
               type="text"
+              autoComplete="name"
               value={form.fullName}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
+              className={labelCls(!!fe.fullName)}
               placeholder="Name"
             />
+            {fe.fullName && <p className="text-red-600 text-sm mt-1" role="alert">{fe.fullName}</p>}
           </div>
 
           <div>
@@ -163,26 +278,27 @@ const countries = countryList.getNames();
               id="email"
               name="email"
               type="email"
+              autoComplete="email"
               value={form.email}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
+              className={labelCls(!!fe.email)}
               placeholder="Enter Email"
             />
+            {fe.email && <p className="text-red-600 text-sm mt-1" role="alert">{fe.email}</p>}
           </div>
 
             <div>
-            <label className="block mb-1">Mobile Number <span className="text-red-600">*</span></label>
+            <label className="block mb-1" htmlFor="phone-input">Mobile Number <span className="text-red-600">*</span></label>
             <PhoneInput
+                id="phone-input"
                 placeholder="Enter Mobile number"
                 value={form.phone}
                 onChange={handlePhoneChange}
                 defaultCountry="IN"
-                
                 limitMaxLength={true} 
-                className="w-full border focus-within:ring-2 focus-within:ring-black px-3 py-1"
+                className={fe.phone ? `${INPUT_CLASS} ${FIELD_ERR_CLASS}` : `${INPUT_CLASS}`}
             />
-          
+            {fe.phone && <p className="text-red-600 text-sm mt-1" role="alert">{fe.phone}</p>}
             </div>
 
             <div>
@@ -195,9 +311,7 @@ const countries = countryList.getNames();
               name="profession"
               value={form.profession}
               onChange={handleChange}
-              required
-                className="w-full border px-3 py-2 bg-white"
-               
+                className={labelCls(!!fe.profession) + " bg-white py-2"}
             >
               <option value="" className="">Select</option>
               {professions.map((item, index) => (
@@ -206,35 +320,38 @@ const countries = countryList.getNames();
                 </option>
               ))}
               </select>
+              {fe.profession && <p className="text-red-600 text-sm mt-1" role="alert">{fe.profession}</p>}
               </div>
 
 
           <div>
-            <label htmlFor="company" className="block mb-1">Company Name </label>
+            <label htmlFor="company" className="block mb-1">Company name</label>
             <input
               id="company"
               name="company"
-              type="company"
+              type="text"
               value={form.company}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
-               placeholder="Your Company Name"
+              maxLength={200}
+              className={labelCls(!!fe.company)}
+               placeholder="Your company (optional)"
             />
+            {fe.company && <p className="text-red-600 text-sm mt-1" role="alert">{fe.company}</p>}
           </div>
 
           <div>
-            <label htmlFor="designation" className="block mb-1">Designation </label>
+            <label htmlFor="designation" className="block mb-1">Designation</label>
             <input
               id="designation"
               name="designation"
-              type="designation"
+              type="text"
               value={form.designation}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
-               placeholder="Eg. Owner, Manager, Tax Head Etc."
+              maxLength={200}
+              className={labelCls(!!fe.designation)}
+               placeholder="e.g. Owner, Manager (optional)"
             />
+            {fe.designation && <p className="text-red-600 text-sm mt-1" role="alert">{fe.designation}</p>}
           </div>
 
           <div>
@@ -242,21 +359,23 @@ const countries = countryList.getNames();
             <input
               id="city"
               name="city"
-              type="city"
+              type="text"
+              autoComplete="address-level2"
               value={form.city}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
-               placeholder="Enter Your City"
+              className={labelCls(!!fe.city)}
+               placeholder="Enter your city"
             />
+            {fe.city && <p className="text-red-600 text-sm mt-1" role="alert">{fe.city}</p>}
           </div>
 
           <div>
             <label htmlFor="state" className="block mb-1">State <span className="text-red-600">*</span></label>
-          <select name="state" value={form.state} onChange={handleChange}    className="w-full border px-3 py-1">
+          <select id="state" name="state" value={form.state} onChange={handleChange} className={labelCls(!!fe.state) + " bg-white py-2"}>
             <option value="">Select state</option>
             {states.map(st => <option key={st} value={st}>{st}</option>)}
           </select>
+            {fe.state && <p className="text-red-600 text-sm mt-1" role="alert">{fe.state}</p>}
           </div>
 
           <div>
@@ -266,8 +385,7 @@ const countries = countryList.getNames();
               name="country"
               value={form.country}
               onChange={handleChange}
-              required
-              className="w-full border px-3 py-1"
+              className={labelCls(!!fe.country) + " bg-white py-2"}
             >
               <option value="">Select country</option>
               {countries.map((c) => (
@@ -276,6 +394,7 @@ const countries = countryList.getNames();
                 </option>
               ))}
             </select>
+            {fe.country && <p className="text-red-600 text-sm mt-1" role="alert">{fe.country}</p>}
           </div>
     <div className="mb-4">
       <label htmlFor="password" className="block mb-1 md:text-[16px] ">
@@ -288,8 +407,8 @@ const countries = countryList.getNames();
                   type={showPassword ? "text" : "password"}
           value={form.password}
           onChange={handleChange}
-          required
-          className="w-full border px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          autoComplete="new-password"
+          className={(fe.password ? `${INPUT_CLASS} pr-10 ${FIELD_ERR_CLASS}` : `${INPUT_CLASS} pr-10`) + " rounded-md focus:outline-none focus:ring-2 focus:ring-black"}
           placeholder="Enter your password"
         />
         <button
@@ -299,16 +418,15 @@ const countries = countryList.getNames();
         >
                   {showPassword ? (
              <EyeIcon className="w-5 h-5"  />
-          
           ) : (
               <EyeSlashIcon className="w-5 h-5"  />
-           
           )}
           <span className="sr-only">
                     {showPassword ? "Hide password" : "Show password"}
           </span>
         </button>
       </div>
+            {fe.password && <p className="text-red-600 text-sm mt-1" role="alert">{fe.password}</p>}
     </div>
 
           <div className="mb-4">
@@ -322,8 +440,7 @@ const countries = countryList.getNames();
                   type={showConfirmPassword ? "text" : "password"}
                   value={form.confirmPassword}
                   onChange={handleChange}
-                  required
-                  className="w-full border px-3 py-1"
+                  className={(fe.confirmPassword ? `${INPUT_CLASS} pr-10 ${FIELD_ERR_CLASS}` : `${INPUT_CLASS} pr-10`)}
                   placeholder="Confirm password"
                   autoComplete="new-password"
                 />
@@ -334,23 +451,34 @@ const countries = countryList.getNames();
                 >
                   {showConfirmPassword ? (
                     <EyeIcon className="w-5 h-5" />
-
                   ) : (
                     <EyeSlashIcon className="w-5 h-5" />
-
                   )}
                   <span className="sr-only">
                     {showConfirmPassword ? "Hide password" : "Show password"}
                   </span>
                 </button>
          </div>
+            {fe.confirmPassword && <p className="text-red-600 text-sm mt-1" role="alert">{fe.confirmPassword}</p>}
           </div>
   
             <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#AFAFAF]">
 
               <input
+                id="accept-terms"
                 type="checkbox"
                 className="mt-1 shrink-0"
+                checked={acceptedTerms}
+                onChange={(e) => {
+                  setAcceptedTerms(e.target.checked);
+                  setFieldErrors((err) => {
+                    if (!err.terms) return err;
+                    const n = { ...err };
+                    delete n.terms;
+                    return n;
+                  });
+                }}
+                aria-invalid={!!fe.terms}
               />
 
               <p className="leading-relaxed">
@@ -362,12 +490,14 @@ const countries = countryList.getNames();
                 <a href="#" className="text-[#09339B] hover:underline">
                   Privacy Policy
                 </a>
+                <span className="text-red-600"> *</span>
               </p>
 
             </div>
+            {fe.terms && <p className="text-red-600 text-sm -mt-2 mb-1" role="alert">{fe.terms}</p>}
 
 
-          {errors && <p className="text-red-600">{errors}</p>}
+          {formError && <p className="text-red-600" role="alert">{formError}</p>}
 
           <button
             type="submit"

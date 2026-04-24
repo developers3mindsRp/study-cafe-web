@@ -143,6 +143,13 @@ export interface RegisterData {
   email: string;
   password: string;
   confirmPassword: string;
+  phone: string;
+  profession: string;
+  company?: string;
+  designation?: string;
+  city: string;
+  state: string;
+  country: string;
 }
 
 export interface AuthResponse {

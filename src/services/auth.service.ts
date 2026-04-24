@@ -117,12 +117,30 @@ export const register = async (userData: RegisterData): Promise<AuthResponse> =>
     return authResponse;
   }
 
-  const { email, password, name } = userData;
-  const referralCode = getReferralCode() || undefined;
-  const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/register', {
+  const {
     email,
     password,
-    name: name?.trim() || undefined,
+    name,
+    phone,
+    profession,
+    company,
+    designation,
+    city,
+    state,
+    country,
+  } = userData;
+  const referralCode = getReferralCode() || undefined;
+  const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/register', {
+    email: email.trim(),
+    password,
+    name: name.trim(),
+    phone,
+    profession,
+    company: company?.trim() || undefined,
+    designation: designation?.trim() || undefined,
+    city: city.trim(),
+    state,
+    country,
     referralCode,
   });
   return await persistAuth(response.data.data);

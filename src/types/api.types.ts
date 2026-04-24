@@ -10,6 +10,8 @@ export interface ApiError {
   message: string;
   code?: string;
   errors?: Record<string, string[]>;
+  /** Field-level errors from API validation (e.g. auth-service Joi) */
+  details?: { field: string; message: string }[];
   statusCode?: number;
 }
 

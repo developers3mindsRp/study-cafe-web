@@ -21,12 +21,11 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
 
-  console.log("hero -->", hero);
-
   const heroSrc = h.imageUrl
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
     : "/images/home/home.png";
-  console.log("her image url", h);
+
+  /** Remote CMS/API URLs: load in the browser (bypass next/image optimizer). The optimizer runs on the Next server and often fails in production when fetching a different origin (timeouts, IP rules, SSL). Local /public assets still use optimization. */
   const heroImageUnoptimized =
     heroSrc.startsWith("http://") || heroSrc.startsWith("https://");
 
@@ -82,9 +81,11 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             width={1000}
             height={1000}
             src={heroSrc}
-            crossOrigin="anonymous"
             alt="Learning illustration"
-            className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full object-contain "
+            unoptimized={heroImageUnoptimized}
+            priority
+            sizes="(max-width: 1023px) min(100vw, 28rem) 50vw"
+            className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full h-auto object-contain max-w-full"
           />
         </div>
       </div>

@@ -164,7 +164,7 @@ axiosInstance.interceptors.response.use(
 
     // ================= NORMALIZE ERROR =================
     const body = error.response?.data as
-      | { message?: string; error?: string; errors?: any }
+      | { message?: string; error?: string; errors?: any; details?: { field: string; message: string }[] }
       | undefined;
 
     const apiError: ApiError = {
@@ -176,6 +176,7 @@ axiosInstance.interceptors.response.use(
       code: error.code,
       statusCode: status,
       errors: body?.errors,
+      details: body?.details,
     };
 
     return Promise.reject(apiError);
