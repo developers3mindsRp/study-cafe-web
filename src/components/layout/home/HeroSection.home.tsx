@@ -8,8 +8,6 @@ import Image from "next/image";
 
 const DEFAULT_HERO: HomeHero = {
   title: "Master Your Skills with Professional Courses",
-  subtitle:
-    "Learn from industry experts, get certified, and boost your career with our comprehensive online courses",
   ctaText: "View Memberships",
   ctaLink: "/plans",
   badge: "Welcome to StudyCafe Learning Platform",
@@ -22,6 +20,8 @@ interface HeroSectionProps {
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
+
+  console.log("hero -->", hero);
 
   const heroSrc = h.imageUrl
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
@@ -49,9 +49,9 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             {h.title}
           </h1>
 
-          {h.subtitle && (
+          {h.description && (
             <p className="mt-4 text-[16px] md:text-[18px] xl:text-[24px] 2xl:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
-              {h.subtitle}
+              {h.description}
             </p>
           )}
 
@@ -78,7 +78,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
 
         {/* IMAGE */}
         <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
-          <img
+          <Image
             width={1000}
             height={1000}
             src={heroSrc}

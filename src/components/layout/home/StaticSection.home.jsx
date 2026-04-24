@@ -15,11 +15,14 @@ function parseStatValue(raw) {
   return Number.isFinite(n) ? n : 0;
 }
 
-function getSuffix(stat) {
+function getSuffix(stat, index) {
   const raw = String(stat.value);
   const trailingNonNum = raw.match(/[^0-9,]+$/);
   if (trailingNonNum) return trailingNonNum[0];
-  return stat.suffix ?? '';
+  if (stat.suffix != null && String(stat.suffix) !== "") return String(stat.suffix);
+  // CMS/API stats often omit suffix — match defaults and label hints
+  if (stat.label && /success\s*rate/i.test(String(stat.label))) return "%";
+  return DEFAULT_STATS[index]?.suffix ?? "+";
 }
 
 export default function StatsSection({ stats: statsProp }) {
@@ -38,13 +41,13 @@ export default function StatsSection({ stats: statsProp }) {
                 />
               </div>
               <div className="md:flex flex-col">
-                <h3 className="text-[15px] xl:text-[40px] text-left font-bold text-[#FFFFFF]">
+                <h3 className="whitespace-nowrap text-[15px] xl:text-[40px] text-left font-bold text-[#FFFFFF]">
                   <CountUp
                     end={parseStatValue(stat.value)}
                     duration={2}
                     separator=","
+                    suffix={getSuffix(stat, i)}
                   />
-                  {getSuffix(stat)}
                 </h3>
                 <p className="text-[#FFFFFF] text-[14px] md:text-[16px] text-left">{stat.label}</p>
               </div>

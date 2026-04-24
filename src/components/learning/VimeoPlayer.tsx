@@ -30,7 +30,20 @@ export default function VimeoPlayer({
       const Player = mod.default;
       if (destroyed || !containerRef.current) return;
       const numericId = parseInt(String(videoId).replace(/\D/g, "") || "0", 10);
-      player = new Player(containerRef.current, { id: numericId || Number(videoId) });
+      player = new Player(containerRef.current, {
+        id: numericId || Number(videoId),
+        /** Fill the parent box instead of a fixed 640×360-style embed */
+        responsive: true,
+      });
+      try {
+        await player.ready();
+        const iframe = await player.getIframe();
+        if (iframe && !destroyed) {
+          iframe.setAttribute("style", "position:absolute;inset:0;width:100%;height:100%;");
+        }
+      } catch {
+        /* ignore */
+      }
       if (startSeconds > 0) {
         try {
           await player.setCurrentTime(startSeconds);
@@ -55,5 +68,10 @@ export default function VimeoPlayer({
     };
   }, [videoId, onTimeUpdate, onEnded, startSeconds]);
 
-  return <div ref={containerRef} className="aspect-video w-full overflow-hidden rounded-lg bg-black" />;
+  return (
+    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+      {/** Outer box sets size; inner div is the Vimeo mount point and fills it. */}
+      <div ref={containerRef} className="absolute inset-0 h-full w-full min-h-0" />
+    </div>
+  );
 }

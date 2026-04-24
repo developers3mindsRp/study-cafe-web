@@ -86,7 +86,7 @@ function SkeletonGrid() {
 
 const SORT_OPTIONS = [
   { label: "Latest", value: "latest" },
-  { label: "Most Enrolled", value: "latest" },
+  // { label: "Most Enrolled", value: "latest" },
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
 ] as const;
@@ -205,12 +205,12 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           </select>
 
           {/* Level — UI only (backend doesn't track level yet) */}
-          <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
+          {/* <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
             <option>All Levels</option>
             <option>Beginner</option>
             <option>Intermediate</option>
             <option>Advanced</option>
-          </select>
+          </select> */}
 
           {/* Price */}
           <select
@@ -225,9 +225,9 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           </select>
 
           {/* Author — placeholder */}
-          <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
+          {/* <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
             <option>All Author/faculty</option>
-          </select>
+          </select> */}
 
           {/* Clear button — only when filters active */}
           {hasActiveFilters && (

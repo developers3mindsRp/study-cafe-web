@@ -214,11 +214,11 @@ export interface DashboardStats {
 /** Home page hero and above-the-fold content */
 export interface HomeHero {
   title: string;
-  subtitle?: string;
   ctaText?: string;
   ctaLink?: string;
   imageUrl?: string;
   badge?: string;
+  description?: string;
 }
 
 /** Feature or value proposition for home page */
