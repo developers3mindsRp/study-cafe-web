@@ -7,6 +7,8 @@ type Props = {
   /** Called ~every 15s with current seconds */
   onTimeUpdate?: (seconds: number) => void;
   onEnded?: () => void;
+  /** Fired when the clip duration is known (Vimeo `getDuration()`, seconds) */
+  onDuration?: (durationSeconds: number) => void;
   startSeconds?: number;
 };
 
@@ -14,10 +16,13 @@ export default function VimeoPlayer({
   videoId,
   onTimeUpdate,
   onEnded,
+  onDuration,
   startSeconds = 0,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const lastEmitRef = useRef(0);
+  const onDurationRef = useRef(onDuration);
+  onDurationRef.current = onDuration;
 
   useEffect(() => {
     if (!videoId || !containerRef.current) return;
@@ -35,12 +40,26 @@ export default function VimeoPlayer({
         /** Fill the parent box instead of a fixed 640×360-style embed */
         responsive: true,
       });
+      const reportDuration = async () => {
+        try {
+          const d = await player.getDuration();
+          if (destroyed) return;
+          if (Number.isFinite(d) && d > 0) {
+            onDurationRef.current?.(d);
+          }
+        } catch {
+          /* ignore */
+        }
+      };
+
       try {
         await player.ready();
         const iframe = await player.getIframe();
         if (iframe && !destroyed) {
           iframe.setAttribute("style", "position:absolute;inset:0;width:100%;height:100%;");
         }
+        await reportDuration();
+        player.on("loaded", reportDuration);
       } catch {
         /* ignore */
       }

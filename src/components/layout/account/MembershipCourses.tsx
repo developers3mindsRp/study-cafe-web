@@ -4,10 +4,11 @@ import {
   useSubscriptionStatus,
   useOverallProgress,
 } from "@/hooks/usePurchases";
-import type { MembershipCourseItem } from "@/types/models.types";
+import type { MembershipCourseItem, MembershipPlanCourses } from "@/types/models.types";
 import CourseCard, { type MyCourseCardModel } from "@/components/CourseCard";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import type { OverallProgressRow } from "@/services/progress.service";
+import { isMembershipCourseStarted } from "@/utils/membershipCourseProgress";
 import Image from "next/image";
 
 function membershipToCardModel(
@@ -26,10 +27,24 @@ function membershipToCardModel(
   };
 }
 
-function hasStarted(prog?: OverallProgressRow) {
-  if (!prog) return false;
-  if (prog.percent > 0) return true;
-  return prog.status === "in_progress" || prog.status === "completed";
+function sortMembershipCourses(
+  courses: MembershipPlanCourses["courses"],
+  progressById: Map<string, OverallProgressRow>
+) {
+  return [...courses].sort((a, b) => {
+    const pa = progressById.get(String(a.id));
+    const pb = progressById.get(String(b.id));
+    const aStarted = isMembershipCourseStarted(pa);
+    const bStarted = isMembershipCourseStarted(pb);
+    if (aStarted !== bStarted) return aStarted ? -1 : 1;
+    if (aStarted && bStarted) {
+      const d =
+        (pb?.percent ?? 0) - (pa?.percent ?? 0) ||
+        (pb?.completedSessions ?? 0) - (pa?.completedSessions ?? 0);
+      if (d !== 0) return d;
+    }
+    return String(a.title).localeCompare(String(b.title));
+  });
 }
 
 function MembershipStartCard({ course }: { course: MembershipCourseItem }) {
@@ -164,9 +179,9 @@ export default function MembershipCourses() {
                 </p>
               ) : (
                 <div className="sm:grid grid-cols-2 md:grid-cols-2 gap-8">
-                  {group.courses.map((course) => {
+                  {sortMembershipCourses(group.courses, progressById).map((course) => {
                     const prog = progressById.get(String(course.id));
-                    if (hasStarted(prog)) {
+                    if (isMembershipCourseStarted(prog)) {
                       return (
                         <CourseCard key={course.id} course={membershipToCardModel(course, prog)} />
                       );

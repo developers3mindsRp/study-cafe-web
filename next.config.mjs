@@ -25,16 +25,16 @@ const nextConfig = {
         destination: "/courses",
         permanent: true,
       },
-      {
-        source: "/account",
-        destination: "/dashboard/profile",
-        permanent: false,
-      },
-      {
-        source: "/account/:path*",
-        destination: "/dashboard/profile",
-        permanent: false,
-      },
+      // {
+      //   source: "/account",
+      //   destination: "/dashboard/profile",
+      //   permanent: false,
+      // },
+      // {
+      //   source: "/account/:path*",
+      //   destination: "/dashboard/profile",
+      //   permanent: false,
+      // },
     ];
   },
   images: {

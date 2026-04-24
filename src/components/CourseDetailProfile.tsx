@@ -8,14 +8,22 @@ import VimeoPlayer from "@/components/learning/VimeoPlayer";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import { sessionListLabel } from "@/utils/sessionLabel";
 import type { ProgressSessionRow } from "@/services/progress.service";
+import {
+  firstVimeoIdFromSession,
+  prefetchVimeoThumbnails,
+} from "@/utils/vimeo";
 
-function formatMinutes(seconds: number | null | undefined): string {
+/** Clock-style length (uses Vimeo duration when available). */
+function formatVideoClock(seconds: number | null | undefined): string {
   if (seconds == null || !Number.isFinite(seconds) || seconds <= 0) return "—";
-  const m = Math.round(seconds / 60);
-  if (m < 60) return `${m} Minutes`;
-  const h = Math.floor(m / 60);
-  const rm = m % 60;
-  return rm ? `${h}h ${rm}m` : `${h}h`;
+  const s = Math.floor(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) {
+    return `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  }
+  return `${m}:${String(sec).padStart(2, "0")}`;
 }
 
 function formatTotalDuration(seconds: number): string {
@@ -84,13 +92,39 @@ export default function CourseDetailProfile({
   canNext,
   isCourseComplete,
   onCertificateDownload,
-  backHref = "/dashboard/profile",
+  backHref = "/dashboard",
 }: CourseDetailProfileProps) {
   const [openDay, setOpenDay] = useState<number | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
+  const [vimeoDurationSeconds, setVimeoDurationSeconds] = useState<number | null>(null);
+  const [vimeoThumbnailsById, setVimeoThumbnailsById] = useState<Record<string, string>>({});
   const thumb =
     resolveApiAssetUrl(courseThumbnailUrl ?? "") || "/images/home/f1.jpg";
+
+  useEffect(() => {
+    setVimeoDurationSeconds(null);
+  }, [videoPlayerKey]);
+
+  useEffect(() => {
+    const ids: string[] = [];
+    for (const s of sessions) {
+      const id = firstVimeoIdFromSession(s);
+      if (id) ids.push(id);
+    }
+    if (ids.length === 0) {
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const map = await prefetchVimeoThumbnails(ids);
+      if (cancelled) return;
+      setVimeoThumbnailsById((prev) => ({ ...prev, ...map }));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [sessions]);
 
   const sessionsByDay = useMemo(() => {
     const m = new Map<number, ProgressSessionRow[]>();
@@ -243,6 +277,7 @@ export default function CourseDetailProfile({
                 videoId={videoId}
                 onTimeUpdate={onTimeUpdate}
                 onEnded={onVideoEnded}
+                onDuration={setVimeoDurationSeconds}
                 startSeconds={startSeconds}
               />
             ) : (
@@ -286,9 +321,12 @@ export default function CourseDetailProfile({
               {sectionHeading}
             </span>
 
-            <span className="flex items-center gap-2 rounded-[12px] border border-[#9FBBFF] px-3 py-1 text-sm text-[#09339B]">
+            <span
+              className="flex items-center gap-2 rounded-[12px] border border-[#9FBBFF] px-3 py-1 text-sm text-[#09339B] tabular-nums"
+              title="Video length"
+            >
               <img src="/images/time.png" alt="" className="h-4 w-4" />
-              {formatMinutes(active?.durationSeconds)}
+              {formatVideoClock(vimeoDurationSeconds ?? active?.durationSeconds)}
             </span>
           </div>
 
@@ -371,6 +409,9 @@ export default function CourseDetailProfile({
                     {daySessions.map((s) => {
                       const selected = s.sessionId === activeSessionId;
                       const label = sessionListLabel(s, daySessions);
+                      const vimeoId = firstVimeoIdFromSession(s);
+                      const listThumb =
+                        (vimeoId && vimeoThumbnailsById[vimeoId]) || thumb;
                       return (
                         <li key={s.sessionId}>
                           <button
@@ -385,7 +426,7 @@ export default function CourseDetailProfile({
                             <div className="relative h-10 w-16 flex-shrink-0">
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
-                                src={thumb}
+                                src={listThumb}
                                 alt=""
                                 className="h-full w-full rounded-md object-cover"
                               />

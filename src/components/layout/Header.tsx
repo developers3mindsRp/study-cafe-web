@@ -339,7 +339,7 @@ export default function Header() {
                       My Courses
                     </Link>
                     <Link
-                      href="/dashboard/profile"
+                      href="/dashboard"
                       className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
                     >
                       Profile

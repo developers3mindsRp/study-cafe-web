@@ -116,7 +116,7 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
           </div>
         )}
 
-        {isLiveCohort && !isUpcomingLive && (
+        {isLiveCohort && !isUpcomingLive && course.enrolledBatch?.startDate && (
           <div className="rounded-lg border border-[#09339B]/25 bg-[#f0f4ff] px-3 py-2 text-sm text-[#09339B]">
             <span className="font-semibold">Live batch in progress</span>
             {startLabel || endLabel ? (

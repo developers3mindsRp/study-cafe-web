@@ -2,7 +2,7 @@
 export type AccountTabKey = "Profile" | "Payment" | "Course" | "Membership" | "Earning";
 
 export const TAB_TO_PATH: Record<AccountTabKey, string> = {
-  Profile: "/dashboard/profile",
+  Profile: "/dashboard",
   Payment: "/dashboard/payments",
   Course: "/dashboard/courses",
   Membership: "/dashboard/membership",

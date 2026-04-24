@@ -6,6 +6,7 @@ import Image from "next/image";
 import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
 import { useUserPurchases } from "@/hooks/usePurchases";
 import { getToken } from "@/utils/auth.utils";
+import { isUserCourseOrderPurchase } from "@/utils/purchaseGuards";
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
@@ -151,9 +152,11 @@ export default function BannerSection({
   const myPurchase = useMemo(() => {
     if (!course?.id || !purchases?.length) return undefined;
     const cid = String(course.id);
-    return purchases.find(
-      (p) => p.status === "completed" && String(p.courseId) === cid,
-    );
+    return purchases
+      .filter(isUserCourseOrderPurchase)
+      .find(
+        (p) => p.status === "completed" && String(p.courseId) === cid,
+      );
   }, [course?.id, purchases]);
 
   const isOwned = !!myPurchase;

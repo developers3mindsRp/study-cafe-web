@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/react-query";
 import { PublicLayout } from "@/components/layout";
 import CourseDetailProfile from "@/components/CourseDetailProfile";
 import { getCourseById } from "@/services/platform.service";
@@ -11,6 +13,7 @@ import {
 import { downloadCertificate } from "@/services/progress.service";
 import type { CoursePublicDetail } from "@/types/models.types";
 import type { ProgressSessionRow } from "@/services/progress.service";
+import { parseVimeoIdFromUrl } from "@/utils/vimeo";
 
 type Props = {
   courseId: string;
@@ -25,21 +28,129 @@ function instructorLine(course: CoursePublicDetail | null): string | null {
   return null;
 }
 
-function parseVimeoIdFromRecordingUrl(url: string): string | null {
-  const u = String(url).trim();
-  if (!u) return null;
-  if (/^\d+$/.test(u)) return u;
-  const m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-  return m ? m[1] : u;
+function BrandedSpinner({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={`animate-spin ${className}`.trim()}
+      viewBox="0 0 24 24"
+      fill="none"
+      role="presentation"
+      aria-hidden
+    >
+      <circle
+        className="opacity-20"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="2.5"
+      />
+      <path
+        d="M12 2a10 10 0 0 1 9.5 6.5"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function LearningPageLoading({ phase }: { phase: "course" | "progress" }) {
+  const label = phase === "course" ? "Loading course" : "Loading your progress";
+  const detail =
+    phase === "course"
+      ? "Fetching course details and outline…"
+      : "Preparing lessons and your saved progress…";
+
+  return (
+    <PublicLayout>
+      <div
+        className="min-h-screen bg-gradient-to-b from-slate-50 to-white"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label={label}
+      >
+        <div className="container mx-auto px-4 py-6 sm:px-6">
+          <div className="mb-6 h-5 w-40 animate-pulse rounded bg-slate-200" />
+
+          <div className="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-start">
+            <div className="space-y-3">
+              <div className="h-8 w-full max-w-xl animate-pulse rounded-lg bg-slate-200" />
+              <div className="h-5 w-64 animate-pulse rounded bg-slate-100" />
+            </div>
+            <div className="flex gap-2">
+              <div className="h-10 w-28 animate-pulse rounded-md bg-slate-200" />
+              <div className="h-10 w-32 animate-pulse rounded-md bg-slate-100" />
+            </div>
+          </div>
+
+          <div className="mb-6 rounded-lg border border-[#9FBBFF]/60 bg-white p-4 shadow-sm">
+            <div className="mb-3 flex justify-between">
+              <div className="h-4 w-32 animate-pulse rounded bg-slate-200" />
+              <div className="h-4 w-16 animate-pulse rounded bg-slate-100" />
+            </div>
+            <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full w-1/3 animate-pulse bg-[#09339B]/30" />
+            </div>
+            <div className="mt-3 flex justify-between">
+              <div className="h-3 w-48 animate-pulse rounded bg-slate-100" />
+              <div className="h-3 w-24 animate-pulse rounded bg-slate-100" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-4 rounded-xl border border-[#9FBBFF]/60 bg-white p-4 shadow-sm lg:col-span-2">
+              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-50/90">
+                  <BrandedSpinner className="h-10 w-10 text-[#09339B]" />
+                  <p className="text-sm font-medium text-slate-600">{label}</p>
+                  <p className="max-w-sm px-4 text-center text-xs text-slate-400">{detail}</p>
+                </div>
+              </div>
+              <div className="h-4 w-3/4 max-w-md animate-pulse rounded bg-slate-100" />
+              <div className="h-6 w-2/3 animate-pulse rounded bg-slate-200" />
+            </div>
+
+            <div className="space-y-3 rounded-xl border border-[#9FBBFF]/60 bg-white p-4 shadow-sm">
+              <div className="h-5 w-40 animate-pulse rounded bg-slate-200" />
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="flex gap-3 rounded-lg border border-slate-100 p-2.5"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <div className="mt-0.5 h-9 w-9 shrink-0 rounded-md bg-slate-100" />
+                  <div className="min-w-0 flex-1 space-y-2 py-0.5">
+                    <div className="h-3.5 w-full animate-pulse rounded bg-slate-200" />
+                    <div className="h-3 w-2/3 animate-pulse rounded bg-slate-100" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </PublicLayout>
+  );
 }
 
 export default function LearningPage({ courseId, slug }: Props) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const overallInvalidatedFor = useRef<string | null>(null);
   const [course, setCourse] = useState<CoursePublicDetail | null>(null);
   const { data: progress, isLoading: progLoading, refetch: refetchProgress } =
     useCourseProgress(courseId, { enabled: !!courseId });
   const heartbeat = useHeartbeat();
   const markComplete = useMarkSessionComplete();
+
+  useEffect(() => {
+    if (courseId && progress && overallInvalidatedFor.current !== courseId) {
+      overallInvalidatedFor.current = courseId;
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.progress.all, "overall"] });
+    }
+  }, [courseId, progress, queryClient]);
 
   const qSession = router.query.session;
   const querySessionId =
@@ -107,7 +218,7 @@ export default function LearningPage({ courseId, slug }: Props) {
     const r =
       activeRecordings.find((x) => x.id === selectedRecordingId) || activeRecordings[0];
     if (!r?.url) return null;
-    return parseVimeoIdFromRecordingUrl(r.url);
+    return parseVimeoIdFromUrl(r.url);
   }, [activeRecordings, selectedRecordingId]);
 
   const onTimeUpdate = useCallback(
@@ -152,19 +263,11 @@ export default function LearningPage({ courseId, slug }: Props) {
   }, [courseId]);
 
   if (!course) {
-    return (
-      <PublicLayout>
-        <div className="p-8 text-center text-gray-500">Loading course…</div>
-      </PublicLayout>
-    );
+    return <LearningPageLoading phase="course" />;
   }
 
   if (progLoading) {
-    return (
-      <PublicLayout>
-        <div className="p-8 text-center text-gray-500">Loading progress…</div>
-      </PublicLayout>
-    );
+    return <LearningPageLoading phase="progress" />;
   }
 
   if (sessions.length === 0) {
