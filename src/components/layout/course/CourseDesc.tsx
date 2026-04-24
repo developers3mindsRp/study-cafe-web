@@ -9,16 +9,30 @@ const tabs = [
   { label: "Certificate", target: "certificate" },
 ];
 
+
+
+
 export default function CourseTabs() {
   const [activeTab, setActiveTab] = useState("features");
   const [isSticky, setIsSticky] = useState(true);
 
   const handleScroll = (id: string) => {
     const element = document.getElementById(id);
+
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      const headerOffset = 140; // adjust (top-20 ≈ 80px, so 90–110 is safe)
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      setActiveTab(id); // optional but recommended
     }
   };
+
 
 useEffect(() => {
 

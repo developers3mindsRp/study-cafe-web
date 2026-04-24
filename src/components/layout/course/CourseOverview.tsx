@@ -216,13 +216,13 @@ export default function CourseOverview({
       {/* Course Key Features */}
       <h2
         className="md:hidden container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-2 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
-        id="features"
+       
       >
         Course Key Features
       </h2>
 
       <div
-        className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28"
+        className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 "
         id="features"
       >
         {displayFeatures.map((feature, index) => (

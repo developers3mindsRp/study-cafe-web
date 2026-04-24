@@ -209,7 +209,7 @@ export default function EditProfile({
 
         {/* RIGHT CONTENT */}
         <div className="md:col-span-2 bg-white rounded-xl md:p-6">
-          <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar-hide justify-around gap-2">
+          <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar justify-around gap-2">
             {TABS.map((tab) => {
               const isOn = currentTab === tab.key;
               const tabClass = `md:flex-1 px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px] ${

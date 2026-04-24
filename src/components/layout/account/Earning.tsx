@@ -113,11 +113,11 @@ export default function Earning() {
           <img src="/images/link.svg" alt="" /> <span className="font-bold">Affiliate URLs</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-          <div className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 items-stretch">
+          <div className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg ">
             <img src="/images/home.svg" alt="" />
             <h2 className="font-bold">Homepage</h2>
-            <p className="line-clamp-2">Direct traffic to our main landing page for general visitors.</p>
+            <p className="line-clamp-2 flex-grow">Direct traffic to our main landing page for general visitors.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md break-all">
               {BASE_URL}{links?.homepage ?? ""}
             </p>
@@ -136,7 +136,7 @@ export default function Earning() {
           <div className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
             <img src="/images/member-b.svg" alt="" />
             <h2 className="font-bold">Membership</h2>
-            <p className="line-clamp-2">Direct users to the membership page with your referral.</p>
+            <p className="line-clamp-2 px-1">Direct users to the membership page with your referral.</p>
             <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md break-all">
               {BASE_URL}{links?.membership ?? ""}
             </p>
