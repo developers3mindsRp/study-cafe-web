@@ -23,7 +23,7 @@ export default function SignUpPage() {
   const [form, setForm] = useState({
     fullName: "",
     email: "",
-    number: "",
+    phone: "",
     profession: "",
     company: "",
     designation: "",
@@ -34,7 +34,6 @@ export default function SignUpPage() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<string | null>(null);
-  const [phone, setPhone] = useState<string | undefined>(undefined);
   const handlePhoneChange = (value: string | undefined) => {
     setForm(prev => ({
       ...prev,

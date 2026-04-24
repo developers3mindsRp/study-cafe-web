@@ -359,7 +359,6 @@ export const getPurchasedCourseIds = (userId: string): string[] => {
 export const mockHomePageData: HomePageData = {
   hero: {
     title: 'Learn CA, CS, CWA & Professional Courses',
-    subtitle: 'Your trusted platform for exam preparation, GST, Income Tax, and Business News.',
     ctaText: 'Explore Courses',
     ctaLink: '/courses',
     badge: 'Trusted by 10,000+ students',

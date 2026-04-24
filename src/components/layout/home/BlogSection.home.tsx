@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getArticles } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
+import Image from "next/image";
 
 const PLACEHOLDER_IMGS = ["/images/b1.jpg", "/images/b2.png", "/images/b3.png"];
 
@@ -44,7 +45,7 @@ function BlogCard({
       }
     >
       <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>
-        <img src={img} alt={title} className="w-full h-full object-fit" />
+        <Image width={500} height={300} src={img} alt={title} className="w-full h-full object-cover" crossOrigin="anonymous" />
         <span className="absolute top-4 left-4 bg-white text-[#252525] text-[10px] md:text-[14px] font-normal px-2 py-1 rounded-[14px]">
           {tag}
         </span>

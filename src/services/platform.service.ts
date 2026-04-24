@@ -361,6 +361,30 @@ export const getPublishedCourses = async (): Promise<PublicCourse[]> => {
   }
 };
 
+/** Result of POST /platform/newsletter/subscribe (public, no auth) */
+export interface NewsletterSubscribeResult {
+  subscribed: true;
+  already_subscribed: boolean;
+}
+
+/**
+ * Subscribe an email to the site newsletter (footer, landing pages, etc.)
+ */
+export const subscribeNewsletter = async (email: string): Promise<NewsletterSubscribeResult> => {
+  const trimmed = email.trim();
+  if (!trimmed) {
+    throw new Error('Email is required');
+  }
+  if (shouldUseMock()) {
+    return mockPlatformApi.subscribeNewsletter(trimmed);
+  }
+  const response = await axiosInstance.post<ApiResponse<NewsletterSubscribeResult>>(
+    '/platform/newsletter/subscribe',
+    { email: trimmed }
+  );
+  return response.data.data;
+};
+
 /**
  * Fetch multiple platform datasets in one go (e.g. for layout or home).
  * Use when you need home + memberships + faq on the same page.

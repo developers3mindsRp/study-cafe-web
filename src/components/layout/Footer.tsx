@@ -1,12 +1,17 @@
 // components/Footer.jsx
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type FormEvent } from 'react';
 import Link from 'next/link';
+import { subscribeNewsletter } from '@/services/platform.service';
+import type { ApiError } from '@/types/api.types';
 
 export default function Footer() {
   const [usefulOpen, setUsefulOpen] = useState(false);
   const [importantOpen, setImportantOpen] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [newsletterMessage, setNewsletterMessage] = useState<string | null>(null);
 
   // Optional: refs if you want to manage dynamic height — simpler version uses a fixed max-height
   const usefulRef = useRef<HTMLUListElement>(null);
@@ -36,6 +41,33 @@ export default function Footer() {
     });
   }, [importantOpen]);
 
+  const handleNewsletterSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (newsletterStatus === 'loading') return;
+    setNewsletterMessage(null);
+    if (!newsletterEmail.trim()) {
+      setNewsletterStatus('error');
+      setNewsletterMessage('Please enter your email address.');
+      return;
+    }
+    setNewsletterStatus('loading');
+    try {
+      const result = await subscribeNewsletter(newsletterEmail);
+      setNewsletterStatus('success');
+      setNewsletterMessage(
+        result.already_subscribed
+          ? "You're already on the list. Thanks for your interest."
+          : "Thanks! You're subscribed to our newsletter."
+      );
+      setNewsletterEmail('');
+    } catch (err) {
+      const apiErr = err as ApiError;
+      setNewsletterStatus('error');
+      setNewsletterMessage(
+        typeof apiErr?.message === 'string' ? apiErr.message : 'Something went wrong. Please try again.'
+      );
+    }
+  };
 
   return (
     <footer className="bg-[#252525] text-gray-300 " id='footer'>
@@ -162,39 +194,66 @@ export default function Footer() {
           {/* Support / Newsletter Column */}
           <div className="col-span-1 text-center sm:text-left flex flex-col items-center sm:items-start mb-8">
             <h3 className="text-white font-normal mb-4 text-[24px]">Newsletter</h3>
-            <ul className="space-y-2">
-              <li className='px-16 md:px-0'>
-                <Link href="/help" className="text-[16px] text-white transition-colors ">
-                  Subscribe to get updates on new courses and offers.
-                </Link>
-              </li>
-            <li className="relative">
-              <img
-                src="/images/email1.png"
-                alt="email"
-                className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5"
-              />
-
-              <input
-                id="footer-email"
-                type="email"
-                className="p-3 pl-12 w-full text-black rounded-[10px] bg-white mt-3 mb-3"
-                placeholder="Email"
-              />
-            </li>
-
-              <button className="
+            <form onSubmit={handleNewsletterSubmit} className="w-full max-w-sm">
+              <p className="text-[16px] text-white mb-2 px-16 md:px-0 text-center sm:text-left">
+                Subscribe to get updates on new courses and offers.
+              </p>
+              <div className="relative">
+                <img
+                  src="/images/email1.png"
+                  alt=""
+                  className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none"
+                  aria-hidden
+                />
+                <label htmlFor="footer-email" className="sr-only">
+                  Email for newsletter
+                </label>
+                <input
+                  id="footer-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={newsletterEmail}
+                  onChange={(e) => {
+                    setNewsletterEmail(e.target.value);
+                    if (newsletterStatus === 'error' || newsletterStatus === 'success') {
+                      setNewsletterStatus('idle');
+                      setNewsletterMessage(null);
+                    }
+                  }}
+                  disabled={newsletterStatus === 'loading'}
+                  className="p-3 pl-12 w-full text-black rounded-[10px] bg-white mt-1 mb-2 disabled:opacity-60"
+                  placeholder="Email"
+                />
+              </div>
+              {newsletterMessage && (
+                <p
+                  className={
+                    newsletterStatus === 'error'
+                      ? 'text-amber-300 text-sm mb-2 text-left'
+                      : 'text-green-300 text-sm mb-2 text-left'
+                  }
+                  role="status"
+                >
+                  {newsletterMessage}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={newsletterStatus === 'loading'}
+                className="
                     whitespace-nowrap
-                    w-100%
+                    w-full
                     text-[18px] sm:text-[20px]
                     px-4 py-2 sm:px-6 sm:py-3
                     bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
                     rounded-[10px] transition
-                  ">
-                Subscribe Now
+                    disabled:opacity-60 disabled:cursor-not-allowed
+                  "
+              >
+                {newsletterStatus === 'loading' ? 'Subscribing…' : 'Subscribe Now'}
               </button>
-
-            </ul>
+            </form>
           </div>
 
         </div>

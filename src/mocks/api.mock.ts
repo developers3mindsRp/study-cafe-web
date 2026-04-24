@@ -447,4 +447,11 @@ export const mockPlatformApi = {
       popular_tags: [],
     };
   },
+
+  subscribeNewsletter: async (
+    _email: string
+  ): Promise<{ subscribed: true; already_subscribed: boolean }> => {
+    await delay(500);
+    return { subscribed: true, already_subscribed: false };
+  },
 };
