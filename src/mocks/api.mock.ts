@@ -461,4 +461,39 @@ export const mockPlatformApi = {
     await delay(500);
     return { subscribed: true, already_subscribed: false };
   },
+
+  submitContactInquiry: async (body: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    mobile_number: string;
+    country_code?: string;
+    subject?: string;
+    message: string;
+  }): Promise<{
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    mobile_number: string;
+    country_code?: string;
+    subject?: string | null;
+    message: string;
+    status: string;
+    created_at: string;
+  }> => {
+    await delay(500);
+    return {
+      id: 1,
+      first_name: body.first_name,
+      last_name: body.last_name,
+      email: body.email,
+      mobile_number: body.mobile_number,
+      country_code: body.country_code,
+      subject: body.subject ?? null,
+      message: body.message,
+      status: "new",
+      created_at: new Date().toISOString(),
+    };
+  },
 };

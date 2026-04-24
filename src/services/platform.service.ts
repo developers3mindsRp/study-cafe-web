@@ -370,6 +370,52 @@ export interface NewsletterSubscribeResult {
 /**
  * Subscribe an email to the site newsletter (footer, landing pages, etc.)
  */
+/** Public contact form — POST /platform/contact-us */
+export interface ContactInquiryPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  mobile_number: string;
+  country_code?: string;
+  subject?: string;
+  message: string;
+}
+
+export interface ContactInquiryResult {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  mobile_number: string;
+  country_code?: string;
+  subject?: string | null;
+  message: string;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const submitContactInquiry = async (
+  body: ContactInquiryPayload
+): Promise<ContactInquiryResult> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.submitContactInquiry(body);
+  }
+  const response = await axiosInstance.post<ApiResponse<ContactInquiryResult>>(
+    "/platform/contact-us",
+    {
+      first_name: body.first_name,
+      last_name: body.last_name,
+      email: body.email,
+      mobile_number: body.mobile_number,
+      country_code: body.country_code ?? "IN",
+      subject: body.subject,
+      message: body.message,
+    }
+  );
+  return response.data.data;
+};
+
 export const subscribeNewsletter = async (email: string): Promise<NewsletterSubscribeResult> => {
   const trimmed = email.trim();
   if (!trimmed) {

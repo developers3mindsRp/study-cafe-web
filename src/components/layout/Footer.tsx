@@ -183,7 +183,7 @@ export default function Footer() {
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">GST</Link></li>
                   <li><Link href="/faq" className="text-[16px] text-white transition-colors">Income Tax</Link></li>
                   <li><Link href="/downloads" className="text-[16px] text-white transition-colors">Downloads</Link></li>
-                  <li><Link href="/contact-us" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
+                  <li><Link href="/contact" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
                 </ul>
               </div>
             </div>

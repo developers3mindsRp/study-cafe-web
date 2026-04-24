@@ -164,9 +164,9 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/contact-us"
+              href="/contact"
               className={`text-[16px] transition-colors ${
-                router.pathname === "/contact-us"
+                router.pathname === "/contact"
                   ? "text-blue-600 font-semibold"
                   : "text-gray-700 hover:text-blue-600"
               }`}
@@ -308,7 +308,7 @@ export default function Header() {
                 Blogs
               </Link>
               <Link
-                href="/contact-us"
+                href="/contact"
                 className="text-gray-700 hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
