@@ -41,6 +41,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "assets.studycafe.in",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "**",
       },
       {
