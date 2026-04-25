@@ -1,18 +1,69 @@
 
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/react-query';
+import { getCategoryFiles, getDownloadCategories } from '@/services/downloads.service';
+import { downloadFileHref, formatDownloadDateShort } from '@/utils/downloadsDisplay';
 
-const Accounts_downloads = () => {
-    const fileData = [
-        { id: 1, title: "Supreme Court: COVID Extension Saves Arbitration Claim Filed After 3 Years", duration: "December 16 2025 @ 10:33 AM" },
-        { id: 2, title: "ICAI Imposes Rs. 2 Lakh Fine on Chartered Accountant for Professional Misconduct in..", duration: "December 16 2025 @ 10:33 AM" },
-        { id: 3, title: "Amended Schedule III of Companies Act 2013", duration: "December 16 2025 @ 10:33 AM" },
-        { id: 4, title: "New Rules for Tax Audit under Section 44AB", duration: "December 16 2025 @ 10:33 AM" },
-        { id: 5, title: "ICAI release Guidance Note on Accounting for Share-based Payments", duration: "December 16 2025 @ 10:33 AM" },
-        { id: 6, title: "AO cannot made additions by ignoring method of accounting", duration: "December 16 2025 @ 10:33 AM" },
-    ];
-    
+const FILES_PAGE_SIZE = 12;
+
+type Props = {
+    categorySlug: string;
+};
+
+const Accounts_downloads = ({ categorySlug }: Props) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [page, setPage] = useState(1);
+    const slug = categorySlug ? decodeURIComponent(categorySlug) : '';
+
+    useEffect(() => {
+        const t = window.setTimeout(() => {
+            setDebouncedSearch(searchInput.trim());
+        }, 400);
+        return () => window.clearTimeout(t);
+    }, [searchInput]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch]);
+
+    useEffect(() => {
+        setPage(1);
+        setSearchInput('');
+        setDebouncedSearch('');
+    }, [slug]);
+
+    const { data: categories = [] } = useQuery({
+        queryKey: queryKeys.downloads.categories(),
+        queryFn: getDownloadCategories,
+    });
+
+    const { data, isLoading, isError, isFetching } = useQuery({
+        queryKey: queryKeys.downloads.categoryFiles(slug, {
+            page,
+            limit: FILES_PAGE_SIZE,
+            search: debouncedSearch,
+        }),
+        queryFn: () =>
+            getCategoryFiles(slug, {
+                page,
+                limit: FILES_PAGE_SIZE,
+                search: debouncedSearch || undefined,
+            }),
+        enabled: Boolean(slug),
+        placeholderData: (prev) => prev,
+    });
+
+    const files = data?.data ?? [];
+    const meta = data?.meta;
+
+    const heading =
+        categories.find((c) => c.slug === slug)?.name ??
+        files[0]?.FileCats?.[0]?.name ??
+        slug.replace(/-/g, ' ');
 
   return (
 
@@ -28,24 +79,43 @@ const Accounts_downloads = () => {
                           className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10"
                       />
 
-                      {/* Input */}
+                      {/* Input — server-side search via API */}
                       <input
                           type="text"
-                          placeholder="Search by file name or author..."
+                          placeholder="Search files in this category by title..."
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
                           className="w-full pl-14 pr-4 py-3 border border-[#EDF1F3] rounded-lg focus:outline-none focus:ring-2 focus:ring-black shadow-sm text-[#49454F]"
                       />
 
                   </div>
 
-                  <h2 className='text-[26px] font-normal text-[#252525] mb-4'>Accounts</h2>
+                  <h2 className='text-[26px] font-normal text-[#252525] mb-4 capitalize'>
+                      {heading || 'Downloads'}
+                  </h2>
+                  {meta != null && (
+                      <p className="text-sm text-gray-500 mb-2">
+                          {meta.total} file{meta.total === 1 ? '' : 's'}
+                          {debouncedSearch ? ` matching “${debouncedSearch}”` : ''}
+                      </p>
+                  )}
+                  {isLoading && !data && (
+                      <p className="text-sm text-gray-500 mb-4">Loading files…</p>
+                  )}
+                  {isError && (
+                      <p className="text-sm text-red-600 mb-4">Could not load files for this category.</p>
+                  )}
           
               </div>
-              <Link href="/downloads/details">
            
               <div className="grid md:grid-cols-2 gap-4">
-                  {fileData.map((item) => (
-                      <div
+                  {files.map((item) => (
+                      <Link
                           key={item.id}
+                          href={downloadFileHref(item.slug, item.id)}
+                          className="block"
+                      >
+                      <div
                           className="flex items-center justify-between border px-4 py-3 rounded-lg hover:shadow-md transition bg-white shadow-md cursor-pointer hover:border-[#9FBBFF]"
                       >
                           {/* Left Section */}
@@ -60,19 +130,49 @@ const Accounts_downloads = () => {
                                       {item.title}
                                   </p>
                                   <p className="text-[12px] text-[#929292]">
-                                      By: Nidhi
+                                      {item.author_id != null ? `Ref: ${item.author_id}` : 'By: —'}
                                   </p>
                                   <span className="text-[12px] text-[#929292]">
-                                      {item.duration}
+                                      {formatDownloadDateShort(item.created_at)}
                                   </span>
                               </div>
                           </div>
 
               
                       </div>
+                      </Link>
                   ))}
                   </div>
-              </Link>
+
+              {!isLoading && files.length === 0 && (
+                  <p className="text-center text-gray-500 py-8">
+                      No files found{debouncedSearch ? ' for your search.' : ' in this category.'}
+                  </p>
+              )}
+
+              {meta != null && meta.totalPages > 1 && (
+                  <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
+                      <button
+                          type="button"
+                          disabled={!meta.hasPreviousPage || isFetching}
+                          onClick={() => setPage((p) => Math.max(1, p - 1))}
+                          className="px-4 py-2 rounded-lg border border-[#EDF1F3] bg-white text-[#454545] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[#9FBBFF]"
+                      >
+                          Previous
+                      </button>
+                      <span className="text-sm text-[#454545]">
+                          Page {meta.page} of {meta.totalPages}
+                      </span>
+                      <button
+                          type="button"
+                          disabled={!meta.hasNextPage || isFetching}
+                          onClick={() => setPage((p) => p + 1)}
+                          className="px-4 py-2 rounded-lg border border-[#EDF1F3] bg-white text-[#454545] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[#9FBBFF]"
+                      >
+                          Next
+                      </button>
+                  </div>
+              )}
 
           </section>
 

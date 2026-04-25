@@ -1,15 +1,17 @@
 import React from 'react'
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/react-query';
+import { getRecentDownloadFiles } from '@/services/downloads.service';
+import { downloadFileHref, formatDownloadDateShort } from '@/utils/downloadsDisplay';
 
 const Sidebar_downloads = () => {
-    const pdfData = [
-        { id: 1, title: "ITAT Deletes Section 270A Penalty as AO Fails to Specify Misreporting Limb", duration: "December 16 @ 10:33 AM" },
-        { id: 2, title: "ITAT Deletes Section 270A Penalty as AO Fails to Specify Misreporting Limb", duration: "December 16 @ 10:33 AM" },
-        { id: 3, title: "ITAT Deletes Section 270A Penalty as AO Fails to Specify Misreporting Limb", duration: "December 16 @ 10:33 AM" },
-        { id: 4, title: "ITAT Deletes Section 270A Penalty as AO Fails to Specify Misreporting Limb", duration: "December 16 @ 10:33 AM" },
+    const { data } = useQuery({
+        queryKey: queryKeys.downloads.recent(5),
+        queryFn: () => getRecentDownloadFiles(5),
+    });
 
-    ];
-
-
+    const pdfData = data?.data ?? [];
 
     return (
 
@@ -23,8 +25,12 @@ const Sidebar_downloads = () => {
                 </div>
                 <div className=" divide-y divide-[#AFAFAF]">
                     {pdfData.map((item) => (
-                        <div
+                        <Link
                             key={item.id}
+                            href={downloadFileHref(item.slug, item.id)}
+                            className="block"
+                        >
+                        <div
                             className="flex items-center px-4 py-4 cursor-pointer hover:bg-gray-50 transition"
                         >
                             {/* Left Section */}
@@ -39,21 +45,21 @@ const Sidebar_downloads = () => {
                                         {item.title}
                                     </p>
                                     <p className="text-[12px] text-[#929292]">
-                                        By: Nidhi
+                                        {item.author_id != null ? `Ref: ${item.author_id}` : 'By: —'}
                                     </p>
                                     <span className="text-[12px] text-[#929292]">
-                                        {item.duration}
+                                        {formatDownloadDateShort(item.created_at)}
                                     </span>
                                 </div>
                             </div>
                         </div>
+                        </Link>
                     ))}
                 </div>
 
        
 
             </section>
-
 
 
 

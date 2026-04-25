@@ -96,5 +96,28 @@ export const queryKeys = {
     course: (courseId: string) => [...queryKeys.progress.all, 'course', courseId] as const,
     lesson: (lessonId: string) => [...queryKeys.progress.all, 'lesson', lessonId] as const,
   },
+
+  // Downloads (members-only file library)
+  downloads: {
+    all: ['downloads'] as const,
+    categories: () => [...queryKeys.downloads.all, 'categories'] as const,
+    categoryFiles: (
+      slug: string,
+      filters?: { page?: number; limit?: number; search?: string }
+    ) =>
+      [
+        ...queryKeys.downloads.all,
+        'category',
+        slug,
+        {
+          page: filters?.page ?? 1,
+          limit: filters?.limit ?? 12,
+          search: (filters?.search ?? '').trim(),
+        },
+      ] as const,
+    file: (idOrSlug: string) => [...queryKeys.downloads.all, 'file', idOrSlug] as const,
+    recent: (limit?: number) =>
+      [...queryKeys.downloads.all, 'recent', limit ?? 5] as const,
+  },
 };
 
