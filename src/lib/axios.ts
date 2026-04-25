@@ -10,18 +10,23 @@ import {
   clearAuthData,
 } from '@/utils/auth.utils';
 import { ApiError } from '@/types/api.types';
-import { getServerApiBaseFromContext } from '@/lib/apiBase';
+import {
+  getPublicApiBaseFromEnv,
+  getServerApiBaseFromContext,
+} from '@/lib/apiBase';
 
 // ================= BASE URL =================
 const getApiBaseUrl = (): string => {
+  // When set, talk directly to the real gateway (deployed or local). Avoids Next.js
+  // /api rewrites that proxy every request through the dev server (EMFILE / ECONNRESET).
+  const fromEnv = getPublicApiBaseFromEnv();
+  if (fromEnv) return fromEnv;
+
   if (typeof window !== 'undefined') {
     return '/api';
   }
   const fromSsrContext = getServerApiBaseFromContext();
   if (fromSsrContext) return fromSsrContext;
-
-  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL)
-    return process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (
     typeof import.meta !== 'undefined' &&

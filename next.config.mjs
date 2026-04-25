@@ -1,8 +1,22 @@
 // next.config.mjs
 /** @type {import('next').NextConfig} */
 
-const gatewayOrigin =
-  process.env.API_GATEWAY_ORIGIN || "http://127.0.0.1:3000";
+function resolveGatewayOrigin() {
+  if (process.env.API_GATEWAY_ORIGIN) {
+    return process.env.API_GATEWAY_ORIGIN.replace(/\/$/, "");
+  }
+  const pub = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+  if (pub) {
+    try {
+      return new URL(pub).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  return "http://127.0.0.1:3000";
+}
+
+const gatewayOrigin = resolveGatewayOrigin();
 
 const nextConfig = {
   reactStrictMode: true,
