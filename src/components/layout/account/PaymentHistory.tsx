@@ -81,7 +81,7 @@ function generateInvoiceHtml(inv: {
     <div>
       <p><strong>Order ID:</strong> ${inv.orderId}</p>
       ${inv.paymentId ? `<p><strong>Transaction ID:</strong> ${inv.paymentId}</p>` : ""}
-      <p><strong>Payment Method:</strong> Razorpay</p>
+      <p><strong>Payment Method:</strong> ${inv.paymentMethod === "Free" ? "Free" : "Razorpay"}</p>
     </div>
     <div>
       <p><strong>Status:</strong> <span class="status ${inv.status === "paid" ? "paid" : inv.status === "pending" ? "pending" : "failed"}">${inv.status === "paid" ? "Paid" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}</span></p>
