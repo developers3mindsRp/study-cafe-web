@@ -67,17 +67,17 @@ export const useRegister = () => {
   });
 };
 
-// Hook for logout mutation
+/** Header & legacy callers — delegates to AuthProvider so tokens, cache, and hasToken reset together */
 export const useLogout = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const { logout } = useAuth();
 
   return useMutation({
-    mutationFn: authService.logout,
+    mutationFn: async () => {
+      logout();
+    },
     onSuccess: () => {
-      queryClient.setQueryData(queryKeys.auth.currentUser, null);
-      queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
-      router.push('/');
+      void router.push('/');
     },
   });
 };

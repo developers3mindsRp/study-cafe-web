@@ -75,16 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // The axios interceptor handles 401s when a refresh token exists.
     if (!getRefreshToken()) {
       clearAuthData();
-      queryClient.setQueryData(queryKeys.auth.currentUser, null);
-      queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
+      queryClient.clear();
       setHasToken(false);
     }
   }, [isError, queryClient]);
 
   const logout = useCallback(() => {
-    clearAuthData();
-    queryClient.setQueryData(queryKeys.auth.currentUser, null);
-    queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
+    void authService.logout();
+    queryClient.clear();
     setHasToken(false);
   }, [queryClient]);
 
@@ -132,7 +130,6 @@ export function useInvalidateSession() {
   const queryClient = useQueryClient();
   return useCallback(() => {
     clearAuthData();
-    queryClient.setQueryData(queryKeys.auth.currentUser, null);
-    queryClient.removeQueries({ queryKey: queryKeys.auth.currentUser });
+    queryClient.clear();
   }, [queryClient]);
 }

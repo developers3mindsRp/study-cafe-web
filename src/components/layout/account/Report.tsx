@@ -198,7 +198,7 @@ export default function AffiliateReportPage() {
       <button
         type="button"
         className="text-[16px] text-[#09339B] mb-3 hover:underline"
-        onClick={() => router.push("/dashboard/earnings")}
+        onClick={() => router.push("/dashboard")}
       >
         ← Back to Affiliate Dashboard
       </button>
