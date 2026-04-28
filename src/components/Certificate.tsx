@@ -6,15 +6,14 @@ type CertifyModalProps = {
   onDownload?: () => void | Promise<void>;
 };
 
-export default function Certificate({ onClose, onDownload }: CertifyModalProps) {
-
+export default function Certificate({
+  onClose,
+  onDownload,
+}: CertifyModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal Box */}
       <div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-6 z-10">
@@ -26,45 +25,49 @@ export default function Certificate({ onClose, onDownload }: CertifyModalProps) 
           ✕
         </button>
 
-                {/* Certificate Card */}
-                <div className="bg-white shadow rounded p-5 space-y-3">
-             <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
-            <img src="/images/award.png" alt="Certificate Icon" className="w-6 h-6" />
+        {/* Certificate Card */}
+        <div className="bg-white shadow rounded p-5 space-y-3">
+          <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
+            <img
+              src="/images/award.png"
+              alt="Certificate Icon"
+              className="w-6 h-6"
+            />
             Course Certificate
           </h3>
 
-                  <p className="text-[16px] text-[#929292] text-center">Download your certificate of completion of this course</p>
-          
-                  <Image
-                    src="/images/certificate.svg"
-                    alt="Certificate"
-                    width={500}
-                    height={300}
-                    className="rounded"
-                  />
-                </div>
+          <p className="text-[16px] text-[#929292] text-center">
+            Download your certificate of completion of this course
+          </p>
 
-            <div className="flex justify-center gap-3 pt-3 ">
-            <button
-              type="button"
-              className="px-4 py-2 bg-[#09339B] text-white rounded"
-              onClick={() => {
-                void onDownload?.();
-              }}
-            >
-              Download
-            </button>
+          <Image
+            src="/images/certificate.svg"
+            alt="Certificate"
+            width={500}
+            height={300}
+            className="rounded"
+          />
+        </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border rounded"
-            >
-              Close
-            </button>
-          </div>
+        <div className="flex justify-center gap-3 pt-3 ">
+          <button
+            type="button"
+            className="px-4 py-2 bg-[#09339B] text-white rounded"
+            onClick={() => {
+              void onDownload?.();
+            }}
+          >
+            Download
+          </button>
 
-
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border rounded"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

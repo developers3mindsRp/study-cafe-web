@@ -1,22 +1,45 @@
 "use client";
 import { useState } from "react";
-type ReviewModalProps = {
-  onClose?: () => void
-}
+import { submitCourseReview } from "@/services/courseReviews.service";
 
-export default function ReviewPage({ onClose }: ReviewModalProps) {
-      const [rating, setRating] = useState(0);
-      const [hoverRating, setHoverRating] = useState(0);
-      const [review, setReview] = useState("");
-    
-      const stars = [1, 2, 3, 4, 5];
-    
-      const handleSubmit = () => {
-        console.log({ rating, review });
-        alert(`Rating: ${rating}\nReview: ${review}`);
-        setRating(0);
-        setReview("");
-      };
+type ReviewModalProps = {
+  courseId: string;
+  onClose?: () => void;
+  onSubmitted?: () => void;
+};
+
+export default function ReviewPage({ courseId, onClose, onSubmitted }: ReviewModalProps) {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [review, setReview] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const stars = [1, 2, 3, 4, 5];
+
+  const handleSubmit = async () => {
+    setError(null);
+    if (!rating) {
+      setError("Please choose a star rating.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await submitCourseReview(courseId, rating, review);
+      setRating(0);
+      setReview("");
+      onSubmitted?.();
+      onClose?.();
+    } catch (e: unknown) {
+      const msg =
+        e && typeof e === "object" && "message" in e && typeof (e as { message: unknown }).message === "string"
+          ? (e as { message: string }).message
+          : "Could not submit review. Please try again.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
@@ -58,6 +81,11 @@ export default function ReviewPage({ onClose }: ReviewModalProps) {
         <span className="text-gray-400 text-sm">Your overall rating</span>
       </div>
               <h2 className="text-[16px]  mb-1">Add Detailed Review</h2>
+            {error ? (
+              <p className="mb-2 rounded-md bg-red-50 px-2 py-2 text-center text-sm text-red-700" role="alert">
+                {error}
+              </p>
+            ) : null}
             <textarea
         className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#09339B]"
         placeholder="Write here"
@@ -68,10 +96,12 @@ export default function ReviewPage({ onClose }: ReviewModalProps) {
 
 <div className="flex justify-center">
   <button
-    onClick={handleSubmit}
-    className="w-1/2 bg-[#09339B] text-white py-3 rounded-md hover:bg-blue-800 transition"
+    type="button"
+    disabled={submitting}
+    onClick={() => void handleSubmit()}
+    className="w-1/2 rounded-md bg-[#09339B] py-3 text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
   >
-    Submit
+    {submitting ? "Submitting…" : "Submit"}
   </button>
 </div>
 
