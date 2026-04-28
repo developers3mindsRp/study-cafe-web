@@ -6,12 +6,24 @@ import Link from 'next/link';
 import { subscribeNewsletter } from '@/services/platform.service';
 import type { ApiError } from '@/types/api.types';
 
-export default function Footer() {
+type FooterProps = {
+  footerData: any;
+};
+
+export default function Footer({ footerData }: FooterProps) {
+
+  console.log(footerData,"footerData")
+
   const [usefulOpen, setUsefulOpen] = useState(false);
   const [importantOpen, setImportantOpen] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [newsletterMessage, setNewsletterMessage] = useState<string | null>(null);
+  const socialLinks = footerData?.social_links  ? JSON.parse(footerData.social_links) : {};  
+  const appLinks = footerData?.app_links  ? JSON.parse(footerData.app_links) : {};
+  const importantLinks = footerData?.important_links  ? JSON.parse(footerData.important_links) : [];
+  const column1 = importantLinks.filter((item: any) => item.column === 1);
+  const column2 = importantLinks.filter((item: any) => item.column === 2);
 
   // Optional: refs if you want to manage dynamic height — simpler version uses a fixed max-height
   const usefulRef = useRef<HTMLUListElement>(null);
@@ -84,31 +96,64 @@ export default function Footer() {
               </Link>
             </div>
             <p className="text-[16px] md:text-[16px] text-white mb-8 md:mb-4 font-normal px-12 md:px-0">
-              Empowering learners with quality education and professional courses.
+             {footerData?.tagline}
             </p>
             <div className="flex gap-4">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/icons/x.svg" alt="Twitter" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/icons/insta.svg" alt="Instagram" />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/icons/linkedin.svg" alt="LinkedIn" />
-              </a>
-              <a href="https://fb.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/icons/fb.svg" alt="Facebook" />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center transition-colors">
-                <img src="/images/icons/yt.svg" alt="YouTube" />
-              </a>
-              <a href="https://telegram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center  transition-colors">
-                <img src="/images/icons/telegram.svg" alt="Telegram" />
-              </a>
-            </div>
+                {socialLinks?.twitter && (
+                  <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/x.svg" alt="Twitter" />
+                  </a>
+                )}
+
+                {socialLinks?.instagram && (
+                  <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/insta.svg" alt="Instagram" />
+                  </a>
+                )}
+
+                {socialLinks?.linkedin && (
+                  <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/linkedin.svg" alt="LinkedIn" />
+                  </a>
+                )}
+
+                {socialLinks?.facebook && (
+                  <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/fb.svg" alt="Facebook" />
+                  </a>
+                )}
+
+                {socialLinks?.youtube && (
+                  <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/yt.svg" alt="YouTube" />
+                  </a>
+                )}
+
+                {socialLinks?.telegram && (
+                  <a href={socialLinks.telegram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <img src="/images/icons/telegram.svg" alt="Telegram" />
+                  </a>
+                )}
+              </div>
+            
             <div className="mt-6 hidden  md:flex gap-2">
-              <img src="/images/google-play.png" alt="Download on Google Play" width="130" height="40" />
-              <img src="/images/app-store.png" alt="Download on app store" width="130" height="40" />
+              
+                
+                {appLinks?.googlePlay && (
+                  <a href={appLinks.googlePlay} target="_blank" rel="noopener noreferrer" >
+                    <img src="/images/google-play.png" alt="Download on Google Play" width="130" height="40" />
+                  </a>
+                )}
+              
+               
+                {appLinks?.appStore && (
+                  <a href={appLinks.appStore} target="_blank" rel="noopener noreferrer" >
+                       <img src="/images/app-store.png" alt="Download on app store" width="130" height="40" />
+                  </a>
+                )}
+              
+             
+           
             </div>
           </div>
 
@@ -132,11 +177,11 @@ export default function Footer() {
               style={{ maxHeight: '0px' /* collapsed by default */ }}
             >
               <li><Link href="/about" className="text-[16px] text-white transition-colors">About US</Link></li>
-              <li><Link href="/?category=data-science" className="text-[16px] text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/?category=design" className="text-[16px] text-white transition-colors">Ethics Policy</Link></li>
-              <li><Link href="/?category=business" className="text-[16px] text-white transition-colors">Terms of Use</Link></li>
-              <li><Link href="/?category=marketing" className="text-[16px] text-white transition-colors">Disclaimer</Link></li>
-              <li><Link href="/?category=marketing" className="text-[16px] text-white transition-colors">Refund Policy</Link></li>
+              <li><Link href="/privacy-policy" className="text-[16px] text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/ethics-policy" className="text-[16px] text-white transition-colors">Ethics Policy</Link></li>
+              <li><Link href="/terms-of-use" className="text-[16px] text-white transition-colors">Terms of Use</Link></li>
+              <li><Link href="/disclaimer" className="text-[16px] text-white transition-colors">Disclaimer</Link></li>
+              <li><Link href="/refund-policy" className="text-[16px] text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
           <hr className='block md:hidden' />
@@ -155,6 +200,49 @@ export default function Footer() {
               </button>
             </h3>
             <div className='md:flex md:gap-12'>
+
+              {/* Column 1 */}
+              <div>
+                <ul
+                  ref={importantRef1}
+                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
+                  style={{ maxHeight: '0px' }}
+                >
+                  {column1.map((item: any, index: number) => (
+                    <li key={index}>
+                      <Link
+                        href={item.url}
+                        className="text-[16px] text-white transition-colors"
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Column 2 */}
+              <div>
+                <ul
+                  ref={importantRef2}
+                  className="space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible mt-4 md:mt-0"
+                  style={{ maxHeight: '0px' }}
+                >
+                  {column2.map((item: any, index: number) => (
+                    <li key={index}>
+                      <Link
+                        href={item.url}
+                        className="text-[16px] text-white transition-colors"
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+            {/* <div className='md:flex md:gap-12'>
               <div>
                 <ul
                   id="important-links-list"
@@ -186,7 +274,7 @@ export default function Footer() {
                   <li><Link href="/contact" className="text-[16px] text-white transition-colors">Contact Us</Link></li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
 
 
@@ -263,7 +351,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className=" mt-6 text-center ">
           <p className="text-[12px] md:text-[18px] text-white">
-            Copyright © 2026 StudyCafe Private Limited. All Rights Reserved.
+           {footerData?.copyright}
           </p>
         </div>
       </div>

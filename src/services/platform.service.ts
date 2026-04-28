@@ -15,6 +15,7 @@ import {
   PaginatedCourses,
   CoursePublicDetail,
   CourseBatch,
+  FooterContent,
 } from '@/types/models.types';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -93,6 +94,24 @@ export const getPageContent = async (slug: string): Promise<PageContent | null> 
       `/platform/cms-pages/${encodeURIComponent(slug)}`
     );
     return response.data.data ?? null;
+  } catch {
+    return null;
+  }
+};
+
+/*-----footer data -------*/
+let footerCache: FooterContent | null = null;
+
+export const getFooterContent = async (): Promise<FooterContent | null> => {
+  if (footerCache) return footerCache;
+
+  try {
+    const response = await axiosInstance.get<ApiResponse<FooterContent>>(
+      `/platform/footer`
+    );
+
+    footerCache = response.data.data ?? null;
+    return footerCache;
   } catch {
     return null;
   }

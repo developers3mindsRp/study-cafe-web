@@ -1,5 +1,5 @@
 import axiosInstance from '@/lib/axios';
-import { Course, CourseDetail } from '@/types/models.types';
+import { Course, CourseDetail, CertificateDetail } from '@/types/models.types';
 import { ApiResponse, PaginatedResponse, CourseFilters } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockCoursesApi } from '@/mocks/api.mock';
@@ -39,6 +39,23 @@ export const getCourseById = async (id: string): Promise<CourseDetail> => {
     `/courses/${id}`
   );
   
+  return response.data.data;
+};
+
+
+export const getCertificateByCourseId = async (
+  id: string
+): Promise<CertificateDetail> => {
+  // Use mock API if configured
+  if (shouldUseMock()) {
+    // return mockCertificateApi.getCertificateByCourseId(id);
+    throw new Error("Mock not implemented for certificate yet");
+  }
+
+  const response = await axiosInstance.get<
+    ApiResponse<CertificateDetail>
+  >(`/certificates/course/${id}`);
+
   return response.data.data;
 };
 
