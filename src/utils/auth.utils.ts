@@ -80,9 +80,10 @@ const REFERRAL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 export const setReferralCode = (code: string): void => {
   if (typeof window === 'undefined') return;
-  const existing = localStorage.getItem(REFERRAL_KEY);
-  if (existing) return;
-  localStorage.setItem(REFERRAL_KEY, code);
+  const normalized = String(code).trim().toUpperCase();
+  if (!normalized) return;
+  /** Last non-empty `?ref=` wins so a new affiliate link overrides a stale first-touch code. */
+  localStorage.setItem(REFERRAL_KEY, normalized);
   localStorage.setItem(REFERRAL_TS_KEY, String(Date.now()));
 };
 
@@ -96,7 +97,7 @@ export const getReferralCode = (): string | null => {
     localStorage.removeItem(REFERRAL_TS_KEY);
     return null;
   }
-  return code;
+  return code.trim().toUpperCase();
 };
 
 export const clearReferralCode = (): void => {

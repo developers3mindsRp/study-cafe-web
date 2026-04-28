@@ -139,10 +139,23 @@ export interface AffiliateHistoryItem {
 
 export interface AffiliateDashboardData {
   balance: AffiliateBalance;
+  /** Sum of amounts in `pending` withdrawal requests (reserved). */
+  pending_withdrawal_total?: number;
+  /** current_balance − pending_withdrawal_total */
+  available_for_withdrawal?: number;
   totalOrders: number;
   totalOrderValue: number;
   totalCommission: number;
   history: AffiliateHistoryItem[];
+}
+
+export interface UserWithdrawalRequest {
+  id: number;
+  affiliate_id: number;
+  amount: string | number;
+  status: 'pending' | 'approved' | 'rejected';
+  remarks?: string | null;
+  created_at: string;
 }
 
 export interface ReferralLinkCategory {
@@ -273,8 +286,15 @@ export const getMyReferralLinks = async (): Promise<ReferralLinksData> => {
   return response.data.data;
 };
 
+export const getMyWithdrawals = async (): Promise<UserWithdrawalRequest[]> => {
+  const response = await axiosInstance.get<ApiResponse<UserWithdrawalRequest[]>>(
+    '/affiliate/my-withdrawals',
+  );
+  return response.data.data ?? [];
+};
+
 export const createWithdrawalRequest = async (amount: number) => {
-  const response = await axiosInstance.post<ApiResponse<any>>(
+  const response = await axiosInstance.post<ApiResponse<UserWithdrawalRequest>>(
     '/affiliate/my-withdrawals',
     { amount },
   );

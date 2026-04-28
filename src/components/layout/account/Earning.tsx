@@ -98,6 +98,24 @@ export default function Earning() {
         </div>
       </div>
 
+      {(dashboard?.available_for_withdrawal != null ||
+        dashboard?.pending_withdrawal_total != null) && (
+        <div className="mt-4 px-2 flex flex-wrap gap-6 text-sm text-[#555]">
+          <p>
+            Available to withdraw:{" "}
+            <span className="font-semibold text-[#09339B]">
+              ₹{(dashboard?.available_for_withdrawal ?? 0).toLocaleString("en-IN")}
+            </span>
+          </p>
+          <p>
+            Pending withdrawal requests:{" "}
+            <span className="font-semibold">
+              ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN")}
+            </span>
+          </p>
+        </div>
+      )}
+
       <div className="px-2 mt-6">
         <button
           className="px-4 py-2 bg-[#09339B] text-white rounded-lg text-sm md:text-base font-medium hover:bg-white hover:text-[#09339B] border border-[#09339B] transition-colors duration-300"
