@@ -48,3 +48,10 @@ export interface QueryParams {
   [key: string]: string | number | boolean | undefined;
 }
 
+
+
+
+export interface CertificateDetail  {
+  certificate_url: string;
+  // add more fields if API returns more
+};

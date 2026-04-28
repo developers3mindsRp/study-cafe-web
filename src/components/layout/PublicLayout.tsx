@@ -1,8 +1,9 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Header from './Header';
 import Footer from './Footer';
 import { setReferralCode } from '@/utils/auth.utils';
+import { getFooterContent } from "@/services/platform.service";
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface PublicLayoutProps {
 
 export default function PublicLayout({ children, showFooter = true }: PublicLayoutProps) {
   const router = useRouter();
+  const [footerData, setFooterData] = useState<any>(null);
 
   useEffect(() => {
     const ref = router.query.ref;
@@ -18,6 +20,17 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
       setReferralCode(ref);
     }
   }, [router.query.ref]);
+
+  // ✅ Fetch footer directly here
+  useEffect(() => {
+    const fetchFooter = async () => {
+      const data = await getFooterContent();
+      setFooterData(data);
+    };
+
+    fetchFooter();
+  }, [footerData]);
+    const memoFooterData = useMemo(() => footerData, [footerData]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -27,8 +40,7 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
         {children}
       </main>
 
-      {showFooter && <Footer />}
+      {showFooter && <Footer footerData={memoFooterData} />}
     </div>
   );
 }
-

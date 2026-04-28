@@ -11,6 +11,7 @@ import Learning from '@/components/layout/home/Learning.home';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { getHomePageData, getMemberships } from '@/services/platform.service';
 import type { HomePageData, Membership } from '@/types/models.types';
+import CertificateLayout from '@/components/ui/CertificateLayout';
 
 interface HomeProps {
   homePageData: HomePageData | null;
@@ -20,6 +21,7 @@ interface HomeProps {
 export default function Home({ homePageData, memberships }: HomeProps) {
   return (
     <PublicLayout>
+      {/* <CertificateLayout /> */}
       <HeroSection hero={homePageData?.hero} />
       <StatsSection stats={homePageData?.stats} />
       <FeaturedCourses />
