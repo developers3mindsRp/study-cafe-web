@@ -20,6 +20,7 @@ import {
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockPlatformApi } from '@/mocks/api.mock';
+import { normalizeSeoPayload, pathnameForSeoLookup } from '@/lib/seo/normalize';
 
 /**
  * Platform Service
@@ -117,21 +118,35 @@ export const getFooterContent = async (): Promise<FooterContent | null> => {
   }
 };
 
-/** SEO metadata for a page (for meta tags, OG, etc.) */
-export const getSeoMetadata = async (
-  pageSlug: string
+/**
+ * Resolve SEO row for an app route path (`/contact`, `/blogs/foo`).
+ * Matches `seo_metadata.page_slug` on the backend (supports multi-segment paths).
+ */
+export const fetchSeoMetadataByPath = async (
+  pathInput: string
 ): Promise<SeoMetadata | null> => {
+  const path = pathnameForSeoLookup(pathInput);
+
   if (shouldUseMock()) {
-    return mockPlatformApi.getSeoMetadata(pageSlug);
+    return mockPlatformApi.getSeoMetadata(path);
   }
+
   try {
-    const response = await axiosInstance.get<ApiResponse<SeoMetadata>>(
-      `/platform/seo/${encodeURIComponent(pageSlug)}`
+    const response = await axiosInstance.get<ApiResponse<Record<string, unknown>>>(
+      '/platform/seo-metadata/by-path',
+      { params: { path } }
     );
-    return response.data.data;
+    const payload = response.data?.data as Record<string, unknown> | undefined;
+    return normalizeSeoPayload(payload);
   } catch {
     return null;
   }
+};
+
+/** Legacy: slug fragment like `contact` or `/contact` — same backend lookup by path */
+export const getSeoMetadata = async (pageSlug: string): Promise<SeoMetadata | null> => {
+  const path = pageSlug.startsWith('/') ? pageSlug : `/${pageSlug}`;
+  return fetchSeoMetadataByPath(path);
 };
 
 /** Public article by slug (body + related_articles for [related id="..."] shortcodes) */
