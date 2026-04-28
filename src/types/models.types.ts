@@ -49,6 +49,10 @@ export interface Course {
   createdAt: string;
   updatedAt: string;
 }
+export interface CertificateDetail  {
+  certificate_url: string;
+  // add more fields if API returns more
+};
 
 // Course Content/Curriculum
 export interface CourseLesson {
@@ -542,3 +546,15 @@ export interface ArticleBySlug {
   related_articles?: RelatedArticle[];
   download_url?: string | null;
 }
+
+export interface FooterContent  {
+  links: {
+    title: string;
+    url: string;
+  }[];
+  copyright: string;
+  social?: {
+    platform: string;
+    url: string;
+  }[];
+};

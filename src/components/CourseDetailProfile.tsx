@@ -233,6 +233,7 @@ export default function CourseDetailProfile({
 
           {isCertificateOpen && (
             <Certificate
+              courseId={courseId}
               onClose={() => setIsCertificateOpen(false)}
               onDownload={onCertDownloadClick}
             />
