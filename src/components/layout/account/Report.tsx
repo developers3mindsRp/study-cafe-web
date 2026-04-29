@@ -1,8 +1,16 @@
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+"use client";
+
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useRouter } from "next/router";
+import { isAxiosError } from "axios";
 import {
   getMyCommissionOrders,
+  getMyAffiliateDashboard,
+  getMyWithdrawals,
+  createWithdrawalRequest,
   type AffiliateHistoryItem,
+  type AffiliateDashboardData,
+  type UserWithdrawalRequest,
 } from "@/services/order.service";
 
 function formatDate(dateStr: string) {
@@ -13,134 +21,418 @@ function formatDate(dateStr: string) {
   });
 }
 
-export default function Commission() {
+function isoDateLocal(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function firstDayOfMonth(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+export default function AffiliateReportPage() {
   const router = useRouter();
+  const today = useMemo(() => new Date(), []);
+  const [fromDate, setFromDate] = useState(() => isoDateLocal(firstDayOfMonth(today)));
+  const [toDate, setToDate] = useState(() => isoDateLocal(today));
+  const [allTime, setAllTime] = useState(false);
+
   const [orders, setOrders] = useState<AffiliateHistoryItem[]>([]);
-  const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  const [dashboard, setDashboard] = useState<AffiliateDashboardData | null>(null);
+  const [withdrawals, setWithdrawals] = useState<UserWithdrawalRequest[]>([]);
+
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawSubmitting, setWithdrawSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const loadSummary = useCallback(async () => {
+    const [dash, wd] = await Promise.all([
+      getMyAffiliateDashboard(),
+      getMyWithdrawals(),
+    ]);
+    setDashboard(dash);
+    setWithdrawals(wd);
+  }, []);
+
+  const fetchOrders = useCallback(
+    async (opts?: { all?: boolean }) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const useAll = opts?.all ?? allTime;
+        const data = await getMyCommissionOrders(
+          useAll ? undefined : fromDate || undefined,
+          useAll ? undefined : toDate || undefined,
+        );
+        setOrders(data);
+      } catch (err: unknown) {
+        console.error("Failed to fetch commission orders:", err);
+        setOrders([]);
+        setError("Could not load commission orders. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [allTime, fromDate, toDate],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const now = new Date();
+        const initialFrom = isoDateLocal(firstDayOfMonth(now));
+        const initialTo = isoDateLocal(now);
+        const [dash, wd, orderRows] = await Promise.all([
+          getMyAffiliateDashboard(),
+          getMyWithdrawals(),
+          getMyCommissionOrders(initialFrom, initialTo),
+        ]);
+        if (!cancelled) {
+          setDashboard(dash);
+          setWithdrawals(wd);
+          setOrders(orderRows);
+        }
+      } catch {
+        if (!cancelled) {
+          setOrders([]);
+          setError("Could not load your report. Please refresh.");
+        }
+      } finally {
+        if (!cancelled) setInitialLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const periodCommission = useMemo(
+    () =>
+      orders.reduce((s, o) => s + parseFloat(String(o.commission_amount || 0)), 0),
+    [orders],
+  );
+
+  const available =
+    dashboard?.available_for_withdrawal ??
+    Math.max(
+      0,
+      parseFloat(String(dashboard?.balance?.current_balance ?? 0)) -
+        (dashboard?.pending_withdrawal_total ?? 0),
+    );
 
   const handleSearch = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getMyCommissionOrders(fromDate || undefined, toDate || undefined);
-      setOrders(data);
-      setSearched(true);
-    } catch (err) {
-      console.error("Failed to fetch commission orders:", err);
-      setOrders([]);
-      setSearched(true);
-    } finally {
-      setLoading(false);
+    setSuccess(null);
+    if (!allTime) {
+      if (!fromDate || !toDate) {
+        setError("Please select both From and To dates, or enable “All time”.");
+        return;
+      }
+      if (new Date(fromDate) > new Date(toDate)) {
+        setError("“From” date must be on or before “To” date.");
+        return;
+      }
     }
-  }, [fromDate, toDate]);
+    setError(null);
+    await fetchOrders();
+  }, [allTime, fromDate, toDate, fetchOrders]);
+
+  const handleToggleAllTime = useCallback(
+    (checked: boolean) => {
+      setAllTime(checked);
+      setError(null);
+    },
+    [],
+  );
+
+  const handleWithdraw = useCallback(async () => {
+    const amount = parseFloat(withdrawAmount);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setError("Enter a valid withdrawal amount.");
+      return;
+    }
+    if (amount > available + 1e-6) {
+      setError(`Amount cannot exceed available balance (₹${available.toFixed(2)}).`);
+      return;
+    }
+    setWithdrawSubmitting(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      await createWithdrawalRequest(amount);
+      setWithdrawAmount("");
+      setSuccess("Withdrawal request submitted. Our team will process it and update your balance.");
+      await loadSummary();
+      await fetchOrders({ all: allTime });
+    } catch (e: unknown) {
+      const msg =
+        isAxiosError(e) &&
+        e.response?.data &&
+        typeof (e.response.data as { message?: string }).message === "string"
+          ? (e.response.data as { message: string }).message
+          : "Could not submit withdrawal. Please try again.";
+      setError(msg);
+    } finally {
+      setWithdrawSubmitting(false);
+    }
+  }, [withdrawAmount, available, loadSummary, fetchOrders, allTime]);
+
+  if (initialLoading) {
+    return (
+      <section className="md:p-6 max-w-6xl mx-auto bg-white px-6 py-12 text-center text-gray-500">
+        Loading your report…
+      </section>
+    );
+  }
+
+  const bal = dashboard?.balance;
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto bg-white px-6">
-      <div className="text-[16px] text-[#09339B] mb-3 cursor-pointer" onClick={() => router.back()}>
-         ← Back to Affiliate Dashboard
-      </div>
-      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-1">
-       Commission Orders
-      </h2>
-      <p className="text-[#252525] text-[16px] md:text-[26px] mb-6">
-        Search your affiliate commission orders by date or month.
+    <section className="md:p-6 max-w-6xl mx-auto bg-white px-4 sm:px-6 pb-16">
+      <button
+        type="button"
+        className="text-[16px] text-[#09339B] mb-3 hover:underline"
+        onClick={() => router.push("/dashboard")}
+      >
+        ← Back to Affiliate Dashboard
+      </button>
+
+      <h1 className="text-[26px] md:text-[34px] font-semibold text-[#252525] mb-1">
+        Commission report
+      </h1>
+      <p className="text-[#454545] text-[15px] md:text-[18px] mb-6">
+        Filter referral commissions by period and request payouts. Withdrawals stay pending until
+        staff marks them approved in admin after paying you manually.
       </p>
-      <div className="border border-[#B4C6FF] rounded-xl p-4 shadow-md">
-        <div className="flex flex-col md:flex-row gap-6 md:items-end">
-          <div className="flex-1 min-w-0">
-            <label className="text-[16px]">
-              From <span className="text-red-500">*</span>
-            </label>
-            <div className="relative mt-2">
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                style={{ WebkitAppearance: 'none' }}
-                className="w-full min-w-0 h-[48px] px-4 border border-gray-300 rounded-xl bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#09339B]"
-              />
-            </div>
-          </div>
 
-          <div className="flex-1 min-w-0">
-            <label className="text-[16px]">
-              To <span className="text-red-500">*</span>
-            </label>
-            <div className="relative mt-2">
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-full min-w-0 h-[48px] appearance-none pl-4 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B]"
-              />
-            </div>
-          </div>
+      {/* Balance overview */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div className="border border-[#E5E7EB] rounded-xl p-4">
+          <p className="text-sm text-[#717171]">Current balance</p>
+          <p className="text-xl font-semibold text-[#252525]">
+            ₹{parseFloat(String(bal?.current_balance ?? 0)).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+        <div className="border border-[#E5E7EB] rounded-xl p-4">
+          <p className="text-sm text-[#717171]">Pending withdrawal requests</p>
+          <p className="text-xl font-semibold text-[#252525]">
+            ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+        <div className="border border-[#B4C6FF] rounded-xl p-4 bg-[#F8FAFF]">
+          <p className="text-sm text-[#09339B]">Available to withdraw</p>
+          <p className="text-xl font-semibold text-[#09339B]">
+            ₹{available.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+        <div className="border border-[#E5E7EB] rounded-xl p-4">
+          <p className="text-sm text-[#717171]">Lifetime commission (earned)</p>
+          <p className="text-xl font-semibold text-[#252525]">
+            ₹{parseFloat(String(bal?.total_earned ?? 0)).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+      </div>
 
+      {(error || success) && (
+        <div className="mb-6 space-y-2">
+          {error && (
+            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-800">{error}</p>
+          )}
+          {success && (
+            <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-900">{success}</p>
+          )}
+        </div>
+      )}
+
+      {/* Date filter */}
+      <div className="border border-[#B4C6FF] rounded-xl p-4 shadow-md mb-8">
+        <div className="flex flex-col md:flex-row gap-4 md:items-end flex-wrap">
+          <label className="flex items-center gap-2 cursor-pointer order-first md:order-none">
+            <input
+              type="checkbox"
+              checked={allTime}
+              onChange={(e) => handleToggleAllTime(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            <span className="text-[15px] text-[#252525]">All time (ignore dates)</span>
+          </label>
+
+          <div className="flex-1 min-w-[140px]">
+            <label className="text-[14px] text-[#555]">From</label>
+            <input
+              type="date"
+              disabled={allTime}
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              className="mt-1 w-full h-[44px] px-3 border border-gray-300 rounded-xl bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#09339B] disabled:opacity-50"
+            />
+          </div>
+          <div className="flex-1 min-w-[140px]">
+            <label className="text-[14px] text-[#555]">To</label>
+            <input
+              type="date"
+              disabled={allTime}
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              className="mt-1 w-full h-[44px] px-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#09339B] disabled:opacity-50"
+            />
+          </div>
           <button
+            type="button"
             onClick={handleSearch}
             disabled={loading}
-            className="flex items-center justify-center gap-2 bg-[#09339B] text-white px-6 py-2 rounded-xl hover:bg-[#0F2E75] transition text-[16px] w-full md:w-auto disabled:opacity-60"
+            className="bg-[#09339B] text-white px-6 py-2.5 rounded-xl hover:bg-[#0F2E75] transition text-[15px] disabled:opacity-60 h-[44px] self-end"
           >
-            {loading ? "Searching…" : "Search"}
+            {loading ? "Loading…" : "Apply filter"}
+          </button>
+        </div>
+
+        {!loading && orders.length > 0 && (
+          <p className="mt-4 text-[15px] text-[#252525]">
+            <span className="font-semibold">{orders.length}</span> order
+            {orders.length !== 1 ? "s" : ""} in this view · Commission total in period:{" "}
+            <span className="font-semibold text-[#275934]">
+              ₹{periodCommission.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </p>
+        )}
+      </div>
+
+      {/* Withdrawal request */}
+      <div className="border border-[#E5E7EB] rounded-xl p-5 mb-10">
+        <h2 className="text-lg font-semibold text-[#252525] mb-2">Request withdrawal</h2>
+        <p className="text-sm text-[#616161] mb-4">
+          Submit the amount you want paid out. Admin will transfer funds offline and mark the request
+          approved in the system (which updates your balance). Rejected requests do not change your
+          balance.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-end max-w-xl">
+          <div className="flex-1">
+            <label className="text-sm text-[#555]">Amount (₹)</label>
+            <input
+              type="number"
+              min={0}
+              step={0.01}
+              max={available}
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              placeholder={`Max ₹${available.toFixed(2)}`}
+              className="mt-1 w-full h-[44px] px-3 border border-gray-300 rounded-xl"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleWithdraw}
+            disabled={withdrawSubmitting || available <= 0}
+            className="bg-[#09339B] text-white px-6 py-2.5 rounded-xl hover:bg-[#0F2E75] disabled:opacity-50 h-[44px]"
+          >
+            {withdrawSubmitting ? "Submitting…" : "Submit request"}
           </button>
         </div>
       </div>
 
-      <div className="py-4">
-        {searched && (
-          <div className="flex flex-col md:flex-row mt-4 px-2">
-            <h2 className="font-regular text-[20px] mb-2">
-              {orders.length} Order{orders.length !== 1 ? "s" : ""} Found
-            </h2>
+      {/* Your withdrawal history */}
+      <div className="mb-10">
+        <h2 className="text-lg font-semibold text-[#252525] mb-3">Your withdrawal requests</h2>
+        {withdrawals.length === 0 ? (
+          <p className="text-gray-500 text-sm">No withdrawal requests yet.</p>
+        ) : (
+          <div className="overflow-x-auto border border-[#E5E7EB] rounded-xl">
+            <table className="min-w-full text-sm">
+              <thead className="bg-[#F9FAFB] text-left">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Date</th>
+                  <th className="px-4 py-2 font-medium">Amount</th>
+                  <th className="px-4 py-2 font-medium">Status</th>
+                  <th className="px-4 py-2 font-medium">Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {withdrawals.map((w) => (
+                  <tr key={w.id} className="border-t border-[#EEE]">
+                    <td className="px-4 py-2 whitespace-nowrap">{formatDate(w.created_at)}</td>
+                    <td className="px-4 py-2">
+                      ₹{parseFloat(String(w.amount)).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={
+                          w.status === "approved"
+                            ? "text-green-700"
+                            : w.status === "rejected"
+                              ? "text-red-700"
+                              : "text-amber-700"
+                        }
+                      >
+                        {w.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-[#555] max-w-xs truncate" title={w.remarks || ""}>
+                      {w.remarks || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
-
-        {!searched && !loading && (
-          <p className="text-center text-gray-400 py-8">
-            Select a date range and click Search to view commission orders.
-          </p>
-        )}
-
-        {searched && orders.length === 0 && (
-          <p className="text-center text-gray-400 py-8">
-            No commission orders found for the selected period.
-          </p>
-        )}
-
-        {orders.map((order) => (
-          <div
-            key={order.id}
-            className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-4 md:px-6 md:mx-2"
-          >
-            <div className="flex justify-between md:text-[20px]">
-              <p className="font-bold">Order - {order.order_id}</p>
-              <p>{formatDate(order.created_at)}</p>
-            </div>
-
-            <p className="font-regular">{order.buyer_name}</p>
-            <ul className="text-sm text-gray-600 flex flex-wrap gap-2 list-disc marker:text-[#D9D9D9] mb-4">
-              <span>{order.buyer_email}</span>
-              {order.buyer_phone && (
-                <li className="ml-4"><span>{order.buyer_phone}</span></li>
-              )}
-            </ul>
-
-            <div className="border-t border-[#AFAFAF]"></div>
-
-            <div className="flex justify-between items-start">
-              <div className="flex flex-col">
-                <p className="font-medium mt-4 whitespace-nowrap">{order.item_title}</p>
-                <p className="mt-1">Amount: <span className="font-semibold">₹{parseFloat(order.order_amount).toLocaleString("en-IN")}</span></p>
-              </div>
-              <p className="bg-[#C5FFD4] px-2 md:px-6 py-1 rounded-lg text-[#275934] font-medium mt-6 text-[14px] md:text-[16px] whitespace-nowrap">
-                ₹{parseFloat(order.commission_amount).toLocaleString("en-IN")} Commission
-              </p>
-            </div>
-          </div>
-        ))}
       </div>
+
+      {/* Commission orders list */}
+      <h2 className="text-lg font-semibold text-[#252525] mb-3">Commission orders</h2>
+      {!loading && orders.length === 0 && (
+        <p className="text-center text-gray-500 py-8">No commission orders for the selected period.</p>
+      )}
+
+      {orders.map((order) => (
+        <div
+          key={order.id}
+          className="grid grid-cols-1 gap-3 mt-4 border hover:border-[#9FBBFF] shadow-md rounded-lg p-4 px-4 md:px-6 md:mx-0"
+        >
+          <div className="flex justify-between md:text-[18px] flex-wrap gap-2">
+            <p className="font-bold">Order — {order.order_id}</p>
+            <p className="text-[#555]">{formatDate(order.created_at)}</p>
+          </div>
+
+          <p className="font-medium">{order.buyer_name}</p>
+          <ul className="text-sm text-gray-600 flex flex-wrap gap-2 list-disc marker:text-[#D9D9D9] mb-2">
+            <span>{order.buyer_email}</span>
+            {order.buyer_phone && (
+              <li className="ml-4">
+                <span>{order.buyer_phone}</span>
+              </li>
+            )}
+          </ul>
+
+          <div className="border-t border-[#AFAFAF]" />
+
+          <div className="flex justify-between items-start gap-4">
+            <div className="flex flex-col min-w-0">
+              <p className="font-medium mt-2">{order.item_title}</p>
+              <p className="text-sm mt-1">
+                Order amount:{" "}
+                <span className="font-semibold">
+                  ₹{parseFloat(String(order.order_amount)).toLocaleString("en-IN")}
+                </span>
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5 capitalize">Type: {order.entity_type}</p>
+            </div>
+            <p className="bg-[#C5FFD4] px-3 md:px-5 py-1.5 rounded-lg text-[#275934] font-medium whitespace-nowrap shrink-0">
+              ₹
+              {parseFloat(String(order.commission_amount)).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+              })}{" "}
+              commission
+            </p>
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

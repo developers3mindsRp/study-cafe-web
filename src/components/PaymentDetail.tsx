@@ -168,7 +168,7 @@ export default function PaymentDetail() {
               </span>
             </div>
             <span className="text-black md:text-[16px] mb-1 font-bold ml-2 md:ml-7 md:mt-2">
-              Razorpay
+              {invoice.paymentMethod === "Free" ? "Free" : "Razorpay"}
             </span>
           </div>
         </div>

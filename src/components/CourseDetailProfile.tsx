@@ -209,7 +209,10 @@ export default function CourseDetailProfile({
           </button>
 
           {isReviewOpen && (
-            <ReviewPage onClose={() => setIsReviewOpen(false)} />
+            <ReviewPage
+              courseId={courseId}
+              onClose={() => setIsReviewOpen(false)}
+            />
           )}
 
           <button

@@ -59,10 +59,7 @@ const handleDownload = async () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal Box */}
       <div className="relative bg-white w-full max-w-[70%] rounded-xl shadow-lg p-6 z-10">
@@ -74,10 +71,14 @@ const handleDownload = async () => {
           ✕
         </button>
 
-                {/* Certificate Card */}
-                <div className="bg-white shadow rounded p-5 space-y-3">
-             <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
-            <img src="/images/award.png" alt="Certificate Icon" className="w-6 h-6" />
+        {/* Certificate Card */}
+        <div className="bg-white shadow rounded p-5 space-y-3">
+          <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
+            <img
+              src="/images/award.png"
+              alt="Certificate Icon"
+              className="w-6 h-6"
+            />
             Course Certificate
           </h3>
 
@@ -127,7 +128,25 @@ const handleDownload = async () => {
             </button>
           </div>
 
+        <div className="flex justify-center gap-3 pt-3 ">
+          <button
+            type="button"
+            className="px-4 py-2 bg-[#09339B] text-white rounded"
+            onClick={() => {
+              void onDownload?.();
+            }}
+          >
+            Download
+          </button>
 
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border rounded"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

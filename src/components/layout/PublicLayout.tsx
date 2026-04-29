@@ -17,7 +17,7 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
   useEffect(() => {
     const ref = router.query.ref;
     if (typeof ref === 'string' && ref.trim()) {
-      setReferralCode(ref.trim());
+      setReferralCode(ref);
     }
   }, [router.query.ref]);
 

@@ -63,12 +63,19 @@ export interface CreateOrderPayload {
 
 export interface CreateOrderResponse {
   orderId: string;
-  razorpayOrderId: string;
-  amount: number;           // final payable amount in paise
+  /** Present when a Razorpay checkout is required */
+  razorpayOrderId?: string | null;
+  /** Final payable in paise (0 for free / fully discounted checkout) */
+  amount: number;
   originalAmount: number;   // original price in paise (before coupon)
   discountAmount: number;   // discount in paise
+  gstAmount?: number;       // paise
+  grandTotal?: number;      // paise
   currency: string;
-  key: string;
+  key?: string | null;
+  /** True when the order is fulfilled without payment (free course or 100% off) */
+  free?: boolean;
+  paid?: boolean;
   prefill?: {
     name?: string;
     email?: string;
@@ -98,6 +105,8 @@ export interface OrderInvoice {
   status: string;
   paidAt: string | null;
   paymentId: string | null;
+  /** Present when the server marks the order as free / zero-rupee */
+  paymentMethod?: 'Free' | 'Razorpay';
 }
 
 /* ────────────────────── Affiliate types ────────────────────── */
@@ -130,10 +139,23 @@ export interface AffiliateHistoryItem {
 
 export interface AffiliateDashboardData {
   balance: AffiliateBalance;
+  /** Sum of amounts in `pending` withdrawal requests (reserved). */
+  pending_withdrawal_total?: number;
+  /** current_balance − pending_withdrawal_total */
+  available_for_withdrawal?: number;
   totalOrders: number;
   totalOrderValue: number;
   totalCommission: number;
   history: AffiliateHistoryItem[];
+}
+
+export interface UserWithdrawalRequest {
+  id: number;
+  affiliate_id: number;
+  amount: string | number;
+  status: 'pending' | 'approved' | 'rejected';
+  remarks?: string | null;
+  created_at: string;
 }
 
 export interface ReferralLinkCategory {
@@ -264,8 +286,15 @@ export const getMyReferralLinks = async (): Promise<ReferralLinksData> => {
   return response.data.data;
 };
 
+export const getMyWithdrawals = async (): Promise<UserWithdrawalRequest[]> => {
+  const response = await axiosInstance.get<ApiResponse<UserWithdrawalRequest[]>>(
+    '/affiliate/my-withdrawals',
+  );
+  return response.data.data ?? [];
+};
+
 export const createWithdrawalRequest = async (amount: number) => {
-  const response = await axiosInstance.post<ApiResponse<any>>(
+  const response = await axiosInstance.post<ApiResponse<UserWithdrawalRequest>>(
     '/affiliate/my-withdrawals',
     { amount },
   );

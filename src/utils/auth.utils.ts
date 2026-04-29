@@ -8,7 +8,10 @@ const cookieOpts = (days: number) => ({
   expires: days,
   secure: process.env.NODE_ENV === 'production',
   sameSite: 'strict' as const,
+  path: '/',
 });
+
+const cookieRemoveOpts = { path: '/' as const };
 
 // Token storage functions
 export const getToken = (): string | undefined => {
@@ -21,7 +24,7 @@ export const setToken = (token: string): void => {
 };
 
 export const removeToken = (): void => {
-  Cookies.remove(TOKEN_KEY);
+  Cookies.remove(TOKEN_KEY, cookieRemoveOpts);
 };
 
 export const getRefreshToken = (): string | undefined => {
@@ -34,7 +37,7 @@ export const setRefreshToken = (token: string): void => {
 };
 
 export const removeRefreshToken = (): void => {
-  Cookies.remove(REFRESH_TOKEN_KEY);
+  Cookies.remove(REFRESH_TOKEN_KEY, cookieRemoveOpts);
 };
 
 // Check if user is authenticated
@@ -46,10 +49,15 @@ export const isAuthenticated = (): boolean => {
 export const clearAuthData = (): void => {
   removeToken();
   removeRefreshToken();
-  
-  // Clear any other auth-related data from localStorage if needed
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('user');
+
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.removeItem("user");
+      // Ephemeral UI / feature flags that must not bleed into the next account on this browser
+      sessionStorage.clear();
+    } catch {
+      /* ignore quota / blocked storage */
+    }
   }
 };
 
@@ -80,9 +88,10 @@ const REFERRAL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 export const setReferralCode = (code: string): void => {
   if (typeof window === 'undefined') return;
-  const existing = localStorage.getItem(REFERRAL_KEY);
-  if (existing) return;
-  localStorage.setItem(REFERRAL_KEY, code);
+  const normalized = String(code).trim().toUpperCase();
+  if (!normalized) return;
+  /** Last non-empty `?ref=` wins so a new affiliate link overrides a stale first-touch code. */
+  localStorage.setItem(REFERRAL_KEY, normalized);
   localStorage.setItem(REFERRAL_TS_KEY, String(Date.now()));
 };
 
@@ -96,7 +105,7 @@ export const getReferralCode = (): string | null => {
     localStorage.removeItem(REFERRAL_TS_KEY);
     return null;
   }
-  return code;
+  return code.trim().toUpperCase();
 };
 
 export const clearReferralCode = (): void => {

@@ -1,6 +1,7 @@
 import axiosInstance from '@/lib/axios';
 import { ApiResponse } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
+import { printCertificate, type CertificatePayload } from '@/utils/certificatePrint';
 
 const api = axiosInstance;
 
@@ -38,7 +39,6 @@ export type CourseProgressPayload = {
 export type CompleteSessionResponse = {
   progress: Record<string, unknown>;
   courseCompleted: boolean;
-  certificate: Record<string, unknown> | null;
 };
 
 export const getCourseProgress = async (courseId: string): Promise<CourseProgressPayload> => {
@@ -73,7 +73,7 @@ export const heartbeatSession = async (
 
 export const completeSession = async (sessionId: string | number): Promise<CompleteSessionResponse> => {
   if (shouldUseMock()) {
-    return { progress: {}, courseCompleted: false, certificate: null };
+    return { progress: {}, courseCompleted: false };
   }
   const response = await api.post<ApiResponse<CompleteSessionResponse>>(
     `/progress/session/${encodeURIComponent(String(sessionId))}/complete`
@@ -95,16 +95,28 @@ export const getOverallProgress = async (): Promise<OverallProgressRow[]> => {
   return response.data.data;
 };
 
-export const downloadCertificate = async (courseId: string): Promise<void> => {
-  if (shouldUseMock()) return;
-  const response = await api.get(`/certificates/course/${encodeURIComponent(courseId)}/download`, {
-    responseType: 'blob',
-  });
-  const blob = response.data as Blob;
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `certificate-${courseId}.pdf`;
-  a.click();
-  URL.revokeObjectURL(url);
+/** Server data for building a certificate on the client (no PDF from backend). */
+export const fetchCertificatePayload = async (courseId: string): Promise<CertificatePayload> => {
+  if (shouldUseMock()) {
+    return {
+      courseTitle: 'Sample course',
+      studentName: 'Learner',
+      completionDate: new Date().toISOString().slice(0, 10),
+    };
+  }
+  const response = await api.get<ApiResponse<CertificatePayload>>(
+    `/certificates/course/${encodeURIComponent(courseId)}`
+  );
+  return response.data.data;
 };
+
+/**
+ * Fetches certificate fields and opens the browser print dialog (Save as PDF).
+ * @deprecated Renamed behavior: use fetchCertificatePayload + your own UI, or call printCertificate after fetch.
+ */
+export const downloadCertificate = async (courseId: string): Promise<void> => {
+  const payload = await fetchCertificatePayload(courseId);
+  printCertificate(payload);
+};
+
+export { printCertificate, type CertificatePayload };

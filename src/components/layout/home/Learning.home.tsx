@@ -1,7 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
 
 const Learning = () => {
+  const { user, isLoading: authLoading } = useAuth();
+
+  console.log(user,"user")
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center
@@ -18,13 +22,23 @@ const Learning = () => {
         <p className="text-white text-[18px] xl:text-[24px] font-normal max-w-xl mx-auto mb-6 px-8">
         Join thousands of students already learning on StudyCafe
         </p>
-
-        <Link href="/login">
-          <button className="bg-white text-[#09339B] px-6 py-3 rounded-[15px] hover:bg-[#09339B] hover:text-white transition flex mx-auto items-center gap-2">
-            Get Started Today
-            <img src="/images/icons/blue_arrow.png" alt="" />
-          </button>
-        </Link>
+        {
+          user?.id  ?
+            <Link href="/courses">
+              <button className="bg-white text-[#09339B] px-6 py-3 rounded-[15px] hover:bg-[#09339B] hover:text-white transition flex mx-auto items-center gap-2">
+                Get Started Today
+                <img src="/images/icons/blue_arrow.png" alt="" />
+              </button>
+            </Link>
+          :
+            <Link href="/login">
+              <button className="bg-white text-[#09339B] px-6 py-3 rounded-[15px] hover:bg-[#09339B] hover:text-white transition flex mx-auto items-center gap-2">
+                Get Started Today
+                <img src="/images/icons/blue_arrow.png" alt="" />
+              </button>
+            </Link>
+        }
+     
       </div>
     </section>
   );

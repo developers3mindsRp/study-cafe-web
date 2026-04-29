@@ -319,9 +319,6 @@ export default function PriceCard({ course }: Props) {
             if (!course?.id || paymentLoading) return;
             setPaymentLoading(true);
             try {
-              const loaded = await loadRazorpayScript();
-              if (!loaded) { alert("Failed to load payment gateway. Please try again."); return; }
-
               const refCode = getReferralCode() || undefined;
               const orderData = await createOrder({
                 type: "course",
@@ -329,6 +326,19 @@ export default function PriceCard({ course }: Props) {
                 couponCode: appliedCoupon?.coupon.code || undefined,
                 referralCode: refCode,
               });
+
+              if (orderData.free && orderData.paid) {
+                router.push(`/payment-success?orderId=${orderData.orderId}`);
+                return;
+              }
+
+              const loaded = await loadRazorpayScript();
+              if (!loaded) { alert("Failed to load payment gateway. Please try again."); return; }
+
+              if (!orderData.key || !orderData.razorpayOrderId) {
+                alert("Order could not be started. Please try again.");
+                return;
+              }
 
               const options = {
                 key: orderData.key,

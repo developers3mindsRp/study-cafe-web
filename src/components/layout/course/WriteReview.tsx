@@ -1,22 +1,44 @@
 "use client";
 import { useState } from "react";
+import { submitCourseReview } from "@/services/courseReviews.service";
 
 interface ReviewFormProps {
-  onClose: () => void; // callback to close the form
+  courseId: string;
+  onClose: () => void;
+  onSubmitted?: () => void;
 }
 
-export default function ReviewForm({ onClose }: ReviewFormProps) {
+export default function ReviewForm({ courseId, onClose, onSubmitted }: ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const stars = [1, 2, 3, 4, 5];
 
-  const handleSubmit = () => {
-    console.log({ rating, review });
-    alert(`Rating: ${rating}\nReview: ${review}`);
-    setRating(0);
-    setReview("");
+  const handleSubmit = async () => {
+    setError(null);
+    if (!rating) {
+      setError("Please choose a star rating.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await submitCourseReview(courseId, rating, review);
+      setRating(0);
+      setReview("");
+      onSubmitted?.();
+      onClose();
+    } catch (e: unknown) {
+      const msg =
+        e && typeof e === "object" && "message" in e && typeof (e as { message: unknown }).message === "string"
+          ? (e as { message: string }).message
+          : "Could not submit review. Please try again.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -27,6 +49,12 @@ export default function ReviewForm({ onClose }: ReviewFormProps) {
       >
         &larr; Back
       </button>
+
+      {error ? (
+        <p className="mb-3 rounded-md bg-red-50 px-2 py-2 text-sm text-red-700" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <div className="flex flex-col items-center mb-6">
         <div className="flex space-x-1 mb-2">
@@ -57,10 +85,12 @@ export default function ReviewForm({ onClose }: ReviewFormProps) {
       />
 
       <button
-        onClick={handleSubmit}
-        className="w-full bg-[#09339B] text-white py-3 rounded-md hover:bg-blue-800 transition"
+        type="button"
+        disabled={submitting}
+        onClick={() => void handleSubmit()}
+        className="w-full rounded-md bg-[#09339B] py-3 text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Submit
+        {submitting ? "Submitting…" : "Submit"}
       </button>
     </div>
   );

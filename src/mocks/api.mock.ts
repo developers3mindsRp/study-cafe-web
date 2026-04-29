@@ -433,9 +433,13 @@ export const mockPlatformApi = {
     return page;
   },
 
-  getSeoMetadata: async (pageSlug: string): Promise<SeoMetadata | null> => {
+  getSeoMetadata: async (pageSlugOrPath: string): Promise<SeoMetadata | null> => {
     await delay(200);
-    return mockSeoMetadata[pageSlug] ?? null;
+    const normalized = pageSlugOrPath.startsWith('/')
+      ? pageSlugOrPath
+      : `/${pageSlugOrPath}`;
+    const noLead = normalized === '/' ? '/' : normalized.replace(/^\/+/, '');
+    return mockSeoMetadata[normalized] ?? mockSeoMetadata[noLead] ?? null;
   },
 
   getArticleBySlug: async (_slug: string): Promise<import('@/types/models.types').ArticleBySlug | null> => {

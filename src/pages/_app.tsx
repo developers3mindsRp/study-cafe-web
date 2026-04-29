@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/r
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient as defaultQueryClient } from "@/lib/react-query";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { AppRouteSeo } from "@/components/seo/AppRouteSeo";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
         <AuthProvider>
+          <AppRouteSeo />
           <div className={outfit.className}>
             <Component {...pageProps} />
           </div>
