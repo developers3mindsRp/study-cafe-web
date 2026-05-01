@@ -87,7 +87,7 @@ function SkeletonGrid() {
 const SORT_OPTIONS = [
   { label: "Latest", value: "latest" },
   // { label: "Most Enrolled", value: "latest" },
-  { label: "Newest", value: "newest" },
+  // { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
 ] as const;
 
@@ -172,6 +172,9 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
     (initialQuery.sort ?? "latest") !== "latest";
 
   // ─── render ───────────────────────────────────────────────────────────────
+
+
+  console.log(courses,"courses")
 
   return (
     <div className="container px-4 mx-auto">

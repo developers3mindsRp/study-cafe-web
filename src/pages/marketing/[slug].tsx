@@ -79,29 +79,3 @@ export default function marketing() {
 
     );
 }
-
-/**
- * Static Site Generation (SSG)
- * Prefetch data at build time for SEO and performance
- */
-export const getStaticProps: GetStaticProps = async () => {
-    const queryClient = new QueryClient();
-
-    try {
-        // Prefetch featured courses
-        await queryClient.prefetchQuery({
-            queryKey: [...queryKeys.courses.all, 'featured', 6],
-            queryFn: () => coursesService.getFeaturedCourses(6),
-        });
-    } catch (error) {
-        console.error('Error prefetching data:', error);
-    }
-
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient),
-        },
-        // Revalidate every 10 minutes
-        revalidate: 600,
-    };
-};

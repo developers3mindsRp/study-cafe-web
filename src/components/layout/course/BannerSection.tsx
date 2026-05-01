@@ -140,6 +140,9 @@ export default function BannerSection({
   course,
   batches = [],
 }: BannerSectionProps) {
+
+
+  console.log(course,"course")
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

@@ -32,6 +32,8 @@ export default function CoursePage({
   batches,
   trendingCourses,
 }: CoursePageProps) {
+
+  console.log(course,"course")
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] px-1 p-4 mx-auto">
