@@ -94,11 +94,12 @@ export default function ContactInfo({ data }: Props) {
               {data.marketingBlurb}
             </p>
             <a
-              className="text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
+              className="block text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
               href={`mailto:${encodeURIComponent(data.marketingEmail)}`}
             >
               {data.marketingEmail}
             </a>
+
           </div>
           <a
             href={`mailto:${encodeURIComponent(data.marketingEmail)}`}
@@ -114,7 +115,7 @@ export default function ContactInfo({ data }: Props) {
               {data.accountsBlurb}
             </p>
             <a
-              className="text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
+              className="block text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
               href={`mailto:${encodeURIComponent(data.accountsEmail)}`}
             >
               {data.accountsEmail}

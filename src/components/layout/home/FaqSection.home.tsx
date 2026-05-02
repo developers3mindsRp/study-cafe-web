@@ -18,6 +18,14 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const cleanHTML = (html: string) => {
+    return html
+      .replace(/<p>\s*<\/p>/g, "")          // empty <p>
+      .replace(/<p><br\s*\/?><\/p>/g, "")   // <p><br></p>
+      .replace(/(<br\s*\/?>\s*)+$/g, "");   // ending <br>
+  };
+
+
   return (
     <section className=" w-full  py-4 md:py-20 px-4 flex flex-col
       items-center text-center bg-[#FAFBFB] mb-4 md:mb-0">
@@ -47,8 +55,8 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
               </svg>
             </button>
             {openIndex === index && (
-              <div className="px-4 p-4 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                <div className="prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer }}/>
+              <div className=" p-3 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+                <div className="prose prose-sm dark:prose-invert max-w-none " dangerouslySetInnerHTML={{ __html: cleanHTML(item.answer) }}/>
               </div>
             )}
           </div>

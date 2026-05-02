@@ -129,7 +129,7 @@ export default function GetInTouch({ data }: Props) {
               height={250}
               className="mx-auto mt-[11px]"
             />
-            <h1 className="mb-4 pt-[12px] text-[30px] font-bold md:pb-[18px] md:text-4xl">
+            <h1 className="mb-4 pt-[12px] text-[30px] font-bold md:pb-[6px] md:text-4xl">
               {data.heading}
             </h1>
             <div
@@ -141,7 +141,7 @@ export default function GetInTouch({ data }: Props) {
       </div>
 
       <div className="flex w-full justify-center md:w-1/2">
-        <div className="w-full rounded-xl p-4 shadow-sm">
+        <div className="w-full rounded-xl p-4 px-12 shadow-sm">
           <h2 className="mb-6 text-[26px] font-normal">{data.formHeading}</h2>
 
           {success && (
@@ -149,7 +149,7 @@ export default function GetInTouch({ data }: Props) {
               className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
               role="status"
             >
-              Thank you — your message was sent. We will get back to you soon.
+              Thank you, your message was sent. We will get back to you soon.
             </p>
           )}
 
