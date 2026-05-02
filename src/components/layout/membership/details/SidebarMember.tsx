@@ -17,10 +17,6 @@ import { getReferralCode } from "@/utils/auth.utils";
 
 const GST_RATE = 0.18;
 
-declare global {
-  interface Window { Razorpay: any; }
-}
-
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
     if (window.Razorpay) return resolve(true);
