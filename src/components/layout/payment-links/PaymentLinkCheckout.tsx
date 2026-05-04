@@ -10,6 +10,7 @@ import "react-phone-number-input/style.css";
 import type { PublicPaymentLink } from "@/services/paymentLink.service";
 import { createPaymentLinkOrder, verifyPaymentLinkOrder } from "@/services/paymentLink.service";
 import { getReferralCode } from "@/utils/auth.utils";
+import { formatPaymentLinkExpiry } from "@/utils/paymentLinkExpiry";
 
 const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
@@ -62,9 +63,11 @@ type FormValues = {
 type Props = {
   link: PublicPaymentLink;
   initialExpired: boolean;
+  /** Preformatted IST expiry for messaging (from SSR); matches link.expires_at */
+  expiryDisplayLabel: string | null;
 };
 
-export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
+export default function PaymentLinkCheckout({ link, initialExpired, expiryDisplayLabel }: Props) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   /** Avoid hydration mismatch: server time ≠ client time for countdown. */
@@ -108,6 +111,11 @@ export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
 
   const disabledCheckout = expired || soldOut;
 
+  const expiryLabelForMessage =
+    expiryDisplayLabel?.trim() ||
+    (link.expires_at ? formatPaymentLinkExpiry(link.expires_at) : "") ||
+    "—";
+
   const {
     register,
     control,
@@ -138,7 +146,9 @@ export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
       });
 
       if (orderData.free && orderData.paid) {
-        router.push(`/payment-success?orderId=${encodeURIComponent(orderData.orderId)}`);
+        router.push(
+          `/payment-success?orderId=${encodeURIComponent(orderData.orderId)}&payment_link=1`,
+        );
         return;
       }
 
@@ -171,7 +181,9 @@ export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
-            router.push(`/payment-success?orderId=${encodeURIComponent(orderData.orderId)}`);
+            router.push(
+              `/payment-success?orderId=${encodeURIComponent(orderData.orderId)}&payment_link=1`,
+            );
           } catch (verifyErr: unknown) {
             const msg =
               typeof verifyErr === "object" && verifyErr !== null && "message" in verifyErr
@@ -206,6 +218,20 @@ export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
     }
   });
 
+  if (expired) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-10">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-8 md:p-10 text-center shadow-sm">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">{link.title}</h1>
+          <p className="mt-8 text-base md:text-lg font-semibold text-red-800">
+            Payment Link is Expired on {expiryLabelForMessage}
+          </p>
+          <p className="mt-4 text-sm text-gray-600">Checkout is closed for this link.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <div className="mb-8 rounded-xl bg-sky-50 border border-sky-100 p-6 md:p-8">
@@ -239,7 +265,6 @@ export default function PaymentLinkCheckout({ link, initialExpired }: Props) {
             )}
           </p>
         )}
-        {expired && <p className="mt-2 text-sm font-bold text-red-600">This payment link has expired.</p>}
         {soldOut && <p className="mt-2 text-sm font-bold text-red-600">All seats are booked.</p>}
         <div className="mt-6 flex flex-wrap items-baseline gap-3">
           <span className="text-2xl font-bold text-red-600">{fmt(sale)}</span>
