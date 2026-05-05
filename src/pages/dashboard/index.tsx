@@ -8,6 +8,7 @@ import * as coursesService from '@/services/courses.service';
 import { PublicLayout } from '@/components/layout';
 import EditProfile from '@/components/layout/account/EditProfile';
 import RequireAuth from '@/components/auth/RequireAuth';
+import RequireVerifiedEmail from '@/components/auth/RequireVerifiedEmail';
 
 /**
  * Home Page - Course Listing
@@ -28,6 +29,7 @@ export default function Account() {
 
     <PublicLayout>
       <RequireAuth>
+        <RequireVerifiedEmail>
         <div className="container mx-auto p-6">
           <div className="mb-6">
             <h3 className="text-[30px] md:text-[40px] font-semibold">My Account</h3>
@@ -37,6 +39,7 @@ export default function Account() {
           </div>
           <EditProfile />
         </div>
+        </RequireVerifiedEmail>
       </RequireAuth>
     </PublicLayout>
 
