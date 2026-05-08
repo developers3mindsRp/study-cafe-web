@@ -18,7 +18,7 @@ const labelCls = (hasErr: boolean) => (hasErr ? `${INPUT_CLASS} ${FIELD_ERR_CLAS
 
 type FieldName =
   | "fullName" | "email" | "phone" | "profession" | "company" | "designation"
-  | "city" | "state" | "country" | "password" | "confirmPassword" | "terms";
+  | "city" | "state" |  "password" | "confirmPassword" | "terms";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -34,7 +34,7 @@ function mapServerFieldToForm(field: string): FieldName | null {
     designation: "designation",
     city: "city",
     state: "state",
-    country: "country",
+    // country: "country",
     password: "password",
   };
   return map[simple] ?? null;
@@ -119,9 +119,9 @@ export default function SignUpPage() {
     if (!form.state) {
       err.state = "Please select your state.";
     }
-    if (!form.country) {
-      err.country = "Please select your country.";
-    }
+    // if (!form.country) {
+    //   err.country = "Please select your country.";
+    // }
     if (form.password.length < 6) {
       err.password = "Password must be at least 6 characters.";
     } else if (form.password.length > 128) {
@@ -168,7 +168,7 @@ export default function SignUpPage() {
         designation: form.designation.trim() || undefined,
         city: form.city.trim(),
         state: form.state,
-        country: form.country,
+        // country: form.country,
       });
     } catch (err: unknown) {
       const api = err as ApiError;
@@ -353,6 +353,14 @@ export default function SignUpPage() {
             />
             {fe.designation && <p className="text-red-600 text-sm mt-1" role="alert">{fe.designation}</p>}
           </div>
+          <div>
+            <label htmlFor="state" className="block mb-1">State <span className="text-red-600">*</span></label>
+          <select id="state" name="state" value={form.state} onChange={handleChange} className={labelCls(!!fe.state) + " bg-white py-2"}>
+            <option value="">Select state</option>
+            {states.map(st => <option key={st} value={st}>{st}</option>)}
+          </select>
+            {fe.state && <p className="text-red-600 text-sm mt-1" role="alert">{fe.state}</p>}
+          </div>
 
           <div>
             <label htmlFor="city" className="block mb-1">City <span className="text-red-600">*</span></label>
@@ -369,16 +377,9 @@ export default function SignUpPage() {
             {fe.city && <p className="text-red-600 text-sm mt-1" role="alert">{fe.city}</p>}
           </div>
 
-          <div>
-            <label htmlFor="state" className="block mb-1">State <span className="text-red-600">*</span></label>
-          <select id="state" name="state" value={form.state} onChange={handleChange} className={labelCls(!!fe.state) + " bg-white py-2"}>
-            <option value="">Select state</option>
-            {states.map(st => <option key={st} value={st}>{st}</option>)}
-          </select>
-            {fe.state && <p className="text-red-600 text-sm mt-1" role="alert">{fe.state}</p>}
-          </div>
+          
 
-          <div>
+          {/* <div>
             <label htmlFor="country" className="block mb-1">Country <span className="text-red-600">*</span></label>
                 <select
               id="country"
@@ -395,7 +396,7 @@ export default function SignUpPage() {
               ))}
             </select>
             {fe.country && <p className="text-red-600 text-sm mt-1" role="alert">{fe.country}</p>}
-          </div>
+          </div> */}
     <div className="mb-4">
       <label htmlFor="password" className="block mb-1 md:text-[16px] ">
         Password <span className="text-red-600">*</span>

@@ -149,7 +149,7 @@ export default function FeaturedCourses() {
       <div className="container mx-auto px-4">
         {/* Heading + Category Filter */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
-          <div>
+          <div className="w-full md:w-[35%]">
             <h2 className="text-[36px] xl:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
               Featured Courses
             </h2>
@@ -159,7 +159,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Mobile: horizontal scroll */}
-          <div className="sm:hidden w-full relative px-2">
+          <div className="sm:hidden w-full relative px-2 w-full md:w-[65%]">
             <div
               ref={catRef}
               className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth -ml-1"
@@ -182,7 +182,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Desktop: inline buttons */}
-          <div className="hidden sm:flex md:flex-wrap gap-2 xl:gap-4 mt-12">
+          <div className="hidden sm:flex md:flex-wrap gap-2 xl:gap-2 mt-12 w-full md:w-[65%] justify-end">
             {cats.map((cat) => (
               <button
                 key={cat.id}
