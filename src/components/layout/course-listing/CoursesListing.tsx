@@ -112,6 +112,8 @@ const ALL_CAT: CourseCat = { id: 0, name: "All Categories", slug: "all" };
 // ─── main component ──────────────────────────────────────────────────────────
 
 export default function CoursesPage({ cats = [], initialCourses, initialQuery }: Props) {
+
+  console.log(cats,"cats")
   const router = useRouter();
 
   // ── local state ──
