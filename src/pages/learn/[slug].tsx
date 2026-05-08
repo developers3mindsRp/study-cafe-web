@@ -2,6 +2,8 @@ import type { GetServerSideProps } from "next";
 import axios from "axios";
 import LearningPage from "@/components/learning/LearningPage";
 import { getServerSideApiBaseUrl } from "@/lib/apiBase";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RequireVerifiedEmail from "@/components/auth/RequireVerifiedEmail";
 
 type Props = {
   courseId: string;
@@ -9,7 +11,13 @@ type Props = {
 };
 
 export default function LearnRoute(props: Props) {
-  return <LearningPage courseId={props.courseId} slug={props.slug} />;
+  return (
+    <RequireAuth>
+      <RequireVerifiedEmail>
+        <LearningPage courseId={props.courseId} slug={props.slug} />
+      </RequireVerifiedEmail>
+    </RequireAuth>
+  );
 }
 
 function tokenFromCookie(cookieHeader?: string): string | null {

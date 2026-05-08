@@ -21,6 +21,7 @@ import {
   Purchase,
   DashboardStats,
   LoginCredentials,
+  LoginOtpCredentials,
   RegisterData,
   AuthResponse,
   UpdateProfileData,
@@ -60,13 +61,29 @@ export const mockAuthApi = {
     // Simple mock validation
     if (credentials.email && credentials.password) {
       return {
-        user: mockUser,
+        user: { ...mockUser, emailVerified: true },
         token: 'mock_jwt_token_' + Date.now(),
         refreshToken: 'mock_refresh_token_' + Date.now(),
       };
     }
     
     throw new Error('Invalid credentials');
+  },
+
+  requestLoginOtp: async (_email: string): Promise<void> => {
+    await delay(400);
+  },
+
+  loginWithEmailOtp: async (credentials: LoginOtpCredentials): Promise<AuthResponse> => {
+    await delay(800);
+    if (credentials.otp === '123456') {
+      return {
+        user: { ...mockUser, email: credentials.email.trim(), emailVerified: true },
+        token: 'mock_jwt_token_' + Date.now(),
+        refreshToken: 'mock_refresh_token_' + Date.now(),
+      };
+    }
+    throw new Error('Invalid or expired code');
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
@@ -84,10 +101,27 @@ export const mockAuthApi = {
         city: data.city || null,
         state: data.state || null,
         country: data.country || null,
+        emailVerified: false,
       },
       token: 'mock_jwt_token_' + Date.now(),
       refreshToken: 'mock_refresh_token_' + Date.now(),
     };
+  },
+
+  verifyEmailWithOtp: async (otp: string): Promise<AuthResponse> => {
+    await delay(600);
+    if (otp.trim() === '123456') {
+      return {
+        user: { ...mockUser, emailVerified: true },
+        token: 'mock_jwt_token_' + Date.now(),
+        refreshToken: 'mock_refresh_token_' + Date.now(),
+      };
+    }
+    throw new Error('Invalid or expired verification code');
+  },
+
+  resendVerificationEmail: async (): Promise<void> => {
+    await delay(400);
   },
 
   getCurrentUser: async (): Promise<User> => {

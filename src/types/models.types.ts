@@ -19,6 +19,8 @@ export interface User {
   state?: string | null;
   country?: string | null;
   referralCode?: string | null;
+  /** Explicit `false`: must complete email OTP verification (see `/verify-email`). */
+  emailVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -140,6 +142,11 @@ export interface CourseProgress {
 export interface LoginCredentials {
   email: string;
   password: string;
+}
+
+export interface LoginOtpCredentials {
+  email: string;
+  otp: string;
 }
 
 export interface RegisterData {

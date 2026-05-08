@@ -2,6 +2,7 @@ import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 import {
   LoginCredentials,
+  LoginOtpCredentials,
   RegisterData,
   AuthResponse,
   User,
@@ -19,7 +20,14 @@ import {
 import { shouldUseMock } from '@/config/app.config';
 import { mockAuthApi } from '@/mocks/api.mock';
 
-/** Raw auth payload from auth-service (login / register) */
+/** Map API `email_verified` — only explicit `false` blocks the app; omit/`true`/`undefined` = verified for stale caches. */
+export function mapEmailVerifiedFromApi(v: boolean | undefined): boolean | undefined {
+  if (v === false) return false;
+  if (v === true) return true;
+  return undefined;
+}
+
+/** Raw auth payload from auth-service (login / register / verify-email / login-otp) */
 type AuthPayload = {
   token?: string;
   accessToken?: string;
@@ -34,6 +42,7 @@ type AuthPayload = {
     role: string;
     permissions?: string[];
     has_active_membership?: boolean;
+    email_verified?: boolean;
     referral_code?: string | null;
     profession?: string | null;
     company?: string | null;
@@ -46,6 +55,7 @@ type AuthPayload = {
 };
 
 function toUser(u: AuthPayload['user']): User {
+  const ev = mapEmailVerifiedFromApi(u.email_verified);
   return {
     id: String(u.id),
     email: u.email,
@@ -63,24 +73,21 @@ function toUser(u: AuthPayload['user']): User {
     permissions: u.permissions ?? [],
     hasActiveMembership: !!u.has_active_membership,
     referralCode: u.referral_code || null,
+    ...(ev !== undefined ? { emailVerified: ev } : {}),
   };
 }
 
-async function persistAuth(payload: AuthPayload): Promise<AuthResponse> {
+export async function persistAuth(payload: AuthPayload): Promise<AuthResponse> {
   const access = payload.accessToken ?? payload.token;
   if (!access) throw new Error('No access token in auth response');
 
-  // Store the token first so the /auth/me call can authenticate
   setToken(access);
   if (payload.refreshToken) setRefreshToken(payload.refreshToken);
 
-  // Fetch the full user profile (includes avatar, phone, all profile fields)
-  // This ensures localStorage always has the complete, up-to-date user object
   let user: User;
   try {
     user = await getCurrentUser();
   } catch {
-    // Fallback to login payload fields if /auth/me fails for any reason
     user = toUser(payload.user);
     setUserData(user);
   }
@@ -106,6 +113,30 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
     credentials
   );
   return await persistAuth(response.data.data);
+};
+
+export const loginWithEmailOtp = async (credentials: LoginOtpCredentials): Promise<AuthResponse> => {
+  if (shouldUseMock()) {
+    const authResponse = await mockAuthApi.loginWithEmailOtp(credentials);
+    setToken(authResponse.token);
+    if (authResponse.refreshToken) setRefreshToken(authResponse.refreshToken);
+    setUserData(authResponse.user);
+    return authResponse;
+  }
+
+  const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/login/otp', {
+    email: credentials.email.trim(),
+    otp: credentials.otp.trim(),
+  });
+  return await persistAuth(response.data.data);
+};
+
+export const requestLoginOtp = async (email: string): Promise<void> => {
+  if (shouldUseMock()) {
+    await mockAuthApi.requestLoginOtp(email);
+    return;
+  }
+  await axiosInstance.post('/auth/login/otp/request', { email: email.trim() });
 };
 
 export const register = async (userData: RegisterData): Promise<AuthResponse> => {
@@ -163,6 +194,7 @@ export const getCurrentUser = async (): Promise<User> => {
       role: string;
       permissions?: string[];
       has_active_membership?: boolean;
+      email_verified?: boolean;
       referral_code?: string | null;
       avatar?: string | null;
       profession?: string | null;
@@ -173,12 +205,12 @@ export const getCurrentUser = async (): Promise<User> => {
       country?: string | null;
     }>
   >('/auth/me', {
-    // Prevent browser caching — ensures we always get fresh data after profile/avatar updates
     headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
     params: { _t: Date.now() },
   });
 
   const d = response.data.data;
+  const ev = mapEmailVerifiedFromApi(d.email_verified);
   const user: User = {
     id: String(d.id),
     email: d.email,
@@ -196,6 +228,7 @@ export const getCurrentUser = async (): Promise<User> => {
     permissions: d.permissions ?? [],
     hasActiveMembership: !!d.has_active_membership,
     referralCode: d.referral_code || null,
+    ...(ev !== undefined ? { emailVerified: ev } : {}),
   };
   setUserData(user);
   return user;
@@ -242,6 +275,25 @@ export const resetPassword = async (token: string, newPassword: string): Promise
   await axiosInstance.post('/auth/reset-password', { token, password: newPassword });
 };
 
-export const verifyEmail = async (token: string): Promise<void> => {
-  await axiosInstance.post('/auth/verify-email', { token });
+/** Confirm signup / email with 6-digit OTP; returns fresh session. */
+export const verifyEmailWithOtp = async (otp: string): Promise<AuthResponse> => {
+  if (shouldUseMock()) {
+    const authResponse = await mockAuthApi.verifyEmailWithOtp(otp);
+    setToken(authResponse.token);
+    if (authResponse.refreshToken) setRefreshToken(authResponse.refreshToken);
+    setUserData(authResponse.user);
+    return authResponse;
+  }
+  const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/verify-email', {
+    otp: otp.trim(),
+  });
+  return await persistAuth(response.data.data);
+};
+
+export const resendVerificationEmail = async (): Promise<void> => {
+  if (shouldUseMock()) {
+    await mockAuthApi.resendVerificationEmail();
+    return;
+  }
+  await axiosInstance.post('/auth/verify-email/resend');
 };
