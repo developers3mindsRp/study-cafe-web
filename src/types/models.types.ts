@@ -554,6 +554,23 @@ export interface ArticleBySlug {
   download_url?: string | null;
 }
 
+/** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
+export interface SiteAdsSlot {
+  image_url: string;
+  link_url: string;
+}
+
+export interface SiteDisplayAds {
+  popup: SiteAdsSlot & { enabled: boolean };
+  article_detail_sidebar: SiteAdsSlot[];
+  article_listing_sidebar: SiteAdsSlot;
+  between_article: {
+    after_paragraph_3: SiteAdsSlot;
+    after_paragraph_6: SiteAdsSlot;
+    below_featured_post: SiteAdsSlot;
+  };
+}
+
 export interface FooterContent  {
   links: {
     title: string;

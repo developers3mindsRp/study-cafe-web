@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { ArticleBySlug, BlogSpotlightFeed } from "@/types/models.types";
+import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds } from "@/types/models.types";
 import type { ApiResponse } from "@/types/api.types";
 
 /** Read `auth_token` cookie from SSR `Cookie` header (matches js-cookie client name). */
@@ -67,5 +67,19 @@ export async function fetchBlogSpotlightSSR(opts: {
     return res.data?.data ?? emptySpotlight;
   } catch {
     return emptySpotlight;
+  }
+}
+
+/** Public site display ads JSON (SSR for blog/article pages). */
+export async function fetchSiteDisplayAdsSSR(opts: {
+  baseUrl: string;
+}): Promise<SiteDisplayAds | null> {
+  const base = opts.baseUrl.replace(/\/?$/, "");
+  const url = `${base}/platform/site-ads`;
+  try {
+    const res = await axios.get<ApiResponse<SiteDisplayAds>>(url, { timeout: 8000 });
+    return res.data?.data ?? null;
+  } catch {
+    return null;
   }
 }

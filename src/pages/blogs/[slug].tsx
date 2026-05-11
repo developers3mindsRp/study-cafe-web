@@ -3,12 +3,13 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
-import type { ArticleBySlug, BlogSpotlightFeed } from '@/types/models.types';
+import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds } from '@/types/models.types';
 import { appConfig } from '@/config/app.config';
 import {
   bearerFromCookieHeader,
   fetchArticleBySlugSSR,
   fetchBlogSpotlightSSR,
+  fetchSiteDisplayAdsSSR,
 } from '@/lib/serverArticle';
 
 const BlogArticlePremiumLayout = dynamic(
@@ -20,9 +21,10 @@ interface BlogDetailProps {
   slug: string;
   article: ArticleBySlug;
   spotlight: BlogSpotlightFeed;
+  siteAds: SiteDisplayAds | null;
 }
 
-export default function BlogDetail({ slug, article, spotlight }: BlogDetailProps) {
+export default function BlogDetail({ slug, article, spotlight, siteAds }: BlogDetailProps) {
   return (
     <PublicLayout>
       <Head>
@@ -42,6 +44,7 @@ export default function BlogDetail({ slug, article, spotlight }: BlogDetailProps
         slug={slug}
         initialArticle={article}
         initialSpotlight={spotlight}
+        siteAds={siteAds}
       />
     </PublicLayout>
   );
@@ -60,9 +63,10 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ 
   const baseUrl = appConfig.apiBaseUrl;
   const token = bearerFromCookieHeader(req.headers.cookie);
 
-  const [article, spotlight] = await Promise.all([
+  const [article, spotlight, siteAds] = await Promise.all([
     fetchArticleBySlugSSR(slug, { baseUrl, token }),
     fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),
+    fetchSiteDisplayAdsSSR({ baseUrl }),
   ]);
 
   if (!article) return { notFound: true };
@@ -72,6 +76,7 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async ({ 
       slug,
       article,
       spotlight,
+      siteAds,
     },
   };
 };

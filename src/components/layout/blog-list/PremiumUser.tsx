@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "@/providers/AuthProvider";
@@ -9,9 +9,11 @@ import type {
   BlogSpotlightArticleCard,
   BlogSpotlightAuthor,
   RelatedArticle,
+  SiteDisplayAds,
 } from "@/types/models.types";
 import { resolveBlogImageSrc } from "./blogImage";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import { injectBetweenArticleAdsIntoHtml } from "@/lib/siteDisplayAds";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -290,6 +292,8 @@ function TagsBlock({
 
 type Props = {
   article: ArticleBySlug | null;
+  /** Inline banners injected after selected paragraphs — applied on the client after refetches. */
+  betweenArticleAds?: SiteDisplayAds["between_article"] | null;
   authorSpotlight: BlogSpotlightAuthor | null;
   authorRecent: BlogSpotlightArticleCard[];
   recentPosts?: BlogSpotlightArticleCard[];
@@ -299,6 +303,7 @@ type Props = {
 
 export default function Premium_user({
   article,
+  betweenArticleAds,
   authorSpotlight,
   authorRecent,
   recentPosts = [],
@@ -317,6 +322,12 @@ export default function Premium_user({
     authorSpotlight?.display_name ||
     authorSpotlight?.name ||
     (article?.author_name != null ? String(article.author_name) : null);
+
+  const articleBodyHtml = useMemo(() => {
+    const raw = article?.body ?? "";
+    if (!betweenArticleAds) return raw;
+    return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
+  }, [article?.body, betweenArticleAds]);
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">
@@ -340,7 +351,7 @@ export default function Premium_user({
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545] md:text-[17px]"
                     suppressHydrationWarning
-                    dangerouslySetInnerHTML={{ __html: article.body }}
+                    dangerouslySetInnerHTML={{ __html: articleBodyHtml }}
                   />
 
                   {/* Read More button → Premium modal */}
@@ -385,7 +396,7 @@ export default function Premium_user({
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#454545]"
                     suppressHydrationWarning
-                    dangerouslySetInnerHTML={{ __html: article.body }}
+                    dangerouslySetInnerHTML={{ __html: articleBodyHtml }}
                   />
 
                   {/* Download PDF — always premium-gated */}

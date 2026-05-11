@@ -1,6 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { BlogSpotlightArticleCard, BlogSpotlightTag } from "@/types/models.types";
+import type {
+  BlogSpotlightArticleCard,
+  BlogSpotlightTag,
+  SiteAdsSlot,
+} from "@/types/models.types";
+import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { cardThumb } from "./blogImage";
 
 function postHref(slug: string | null | undefined) {
@@ -13,15 +18,28 @@ type Props = {
   recentPosts?: BlogSpotlightArticleCard[];
   allPosts?: BlogSpotlightArticleCard[];
   popularTags?: BlogSpotlightTag[];
+  /** Up to two banners above “Recent Posts” (article detail sidebar). */
+  detailSidebarAds?: SiteAdsSlot[] | null;
 };
 
 export default function SidebarBlog({
   recentPosts = [],
   allPosts = [],
   popularTags = [],
+  detailSidebarAds,
 }: Props) {
+  const sidebarTop = detailSidebarAds?.slice(0, 2).filter((s) => s?.image_url?.trim()) ?? [];
+
   return (
     <div className="space-y-5 sticky top-24">
+      {sidebarTop.length > 0 ? (
+        <div className="space-y-4">
+          {sidebarTop.map((slot, idx) => (
+            <SiteAdBanner key={`top-ad-${idx}`} slot={slot} />
+          ))}
+        </div>
+      ) : null}
+
       <div className="bg-[#F9F9FB] space-y-3">
         <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
           Recent Posts

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/providers/AuthProvider";
 import { queryKeys } from "@/lib/react-query";
 import { getArticleBySlug, getBlogSpotlightFeed } from "@/services/platform.service";
-import type { ArticleBySlug, BlogSpotlightFeed } from "@/types/models.types";
+import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds } from "@/types/models.types";
 import HeroSection_blog from "@/components/layout/blog-list/HeroSection-blog";
 import SidebarBlog from "@/components/layout/blog-list/SidebarBlog";
 import Premium_user from "@/components/layout/blog-list/PremiumUser";
@@ -23,13 +23,20 @@ type Props = {
   slug: string;
   initialArticle: ArticleBySlug;
   initialSpotlight: BlogSpotlightFeed;
+  /** From SSR — article detail sidebar slots */
+  siteAds?: SiteDisplayAds | null;
 };
 
 /**
  * Two-column blog article layout (premium tier) — matches `/blogs/premium-blog` styling;
  * sidebar + author lists are scoped to this slug via `blog-spotlight?current_slug=`.
  */
-export default function BlogArticlePremiumLayout({ slug, initialArticle, initialSpotlight }: Props) {
+export default function BlogArticlePremiumLayout({
+  slug,
+  initialArticle,
+  initialSpotlight,
+  siteAds,
+}: Props) {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();
 
   const { data: article = initialArticle, refetch } = useQuery({
@@ -90,6 +97,7 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
 
           <Premium_user
             article={article}
+            betweenArticleAds={siteAds?.between_article ?? null}
             authorSpotlight={spotlight?.author ?? null}
             authorRecent={spotlight?.author_recent_articles ?? []}
             recentPosts={spotlight?.recent_posts ?? []}
@@ -104,6 +112,7 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
               recentPosts={spotlight?.recent_posts}
               allPosts={spotlight?.all_posts}
               popularTags={spotlight?.popular_tags}
+              detailSidebarAds={siteAds?.article_detail_sidebar}
             />
           </div>
         </div>
@@ -114,6 +123,7 @@ export default function BlogArticlePremiumLayout({ slug, initialArticle, initial
           recentPosts={spotlight?.recent_posts}
           allPosts={spotlight?.all_posts}
           popularTags={spotlight?.popular_tags}
+          detailSidebarAds={siteAds?.article_detail_sidebar}
         />
       </div>
     </div>

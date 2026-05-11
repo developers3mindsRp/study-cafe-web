@@ -16,8 +16,9 @@ import {
   CoursePublicDetail,
   CourseBatch,
   FooterContent,
+  SiteDisplayAds,
 } from '@/types/models.types';
-import { ApiResponse } from '@/types/api.types';
+import { ApiResponse, PublicTrackingSettings } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockPlatformApi } from '@/mocks/api.mock';
 import { normalizeSeoPayload, pathnameForSeoLookup } from '@/lib/seo/normalize';
@@ -147,6 +148,43 @@ export const fetchSeoMetadataByPath = async (
 export const getSeoMetadata = async (pageSlug: string): Promise<SeoMetadata | null> => {
   const path = pageSlug.startsWith('/') ? pageSlug : `/${pageSlug}`;
   return fetchSeoMetadataByPath(path);
+};
+
+/** Promotional placements: popup, article sidebars, in-article banners, listing sidebar */
+export const getSiteDisplayAds = async (): Promise<SiteDisplayAds | null> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getSiteDisplayAds();
+  }
+  try {
+    const response = await axiosInstance.get<ApiResponse<SiteDisplayAds>>('/platform/site-ads');
+    return response.data.data ?? null;
+  } catch {
+    return null;
+  }
+};
+
+/** Marketing snippets from Admin → Global Settings (GTM, Meta, etc.) — GET /platform/global-settings/snippets */
+export const getPublicTrackingSettings = async (): Promise<PublicTrackingSettings> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getPublicTrackingSettings();
+  }
+
+  const empty: PublicTrackingSettings = {
+    tracking_meta_pixel: null,
+    tracking_google_analytics: null,
+    tracking_linkedin_pixel: null,
+  };
+
+  try {
+    const response = await axiosInstance.get<ApiResponse<PublicTrackingSettings>>(
+      '/platform/global-settings/snippets'
+    );
+
+    return response.data.data ?? empty;
+  } catch {
+    /** Table missing, gateway down, or other — page still renders without third-party scripts */
+    return empty;
+  }
 };
 
 /** Public article by slug (body + related_articles for [related id="..."] shortcodes) */

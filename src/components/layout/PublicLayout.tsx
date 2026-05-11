@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { setReferralCode } from '@/utils/auth.utils';
 import { getFooterContent } from "@/services/platform.service";
+import FirstVisitSiteAd from "@/components/ads/FirstVisitSiteAd";
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -39,6 +40,8 @@ export default function PublicLayout({ children, showFooter = true }: PublicLayo
       <main className="flex-1">
         {children}
       </main>
+
+      <FirstVisitSiteAd />
 
       {showFooter && <Footer footerData={memoFooterData} />}
     </div>

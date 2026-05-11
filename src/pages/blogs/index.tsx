@@ -4,15 +4,18 @@ import { useState, useCallback } from 'react';
 import { PublicLayout } from '@/components/layout';
 import BannerSection_blog from '@/components/layout/blog/BannerSection';
 import Blog_list from '@/components/layout/blog/BlogList';
+import SiteAdBanner from '@/components/ads/SiteAdBanner';
 import Breadcrumbs from '@/components/Breadcrumb';
+import { appConfig } from '@/config/app.config';
+import { fetchSiteDisplayAdsSSR } from '@/lib/serverArticle';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
 import {
   getArticles,
   getArticleCategories,
   ArticleListItem,
   ArticleCategoryItem,
-  PaginatedArticles,
 } from '@/services/platform.service';
+import type { SiteDisplayAds } from '@/types/models.types';
 
 
 interface BlogsPageProps {
@@ -23,6 +26,7 @@ interface BlogsPageProps {
   total: number;
   search: string;
   category: string;
+  siteAds: SiteDisplayAds | null;
 }
 
 export default function Blogs({
@@ -32,6 +36,7 @@ export default function Blogs({
   totalPages,
   search: initialSearch,
   category: initialCategory,
+  siteAds,
 }: BlogsPageProps) {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState(initialSearch);
@@ -80,6 +85,16 @@ export default function Blogs({
         onSearchChange={setSearchInput}
         onSearchSubmit={handleSearchSubmit}
       />
+      {siteAds?.between_article?.below_featured_post?.image_url?.trim() ? (
+        <div className="mx-auto max-w-6xl px-4 py-4">
+          <div className="flex justify-center">
+            <SiteAdBanner
+              slot={siteAds.between_article.below_featured_post}
+              className="w-full max-w-3xl"
+            />
+          </div>
+        </div>
+      ) : null}
       <Blog_list
         articles={articles}
         categories={categories}
@@ -89,6 +104,7 @@ export default function Blogs({
         onCategoryChange={handleCategoryChange}
         onPageChange={handlePageChange}
         isLoading={isLoading}
+        listingSidebarAd={siteAds?.article_listing_sidebar ?? null}
       />
     </PublicLayout>
   );
@@ -104,9 +120,10 @@ export const getServerSideProps: GetServerSideProps<BlogsPageProps> = async (
     const category = query.category ? String(query.category).trim() : '';
 
     try {
-      const [articlesData, categoriesData] = await Promise.all([
+      const [articlesData, categoriesData, siteAds] = await Promise.all([
         getArticles({ page, limit: 6, search: search || undefined, category: category || undefined }),
         getArticleCategories(),
+        fetchSiteDisplayAdsSSR({ baseUrl: appConfig.apiBaseUrl }),
       ]);
 
       return {
@@ -118,6 +135,7 @@ export const getServerSideProps: GetServerSideProps<BlogsPageProps> = async (
           total: articlesData.total || 0,
           search,
           category,
+          siteAds: siteAds ?? null,
         },
       };
     } catch (error) {
@@ -131,6 +149,7 @@ export const getServerSideProps: GetServerSideProps<BlogsPageProps> = async (
           total: 0,
           search,
           category,
+          siteAds: null,
         },
       };
     }

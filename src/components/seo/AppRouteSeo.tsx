@@ -17,7 +17,8 @@ function formatTitle(mt: string): string {
 
 export function AppRouteSeo() {
   const router = useRouter();
-  const pathname = pathnameForSeoLookup(router.pathname || "/");
+  /** Actual URL (/blogs/foo), not the route pattern (/blogs/[slug]) — required for CMS SEO by-path. */
+  const pathname = pathnameForSeoLookup(router.asPath || router.pathname || "/");
   const [seo, setSeo] = useState<SeoMetadata | null>(null);
 
   useEffect(() => {
@@ -58,6 +59,9 @@ export function AppRouteSeo() {
   const ogDescription =
     merged.ogDescription?.trim() || description;
 
+  const ogImage = merged.ogImageUrl?.trim();
+  const canonical = merged.canonicalUrl?.trim();
+
   return (
     <Head key={pathname}>
       <title>{title}</title>
@@ -68,15 +72,18 @@ export function AppRouteSeo() {
       {merged.robots?.trim() ? (
         <meta name="robots" content={merged.robots.trim()} />
       ) : null}
-      {merged.canonicalUrl?.trim() ? (
-        <link rel="canonical" href={merged.canonicalUrl.trim()} />
-      ) : null}
+      {canonical ? <link rel="canonical" href={canonical} /> : null}
+
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
-      {merged.ogImageUrl?.trim() ? (
-        <meta property="og:image" content={merged.ogImageUrl.trim()} />
-      ) : null}
+      {ogImage ? <meta property="og:image" content={ogImage} /> : null}
       <meta property="og:type" content="website" />
+      {canonical ? <meta property="og:url" content={canonical} /> : null}
+
+      <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+      <meta name="twitter:title" content={ogTitle} />
+      <meta name="twitter:description" content={ogDescription} />
+      {ogImage ? <meta name="twitter:image" content={ogImage} /> : null}
     </Head>
   );
 }

@@ -38,12 +38,28 @@ export async function middleware(request: NextRequest) {
 }
 
 function resolveApiBaseForEdge(request: NextRequest): string {
-  const raw = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-  if (raw?.startsWith("http")) {
-    return raw.replace(/\/+$/, "");
+  const pub = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+  if (pub?.startsWith("http")) {
+    let s = pub.replace(/\/+$/, "");
+    if (!s.endsWith("/api")) s = `${s}/api`;
+    return s;
   }
-  const host = request.headers.get("host") ?? "localhost:3000";
+  const gateway = process.env.API_GATEWAY_ORIGIN?.trim();
+  if (gateway?.startsWith("http")) {
+    return `${gateway.replace(/\/+$/, "")}/api`;
+  }
+  const host = request.headers.get("host") ?? "";
   const proto = request.headers.get("x-forwarded-proto") ?? "http";
+  const isLocalHost =
+    host.startsWith("localhost:") ||
+    host.startsWith("127.0.0.1:") ||
+    host === "localhost" ||
+    host === "127.0.0.1";
+  if (isLocalHost) {
+    // Next.js runs on :3001 while api-gateway is on :3000. Using request Host here
+    // pointed SSR/Edge fetches at Next's /api rewrite and caused proxy errors.
+    return "http://127.0.0.1:3000/api";
+  }
   return `${proto}://${host}/api`.replace(/\/+$/, "");
 }
 

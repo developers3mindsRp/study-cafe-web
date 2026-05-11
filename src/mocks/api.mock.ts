@@ -476,6 +476,29 @@ export const mockPlatformApi = {
     return mockSeoMetadata[normalized] ?? mockSeoMetadata[noLead] ?? null;
   },
 
+  getSiteDisplayAds: async (): Promise<import('@/types/models.types').SiteDisplayAds> => {
+    await delay(100);
+    return {
+      popup: { enabled: false, image_url: '', link_url: '' },
+      article_detail_sidebar: [
+        { image_url: '', link_url: '' },
+        { image_url: '', link_url: '' },
+      ],
+      article_listing_sidebar: { image_url: '', link_url: '' },
+      between_article: {
+        after_paragraph_3: { image_url: '', link_url: '' },
+        after_paragraph_6: { image_url: '', link_url: '' },
+        below_featured_post: { image_url: '', link_url: '' },
+      },
+    };
+  },
+
+  getPublicTrackingSettings: async (): Promise<import('@/types/api.types').PublicTrackingSettings> => ({
+    tracking_meta_pixel: null,
+    tracking_google_analytics: null,
+    tracking_linkedin_pixel: null,
+  }),
+
   getArticleBySlug: async (_slug: string): Promise<import('@/types/models.types').ArticleBySlug | null> => {
     await delay(200);
     return null;
