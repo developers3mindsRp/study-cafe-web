@@ -26,14 +26,16 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
   if (size === "sm") {
     return (
       <div className="w-[300px] snap-center bg-white shadow-md rounded-md overflow-hidden flex-shrink-0">
-        <div className="relative w-full h-[180px]">
-          <Image src={thumbnail} alt={c.title} fill className="object-cover" />
-          {rating && (
-            <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow mt-2">
-              <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
-            </span>
-          )}
-        </div>
+        <Link href={href}>
+          <div className="relative w-full h-[180px]">
+            <Image src={thumbnail} alt={c.title} fill className="object-cover" />
+            {rating && (
+              <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow mt-2">
+                <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
+              </span>
+            )}
+          </div>
+        </Link>
         <div className="p-4 flex flex-col">
           {c.language && (
             <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
@@ -42,7 +44,8 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
               </span>
             </div>
           )}
-          <h3 className="text-[20px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+          <Link href={href}>
+          <h3 className="text-[20px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3></Link>
           {enrolled && (
             <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
               <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -64,14 +67,16 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
 
   return (
     <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
-      <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
-        <Image src={thumbnail} alt={c.title} fill className="object-cover" />
-        {rating && (
-          <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
-            <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
-          </span>
-        )}
-      </div>
+      <Link href={href}>
+        <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
+          <Image src={thumbnail} alt={c.title} fill className="object-cover" />
+          {rating && (
+            <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
+              <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
+            </span>
+          )}
+        </div>
+      </Link>
       <div className="p-4 flex flex-col flex-1">
         {c.language && (
           <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
@@ -80,7 +85,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
             </span>
           </div>
         )}
-        <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+        <Link href={href}><h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3></Link>
         {enrolled && (
           <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
             <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
