@@ -318,7 +318,7 @@ export default function Footer({ footerData }: FooterProps) {
                 <p
                   className={
                     newsletterStatus === 'error'
-                      ? 'text-amber-300 text-sm mb-2 text-left'
+                      ? 'text-red-300 text-sm mb-2 text-left'
                       : 'text-green-300 text-sm mb-2 text-left'
                   }
                   role="status"

@@ -27,7 +27,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
     return (
       <div className="w-[300px] snap-center bg-white shadow-md rounded-md overflow-hidden flex-shrink-0">
         <div className="relative w-full h-[180px]">
-          <Image src={thumbnail} alt={c.title} fill className="object-cover" />
+          <Image src={thumbnail} alt={c.title} fill className="object-fit" />
           {rating && (
             <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow mt-2">
               <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}

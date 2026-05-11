@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { FAQ } from "@/types/models.types";
+import { motion, AnimatePresence } from "framer-motion";
 
 const FALLBACK_FAQS: FAQ[] = [
   { id: '1', question: "What is included in the membership plans?", answer: "Our membership plans include access to courses based on your tier, downloadable study materials, WhatsApp/Telegram group access for updates, certificates upon course completion, and priority support for Advanced and Premium members." },
@@ -31,36 +32,67 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
       items-center text-center bg-[#FAFBFB] mb-4 md:mb-0">
       <h2 className="text-[32px] xl:text-[40px] font-semibold text-[#1A1A1A]">Frequently
         Asked Questions</h2>
-      <p className="text-[16px] xl:text-[24px] text-[#454545] max-w-xl mt-2">
+      <p className="text-[16px] xl:text-[24px] text-[#454545] max-w-xl mt-3">
         Got questions? We've got answers. Find everything you need to
         know about StudyCafe.
       </p>
 
-      <div className="w-full  mt-10 space-y-3 text-left container px-4">
-        {faqs.map((item, index) => (
-          <div key={item.id ?? index} className="border border-[#AFAFAF] rounded-lg overflow-hidden">
-            <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex justify-between items-center p-4 transition bg-white"
+      <div className="w-full mt-10 space-y-3 text-left container px-4">
+        {faqs.map((item, index) => {
+          const isOpen = openIndex === index;
+
+          return (
+            <div
+              key={item.id ?? index}
+              className="border border-[#AFAFAF] rounded-lg overflow-hidden"
             >
-              <span className="font-medium md:text-[18px] xl:text-[20px] text-black text-left bg-white">{index + 1}. {item.question}</span>
-              <svg
-                className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
+              <button
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+                className="w-full flex justify-between items-start gap-3 p-4 bg-white"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {openIndex === index && (
-              <div className=" p-3 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                <div className="prose prose-sm dark:prose-invert max-w-none " dangerouslySetInnerHTML={{ __html: cleanHTML(item.answer) }}/>
-              </div>
-            )}
-          </div>
-        ))}
+                <span className="flex-1 font-medium md:text-[18px] xl:text-[20px] text-black text-left leading-[140%]">
+                  {index + 1}. {item.question}
+                </span>
+
+                <motion.svg
+                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-5 h-5 flex-shrink-0 mt-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </motion.svg>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    key="content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-3 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+                      <div
+                        className="prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: cleanHTML(item.answer) }}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

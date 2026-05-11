@@ -257,7 +257,7 @@ export default function CourseOverview({
         <div className="p-0 sm:p-8 mt-8 md:mt-6">
           <button className="flex items-center justify-center gap-2 mb-3 bg-[#F7AA0A] mx-auto px-4 py-2 rounded-[10px]">
             <img src="/images/gift.png" alt="" className="w-5 h-5" />
-            <span className="text-sm font-normal text-white">
+            <span className="text-sm font-normal text-black">
               Exclusive bonuses
             </span>
           </button>
