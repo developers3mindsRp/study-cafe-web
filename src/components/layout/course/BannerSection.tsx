@@ -140,9 +140,6 @@ export default function BannerSection({
   course,
   batches = [],
 }: BannerSectionProps) {
-
-
-  console.log(course,"course")
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -178,9 +175,16 @@ export default function BannerSection({
   const startDate = formatDate(displayBatch?.date ?? null);
   const dateLabel =
     displayBatch?.label === "completed" ? "Last batch ended on" : "Starts at";
-  const enrolledCount = course?.enrolled_count ?? 957;
-  const ratings = course?.ratings ? Number(course.ratings).toFixed(1) : "4.8";
-  const ratingUsers = course?.rating_users ?? 47;
+  const enrolledCount = Math.max(0, course?.enrolled_count ?? 0);
+  const rawRating = course?.ratings;
+  const ratingAvg =
+    rawRating != null && rawRating !== ""
+      ? Number(rawRating)
+      : NaN;
+  const ratingAvgLabel = Number.isFinite(ratingAvg)
+    ? ratingAvg.toFixed(1)
+    : null;
+  const ratingUsers = Math.max(0, course?.rating_users ?? 0);
   const languages = course?.language
     ? (Array.isArray(course.language)
         ? course.language
@@ -212,7 +216,9 @@ export default function BannerSection({
         <div className={cls}>
           <img src="/images/Star.png" alt="Rating" className={imgCls} />
           <span>
-            {ratings} by {ratingUsers} Users
+            {ratingAvgLabel != null
+              ? `${ratingAvgLabel} by ${ratingUsers} Users`
+              : "Not rated yet"}
           </span>
         </div>
       </>
