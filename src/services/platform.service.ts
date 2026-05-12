@@ -331,9 +331,9 @@ export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => 
   return response.data.data;
 };
 
-/** All course categories (for filter tabs) */
+/** All course categories (for filter tabs / nav — not limited to featured) */
 export const getCourseCats = async (): Promise<CourseCat[]> => {
-  const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
+  const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats/all');
   return response.data.data;
 };
 
