@@ -4,7 +4,11 @@ import HeroSection_courses from '@/components/layout/course-listing/HeroSection.
 import CoursesPage from '@/components/layout/course-listing/CoursesListing';
 import Breadcrumbs from '@/components/Breadcrumb';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
+<<<<<<< HEAD
 import { getCourseCats, getCoursesByCategory, CourseQueryParams, getAllCategories } from '@/services/platform.service';
+=======
+import { getCourseCatsForCatalog, getCoursesByCategory, CourseQueryParams } from '@/services/platform.service';
+>>>>>>> c4db90991cf83824058bb0868c81192321fcaf83
 import type { CourseCat, PaginatedCourses } from '@/types/models.types';
 
 interface Props {
@@ -45,10 +49,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
   try {
     const [cats, initialCourses] = await Promise.all([
+<<<<<<< HEAD
       // getCourseCats(),
          getAllCategories(),
         getCoursesByCategory(initialQuery),
    
+=======
+      getCourseCatsForCatalog(),
+      getCoursesByCategory(initialQuery),
+>>>>>>> c4db90991cf83824058bb0868c81192321fcaf83
     ]);
 
     return {

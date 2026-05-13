@@ -75,11 +75,16 @@ export async function fetchSiteDisplayAdsSSR(opts: {
   baseUrl: string;
 }): Promise<SiteDisplayAds | null> {
   const base = opts.baseUrl.replace(/\/?$/, "");
-  const url = `${base}/platform/site-ads`;
-  try {
-    const res = await axios.get<ApiResponse<SiteDisplayAds>>(url, { timeout: 8000 });
-    return res.data?.data ?? null;
-  } catch {
-    return null;
+  const paths = ["/platform/cms-display-placements", "/platform/site-ads"];
+  for (const path of paths) {
+    const url = `${base}${path}`;
+    try {
+      const res = await axios.get<ApiResponse<SiteDisplayAds>>(url, { timeout: 8000 });
+      const data = res.data?.data ?? null;
+      if (data) return data;
+    } catch {
+      /* try legacy path */
+    }
   }
+  return null;
 }
