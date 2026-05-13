@@ -359,7 +359,7 @@ console.log(appliedCoupon,"appliedCoupon")
           <p className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
             {fmt(price)}
           </p>
-          <p className="text-[#929292] text-[16px] mt-1">{currentPlan?.remainingDays} Days</p>
+          {/* <p className="text-[#929292] text-[16px] mt-1">{currentPlan?.remainingDays} Days</p> */}
           <p className="text-[#929292] text-[16px] mt-1">{targetPlan?.name}</p>
         </div>
 

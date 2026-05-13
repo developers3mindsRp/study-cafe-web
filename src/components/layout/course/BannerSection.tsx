@@ -169,6 +169,13 @@ export default function BannerSection({
     course?.brief_description ??
     "In our continuous endeavour to empower more and more finance professionals, this certification course has been designed for you. Detailed 2 Days course has been designed where already more than 2 hrs sessions have been organized. Recording of the Video is valid for 1 Year. This Course contains Videos along with study material and files. Live training on GSTR-9 & GSTR-9C will be given.";
   const thumbnail = course?.thumbnail_url ?? "/images/c1.png";
+    const youtubeUrl = course?.youtube_url;
+
+    const videoId = youtubeUrl
+      ?.split("youtu.be/")[1]
+      ?.split("?")[0];
+
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
   const price = formatPrice(course?.price);
   const salePrice = formatPrice(course?.sale_price);
   const displayBatch = resolveDisplayBatch(batches);
@@ -322,12 +329,14 @@ export default function BannerSection({
     </div>
   );
 
+
+  console.log(course,"course")
   return (
     <>
       <div className="bg-[#F5FAFF]">
         <div className="py-2 container px-4 mx-auto">
           <div className="lg:col-span-2 space-y-6 mt-3 md:mt-6">
-            <div className="md:mt-6 md:flex md:items-start md:gap-8">
+            <div className="md:mt-6 md:flex align-start md:gap-8">
               {/* Left: Banner */}
               <div className="md:w-1/2">
                 {/* Course Start Time / Last completed batch date */}
@@ -344,13 +353,29 @@ export default function BannerSection({
                 {/* Mobile image */}
                 <div className="block md:hidden">
                   <div className="rounded overflow-hidden shadow mt-4">
-                    <Image
-                      src={thumbnail}
-                      alt={title}
-                      width={568}
-                      height={320}
-                      className="w-full object-cover"
+                     {
+                    youtubeUrl ?
+                    <iframe
+                      width="100%"
+                      height="400px"
+                      src={embedUrl}
+                      title={title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      
                     />
+                    :
+                       <Image
+                          src={thumbnail}
+                          alt={title}
+                          width={568}
+                          height={320}
+                          className="w-full object-cover"
+                        />
+
+
+                  }
                   </div>
                   <div className="mt-3 p-3 md:flex flex-wrap gap-3 sm:gap-6 justify-center sm:justify-between text-[8px] sm:text-[13px] font-bold hidden">
                     {statBadges("lg")}
@@ -487,15 +512,33 @@ export default function BannerSection({
               </div>
 
               {/* Right: Image + stats */}
-              <div className="md:w-1/2 mt-6 md:mt-[95px]">
+              <div className="md:w-1/2 mt-6 ">
                 <div className="hidden md:block rounded overflow-hidden shadow">
-                  <Image
-                    src={thumbnail}
-                    alt={title}
-                    width={568}
-                    height={320}
-                    className="w-full object-cover"
-                  />
+                  {
+                    youtubeUrl ?
+                    <iframe
+                      width="100%"
+                      height="400px"
+                      src={embedUrl}
+                      title={title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      
+                    />
+                    :
+                       <Image
+                          src={thumbnail}
+                          alt={title}
+                          width={568}
+                          height={320}
+                          className="w-full object-cover"
+                        />
+
+
+                  }
+               
+                  
                 </div>
 
                 {/* Desktop stats */}
