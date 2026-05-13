@@ -160,7 +160,7 @@ export interface RegisterData {
   designation?: string;
   city: string;
   state: string;
-  // country: string;
+  country?: string;
 }
 
 export interface AuthResponse {
