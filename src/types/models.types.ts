@@ -370,6 +370,14 @@ export interface CourseCat {
   is_featured?: boolean;
 }
 
+
+export interface Categories {
+  id: number;
+  name: string;
+  slug: string;
+  is_featured?: boolean;
+}
+
 /** Public course card */
 export interface PublicCourse {
   id: number;

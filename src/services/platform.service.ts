@@ -17,6 +17,7 @@ import {
   CourseBatch,
   FooterContent,
   SiteDisplayAds,
+  Categories,
 } from '@/types/models.types';
 import { ApiResponse, PublicTrackingSettings } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
@@ -337,6 +338,14 @@ export const getCourseCats = async (): Promise<CourseCat[]> => {
   return response.data.data;
 };
 
+
+/** get all category */
+export const getAllCategories = async (): Promise<Categories[]> => {
+  const response = await axiosInstance.get<ApiResponse<Categories[]>>('/course-cats/all');
+  return response.data.data;
+};
+
+
 export interface CourseQueryParams {
   category?: string | null;
   page?: number;
@@ -432,6 +441,36 @@ export const getPublishedCourses = async (): Promise<PublicCourse[]> => {
     return [];
   }
 };
+
+/*---------MembershipSummaryType---------*/
+export interface MembershipSummaryType {
+  targetPlanId: number;
+  code?:string;
+  
+}
+
+export interface MembershipSummaryTypeResult {
+  data: string;
+  
+}
+
+export const getMembershipSummaryById = async (
+  body: MembershipSummaryType
+): Promise<any> => { 
+
+  console.log(body,"body")
+  const response = await axiosInstance.post<ApiResponse<any>>(
+    "/platform/membership/upgrade-summary",
+    {
+      targetPlanId: body.targetPlanId,
+      couponCode:body.code
+    }
+  );
+  return response.data.data;
+};
+
+
+
 
 /** Result of POST /platform/newsletter/subscribe (public, no auth) */
 export interface NewsletterSubscribeResult {

@@ -6,7 +6,7 @@ import { PublicLayout } from "@/components/layout";
 import Breadcrumbs from "@/components/Breadcrumb";
 import MemberDetail from "@/components/layout/membership/details/MemberDetail";
 import MemberPrice from "@/components/layout/membership/details/SidebarMember";
-import { getMembershipBySlug } from "@/services/platform.service";
+import { getMembershipBySlug, getMembershipSummaryById } from "@/services/platform.service";
 import type { Membership } from "@/types/models.types";
 
 export default function MembershipDetailPage() {
@@ -16,6 +16,8 @@ export default function MembershipDetailPage() {
   const [plan, setPlan] = useState<Membership | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [summary, setSummary] = useState<any>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -52,6 +54,34 @@ export default function MembershipDetailPage() {
     };
   }, [router.isReady, slug]);
 
+
+
+  
+ useEffect(() => {
+  if (!plan?.id) return;
+
+  const fetchMembershipSummary = async () => {
+    try {
+      setSummaryLoading(true);
+
+      const response = await getMembershipSummaryById({
+        targetPlanId: Number(plan.id),
+      });
+
+      console.log("Membership Summary API:", response);
+
+      // Adjust according to API structure
+      setSummary(response?.data || response);
+
+    } catch (error) {
+      console.error("Failed to fetch membership summary", error);
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
+  fetchMembershipSummary();
+}, [plan?.id]);
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
@@ -63,7 +93,7 @@ export default function MembershipDetailPage() {
         />
       </div>
 
-      {loading ? (
+      {summaryLoading ? (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-3">
             <div className="w-8 h-8 border-3 border-[#09339B] border-t-transparent rounded-full animate-spin mx-auto" />
@@ -89,7 +119,7 @@ export default function MembershipDetailPage() {
           </div> */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24">
-              <MemberPrice plan={plan} />
+              <MemberPrice plan={summary} />
             </div>
           </div>
         </div>
