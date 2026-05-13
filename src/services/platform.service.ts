@@ -150,14 +150,48 @@ export const getSeoMetadata = async (pageSlug: string): Promise<SeoMetadata | nu
   return fetchSeoMetadataByPath(path);
 };
 
+/** Browser fetch: same-origin `/api` rewrite + no Bearer header (avoids misconfigured cross-origin API URL and auth edge cases). */
+async function fetchSiteDisplayAdsInBrowser(): Promise<SiteDisplayAds | null> {
+  const paths = ['/api/platform/cms-display-placements', '/api/platform/site-ads'];
+  for (const path of paths) {
+    try {
+      const res = await fetch(path, {
+        method: 'GET',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) continue;
+      const json = (await res.json()) as ApiResponse<SiteDisplayAds>;
+      const data = json?.data ?? null;
+      if (data) return data;
+    } catch {
+      /* try next path */
+    }
+  }
+  return null;
+}
+
 /** Promotional placements: popup, article sidebars, in-article banners, listing sidebar */
 export const getSiteDisplayAds = async (): Promise<SiteDisplayAds | null> => {
   if (shouldUseMock()) {
     return mockPlatformApi.getSiteDisplayAds();
   }
   try {
-    const response = await axiosInstance.get<ApiResponse<SiteDisplayAds>>('/platform/site-ads');
-    return response.data.data ?? null;
+    if (typeof window !== 'undefined') {
+      return await fetchSiteDisplayAdsInBrowser();
+    }
+    const paths = ['/platform/cms-display-placements', '/platform/site-ads'];
+    for (const p of paths) {
+      try {
+        const response = await axiosInstance.get<ApiResponse<SiteDisplayAds>>(p);
+        const data = response.data.data ?? null;
+        if (data) return data;
+      } catch {
+        /* try legacy path */
+      }
+    }
+    return null;
   } catch {
     return null;
   }
@@ -331,8 +365,14 @@ export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => 
   return response.data.data;
 };
 
-/** All course categories (for filter tabs / nav — not limited to featured) */
+/** Featured course categories (nav dropdown, homepage tabs — matches GET /course-cats) */
 export const getCourseCats = async (): Promise<CourseCat[]> => {
+  const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
+  return response.data.data;
+};
+
+/** Every course category for the public catalog filters on /courses only (GET /course-cats/all) */
+export const getCourseCatsForCatalog = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats/all');
   return response.data.data;
 };
@@ -342,7 +382,7 @@ export interface CourseQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  sort?: 'latest' | 'newest' | 'oldest';
+  sort?: 'latest' | 'newest' | 'oldest' | 'popular';
   price?: 'all' | 'free' | '0-500' | '500-1000' | '1000+';
 }
 

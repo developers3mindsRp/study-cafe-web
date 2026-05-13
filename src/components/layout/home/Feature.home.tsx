@@ -123,7 +123,11 @@ export default function FeaturedCourses() {
   const fetchCourses = useCallback((slug: string) => {
     setLoading(true);
     setStep(1);
-    getCoursesByCategory({ category: slug === "all" ? undefined : slug, limit: 24 })
+    getCoursesByCategory({
+      category: slug === "all" ? undefined : slug,
+      limit: 24,
+      sort: "popular",
+    })
       .then((res) => setCourses(res.data))
       .catch(() => setCourses([]))
       .finally(() => setLoading(false));
