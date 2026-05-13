@@ -143,44 +143,48 @@ const handleApplyCoupon = useCallback(
     try {
       const payload = {
         targetPlanId: targetPlan.id,
-        code: code,
+        code: code.trim(),
       };
 
       const result = await getMembershipSummaryById(payload);
 
-      console.log("coupon result", result);
-
-      // IMPORTANT FIX
       const updatedData = result?.data || result;
 
+      // update pricing summary
       setSummaryData(updatedData);
 
       setAppliedCoupon({
         coupon: {
-          code: code,
+          code: code.trim(),
           id: updatedData?.coupon?.id || 1,
         },
-        discount: updatedData?.pricing?.deductAmount || 0,
+        discount:
+          updatedData?.coupon?.deductAmount ||
+          updatedData?.coupon?.discountAmount ||
+          0,
       } as any);
 
       setCouponInput(code.trim());
       setOpenCoupon(false);
 
     } catch (err: any) {
-      console.log(err);
-
       setCouponError(err?.message || "Invalid coupon code");
+
+      // reset original data on error
+      setSummaryData(plan);
+
       setAppliedCoupon(null);
     } finally {
       setCouponLoading(false);
     }
   },
-  [targetPlan?.id]
+  [targetPlan?.id, plan]
 );
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCouponInput("");
     setCouponError(null);
+      setSummaryData(plan);
   };
 
   const handleCopyAndApply = (code: string) => {
