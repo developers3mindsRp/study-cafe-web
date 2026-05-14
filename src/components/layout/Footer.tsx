@@ -12,7 +12,7 @@ type FooterProps = {
 
 export default function Footer({ footerData }: FooterProps) {
 
-  console.log(footerData,"footerData")
+  // console.log(footerData,"footerData")
 
   const [usefulOpen, setUsefulOpen] = useState(false);
   const [importantOpen, setImportantOpen] = useState(false);

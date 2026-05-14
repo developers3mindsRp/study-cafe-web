@@ -560,6 +560,7 @@ export interface ArticleBySlug {
   /** Category-based suggestions when premium content is locked */
   related_articles?: RelatedArticle[];
   download_url?: string | null;
+  toc:any
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */

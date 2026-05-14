@@ -394,7 +394,7 @@ export default function Premium_user({
                     {article.title}
                   </h2>
                   <div
-                    className="article-rich-text max-w-none text-[16px] text-[#454545]"
+                    // className="article-rich-text max-w-none text-[16px] text-[#454545]"
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: articleBodyHtml }}
                   />

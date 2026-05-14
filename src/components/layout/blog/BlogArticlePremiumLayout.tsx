@@ -81,6 +81,8 @@ export default function BlogArticlePremiumLayout({
     staleTime: 5 * 60 * 1000,
   });
 
+  console.log(initialArticle,"initialArticle")
+
   return (
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6">
       <div className="lg:col-span-2 space-y-10">
@@ -93,6 +95,7 @@ export default function BlogArticlePremiumLayout({
             date={formatDate(article.published_at)}
             update={formatDate(article.updated_at)}
             image={cardThumb(article.thumbnail_url || article.cover_image_url)}
+            toc={article.toc}
           />
 
           <Premium_user

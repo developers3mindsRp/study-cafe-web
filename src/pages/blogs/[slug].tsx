@@ -25,6 +25,9 @@ interface BlogDetailProps {
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds }: BlogDetailProps) {
+
+
+  console.log(slug, article, "slug, article, spotlight, siteAds")
   return (
     <PublicLayout>
       <Head>

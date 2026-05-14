@@ -11,6 +11,8 @@ type Props = {
 };
 
 export default function LearnRoute(props: Props) {
+
+  console.log(props,"props")
   return (
     <RequireAuth>
       <RequireVerifiedEmail>
