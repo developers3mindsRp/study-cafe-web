@@ -118,32 +118,32 @@ export default function BlogArticlePremiumLayout({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-500">Appeal Number</p>
-                    <p className="font-medium">{citation.appeal_number}</p>
+                    <p className="font-medium">{citation?.appeal_number}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-gray-500">Assessment Year</p>
-                    <p className="font-medium">{citation.assessment_year}</p>
+                    <p className="font-medium">{citation?.assessment_year}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-gray-500">Case Citation</p>
-                    <p className="font-medium">{citation.case_citation}</p>
+                    <p className="font-medium">{citation?.case_citation}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-gray-500">Case Name</p>
-                    <p className="font-medium">{citation.case_name}</p>
+                    <p className="font-medium">{citation?.case_name}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-gray-500">Court</p>
-                    <p className="font-medium">{citation.court}</p>
+                    <p className="font-medium">{citation?.court}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-gray-500">Judgement Date</p>
-                    <p className="font-medium">{citation.judgement_date}</p>
+                    <p className="font-medium">{citation?.judgement_date}</p>
                   </div>
 
                   {/* <div className="md:col-span-2">
