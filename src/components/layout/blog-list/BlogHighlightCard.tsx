@@ -159,6 +159,8 @@ export default function BlogHighlightCard({
 
       </div>
 
+     
+
 
 
       {upNextPosts !== undefined ? (

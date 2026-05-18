@@ -547,6 +547,7 @@ export interface ArticleBySlug {
   excerpt?: string | null;
   sub_heading?: string | null;
   body: string;
+  citation:any;
   thumbnail_url?: string | null;
   cover_image_url?: string | null;
   author_name?: string | number | null;

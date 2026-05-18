@@ -166,9 +166,14 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
             <p className="text-[16px] text-gray-600 mt-2 font-medium capitalize">
               {subscription.membershipType || "Premium Membership"}
             </p>
+            {
+              subscription.membershipType != 'Ultimate' &&
+              <a href="/plans" className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60 block text-center mt-2">Upgrade Membership</a>
+            }
+            
 
             {/* Lifetime — no dates or progress bar needed */}
-            {!isLifetime && (
+            {/* {!isLifetime && (
               <div className="mt-3 text-[14px] text-[#454545] space-y-2">
                 <div className="flex justify-between">
                   <span>Start Date:</span>
@@ -192,7 +197,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
                   {Math.round(subscriptionProgress)}% elapsed
                 </p>
               </div>
-            )}
+            )} */}
           </>
         ) : (
           <p className="text-[14px] text-gray-500 mt-2">

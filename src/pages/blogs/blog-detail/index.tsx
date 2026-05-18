@@ -120,7 +120,7 @@ export default function Blog_detail() {
               />
 
 
-
+              
               {/* Blog Cards */}
               {blog.cards?.map((card, cardIndex) => (
                 <BlogHighlightCard

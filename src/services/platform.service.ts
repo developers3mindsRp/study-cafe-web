@@ -43,12 +43,12 @@ export const getHomePageData = async (): Promise<HomePageData> => {
 
 /** All active membership plans (for pricing page) */
 export const getMemberships = async (): Promise<Membership[]> => {
-  if (shouldUseMock()) {
-    return mockPlatformApi.getMemberships();
-  }
+ 
   const response = await axiosInstance.get<ApiResponse<Membership[]>>(
     '/platform/memberships'
   );
+
+
   return response.data.data;
 };
 

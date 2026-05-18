@@ -80,6 +80,7 @@ export default function BlogArticlePremiumLayout({
     initialData: initialSpotlight,
     staleTime: 5 * 60 * 1000,
   });
+  const citation = initialArticle?.citation;
 
   console.log(initialArticle,"initialArticle")
 
@@ -98,6 +99,8 @@ export default function BlogArticlePremiumLayout({
             toc={article.toc}
           />
 
+          
+
           <Premium_user
             article={article}
             betweenArticleAds={siteAds?.between_article ?? null}
@@ -107,6 +110,60 @@ export default function BlogArticlePremiumLayout({
             allPosts={spotlight?.all_posts ?? []}
             popularTags={spotlight?.popular_tags ?? []}
           />
+
+         <div className="w-full bg-white py-2 container mx-auto px-4">
+            <div className="border border-[#AFAFAF] shadow-md rounded-xl p-5  bg-white">
+                <h2 className="text-xl font-semibold mb-4">Citation Details</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Appeal Number</p>
+                    <p className="font-medium">{citation.appeal_number}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Assessment Year</p>
+                    <p className="font-medium">{citation.assessment_year}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Case Citation</p>
+                    <p className="font-medium">{citation.case_citation}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Case Name</p>
+                    <p className="font-medium">{citation.case_name}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Court</p>
+                    <p className="font-medium">{citation.court}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Judgement Date</p>
+                    <p className="font-medium">{citation.judgement_date}</p>
+                  </div>
+
+                  {/* <div className="md:col-span-2">
+                    <p className="text-sm text-gray-500 mb-1">Case Law Link</p>
+
+                    <a
+                      href={citation.link_to_case_law}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline break-all"
+                    >
+                      View Case Law
+                    </a>
+                  </div> */}
+                </div>
+              </div>
+
+         </div>
+          
+
 
           <ArticleUpNextSection slug={slug} />
 

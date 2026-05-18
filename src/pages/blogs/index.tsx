@@ -85,7 +85,7 @@ export default function Blogs({
         onSearchChange={setSearchInput}
         onSearchSubmit={handleSearchSubmit}
       />
-      {siteAds?.between_article?.below_featured_post?.image_url?.trim() ? (
+      {/* {siteAds?.between_article?.below_featured_post?.image_url?.trim() ? (
         <div className="mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-center">
             <SiteAdBanner
@@ -94,7 +94,7 @@ export default function Blogs({
             />
           </div>
         </div>
-      ) : null}
+      ) : null} */}
       <Blog_list
         articles={articles}
         categories={categories}
