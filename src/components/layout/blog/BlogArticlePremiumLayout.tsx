@@ -111,7 +111,9 @@ export default function BlogArticlePremiumLayout({
             popularTags={spotlight?.popular_tags ?? []}
           />
 
-         <div className="w-full bg-white py-2 container mx-auto px-4">
+      {
+        citation &&
+        <div className="w-full bg-white py-2 container mx-auto px-4">
             <div className="border border-[#AFAFAF] shadow-md rounded-xl p-5  bg-white">
                 <h2 className="text-xl font-semibold mb-4">Citation Details</h2>
 
@@ -162,6 +164,9 @@ export default function BlogArticlePremiumLayout({
               </div>
 
          </div>
+      }
+
+         
           
 
 
