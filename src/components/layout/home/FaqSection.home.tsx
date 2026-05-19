@@ -81,7 +81,7 @@ export default function FAQSection({ faqs: faqsProp }: FAQSectionProps) {
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="p-3 xl:text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+                    <div className="p-3 xl:text-[16px] text-[#3a3c3e] leading-relaxed border-t bg-white">
                       <div
                         className="prose prose-sm max-w-none"
                         dangerouslySetInnerHTML={{ __html: cleanHTML(item.answer) }}

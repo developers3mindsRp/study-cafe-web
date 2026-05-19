@@ -114,7 +114,7 @@ useEffect(() => {
                 ${
                   activeTab === tab.target
                     ? "text-[#252525] font-semibold after:scale-x-100"
-                    : "text-[#6C6C6C] after:scale-x-0"
+                    : "text-[#3a3c3e] after:scale-x-0"
                 }
                 after:content-['']
                 after:absolute

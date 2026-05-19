@@ -338,7 +338,7 @@ export default function Premium_user({
                   </h2>
 
                   <div
-                    className="article-rich-text max-w-none text-[16px] text-[#454545] md:text-[17px]"
+                    className="article-rich-text max-w-none text-[16px] text-[#3a3c3e] md:text-[17px]"
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: article.body }}
                   />
@@ -383,7 +383,7 @@ export default function Premium_user({
                     {article.title}
                   </h2>
                   <div
-                    className="article-rich-text max-w-none text-[16px] text-[#454545]"
+                    className="article-rich-text max-w-none text-[16px] text-[#3a3c3e]"
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: article.body }}
                   />

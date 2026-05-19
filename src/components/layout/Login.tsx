@@ -44,8 +44,8 @@ export default function LoginPage() {
   return (
     <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
       <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center">
-        <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
-          <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
+       <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
           <div className="relative z-10">
             <img
               src="/images/study-logo.svg"
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
         <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px" />
         <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
-        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-6 pt-[10px]">
+        <p className="text-[16px] md:text-[24px] text-[#3a3c3e] mb-6 pt-[10px]">
           Sign in to your account to continue learning
         </p>
         <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4">
@@ -133,7 +133,7 @@ export default function LoginPage() {
           </div>
 
         <div className="flex justify-between items-center mt-4 pb-5">
-        <label className="flex items-center gap-2 text-[16px] text-[#AFAFAF]">
+        <label className="flex items-center gap-2 text-[16px] text-[#3a3c3e]">
             <input type="checkbox" />
             Remember me
         </label>
@@ -185,7 +185,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
+        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-[#09339B]">
             Sign up

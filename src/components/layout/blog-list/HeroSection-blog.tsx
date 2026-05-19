@@ -57,12 +57,12 @@ const HeroSection_blog = ({
 
       {/* Description */}
       {description ? (
-        <p className="text-[#6C6C6C] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-normal ">
+        <p className="text-[#3a3c3e] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-normal ">
           {description}
         </p>
       ) : null}
-      {para1 ? <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para1}</p> : null}
-      {para2 ? <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-normal">{para2}</p> : null}
+      {para1 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para1}</p> : null}
+      {para2 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para2}</p> : null}
 
       {/* Author + Date */}
       <div

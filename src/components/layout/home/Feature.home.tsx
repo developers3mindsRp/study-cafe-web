@@ -42,7 +42,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
               </span>
             </div>
           )}
-          <h3 className="text-[20px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+          <h3 className="text-[20px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
           {enrolled && (
             <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
               <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -51,7 +51,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           <div className="flex justify-between items-center mt-4">
             <div>
               {newPrice && <span className="line-through text-[#AFAFAF] text-[15px]">{oldPrice}</span>}
-              <span className="text-[#252525] font-normal text-[15px] ml-2">{newPrice ?? oldPrice}</span>
+              <span className="text-[#3a3c3e] font-normal text-[15px] ml-2">{newPrice ?? oldPrice}</span>
             </div>
             <Link href={href}>
               <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm">View Course</button>
@@ -80,7 +80,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
             </span>
           </div>
         )}
-        <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+        <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
         {enrolled && (
           <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
             <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -89,7 +89,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
         <div className="flex justify-between items-center mt-4">
           <div>
             {newPrice && <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{oldPrice}</span>}
-            <span className="text-[#252525] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
+            <span className="text-[#3a3c3e] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
           </div>
           <Link href={href}>
             <button className="bg-[#09339B] text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base">View Course</button>
@@ -171,7 +171,7 @@ export default function FeaturedCourses() {
                   key={cat.id}
                   role="option"
                   aria-selected={activeSlug === cat.slug}
-                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#3a3c3e]"
                     }`}
                   onClick={() => handleCatClick(cat.slug)}
                 >
@@ -186,7 +186,7 @@ export default function FeaturedCourses() {
             {cats.map((cat) => (
               <button
                 key={cat.id}
-                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#3a3c3e]"
                   }`}
                 onClick={() => handleCatClick(cat.slug)}
               >

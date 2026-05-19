@@ -273,7 +273,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
         {!highlight && <div className="-mx-6 h-[1px] bg-black" />}
 
         {features.length > 0 && (
-          <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
+          <ul className="px-6 py-6 space-y-4 text-[#3a3c3e] md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
             {features.map((f, i) => (
               <li key={i} className="flex gap-3">
                 <span>

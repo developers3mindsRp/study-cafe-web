@@ -352,7 +352,7 @@ export default function BannerSection({
                 </div>
 
                 {/* Description */}
-                <p className="text-[#929292] text-[16px] leading-[32px] mt-6">
+                <p className="text-[#3a3c3e] text-[16px] leading-[32px] mt-6">
                   {description}
                 </p>
 
@@ -505,7 +505,7 @@ export default function BannerSection({
             <h3 className="text-[14px] md:text-[20px] font-medium">
               This course includes:
             </h3>
-            <div className="flex flex-wrap gap-4 items-center text-[#696969] p-3 text-[12px] md:text-[16px]">
+            <div className="flex flex-wrap gap-4 items-center text-[#3a3c3e] p-3 text-[12px] md:text-[16px]">
               {courseIncludes.map((include, idx) => (
                 <div
                   key={idx}

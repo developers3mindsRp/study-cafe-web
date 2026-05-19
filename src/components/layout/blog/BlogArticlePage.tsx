@@ -81,7 +81,7 @@ export default function BlogArticlePage({
       </header>
 
       <div
-        className="article-rich-text max-w-none text-[16px] text-[#454545]"
+        className="article-rich-text max-w-none text-[16px] text-[#3a3c3e]"
         dangerouslySetInnerHTML={{ __html: article.body }}
       />
 

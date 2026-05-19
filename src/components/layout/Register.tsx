@@ -234,8 +234,8 @@ export default function SignUpPage() {
   return (
     <div className="h-screen flex flex-col md:flex-row mx-auto  ">
       <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center ">
-            <div className="relative border xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden">
-            <div className="absolute inset-0 bg-white/30 blur-xxl"></div>
+         <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
             <div className="relative z-10">
                 <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
                 <h1 className="text-[30px] xl:text-4xl font-bold mb-4 pt-[12px] xl:pb-[18px]">Join Our Learning <br />Community</h1>
@@ -255,7 +255,7 @@ export default function SignUpPage() {
       <div className="md:h-screen overflow-y-auto xl:p-8 scrollbar-thin-custom md:mt-4 ">
       <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px"/>
         <h2 className="text-[20px] xl:text-[40px] font-semibold  pt-[8px]">Create your account</h2>
-        <p className="text-[16px] xl:text-[24px] text-[#AFAFAF] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
+        <p className="text-[16px] xl:text-[24px] text-[#3a3c3e] mb-6 pt-[5px] md:pt-[10px]">Sign up to start your learning journey</p>
         <form onSubmit={handleSubmit} className="space-y-4 text-[16px] md:text-[16px] px-4" noValidate>
           <div>
             <label htmlFor="fullName" className="block mb-1">Full Name <span className="text-red-600">*</span></label>  
@@ -462,7 +462,7 @@ export default function SignUpPage() {
             {fe.confirmPassword && <p className="text-red-600 text-sm mt-1" role="alert">{fe.confirmPassword}</p>}
           </div>
   
-            <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#AFAFAF]">
+            <div className="mt-4 pb-5 flex items-start gap-2 text-[16px] md:text-[16px] text-[#3a3c3e]">
 
               <input
                 id="accept-terms"
@@ -508,7 +508,7 @@ export default function SignUpPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
+        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
           Already have an account?{" "}
           <Link href="/login" className="text-[#09339B]">
             Sign in

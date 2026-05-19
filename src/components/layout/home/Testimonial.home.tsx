@@ -84,7 +84,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
                   <div>
                     <p
                       ref={(el) => (textRefs.current[index] = el)}
-                      className={`text-[#696969] xl:text-[20px] mt-2 leading-relaxed ${expandedIndex === index ? "" : "line-clamp-4"
+                      className={`text-[#3a3c3e]  xl:text-[20px] mt-2 leading-relaxed ${expandedIndex === index ? "" : "line-clamp-4"
                         }`}
                     >
                       {item.quote}

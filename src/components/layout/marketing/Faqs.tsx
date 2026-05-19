@@ -1,9 +1,8 @@
+"use client";
 
-
-
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
     {
@@ -29,57 +28,73 @@ const faqs = [
 ];
 
 const Faqs_marketing = () => {
-     const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     return (
-        <section
-            className="container px-4 mx-auto pb-8"
-        >
-
-
+        <section className="container px-4 mx-auto pb-8">
             {/* FAQ Section */}
-            <div className=" mx-auto  md:mt-2">
-                <h2 className="text-center text-[30px] md:text-[40px] mb-6">FAQ's</h2>
+            <div className="mx-auto md:mt-2">
+                <h2 className="text-center text-[30px] md:text-[40px] mb-6">
+                    FAQ's
+                </h2>
+
                 <div className="space-y-4">
                     {faqs.map((item, index) => (
-                        <div key={index} className="border rounded-lg overflow-hidden shadow-md">
+                        <div
+                            key={index}
+                            className="border rounded-lg overflow-hidden shadow-md"
+                        >
                             {/* Question Button */}
                             <button
-                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                onClick={() =>
+                                    setOpenIndex(openIndex === index ? null : index)
+                                }
                                 className={`
-      w-full flex justify-between items-center p-4 transition
-      ${openIndex === index
-                                    ? "bg-white text-black"    // Active
-                                        : "bg-white text-black"}   // Inactive
-    `}
+                  w-full flex justify-between items-center p-4 transition
+                  ${openIndex === index
+                                        ? "bg-white text-black"
+                                        : "bg-white text-black"}
+                `}
                             >
                                 <span className="font-medium text-[20px] text-left">
                                     {index + 1}. {item.q}
                                 </span>
 
                                 {/* Arrow Icon */}
-                                <svg
-                                    className={`
-        w-5 h-5 transition-transform 
-        ${openIndex === index ? "rotate-180 text-white" : "rotate-0 text-black"}
-      `}
+                                <motion.svg
+                                    animate={{ rotate: openIndex === index ? 180 : 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="w-5 h-5"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
                                     viewBox="0 0 24 24"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </motion.svg>
                             </button>
 
                             {/* Answer */}
-                            {openIndex === index && (
-                                <div className="px-4 pb-4 text-[16px] text-[#454545] bg-white leading-[28px] border-t p-4">
-                                    {item.a}
-                                </div>
-                            )}
+                            <AnimatePresence>
+                                {openIndex === index && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.35, ease: "easeInOut" }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="px-4 pb-4 text-[16px] text-[#454545] bg-white leading-[28px] border-t p-4">
+                                            {item.a}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
-
                     ))}
                 </div>
             </div>

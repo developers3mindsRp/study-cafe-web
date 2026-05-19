@@ -119,8 +119,8 @@ export default function GetInTouch({ data }: Props) {
         className="hidden max-h-[650px] w-1/2 flex-col justify-center object-cover bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat p-8 text-white md:flex"
         aria-hidden
       >
-        <div className="relative mx-auto h-auto max-h-[280px] w-full max-w-[548px] overflow-hidden rounded-[35px] text-center xl:h-[280px] xl:w-[548px]">
-          <div className="absolute inset-0 bg-white/30 blur-xxl" />
+        <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
           <div className="relative z-10">
             <img
               src="/images/study-logo.svg"
