@@ -561,7 +561,11 @@ export interface ArticleBySlug {
   /** Category-based suggestions when premium content is locked */
   related_articles?: RelatedArticle[];
   download_url?: string | null;
-  toc:any
+  toc?:any;
+  whatsapp_link?:any;
+  telegram_link?:any;
+  google_news_url?:any;
+
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */

@@ -81,6 +81,11 @@ export default function BlogArticlePremiumLayout({
     staleTime: 5 * 60 * 1000,
   });
   const citation = initialArticle?.citation;
+  const whatsapp_link = initialArticle?.whatsapp_link
+  const telegram_link = initialArticle?.telegram_link
+
+  const google_news_url = initialArticle?.google_news_url
+
 
   console.log(initialArticle,"initialArticle")
 
@@ -109,6 +114,11 @@ export default function BlogArticlePremiumLayout({
             recentPosts={spotlight?.recent_posts ?? []}
             allPosts={spotlight?.all_posts ?? []}
             popularTags={spotlight?.popular_tags ?? []}
+            whatsapp_link={whatsapp_link}
+            telegram_link={telegram_link}
+            google_news_url={google_news_url}
+
+
           />
 
       {

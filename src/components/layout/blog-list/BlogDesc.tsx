@@ -33,7 +33,7 @@ export default function BlogDesc() {
           <div className="flex flex-col sm:flex-row justify-center items-center pt-2 gap-4">
             <button className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#34C759] px-6 sm:px-12 py-2 rounded-[10px] text-[#34C759] font-medium hover:bg-[#34C759] hover:text-white transition">
               <img src="/images/whatsapp.png" alt="" className="w-4 h-4" />
-              <span>Join WhatsApp Group</span>
+              <span>Join WhatsApp Group </span>
             </button>
 
             <button className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#039BE5] px-6 sm:px-12 py-2 rounded-[10px] text-[#039BE5] font-medium hover:bg-[#039BE5] hover:text-white transition">
