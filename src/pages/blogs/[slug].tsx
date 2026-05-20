@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next';
-import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
@@ -25,17 +24,9 @@ interface BlogDetailProps {
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds }: BlogDetailProps) {
-
-
-  console.log(slug, article, "slug, article, spotlight, siteAds")
   return (
     <PublicLayout>
-      <Head>
-        <title>{`${String(article.meta_title || article.title || 'Article').trim()} | StudyCafe`}</title>
-        {article.meta_description ? (
-          <meta name="description" content={String(article.meta_description)} />
-        ) : null}
-      </Head>
+      {/* SEO: AppRouteSeo + middleware use /api/platform/seo-metadata/by-path for this pathname */}
 
       {/* Breadcrumbs */}
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
