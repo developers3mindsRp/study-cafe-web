@@ -35,6 +35,15 @@ const nextConfig = {
         source: "/api/:path*",
         destination: `${gatewayOrigin.replace(/\/$/, "")}/api/:path*`,
       },
+      /**
+       * Article URLs live at /{slug}-{id}.html but render blogs/[slug].
+       * Without this, client-side <Link> navigation matches pages/[slug] first
+       * and the router aborts with "Abort fetching component for route: /[slug]".
+       */
+      {
+        source: "/:slug.html",
+        destination: "/blogs/:slug",
+      },
     ];
   },
   async redirects() {
@@ -42,6 +51,11 @@ const nextConfig = {
       {
         source: "/course-detailPage",
         destination: "/courses",
+        permanent: true,
+      },
+      {
+        source: "/blogs/:slug.html",
+        destination: "/:slug.html",
         permanent: true,
       },
       // {

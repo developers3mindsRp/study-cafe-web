@@ -62,9 +62,10 @@ export default function ArticleBody({
       );
     }
     const article = mapById.get(id);
-    const path = article
-      ? buildArticlePublicPath(article.slug, article.id)
-      : `/blogs/${encodeURIComponent(String(id))}`;
+    const path =
+      buildArticlePublicPath(article?.slug, article?.id) ??
+      buildArticlePublicPath('article', id) ??
+      '/blogs';
     const href = articleUrlBase
       ? `${articleUrlBase.replace(/\/$/, '')}${path}`
       : path;

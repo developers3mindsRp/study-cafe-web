@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 export default function Breadcrumbs({ content }: { content?: { label: string, href?: string }[] }) {
-  const pathname = usePathname();
+  const router = useRouter();
+  const pathname = (router.asPath || router.pathname || "/").split("?")[0] || "/";
 
   const breadcrumbItems = content || (() => {
     const segments = pathname.split("/").filter(Boolean);
     return segments.map((segment, index) => {
       const href = "/" + segments.slice(0, index + 1).join("/");
       const label = segment
+        .replace(/\.html$/i, "")
         .replace(/-/g, " ")
         .replace(/\b\w/g, char => char.toUpperCase());
       return { label, href };
@@ -33,17 +35,18 @@ export default function Breadcrumbs({ content }: { content?: { label: string, hr
           return (
             <li key={index} className="inline-flex items-center gap-x-2 min-w-0">
               <span className="shrink-0 whitespace-nowrap">{">>"}</span>
-              {href ? (
+              {href && !isLast ? (
                 <Link
                   href={href}
-                  className={`${isLast ? "text-[#09339B] font-medium" : "hover:text-[#09339B]"
-                    } hover:underline transition-colors line-clamp-1 sm:line-clamp-none sm:break-words`}
+                  className="hover:text-[#09339B] hover:underline transition-colors line-clamp-1 sm:line-clamp-none sm:break-words"
                   title={label}
                 >
                   {label}
                 </Link>
               ) : (
-                <span className="text-[#09339B] font-medium">{label}</span>
+                <span className="text-[#09339B] font-medium line-clamp-1 sm:line-clamp-none sm:break-words" title={label}>
+                  {label}
+                </span>
               )}
             </li>
           );
@@ -52,4 +55,3 @@ export default function Breadcrumbs({ content }: { content?: { label: string, hr
     </nav>
   );
 }
-
