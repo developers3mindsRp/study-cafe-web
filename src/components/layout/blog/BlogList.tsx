@@ -29,7 +29,7 @@ export default function Blog_list({
   listingSidebarAd,
 }: BlogListProps) {
 
-  const allCategories = [{ id: 0, name: "All", slug: "" }, ...categories];
+  const allCategories = [{ id: 0, name: "All", slug: "all" }, ...categories];
   const hasListingAd = Boolean(listingSidebarAd?.image_url?.trim());
 
   const handlePageClick = (page: number) => {
@@ -127,7 +127,7 @@ export default function Blog_list({
           {allCategories.map((cat) => (
             <button
               key={cat.id}
-              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${(activeCategory === cat.slug || (activeCategory === "" && cat.slug === ""))
+              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${(activeCategory === cat.slug || (activeCategory === "" && cat.slug === "all"))
                 ? "bg-[#09339B] text-white"
                 : "bg-transparent text-[#767676]"
                 }`}

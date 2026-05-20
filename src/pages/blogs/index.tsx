@@ -67,7 +67,7 @@ export default function Blogs({
 
   const handleCategoryChange = (slug: string) => {
     setSearchInput('');
-    updateQuery({ category: slug || undefined, search: undefined, page: 1 });
+    updateQuery({ category: slug || '/blogs', search: undefined, page: 1 });
   };
 
   const handlePageChange = (page: number) => {

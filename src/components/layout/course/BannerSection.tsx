@@ -162,13 +162,9 @@ export default function BannerSection({
   const isOwned = !!myPurchase;
   const batchPhase = myPurchase?.enrolledBatch?.phase;
 
-  const title =
-    course?.title ??
-    "Certification Course On Practical Filing of GSTR-9 & GSTR-9C";
-  const description =
-    course?.brief_description ??
-    "In our continuous endeavour to empower more and more finance professionals, this certification course has been designed for you. Detailed 2 Days course has been designed where already more than 2 hrs sessions have been organized. Recording of the Video is valid for 1 Year. This Course contains Videos along with study material and files. Live training on GSTR-9 & GSTR-9C will be given.";
-  const thumbnail = course?.thumbnail_url ?? "/images/c1.png";
+  const title = course?.title ;
+  const description =course?.brief_description;
+  const thumbnail = course?.thumbnail_url ?? "/images/placeholder.jpg";
     const youtubeUrl = course?.youtube_url;
 
     const videoId = youtubeUrl
@@ -200,7 +196,7 @@ export default function BannerSection({
     : "English";
   const parsedIncludes = parseCourseIncludesJson(course?.course_includes);
   const courseIncludes =
-    parsedIncludes.length > 0 ? parsedIncludes : FALLBACK_COURSE_INCLUDES;
+    parsedIncludes.length > 0 && parsedIncludes;
   const displayPrice = salePrice ?? price;
   const originalPrice = salePrice ? price : null;
 
@@ -550,27 +546,32 @@ export default function BannerSection({
           </div>
 
           {/* This course includes */}
-          <div className="mt-8">
-            <h3 className="text-[14px] md:text-[20px] font-medium">
-              This course includes:
-            </h3>
-            <div className="flex flex-wrap gap-4 items-center text-[#696969] p-3 text-[12px] md:text-[16px]">
-              {courseIncludes.map((include, idx) => (
-                <div
-                  key={idx}
-                  className="flex gap-2.5 items-center bg-white p-3 rounded-lg"
-                >
-                  {/* Smaller icons than bonus cards (bonus ~36–43px; banner row ~28–32px) */}
-                  <img
-                    src={resolveIncludeImageUrl(include.image)}
-                    alt=""
-                    className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] object-contain flex-shrink-0"
-                  />
-                  <span dangerouslySetInnerHTML={{ __html: include.title }} />
+
+          {
+            courseIncludes &&
+              <div className="mt-8">
+                  <h3 className="text-[14px] md:text-[20px] font-medium">
+                    This course includes:
+                  </h3>
+                  <div className="flex flex-wrap gap-4 items-center text-[#696969] p-3 text-[12px] md:text-[16px]">
+                    {courseIncludes.map((include, idx) => (
+                      <div
+                        key={idx}
+                        className="flex gap-2.5 items-center bg-white p-3 rounded-lg"
+                      >
+                        {/* Smaller icons than bonus cards (bonus ~36–43px; banner row ~28–32px) */}
+                        <img
+                          src={resolveIncludeImageUrl(include.image)}
+                          alt=""
+                          className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] object-contain flex-shrink-0"
+                        />
+                        <span dangerouslySetInnerHTML={{ __html: include.title }} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+          }
+        
         </div>
       </div>
     </>

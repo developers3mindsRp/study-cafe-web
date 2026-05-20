@@ -369,6 +369,8 @@ export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => 
 /** Featured course categories (nav dropdown, homepage tabs — matches GET /course-cats) */
 export const getCourseCats = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
+
+  console.log(response.data.data,"response.data.data")
   return response.data.data;
 };
 
