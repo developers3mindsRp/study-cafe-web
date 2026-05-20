@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getArticles } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
 import Image from "next/image";
-import { buildArticlePublicPath } from "@/lib/articlePaths";
+import { articleHref } from "@/lib/articlePaths";
 
 const PLACEHOLDER_IMGS = ["/images/b1.jpg", "/images/b2.png", "/images/b3.png"];
 
@@ -78,7 +78,7 @@ function BlogCard({
           {title}
         </h3>
 
-        <Link href={buildArticlePublicPath(slug, id)}>
+        <Link href={articleHref(slug, id)}>
           <button className="text-[12px] md:text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 md:py-2 rounded-md flex items-center gap-2">
             Read More
             <img src="/images/arrow-left.svg" alt="" />

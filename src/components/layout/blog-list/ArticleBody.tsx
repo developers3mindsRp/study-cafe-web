@@ -1,7 +1,7 @@
 'use client';
 
 import type { RelatedArticle } from '@/types/models.types';
-import { buildArticlePublicPath } from '@/lib/articlePaths';
+import { articleHref } from '@/lib/articlePaths';
 
 const RELATED_SHORTCODE_REGEX = /\[related\s+id=['"](\d+)['"]\]/gi;
 
@@ -62,10 +62,7 @@ export default function ArticleBody({
       );
     }
     const article = mapById.get(id);
-    const path =
-      buildArticlePublicPath(article?.slug, article?.id) ??
-      buildArticlePublicPath('article', id) ??
-      '/blogs';
+    const path = articleHref(article?.slug ?? 'article', article?.id ?? id);
     const href = articleUrlBase
       ? `${articleUrlBase.replace(/\/$/, '')}${path}`
       : path;

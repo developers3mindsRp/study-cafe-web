@@ -8,12 +8,12 @@ import type {
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { cardThumb } from "./blogImage";
 
-import { buildArticlePublicPath } from "@/lib/articlePaths";
+import { articleHref } from "@/lib/articlePaths";
 
 function postHref(slug: string | null | undefined, id?: number | null) {
   const s = slug?.trim();
   if (!s && (id == null || !Number.isFinite(Number(id)))) return "/blogs";
-  return buildArticlePublicPath(s || "article", id ?? null);
+  return articleHref(s || "article", id ?? null);
 }
 
 type Props = {

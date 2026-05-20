@@ -14,7 +14,7 @@ import type {
 import { resolveBlogImageSrc } from "./blogImage";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import { injectBetweenArticleAdsIntoHtml } from "@/lib/siteDisplayAds";
-import { buildArticlePublicPath } from "@/lib/articlePaths";
+import { articleHref } from "@/lib/articlePaths";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -84,7 +84,7 @@ function AlsoReadBlock({ related }: { related: RelatedArticle[] }) {
         {related.map((r) => (
           <Link
             key={r.id}
-            href={buildArticlePublicPath(r.slug, r.id)}
+            href={articleHref(r.slug, r.id)}
             className="block text-[15px] font-normal leading-snug text-[#09339B] no-underline hover:underline md:text-[16px]"
           >
             {r.title}
@@ -247,7 +247,7 @@ function PostListBlock({
               className="border border-[#AFAFAF] rounded-[10px] p-3"
             >
               <Link
-                href={buildArticlePublicPath(post.slug, post.id)}
+                href={articleHref(post.slug, post.id)}
                 className="inline-flex flex-wrap items-center gap-2 text-[#09339B] text-[15px] md:text-[17px] font-medium hover:underline"
               >
                 {post.title}
@@ -544,7 +544,7 @@ export default function Premium_user({
                 className="border border-[#AFAFAF] p-3 rounded-[10px]"
               >
                 <Link
-                  href={buildArticlePublicPath(row.slug, row.id)}
+                  href={articleHref(row.slug, row.id)}
                   className="inline-flex flex-wrap items-center gap-2"
                 >
                   {row.title}

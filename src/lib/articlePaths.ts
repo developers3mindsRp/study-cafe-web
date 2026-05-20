@@ -14,6 +14,14 @@ export function buildArticlePublicPath(
   return `/${s}-${idNum}.html`;
 }
 
+/** Safe href for Next.js `<Link>` (never null). */
+export function articleHref(
+  slug: string | null | undefined,
+  id: number | string | null | undefined
+): string {
+  return buildArticlePublicPath(slug, id) ?? "/blogs";
+}
+
 /** Blog listing routes under /blogs — not article detail. */
 export const BLOG_RESERVED_SEGMENTS = new Set(["finance", "blog-detail"]);
 
