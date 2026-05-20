@@ -1,6 +1,7 @@
 'use client';
 
 import type { RelatedArticle } from '@/types/models.types';
+import { buildArticlePublicPath } from '@/lib/articlePaths';
 
 const RELATED_SHORTCODE_REGEX = /\[related\s+id=['"](\d+)['"]\]/gi;
 
@@ -9,7 +10,7 @@ interface ArticleBodyProps {
   body: string;
   /** Resolved from [related id="..."] shortcodes (returned by API). */
   relatedArticles?: RelatedArticle[];
-  /** Base URL for article links (e.g. "" for relative "/blogs/slug"). */
+  /** Base URL for article links (e.g. "" for relative `/{slug}-{id}.html`). */
   articleUrlBase?: string;
   className?: string;
 }
@@ -61,10 +62,12 @@ export default function ArticleBody({
       );
     }
     const article = mapById.get(id);
-    const slug = article?.slug != null ? String(article.slug) : String(id);
+    const path = article
+      ? buildArticlePublicPath(article.slug, article.id)
+      : `/blogs/${encodeURIComponent(String(id))}`;
     const href = articleUrlBase
-      ? `${articleUrlBase}/blogs/${encodeURIComponent(slug)}`
-      : `/blogs/${encodeURIComponent(slug)}`;
+      ? `${articleUrlBase.replace(/\/$/, '')}${path}`
+      : path;
     parts.push(
       <div key={`related-${key++}`} className="related-article-inline my-6">
         <p className="related-heading">Also Read</p>

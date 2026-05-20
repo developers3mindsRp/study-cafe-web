@@ -10,31 +10,38 @@ import { shouldFetchGlobalSeoForPathname } from "@/lib/seo/seoRoutePolicy";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!shouldFetchGlobalSeoForPathname(pathname)) {
-    return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+
+  if (shouldFetchGlobalSeoForPathname(pathname)) {
+    const apiBase = resolveApiBaseForEdge(request);
+    const pathParam = pathname === "" ? "/" : pathname;
+    const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
+    try {
+      const fetchRes = await fetch(seoUrl, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (fetchRes.ok) {
+        const body = (await fetchRes.json()) as { data?: Record<string, unknown> };
+        const row = body?.data;
+        if (row && typeof row === "object") {
+          requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(row)));
+        }
+      }
+    } catch {
+      /* non-blocking */
+    }
   }
 
-  const apiBase = resolveApiBaseForEdge(request);
-  const pathParam = pathname === "" ? "/" : pathname;
-  const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
-
-  try {
-    const res = await fetch(seoUrl, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
+  /** WordPress-style public URLs: /{slug}-{id}.html → page at /blogs/[slug] */
+  if (/^\/[^/]+\.html$/i.test(pathname)) {
+    const inner = pathname.slice(1).replace(/\.html$/i, "");
+    return NextResponse.rewrite(new URL(`/blogs/${inner}`, request.url), {
+      request: { headers: requestHeaders },
     });
-    if (!res.ok) return NextResponse.next();
-
-    const body = (await res.json()) as { data?: Record<string, unknown> };
-    const row = body?.data;
-    if (!row || typeof row !== "object") return NextResponse.next();
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(row)));
-    return NextResponse.next({ request: { headers: requestHeaders } });
-  } catch {
-    return NextResponse.next();
   }
+
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 function resolveApiBaseForEdge(request: NextRequest): string {

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getArticles } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
 import Image from "next/image";
+import { buildArticlePublicPath } from "@/lib/articlePaths";
 
 const PLACEHOLDER_IMGS = ["/images/b1.jpg", "/images/b2.png", "/images/b3.png"];
 
@@ -25,6 +26,7 @@ function BlogCard({
   date,
   title,
   slug,
+  id,
   size = "desktop",
 }: {
   img: string;
@@ -33,6 +35,7 @@ function BlogCard({
   date: string;
   title: string;
   slug: string;
+  id: number;
   size?: "mobile" | "desktop";
 }) {
   const isMobile = size === "mobile";
@@ -75,7 +78,7 @@ function BlogCard({
           {title}
         </h3>
 
-        <Link href={`/blogs/${slug}`}>
+        <Link href={buildArticlePublicPath(slug, id)}>
           <button className="text-[12px] md:text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 md:py-2 rounded-md flex items-center gap-2">
             Read More
             <img src="/images/arrow-left.svg" alt="" />
@@ -126,6 +129,7 @@ export default function BlogSection() {
     date: formatDate(article.published_at || article.created_at),
     title: article.title,
     slug: article.slug,
+    id: Number(article.id),
   }));
 
   // Use skeletons while loading

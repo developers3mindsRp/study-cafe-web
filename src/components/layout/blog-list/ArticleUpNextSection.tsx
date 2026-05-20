@@ -7,6 +7,7 @@ import { getArticleUpNext } from "@/services/platform.service";
 import { cardThumb, resolveBlogImageSrc } from "@/components/layout/blog-list/blogImage";
 import { articleTeaserPlain, sanitizeTeaserPlain } from "@/components/layout/blog-list/articleTeaserPlain";
 import type { BlogSpotlightArticleCard } from "@/types/models.types";
+import { buildArticlePublicPath } from "@/lib/articlePaths";
 
 type Props = {
   slug: string;
@@ -63,7 +64,7 @@ function UpNextSocialRow() {
 }
 
 function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
-  const href = `/blogs/${encodeURIComponent(post.slug)}`;
+  const href = buildArticlePublicPath(post.slug, post.id);
   const banner = resolveBlogImageSrc(cardThumb(post.thumbnail_url || post.cover_image_url)) || "/images/s-court.png";
   const serverPreview = post.description_preview?.trim();
   const teaser =
