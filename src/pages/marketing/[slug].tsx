@@ -3,8 +3,10 @@ import Head from 'next/head';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { resolveMarketingPage } from '@/lib/marketing/resolveMarketingPage';
 import type { MarketingPageProps } from '@/lib/marketing/types';
+import type { MediaTestimonial } from '@/types/models.types';
 import {
   getFaq,
+  getGoogleReviews,
   getMarketingPageBySlug,
   getTestimonials,
 } from '@/services/platform.service';
@@ -24,9 +26,26 @@ import Google_review from '@/components/layout/marketing/Google_review';
 import Faqs_marketing from '@/components/layout/marketing/Faqs';
 import Trainer_marketing from '@/components/layout/marketing/Trainer';
 import StickyCTA from '@/components/layout/marketing/Stickybar';
-import Testimonials_home from '@/components/layout/home/Testimonial.home';
 
-export default function MarketingPage({ data, globalFaqs, globalTestimonials }: MarketingPageProps) {
+function metaVideoFallback(
+  videoTestimonials: { url?: string; thumbnail?: string }[],
+): MediaTestimonial[] {
+  return videoTestimonials
+    .filter((v) => v.thumbnail || v.url)
+    .map((v, i) => ({
+      id: `meta-${i}`,
+      mediaType: 'video' as const,
+      mediaUrl: v.thumbnail || v.url || '',
+      videoUrl: v.url || null,
+    }));
+}
+
+export default function MarketingPage({
+  data,
+  globalFaqs,
+  globalGoogleReviews,
+  mediaTestimonials,
+}: MarketingPageProps) {
   return (
     <>
       <Head>
@@ -45,19 +64,13 @@ export default function MarketingPage({ data, globalFaqs, globalTestimonials }: 
         <Bonus_marketing data={data} />
         <Attend_marketing data={data} />
         <Reviews_marketing data={data} />
-        <Testimonials_marketing data={data} />
-        {globalTestimonials.length > 0 ? (
-          <section className="container mx-auto px-4 py-8">
-            <h2 className="text-center text-[30px] md:text-[40px] mb-6 uppercase">Testimonials</h2>
-            <Testimonials_home testimonials={globalTestimonials} />
-          </section>
-        ) : null}
+        <Testimonials_marketing items={mediaTestimonials} />
         <Expert_marketing data={data} />
         <Alumini_marketing data={data} />
         <Trainer_marketing data={data} />
         <Gallery_marketing data={data} />
         <Expert_marketing data={data} />
-        <Google_review data={data} />
+        <Google_review data={data} globalReviews={globalGoogleReviews} />
         <Faqs_marketing data={data} faqs={globalFaqs} />
         <StickyCTA data={data} />
       </div>
@@ -73,18 +86,24 @@ export const getServerSideProps: GetServerSideProps<MarketingPageProps> = async 
     const payload = await getMarketingPageBySlug(slug);
     if (!payload?.course) return { notFound: true };
 
-    const [globalFaqs, globalTestimonials] = await Promise.all([
+    const [globalFaqs, globalGoogleReviews, platformMedia] = await Promise.all([
       getFaq().catch(() => []),
-      getTestimonials(12).catch(() => []),
+      getGoogleReviews().catch(() => []),
+      getTestimonials().catch(() => []),
     ]);
 
     const data = resolveMarketingPage(payload, globalFaqs);
+    const mediaTestimonials =
+      platformMedia.length > 0
+        ? platformMedia
+        : metaVideoFallback(data.videoTestimonials);
 
     return {
       props: {
         data,
         globalFaqs,
-        globalTestimonials,
+        globalGoogleReviews,
+        mediaTestimonials,
       },
     };
   });

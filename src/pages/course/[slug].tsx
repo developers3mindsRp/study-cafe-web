@@ -12,6 +12,7 @@ import Breadcrumbs from "@/components/Breadcrumb";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
 import {
   getCourseBySlugOrId,
+  getCoursePageSettingsPublic,
   getCourseSessionsForResolvedCourse,
   getPublishedCourses,
 } from "@/services/platform.service";
@@ -25,15 +26,15 @@ interface CoursePageProps {
   course: CoursePublicDetail | null;
   batches: CourseBatch[];
   trendingCourses: PublicCourse[];
+  galleryImages: string[];
 }
 
 export default function CoursePage({
   course,
   batches,
   trendingCourses,
+  galleryImages,
 }: CoursePageProps) {
-
-  console.log(course,"course")
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] px-1 p-4 mx-auto">
@@ -70,7 +71,7 @@ export default function CoursePage({
          <GSTRCoursePage course={course} />
       }
      
-      <Gallery />
+      <Gallery images={galleryImages.length > 0 ? galleryImages : undefined} />
       {
         trendingCourses &&
           <TrendingCourses courses={trendingCourses} />
@@ -101,9 +102,10 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
       };
     }
 
-    const [batches, allCourses] = await Promise.all([
+    const [batches, allCourses, pageSettings] = await Promise.all([
       getCourseSessionsForResolvedCourse(course),
       getPublishedCourses(),
+      getCoursePageSettingsPublic(),
     ]);
 
     const trendingCourses = allCourses
@@ -115,6 +117,7 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         course,
         batches,
         trendingCourses,
+        galleryImages: pageSettings.gallery_images ?? [],
       },
     };
   });
