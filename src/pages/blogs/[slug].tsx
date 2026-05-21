@@ -22,12 +22,19 @@ interface BlogDetailProps {
   article: ArticleBySlug;
   spotlight: BlogSpotlightFeed;
   siteAds: SiteDisplayAds | null;
+  isPreview?: boolean;
 }
 
-export default function BlogDetail({ slug, article, spotlight, siteAds }: BlogDetailProps) {
+export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
   return (
     <PublicLayout>
       {/* SEO: AppRouteSeo + middleware use /api/platform/seo-metadata/by-path for this pathname */}
+
+      {isPreview && (
+        <div className="w-full bg-yellow-400 text-yellow-900 text-center text-sm font-semibold py-2 px-4">
+          Preview — This is preview link.
+        </div>
+      )}
 
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
         <Breadcrumbs
@@ -61,39 +68,43 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
 
   const baseUrl = appConfig.apiBaseUrl;
   const token = bearerFromCookieHeader(ctx.req.headers.cookie);
+  const previewToken = typeof ctx.query.preview_token === 'string' ? ctx.query.preview_token : null;
 
   const [article, spotlight, siteAds] = await Promise.all([
-    fetchArticleBySlugSSR(slug, { baseUrl, token }),
+    fetchArticleBySlugSSR(slug, { baseUrl, token, previewToken }),
     fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),
     fetchSiteDisplayAdsSSR({ baseUrl }),
   ]);
 
   if (!article) return { notFound: true };
 
-  const canonicalPath = buildArticlePublicPath(article.slug, article.id);
-  const rawPublicPath = ctx.req.headers['x-studycafe-public-path'];
-  const publicPathHeader = Array.isArray(rawPublicPath) ? rawPublicPath[0] : rawPublicPath;
-  const requestPath = (
-    typeof publicPathHeader === 'string' && publicPathHeader
-      ? publicPathHeader
-      : (ctx.resolvedUrl || ctx.req.url || '')
-  )
-    .split('?')[0] || '';
-  const isDocumentRequest = !ctx.req.headers['x-nextjs-data'];
+  // Skip canonical redirect when previewing a draft — it may not have a canonical URL yet
+  if (!previewToken) {
+    const canonicalPath = buildArticlePublicPath(article.slug, article.id);
+    const rawPublicPath = ctx.req.headers['x-studycafe-public-path'];
+    const publicPathHeader = Array.isArray(rawPublicPath) ? rawPublicPath[0] : rawPublicPath;
+    const requestPath = (
+      typeof publicPathHeader === 'string' && publicPathHeader
+        ? publicPathHeader
+        : (ctx.resolvedUrl || ctx.req.url || '')
+    )
+      .split('?')[0] || '';
+    const isDocumentRequest = !ctx.req.headers['x-nextjs-data'];
 
-  // Redirect legacy /blogs/... URLs only — not .html (rewritten internally to /blogs/[slug])
-  if (
-    canonicalPath &&
-    isDocumentRequest &&
-    requestPath.startsWith('/blogs/') &&
-    requestPath !== canonicalPath
-  ) {
-    return {
-      redirect: {
-        destination: canonicalPath,
-        permanent: true,
-      },
-    };
+    // Redirect legacy /blogs/... URLs only — not .html (rewritten internally to /blogs/[slug])
+    if (
+      canonicalPath &&
+      isDocumentRequest &&
+      requestPath.startsWith('/blogs/') &&
+      requestPath !== canonicalPath
+    ) {
+      return {
+        redirect: {
+          destination: canonicalPath,
+          permanent: true,
+        },
+      };
+    }
   }
 
   return {
@@ -102,6 +113,7 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
       article,
       spotlight,
       siteAds,
+      isPreview: !!previewToken,
     },
   };
 };
