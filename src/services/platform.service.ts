@@ -410,11 +410,14 @@ export const getCoursesByCategory = async (params: CourseQueryParams = {}): Prom
   return response.data.data;
 };
 
-/** Fetch a single published course by its slug */
-export const getCourseBySlug = async (slug: string): Promise<CoursePublicDetail | null> => {
+/** Fetch a single published course by its slug, optionally bypassing the published filter with a preview token */
+export const getCourseBySlug = async (slug: string, previewToken?: string | null): Promise<CoursePublicDetail | null> => {
   try {
+    const params: Record<string, string> = {};
+    if (previewToken) params.preview_token = previewToken;
     const response = await axiosInstance.get<ApiResponse<CoursePublicDetail>>(
-      `/courses/slug/${encodeURIComponent(slug)}`
+      `/courses/slug/${encodeURIComponent(slug)}`,
+      { params }
     );
     return response.data.data ?? null;
   } catch {
@@ -422,11 +425,14 @@ export const getCourseBySlug = async (slug: string): Promise<CoursePublicDetail 
   }
 };
 
-/** Fetch a single published course by numeric database id */
-export const getCourseById = async (id: string | number): Promise<CoursePublicDetail | null> => {
+/** Fetch a single published course by numeric database id, optionally bypassing the published filter with a preview token */
+export const getCourseById = async (id: string | number, previewToken?: string | null): Promise<CoursePublicDetail | null> => {
   try {
+    const params: Record<string, string> = {};
+    if (previewToken) params.preview_token = previewToken;
     const response = await axiosInstance.get<ApiResponse<CoursePublicDetail>>(
-      `/courses/${encodeURIComponent(String(id))}`
+      `/courses/${encodeURIComponent(String(id))}`,
+      { params }
     );
     return response.data.data ?? null;
   } catch {
@@ -436,12 +442,13 @@ export const getCourseById = async (id: string | number): Promise<CoursePublicDe
 
 /**
  * Resolve a URL segment: all digits → GET /courses/:id, otherwise → GET /courses/slug/:slug
+ * Pass previewToken to allow admin preview of unpublished courses.
  */
-export const getCourseBySlugOrId = async (segment: string): Promise<CoursePublicDetail | null> => {
+export const getCourseBySlugOrId = async (segment: string, previewToken?: string | null): Promise<CoursePublicDetail | null> => {
   const s = String(segment || "").trim();
   if (!s) return null;
-  if (/^\d+$/.test(s)) return getCourseById(s);
-  return getCourseBySlug(s);
+  if (/^\d+$/.test(s)) return getCourseById(s, previewToken);
+  return getCourseBySlug(s, previewToken);
 };
 
 /** Fetch batches + sessions + recordings for a published course by slug */
