@@ -20,7 +20,7 @@ import {
 import { shouldUseMock } from '@/config/app.config';
 import { mockAuthApi } from '@/mocks/api.mock';
 
-/** Map API `email_verified` — only explicit `false` blocks the app; omit/`true`/`undefined` = verified for stale caches. */
+/** Map API `email_verified` — only explicit `false` blocks the app; omit/`true`/`undefined` = verified for stale cachess. */
 export function mapEmailVerifiedFromApi(v: boolean | undefined): boolean | undefined {
   if (v === false) return false;
   if (v === true) return true;
