@@ -1,48 +1,55 @@
-import React from "react";
-import Link from "next/link";
+"use client";
 
-const Timer_marketing = () => {
-    return (
-        <section
-            className=""
-        >
+import { useEffect, useState } from "react";
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
+import Expert_marketing from "./Expert";
 
+interface Props {
+  data: ResolvedMarketingPage;
+}
 
-            {/* Center Content */}
-            <div className="relative z-10 text-center ">
-                <h2 className="text-white text-[20px] xl:text-[40px] font-semibold mb-2 px-12 uppercase ">
-                    Time is running out. Reserve your seat <span className="text-[#E6B800]">now!</span>
-                </h2>
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
 
-                <div className="flex justify-center gap-4 mt-4">
+const Timer_marketing = ({ data }: Props) => {
+  const totalSec = (data.countdownMinutes ?? 15) * 60;
+  const [remaining, setRemaining] = useState(totalSec);
 
-                    <div className="bg-[#FFCC00] text-black font-bold 
-                  w-20 h-24 md:w-18 md:h-24 
-                  flex flex-col items-center justify-center 
-                  rounded-lg">
-                        <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">15</span>
-                        <span className="text-[18px] md:text-[18px] ">Min</span>
-                    </div>
+  useEffect(() => {
+    setRemaining(totalSec);
+    const t = setInterval(() => {
+      setRemaining((r) => (r > 0 ? r - 1 : 0));
+    }, 1000);
+    return () => clearInterval(t);
+  }, [totalSec]);
 
-                    <div className="bg-[#FFCC00] text-black font-bold 
-                  w-20 h-24 md:w-18 md:h-24 
-                  flex flex-col items-center justify-center 
-                  rounded-lg">
-                        <span className="text-[40px] md:text-[40px] font-bold leading-none mb-2">00</span>
-                        <span className="text-[18px] md:text-[18px] ">Sec</span>
-                    </div>
+  const min = Math.floor(remaining / 60);
+  const sec = remaining % 60;
 
-                </div>
-
-
-                    <p className="text-[24px] mt-4 px-4 mb-10">
-                    Fee will <span className="text-[#FFCC00]">increase</span> to <span className="text-[#FFCC00]"> Rs 2,000 </span>once the <span className="text-[#FFCC00]"> timer hits ZERO.</span>
-
-                    </p>
-          
-            </div>
-        </section>
-    );
+  return (
+    <section className="container mx-auto px-4 py-8 text-center">
+      <p className="text-[18px] md:text-[22px] font-semibold uppercase mb-4">
+        Time is running out. Reserve your seat <span className="text-yellow-400">now!</span>
+      </p>
+      <div className="flex justify-center gap-4 mb-4">
+        <div className="bg-yellow-400 text-black font-bold px-6 py-4 rounded-lg text-center min-w-[80px]">
+          <div className="text-3xl">{pad(min)}</div>
+          <div className="text-xs">Min</div>
+        </div>
+        <div className="bg-yellow-400 text-black font-bold px-6 py-4 rounded-lg text-center min-w-[80px]">
+          <div className="text-3xl">{pad(sec)}</div>
+          <div className="text-xs">Sec</div>
+        </div>
+      </div>
+      <p className="text-white mb-8">
+        Fee will increase to{" "}
+        <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once the
+        timer hits <span className="text-yellow-400">ZERO</span>.
+      </p>
+      <Expert_marketing data={data} />
+    </section>
+  );
 };
 
 export default Timer_marketing;

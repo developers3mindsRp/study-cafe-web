@@ -1,93 +1,61 @@
-const testimonials = [
-    {
-        images: "/images/t1.png",
+"use client";
 
-    },
-    {
-        images: "/images/t2.png",
-    },
-    {
-        images: "/images/t3.jpg",
-    },
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
-
-];
-
-export default function Testimonials_marketing() {
-    return (
-        <section className=" py-4 md:py-0">
-            <div className="  ">
-                {/* Heading */}
-                <h2 className="text-[30px] xl:text-[40px] font-semibold uppercase text-center mb-4">
-                   Testimonials
-                </h2>
-
-
-                {/* Cards */}
-                <div className="">
-                    {/* Mobile slider */}
-                    <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden md:mt-4 md:pb-4 px-2 scrollbar-hide mb-12">
-                        {testimonials.map((item, index) => (
-                            <div
-                                key={index}
-                                className="w-[250px] snap-center flex-shrink-0 text-left "
-                            >
-
-                                <div className="mt-6 relative  flex items-center justify-between">
-                                    {/* Image */}
-                                    <img
-                                        src={item.images}
-                                        alt=""
-                                        className="object-cover w-full h-[210px] rounded-lg gap-6"
-                                    />
-
-                                    {/* Overlay */}
-                                    <div className="absolute inset-0   flex items-center justify-center rounded-lg">
-                                        <button className="bg-black w-12 h-12 flex items-center justify-center rounded-full">
-                                            <span className="text-[white] text-[20px] ">▶</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Desktop grid */}
-
-                    <div className="hidden md:block overflow-hidden relative ">
-                        <div className="flex gap-8 animate-marquee hover:[animation-play-state:paused]">
-
-                            {[...testimonials, ...testimonials].map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="md:min-w-[350px] xl:min-w-[460px] relative"
-                                >
-                                    <div className="mt-6 relative flex items-center justify-between">
-                                        {/* Image */}
-                                        <img
-                                            src={item.images}
-                                            alt=""
-                                            className="object-fit w-full h-[280px] rounded-lg"
-                                        />
-
-                                        {/* Overlay */}
-                                        <div className="absolute inset-0 flex items-center justify-center rounded-lg">
-                                            <button className="bg-black w-16 h-16 flex items-center justify-center rounded-full">
-                                                <span className="text-white text-[30px]">▶</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </section>
-
-        
-    );
+interface Props {
+  data: ResolvedMarketingPage;
 }
+
+function youtubeEmbed(url: string, autoplay = true): string | null {
+  if (!url?.trim()) return null;
+  let id = "";
+  if (url.includes("youtu.be/")) {
+    id = url.split("youtu.be/")[1]?.split(/[?&#]/)[0] ?? "";
+  } else if (url.includes("youtube.com")) {
+    const m = url.match(/[?&]v=([^&]+)/);
+    id = m?.[1] ?? "";
+  }
+  if (!id) return null;
+  const params = autoplay ? "?autoplay=1&mute=1&playsinline=1&rel=0" : "";
+  return `https://www.youtube.com/embed/${id}${params}`;
+}
+
+const Testimonials_marketing = ({ data }: Props) => {
+  const videos = data.videoTestimonials;
+  if (!videos.length) return null;
+
+  return (
+    <section className="container mx-auto px-4 py-8">
+      <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">Testimonials</h2>
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        {videos.map((item, index) => {
+          const embed = youtubeEmbed(item.url, true);
+          return (
+            <div
+              key={index}
+              className="min-w-[280px] md:min-w-[360px] flex-shrink-0 relative rounded-lg overflow-hidden aspect-video bg-black"
+            >
+              {embed ? (
+                <iframe
+                  src={embed}
+                  title={`Testimonial ${index + 1}`}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <img
+                  src={item.thumbnail}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
+export default Testimonials_marketing;

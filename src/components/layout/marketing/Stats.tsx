@@ -1,58 +1,32 @@
-"use client";
-import React from "react";
-import CountUp from "react-countup";
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
-export default function Stats_marketing() {
+interface Props {
+  data: ResolvedMarketingPage;
+}
+
+const Stats_marketing = ({ data }: Props) => {
+  const { stats } = data;
   return (
-    <section className=" py-4 md:py-4 px-4 md:w-[850px] mx-auto">
-      <div className="container mx-auto px-4 bg-[#09339B] rounded-full md:rounded-full p-6 ">
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-2 text-center px-2">
-
-          {/* Active Students */}
-
- 
-            <div className=" md:flex flex-col">
-              <h3 className="text-[18px] xl:text-[40px] font-bold text-[#FFFFFF]">
-                <CountUp end={10000} duration={2} separator="," />+
-              </h3>
-                          <p className="text-[#FFFFFF] text-[12px] md:text-[16px]">People Coached</p>
-            </div>
-    
-
-          {/* Total Courses */}
-  
-    
-            <div className=" md:flex flex-col">
-              <h3 className="text-[18px] xl:text-[40px] font-bold text-[#FFFFFF]">
-                <CountUp end={150} duration={2} />+
-              </h3>
-                          <p className="text-[#FFFFFF] text-[12px] md:text-[16px] ">Prefered By AI Experts</p>
-            </div>
- 
-
-          {/* Certificates Issued */}
-
-    
-            <div className=" md:flex flex-col">
-              <h3 className="text-[18px] xl:text-[40px] font-bold text-[#FFFFFF]">
-                <CountUp end={8500} duration={2} separator="," />+
-              </h3>
-                          <p className="text-[#FFFFFF] text-[12px] md:text-[16px]">Attended</p>
-            </div>
-  
-
-
-
+    <section className="container mx-auto px-4 py-8">
+      <div className="bg-[#0099FF] rounded-full py-6 px-8 flex flex-col md:flex-row justify-around items-center gap-6 text-center">
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.people_coached}+</p>
+          <p className="text-sm">People Coached</p>
         </div>
-          </div>
-          
-          <div className="mx-auto mt-12 md:ml-12">
-              {/* Heading */}
-              <h1 className="text-2xl md:text-[40px] font-medium leading-snug  px-12 md:px-2 text-center mb-8">
-                  <span className="text-yellow-400">REGISTER </span> BEFORE TODAY'S MIDNIGHT 
-                 
-              </h1>
-          </div>
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.preferred_by}+</p>
+          <p className="text-sm">Prefered By AI Experts</p>
+        </div>
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.attended}+</p>
+          <p className="text-sm">Attended</p>
+        </div>
+      </div>
+      <p className="text-center mt-8 text-[18px] md:text-[24px] font-semibold uppercase">
+        <span className="text-yellow-400">REGISTER</span> BEFORE TODAY&apos;S MIDNIGHT
+      </p>
     </section>
   );
-}
+};
+
+export default Stats_marketing;

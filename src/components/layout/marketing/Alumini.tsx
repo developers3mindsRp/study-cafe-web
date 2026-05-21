@@ -1,44 +1,34 @@
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
+interface Props {
+  data: ResolvedMarketingPage;
+}
 
+const Alumini_marketing = ({ data }: Props) => {
+  const logos = data.alumniLogos;
+  if (!logos.length) return null;
 
-import React from "react";
-import Link from "next/link";
-
-const Alumini_marketing = () => {
-    return (
-        <section
-            className="mt-12"
-        >
-
-
-            {/* Alumni Logos */}
-            <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8 ">
-                <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
-                    Our Alumni at Leading Companies
-                </h2>
-
-                <div className="container mx-auto">
-                    <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
-                        {[1, 2, 3, 4, 5, 6].map((num) => (
-                            <div
-                                key={num}
-                                className="h-[70px] sm:h-[80px] w-full max-w-[140px]
-                     border p-3 sm:p-4 rounded-[10px]
-                     flex items-center justify-center
-                     shadow-sm bg-white"
-                            >
-                                <img
-                                    src={`/images/brand_${num}.svg`}
-                                    alt={`brand_${num}`}
-                                    className="h-full object-contain"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+  return (
+    <section className="py-12 bg-gradient-to-r from-[#4facfe] to-[#00f2fe]">
+      <h2 className="text-center text-white text-[24px] md:text-[32px] font-semibold mb-8">
+        Our Alumni at Leading Companies
+      </h2>
+      <div className="flex flex-wrap justify-center gap-4 px-4 max-w-5xl mx-auto">
+        {logos.map((logo, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-lg p-4 w-[120px] h-[60px] flex items-center justify-center"
+          >
+            <img
+              src={logo.image}
+              alt={logo.name || "Partner"}
+              className="max-h-10 max-w-full object-contain"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 };
 
 export default Alumini_marketing;

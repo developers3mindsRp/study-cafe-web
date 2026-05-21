@@ -1,14 +1,14 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useFeaturedCourses } from '@/hooks/useCourses';
-import { queryKeys } from '@/lib/react-query';
-import * as coursesService from '@/services/courses.service';
-import { PublicLayout } from '@/components/layout';
-import SignUpPage from '@/components/layout/Register';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { runWithServerApiBase } from '@/lib/serverApiContext';
+import { resolveMarketingPage } from '@/lib/marketing/resolveMarketingPage';
+import type { MarketingPageProps } from '@/lib/marketing/types';
+import {
+  getFaq,
+  getMarketingPageBySlug,
+  getTestimonials,
+} from '@/services/platform.service';
 import BannerSection_digital from '@/components/layout/marketing/BannerSection';
-import Expert from '@/components/layout/marketing/Expert';
 import Expert_marketing from '@/components/layout/marketing/Expert';
 import Features_marketing from '@/components/layout/marketing/Features';
 import Stats_marketing from '@/components/layout/marketing/Stats';
@@ -19,63 +19,73 @@ import Attend_marketing from '@/components/layout/marketing/Attend';
 import Reviews_marketing from '@/components/layout/marketing/Reviews';
 import Testimonials_marketing from '@/components/layout/marketing/Testimonial';
 import Alumini_marketing from '@/components/layout/marketing/Alumini';
-import Gallery from '@/components/layout/course/Gallerysection';
 import Gallery_marketing from '@/components/layout/marketing/Gallery';
 import Google_review from '@/components/layout/marketing/Google_review';
 import Faqs_marketing from '@/components/layout/marketing/Faqs';
 import Trainer_marketing from '@/components/layout/marketing/Trainer';
 import StickyCTA from '@/components/layout/marketing/Stickybar';
+import Testimonials_home from '@/components/layout/home/Testimonial.home';
 
-/**
- * Home Page - Course Listing
- * 
- * This example shows how to use React Query with SSG (Static Site Generation)
- * for SEO-optimized course listings
- */
-
-export default function marketing() {
-    const router = useRouter();
-    // Use the hook on the client side - data is already prefetched on the server
-    const { data: featuredCourses, isLoading, error } = useFeaturedCourses();
-
-
-
-    return (
-        <>
-            <div className='bg-[#000A1F] text-white'>
-                <BannerSection_digital />
-                <Expert_marketing />
-                <Features_marketing />
-                <Stats_marketing />
-                <Expert_marketing />
-                <Learning_marketing />
-                <Timer_marketing/>
-                <Expert_marketing />
-                <Bonus_marketing />
-                <Attend_marketing />
-                <Reviews_marketing />
-                <Testimonials_marketing />
-                <Expert_marketing />
-                <Alumini_marketing />
-                <Trainer_marketing/>
-               <Gallery_marketing/>
-                <Expert_marketing />
-                <Google_review />
-                <Faqs_marketing />
-                <StickyCTA/>
-                
-
-            </div>
-            
+export default function MarketingPage({ data, globalFaqs, globalTestimonials }: MarketingPageProps) {
+  return (
+    <>
+      <Head>
+        <title>{data.headline} | StudyCafe</title>
+        <meta name="description" content={data.subheadline} />
+      </Head>
+      <div className="bg-[#000A1F] text-white">
+        <BannerSection_digital data={data} />
+        <Expert_marketing data={data} />
+        <Features_marketing data={data} />
+        <Stats_marketing data={data} />
+        <Expert_marketing data={data} />
+        <Learning_marketing data={data} />
+        <Timer_marketing data={data} />
+        <Expert_marketing data={data} />
+        <Bonus_marketing data={data} />
+        <Attend_marketing data={data} />
+        <Reviews_marketing data={data} />
+        <Testimonials_marketing data={data} />
+        {globalTestimonials.length > 0 ? (
+          <section className="container mx-auto px-4 py-8">
+            <h2 className="text-center text-[30px] md:text-[40px] mb-6 uppercase">Testimonials</h2>
+            <Testimonials_home testimonials={globalTestimonials} />
+          </section>
+        ) : null}
+        <Expert_marketing data={data} />
+        <Alumini_marketing data={data} />
+        <Trainer_marketing data={data} />
+        <Gallery_marketing data={data} />
+        <Expert_marketing data={data} />
+        <Google_review data={data} />
+        <Faqs_marketing data={data} faqs={globalFaqs} />
+        <StickyCTA data={data} />
+      </div>
     </>
-           
-
-
-
-     
-        
-    
-
-
-    );
+  );
 }
+
+export const getServerSideProps: GetServerSideProps<MarketingPageProps> = async (ctx) => {
+  return runWithServerApiBase(ctx.req, async () => {
+    const slug = ctx.params?.slug as string;
+    if (!slug) return { notFound: true };
+
+    const payload = await getMarketingPageBySlug(slug);
+    if (!payload?.course) return { notFound: true };
+
+    const [globalFaqs, globalTestimonials] = await Promise.all([
+      getFaq().catch(() => []),
+      getTestimonials(12).catch(() => []),
+    ]);
+
+    const data = resolveMarketingPage(payload, globalFaqs);
+
+    return {
+      props: {
+        data,
+        globalFaqs,
+        globalTestimonials,
+      },
+    };
+  });
+};
