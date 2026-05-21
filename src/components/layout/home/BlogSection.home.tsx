@@ -44,7 +44,7 @@ function BlogCard({
       className={
         isMobile
           ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
-          : "rounded-xl shadow-md border bg-white overflow-hidden text-left min-w-[500px]"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left w-full max-w-[500px]"
       }
     >
       <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>

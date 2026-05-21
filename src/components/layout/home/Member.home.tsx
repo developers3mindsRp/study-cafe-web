@@ -87,7 +87,7 @@ export default function MembershipPricing({ memberships: initialData }: Membersh
           {/* Mobile slider */}
           <div
             ref={containerRef}
-            className="flex gap-8 overflow-x-auto snap-x snap-mandatory md:hidden mt-4 pb-4 scrollbar-hide pt-8 pl-6 min-h-[540px]"
+            className="flex gap-8 overflow-x-auto overflow-y-hidden  md:hidden mt-4 pb-4 scrollbar-hide pt-0 pl-6"
           >
             {plans.map((plan) => (
               <PlanCard
@@ -150,8 +150,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
       return (
         <div
           ref={ref}
-          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl  min-h-[480px] p-2 ${highlight ? "scale-110 z-10" : ""
-            }`}
+          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl  min-h-[480px] p-2 `}
         >
           {highlight && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[#09339B] text-[16px] font-bold px-4 py-1">
@@ -202,9 +201,10 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
             <div className="-mx-6 h-px bg-black shadow-[0_6px_10px_rgba(0,0,0,0.35)]" />
           )}
 
-          {features.length > 0 && (
-            <ul className="px-6 py-6 space-y-2 text-gray-400 text-[12px]">
-              {features.map((f, i) => (
+           {features.length > 0 && (
+          <div className="flex-1 bg-[#F6F9FF]">
+            <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px]">
+              {visibleFeatures.map((f, i) => (
                 <li key={i} className="flex gap-3">
                   <span>
                     <img
@@ -213,10 +213,61 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                       alt=""
                     />
                   </span>
-                  {f}
+
+                  <p className="text-md">{f}</p>
                 </li>
               ))}
             </ul>
+
+           
+            {features.length > 10 && (
+              <div className="px-6 pb-6">
+                <button
+                  onClick={() => setShowPopup(true)}
+                  className="text-blue-600 font-medium hover:underline"
+                >
+                  Read More
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+          {showPopup && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-xl">
+                
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                  <h3 className="text-xl font-semibold">All Features</h3>
+
+                  <button
+                    onClick={() => setShowPopup(false)}
+                    className="text-gray-500 hover:text-black text-2xl leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-6 overflow-y-auto max-h-[65vh]">
+                  <ul className="space-y-4">
+                    {features.map((f, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span>
+                          <img
+                            className="w-6 h-6 min-w-[24px] min-h-[24px] object-contain flex-shrink-0"
+                            src="/images/tick.svg"
+                            alt=""
+                          />
+                        </span>
+
+                        <p className="text-md text-gray-700">{f}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           )}
          
         </div>

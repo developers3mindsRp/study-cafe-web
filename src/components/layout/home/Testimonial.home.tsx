@@ -78,7 +78,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
           </div>
 
           {/* Desktop marquee */}
-          <div className='max-w-7xl mx-auto md:px-4 md:pt-6'>
+          <div className='max-w-7xl mx-auto md:px-4 md:pt-6 hidden md:block'>
             <Swiper           
               spaceBetween={30}
               slidesPerView={3}            
@@ -87,6 +87,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
                 delay: 2500,
                 disableOnInteraction: false,
               }}
+              
                 modules={[Autoplay]}
               className="testimonial-swiper"
             >
