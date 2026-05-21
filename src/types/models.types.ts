@@ -311,6 +311,27 @@ export interface Testimonial {
   order?: number;
 }
 
+/** Google Review (platform testimonials with rating) */
+export interface GoogleReview {
+  id: number | string;
+  name: string;
+  role: string;
+  rating: number;
+  text: string;
+  ago?: string;
+  avatarUrl?: string | null;
+}
+
+/** Video/image testimonial card (marketing section) */
+export interface MediaTestimonial {
+  id: number | string;
+  title?: string | null;
+  mediaType: 'video' | 'image';
+  mediaUrl: string;
+  videoUrl?: string | null;
+  order?: number;
+}
+
 /** CMS page row from GET /platform/cms-pages/:slug (about, contact, privacy, etc.) */
 export interface PageContent {
   slug: string;

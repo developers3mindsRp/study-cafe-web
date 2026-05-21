@@ -12,6 +12,7 @@ import Breadcrumbs from "@/components/Breadcrumb";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
 import {
   getCourseBySlugOrId,
+  getCoursePageSettingsPublic,
   getCourseSessionsForResolvedCourse,
   getPublishedCourses,
 } from "@/services/platform.service";
@@ -25,6 +26,7 @@ interface CoursePageProps {
   course: CoursePublicDetail | null;
   batches: CourseBatch[];
   trendingCourses: PublicCourse[];
+  galleryImages: string[];
   isPreview?: boolean;
 }
 
@@ -32,10 +34,9 @@ export default function CoursePage({
   course,
   batches,
   trendingCourses,
+  galleryImages,
   isPreview,
 }: CoursePageProps) {
-
-  console.log(course,"course")
   return (
     <PublicLayout>
       {isPreview && (
@@ -77,7 +78,7 @@ export default function CoursePage({
          <GSTRCoursePage course={course} />
       }
      
-      <Gallery />
+      <Gallery images={galleryImages.length > 0 ? galleryImages : undefined} />
       {
         trendingCourses &&
           <TrendingCourses courses={trendingCourses} />
@@ -108,9 +109,10 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
       return { redirect: { destination: dest, permanent: false } };
     }
 
-    const [batches, allCourses] = await Promise.all([
+    const [batches, allCourses, pageSettings] = await Promise.all([
       getCourseSessionsForResolvedCourse(course),
       getPublishedCourses(),
+      getCoursePageSettingsPublic(),
     ]);
 
     const trendingCourses = allCourses
@@ -122,6 +124,7 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         course,
         batches,
         trendingCourses,
+        galleryImages: pageSettings.gallery_images ?? [],
         isPreview: !!previewToken,
       },
     };

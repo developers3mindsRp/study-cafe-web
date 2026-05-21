@@ -4,6 +4,8 @@ import {
   Membership,
   FAQ,
   Testimonial,
+  GoogleReview,
+  MediaTestimonial,
   PageContent,
   SeoMetadata,
   ArticleBySlug,
@@ -76,17 +78,64 @@ export const getFaq = async (): Promise<FAQ[]> => {
   return response.data.data;
 };
 
-/** Testimonials (for home or testimonials page) */
-export const getTestimonials = async (limit?: number): Promise<Testimonial[]> => {
+/** Google Reviews (text + star rating) */
+export const getGoogleReviews = async (): Promise<GoogleReview[]> => {
   if (shouldUseMock()) {
-    return mockPlatformApi.getTestimonials(limit);
+    return mockPlatformApi.getGoogleReviews();
   }
-  const response = await axiosInstance.get<ApiResponse<Testimonial[]>>(
-    '/platform/testimonials',
-    limit != null ? { params: { limit } } : undefined
+  const response = await axiosInstance.get<ApiResponse<Record<string, unknown>[]>>(
+    '/platform/google-reviews',
   );
-  return response.data.data;
+  return (response.data.data ?? []).map(mapGoogleReview);
 };
+
+function mapGoogleReview(row: Record<string, unknown>): GoogleReview {
+  return {
+    id: Number(row.id ?? 0),
+    name: String(row.name ?? ''),
+    role: String(row.role ?? ''),
+    rating: Math.min(5, Math.max(1, Number(row.rating) || 5)),
+    text: String(row.text ?? ''),
+    ago: row.ago != null ? String(row.ago) : undefined,
+    avatarUrl: row.avatar_url != null ? String(row.avatar_url) : null,
+  };
+}
+
+/** Home page text quotes (from google_reviews) */
+export const getHomeTestimonialQuotes = async (limit?: number): Promise<Testimonial[]> => {
+  const reviews = await getGoogleReviews();
+  const list = reviews.map((r) => ({
+    id: String(r.id),
+    quote: r.text,
+    authorName: r.name,
+    authorRole: r.role || undefined,
+    avatarUrl: r.avatarUrl ?? undefined,
+    order: undefined,
+  }));
+  return limit != null ? list.slice(0, limit) : list;
+};
+
+/** Testimonials — video/image cards (testimonials table) */
+export const getTestimonials = async (): Promise<MediaTestimonial[]> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getTestimonials();
+  }
+  const response = await axiosInstance.get<ApiResponse<Record<string, unknown>[]>>(
+    '/platform/testimonials',
+  );
+  return (response.data.data ?? []).map(mapMediaTestimonial);
+};
+
+function mapMediaTestimonial(row: Record<string, unknown>): MediaTestimonial {
+  return {
+    id: Number(row.id ?? 0),
+    title: row.title != null ? String(row.title) : null,
+    mediaType: row.media_type === 'image' ? 'image' : 'video',
+    mediaUrl: String(row.media_url ?? ''),
+    videoUrl: row.video_url != null ? String(row.video_url) : null,
+    order: row.sort_order != null ? Number(row.sort_order) : undefined,
+  };
+}
 
 /** Single CMS page by slug (e.g. about, contact, privacy-policy, terms-of-use) */
 export const getPageContent = async (slug: string): Promise<PageContent | null> => {
@@ -415,6 +464,29 @@ export const getCoursesByCategory = async (params: CourseQueryParams = {}): Prom
   return response.data.data;
 };
 
+export interface CoursePageSettingsPublic {
+  alumni_logos: Array<{ name?: string; logo_url?: string; link?: string }>;
+  featured_in_logos: Array<{ name?: string; logo_url?: string; link?: string }>;
+  gallery_images: string[];
+}
+
+/** Shared course page sections (alumni, featured-in, photo gallery). */
+export const getCoursePageSettingsPublic = async (): Promise<CoursePageSettingsPublic> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<CoursePageSettingsPublic>>(
+      '/course-page-settings/public',
+    );
+    const data = response.data.data;
+    return {
+      alumni_logos: data?.alumni_logos ?? [],
+      featured_in_logos: data?.featured_in_logos ?? [],
+      gallery_images: data?.gallery_images ?? [],
+    };
+  } catch {
+    return { alumni_logos: [], featured_in_logos: [], gallery_images: [] };
+  }
+};
+
 /** Marketing landing page by slug (includes linked course + shared page settings). */
 export const getMarketingPageBySlug = async (
   slug: string,
@@ -626,7 +698,7 @@ export const getPlatformData = async (options: {
     home ? getHomePageData() : Promise.resolve(null),
     memberships ? getMemberships() : Promise.resolve(null),
     faq ? getFaq() : Promise.resolve(null),
-    testimonials ? getTestimonials(testimonialsLimit) : Promise.resolve(null),
+    testimonials ? getHomeTestimonialQuotes(testimonialsLimit) : Promise.resolve(null),
   ]);
   return {
     homePageData: homeData ?? undefined,

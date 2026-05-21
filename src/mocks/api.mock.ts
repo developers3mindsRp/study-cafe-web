@@ -454,10 +454,27 @@ export const mockPlatformApi = {
     return [...mockFaq].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   },
 
-  getTestimonials: async (limit?: number): Promise<Testimonial[]> => {
+  getHomeTestimonialQuotes: async (limit?: number): Promise<Testimonial[]> => {
     await delay(300);
     const list = [...mockTestimonials].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     return limit != null ? list.slice(0, limit) : list;
+  },
+
+  getGoogleReviews: async () => {
+    await delay(300);
+    return mockTestimonials.slice(0, 3).map((t, i) => ({
+      id: i + 1,
+      name: t.authorName,
+      role: t.authorRole || '',
+      rating: 5,
+      text: t.quote,
+      ago: '2 weeks ago',
+    }));
+  },
+
+  getTestimonials: async () => {
+    await delay(300);
+    return [];
   },
 
   getPageContent: async (slug: string): Promise<PageContent | null> => {

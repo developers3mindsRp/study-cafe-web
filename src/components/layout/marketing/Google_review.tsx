@@ -1,11 +1,14 @@
+import type { GoogleReview } from "@/types/models.types";
 import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
 interface Props {
   data: ResolvedMarketingPage;
+  globalReviews?: GoogleReview[];
 }
 
-const Google_review = ({ data }: Props) => {
-  const reviews = data.googleReviews;
+const Google_review = ({ data, globalReviews = [] }: Props) => {
+  const courseReviews = data.googleReviews;
+  const reviews = [...globalReviews, ...courseReviews];
   if (!reviews.length) return null;
 
   return (
@@ -13,14 +16,14 @@ const Google_review = ({ data }: Props) => {
       <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">Google Reviews</h2>
       <div className="grid md:grid-cols-3 gap-6">
         {reviews.map((item, index) => (
-          <div key={index} className="bg-white rounded-lg p-5 text-black">
+          <div key={`${item.name}-${index}`} className="bg-white rounded-lg p-5 text-black">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
                 {item.name.charAt(0)}
               </div>
               <div>
                 <p className="font-semibold">{item.name}</p>
-                <p className="text-xs text-gray-500">{item.role}</p>
+                {item.role ? <p className="text-xs text-gray-500">{item.role}</p> : null}
               </div>
             </div>
             <div className="text-yellow-500 text-sm mb-2">

@@ -1,4 +1,4 @@
-import type { CoursePublicDetail, FAQ, Testimonial } from '@/types/models.types';
+import type { CoursePublicDetail, FAQ, GoogleReview, MediaTestimonial } from '@/types/models.types';
 
 export interface MarketingPageMeta {
   announcement_text?: string;
@@ -22,7 +22,7 @@ export interface MarketingPageMeta {
   };
   learning_bullets?: string[];
   feature_cards?: { icon?: string; text?: string }[];
-  bonus_items?: { label?: string; icon?: string; description?: string; worth?: string }[];
+  bonus_items?: { label?: string; icon?: string; description?: string; title?: string; worth?: string }[];
   who_can_attend?: string[];
   gallery_images?: string[];
   video_url?: string;
@@ -46,6 +46,7 @@ export interface MarketingPagePublicPayload {
   page_settings: {
     alumni_logos: { image?: string; url?: string; name?: string }[];
     featured_in_logos: { image?: string; url?: string; name?: string }[];
+    gallery_images: string[];
   };
 }
 
@@ -69,7 +70,7 @@ export interface ResolvedMarketingPage {
   thumbnailUrl: string;
   learningBullets: string[];
   featureCards: { icon: string; text: string }[];
-  bonusItems: { label: string; icon: string; description: string; worth: string }[];
+  bonusItems: { label: string; image: string; title: string; worth: string }[];
   whoCanAttend: string[];
   galleryImages: string[];
   stats: { people_coached: string; preferred_by: string; attended: string };
@@ -88,5 +89,6 @@ export interface ResolvedMarketingPage {
 export interface MarketingPageProps {
   data: ResolvedMarketingPage;
   globalFaqs: FAQ[];
-  globalTestimonials: Testimonial[];
+  globalGoogleReviews: GoogleReview[];
+  mediaTestimonials: MediaTestimonial[];
 }
