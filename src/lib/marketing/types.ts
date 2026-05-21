@@ -83,7 +83,7 @@ export interface ResolvedMarketingPage {
   };
   alumniLogos: { image: string; name?: string }[];
   faqs: { q: string; a: string }[];
-  googleReviews: { name: string; role: string; rating: number; text: string; ago?: string }[];
+  googleReviews: { name: string; role: string; rating: number; text: string; ago?: string | null }[];
 }
 
 export interface MarketingPageProps {
