@@ -3,6 +3,7 @@ import React from "react";
 import type { SiteAdsSlot } from "@/types/models.types";
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { ArticleListItem, ArticleCategoryItem } from "@/services/platform.service";
+import { articleHref } from "@/lib/articlePaths";
 
 interface BlogListProps {
   articles: ArticleListItem[];
@@ -105,7 +106,7 @@ export default function Blog_list({
                   {b.title}
                 </h3>
 
-                <Link href={`/blogs/${b.slug}`}>
+                <Link href={articleHref(b.slug, b.id)}>
                   <button className="flex items-center gap-2 rounded-md bg-[#09339B] px-4 py-2 text-sm text-white hover:bg-blue-700">
                     Read More
                     <img src="/images/arrow-left.svg" alt="" />

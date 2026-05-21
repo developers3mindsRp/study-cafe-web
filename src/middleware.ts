@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { shouldFetchGlobalSeoForPathname } from "@/lib/seo/seoRoutePolicy";
+import {
+  BLOG_RESERVED_SEGMENTS,
+  isBlogArticleDetailSegment,
+} from "@/lib/articlePaths";
 
 /**
  * Attach `x-studycafe-seo-json` (URL-encoded JSON) on the request when platform
@@ -10,31 +14,58 @@ import { shouldFetchGlobalSeoForPathname } from "@/lib/seo/seoRoutePolicy";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!shouldFetchGlobalSeoForPathname(pathname)) {
-    return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+
+  if (shouldFetchGlobalSeoForPathname(pathname)) {
+    const apiBase = resolveApiBaseForEdge(request);
+    const pathParam = pathname === "" ? "/" : pathname;
+    const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
+    try {
+      const fetchRes = await fetch(seoUrl, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (fetchRes.ok) {
+        const body = (await fetchRes.json()) as { data?: Record<string, unknown> };
+        const row = body?.data;
+        if (row && typeof row === "object") {
+          requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(row)));
+        }
+      }
+    } catch {
+      /* non-blocking */
+    }
   }
 
-  const apiBase = resolveApiBaseForEdge(request);
-  const pathParam = pathname === "" ? "/" : pathname;
-  const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
-
-  try {
-    const res = await fetch(seoUrl, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
-    if (!res.ok) return NextResponse.next();
-
-    const body = (await res.json()) as { data?: Record<string, unknown> };
-    const row = body?.data;
-    if (!row || typeof row !== "object") return NextResponse.next();
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(row)));
-    return NextResponse.next({ request: { headers: requestHeaders } });
-  } catch {
-    return NextResponse.next();
+  /** /blogs/{slug}-{id}.html → /{slug}-{id}.html (canonical) */
+  const blogsHtml = pathname.match(/^\/blogs\/([^/]+\.html)$/i);
+  if (blogsHtml && isBlogArticleDetailSegment(blogsHtml[1].replace(/\.html$/i, ""))) {
+    return NextResponse.redirect(new URL(`/${blogsHtml[1]}`, request.url), 308);
   }
+
+  /** /blogs/{slug}-{id} → /{slug}-{id}.html when segment ends with numeric id */
+  const blogsArticle = pathname.match(/^\/blogs\/([^/]+)$/);
+  if (blogsArticle) {
+    const segment = blogsArticle[1];
+    if (
+      isBlogArticleDetailSegment(segment) &&
+      !BLOG_RESERVED_SEGMENTS.has(segment) &&
+      /-\d+$/.test(segment)
+    ) {
+      return NextResponse.redirect(new URL(`/${segment}.html`, request.url), 308);
+    }
+  }
+
+  /**
+   * Canonical article URLs: /{slug}-{id}.html
+   * Rewrite is handled in next.config.mjs. Pass the browser path to GSSP so it
+   * does not redirect /blogs/... → .html → /blogs/... (308 loop).
+   */
+  if (/^\/[^/]+\.html$/i.test(pathname)) {
+    requestHeaders.set("x-studycafe-public-path", pathname);
+  }
+
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 function resolveApiBaseForEdge(request: NextRequest): string {
@@ -56,8 +87,6 @@ function resolveApiBaseForEdge(request: NextRequest): string {
     host === "localhost" ||
     host === "127.0.0.1";
   if (isLocalHost) {
-    // Next.js runs on :3001 while api-gateway is on :3000. Using request Host here
-    // pointed SSR/Edge fetches at Next's /api rewrite and caused proxy errors.
     return "http://127.0.0.1:3000/api";
   }
   return `${proto}://${host}/api`.replace(/\/+$/, "");
@@ -65,9 +94,6 @@ function resolveApiBaseForEdge(request: NextRequest): string {
 
 export const config = {
   matcher: [
-    /*
-     * Exclude static assets; run for normal document navigations only.
-     */
     "/((?!_next/static|_next/image|favicon.ico|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|map)$).*)",
   ],
 };

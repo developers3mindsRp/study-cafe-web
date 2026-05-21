@@ -8,10 +8,12 @@ import type {
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { cardThumb } from "./blogImage";
 
-function postHref(slug: string | null | undefined) {
+import { articleHref } from "@/lib/articlePaths";
+
+function postHref(slug: string | null | undefined, id?: number | null) {
   const s = slug?.trim();
-  if (!s) return "/blogs";
-  return `/blogs/${encodeURIComponent(s)}`;
+  if (!s && (id == null || !Number.isFinite(Number(id)))) return "/blogs";
+  return articleHref(s || "article", id ?? null);
 }
 
 type Props = {
@@ -51,7 +53,7 @@ export default function SidebarBlog({
           ) : (
             recentPosts.map((post) => (
               <div key={post.id} className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8 md:p-0">
-                <Link href={postHref(post.slug)} className="block">
+                <Link href={postHref(post.slug, post.id)} className="block">
                   {/* eslint-disable-next-line @next/next/no-img-element -- remote CMS URLs; avoids Image SSR/client hydration drift */}
                   <img
                     src={cardThumb(post.thumbnail_url || post.cover_image_url)}
@@ -94,7 +96,7 @@ export default function SidebarBlog({
           ) : (
             allPosts.slice(0, 3).map((post) => (
               <div key={post.id} className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8 md:p-0">
-                <Link href={postHref(post.slug)} className="block">
+                <Link href={postHref(post.slug, post.id)} className="block">
                   {/* eslint-disable-next-line @next/next/no-img-element -- remote CMS URLs; avoids Image SSR/client hydration drift */}
                   <img
                     src={cardThumb(post.thumbnail_url || post.cover_image_url)}

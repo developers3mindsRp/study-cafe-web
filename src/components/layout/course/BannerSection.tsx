@@ -162,7 +162,7 @@ export default function BannerSection({
   const isOwned = !!myPurchase;
   const batchPhase = myPurchase?.enrolledBatch?.phase;
 
-  const title = course?.title ;
+  const title = course?.title ?? "";
   const description =course?.brief_description;
   const thumbnail = course?.thumbnail_url ?? "/images/placeholder.jpg";
     const youtubeUrl = course?.youtube_url;

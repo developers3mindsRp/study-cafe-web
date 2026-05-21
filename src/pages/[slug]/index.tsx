@@ -75,6 +75,11 @@ export const getServerSideProps: GetServerSideProps<
   const queryClient = new QueryClient();
   const slug = context.params?.slug as string;
 
+  // WordPress-style article URLs (/{slug}-{id}.html) are rewritten to /blogs/[slug]
+  if (/\.html$/i.test(slug)) {
+    return { notFound: true };
+  }
+
   try {
     // Optional react-query prefetch
   } catch (error) {
