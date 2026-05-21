@@ -119,8 +119,8 @@ export default function GetInTouch({ data }: Props) {
         className="hidden max-h-[650px] w-1/2 flex-col justify-center object-cover bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat p-8 text-white md:flex"
         aria-hidden
       >
-        <div className="relative mx-auto h-auto max-h-[280px] w-full max-w-[548px] overflow-hidden rounded-[35px] text-center xl:h-[280px] xl:w-[548px]">
-          <div className="absolute inset-0 bg-white/30 blur-xxl" />
+        <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
           <div className="relative z-10">
             <img
               src="/images/study-logo.svg"
@@ -129,7 +129,7 @@ export default function GetInTouch({ data }: Props) {
               height={250}
               className="mx-auto mt-[11px]"
             />
-            <h1 className="mb-4 pt-[12px] text-[30px] font-bold md:pb-[18px] md:text-4xl">
+            <h1 className="mb-4 pt-[12px] text-[30px] font-bold md:pb-[6px] md:text-4xl">
               {data.heading}
             </h1>
             <div
@@ -141,7 +141,7 @@ export default function GetInTouch({ data }: Props) {
       </div>
 
       <div className="flex w-full justify-center md:w-1/2">
-        <div className="w-full rounded-xl p-4 shadow-sm">
+        <div className="w-full rounded-xl p-4 px-12 shadow-sm">
           <h2 className="mb-6 text-[26px] font-normal">{data.formHeading}</h2>
 
           {success && (
@@ -149,7 +149,7 @@ export default function GetInTouch({ data }: Props) {
               className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
               role="status"
             >
-              Thank you — your message was sent. We will get back to you soon.
+              Thank you, your message was sent. We will get back to you soon.
             </p>
           )}
 

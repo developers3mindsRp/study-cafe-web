@@ -70,10 +70,10 @@ export default function Header() {
             {/* Navigation Links */}
             <Link
               href="/"
-              className={` transition-colors text-[16px] ${
+              className={` transition-colors text-[18px] ${
                 router.pathname === "/"
                   ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600"
+                  : "text-[#3a3c3e] hover:text-blue-600"
               }`}
             >
               Home
@@ -89,10 +89,10 @@ export default function Header() {
               <Link
                 href="/courses"
                 aria-expanded={coursesMenuOpen}
-                className={`flex items-center gap-1 text-[16px] transition-colors ${
+                className={`flex items-center gap-1 text-[18px] transition-colors ${
                   router.pathname.startsWith("/course")
                     ? "text-blue-600 font-semibold"
-                    : "text-gray-700 hover:text-blue-600"
+                    : "text-[#3a3c3e] hover:text-blue-600"
                 }`}
               >
                 Courses
@@ -124,7 +124,7 @@ export default function Header() {
                       <Link
                         key={cat.id}
                         href={`/courses?category=${cat.slug}`}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="block px-4 py-2 text-sm text-[#3a3c3e] hover:bg-gray-50"
                         onClick={() => setCoursesMenuOpen(false)}
                       >
                         {cat.name}
@@ -137,10 +137,10 @@ export default function Header() {
 
             <Link
               href="/plans"
-              className={`text-[16px] transition-colors ${
+              className={`text-[18px] transition-colors ${
                 router.pathname === "/plans"
                   ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600"
+                  : "text-[#3a3c3e] hover:text-blue-600"
               }`}
             >
               {" "}
@@ -150,14 +150,14 @@ export default function Header() {
     <Link href="/download"   className={`text-[16px] transition-colors ${
     router.pathname === "/download"
       ? "text-blue-600 font-semibold"
-      : "text-gray-700 hover:text-blue-600"}`}> Downloads</Link> */}
+      : "text-[#3a3c3e] hover:text-blue-600"}`}> Downloads</Link> */}
 
             <Link
               href="/blogs"
-              className={`text-[16px] transition-colors ${
+              className={`text-[18px] transition-colors ${
                 router.pathname === "/blogs"
                   ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600"
+                  : "text-[#3a3c3e] hover:text-blue-600"
               }`}
             >
               Blogs
@@ -165,16 +165,16 @@ export default function Header() {
 
             <Link
               href="/contact"
-              className={`text-[16px] transition-colors ${
+              className={`text-[18px] transition-colors ${
                 router.pathname === "/contact"
                   ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600"
+                  : "text-[#3a3c3e] hover:text-blue-600"
               }`}
             >
               Contact Us
             </Link>
 
-            {/* <Link href="/notify" className="text-gray-700 hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link> */}
+            {/* <Link href="/notify" className="text-[#3a3c3e] hover:text-blue-600 transition-colors"><img src="/images/notify.png" alt="" /></Link> */}
 
             {authLoading ? (
               <div className="h-10 w-24 animate-pulse rounded-lg bg-gray-200" aria-hidden />
@@ -198,7 +198,7 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
-                className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium"
+                className="bg-[#09339B] text-white px-6 py-2 rounded-lg hover:bg-[#09339B] transition-colors font-medium text-[18px]"
               >
                 Login
               </Link>
@@ -208,7 +208,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"
+            className="md:hidden p-2 text-[#3a3c3e] hover:bg-gray-100 rounded-lg border border-gray-200"
           >
             <svg
               className="w-6 h-6"
@@ -241,7 +241,7 @@ export default function Header() {
             <div className="flex flex-col gap-4">
               <Link
                 href="/"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+                className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
@@ -251,7 +251,7 @@ export default function Header() {
               <div>
                 <button
                   onClick={() => setCoursesMobileOpen((s) => !s)}
-                  className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium"
+                  className="flex items-center justify-between w-full text-left text-[#3a3c3e] hover:text-blue-600 font-medium"
                   aria-expanded={coursesMobileOpen}
                 >
                   <span>Courses</span>
@@ -283,7 +283,7 @@ export default function Header() {
                       <Link
                         key={cat.id}
                         href={`/courses?category=${cat.slug}`}
-                        className="text-gray-700 hover:text-blue-600 font-medium"
+                        className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {cat.name}
@@ -295,21 +295,21 @@ export default function Header() {
 
               <Link
                 href="/plans"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+                className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Memberships
               </Link>
               <Link
                 href="/blogs"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+                className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Blogs
               </Link>
               <Link
                 href="/contact"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+                className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact Us
@@ -328,19 +328,19 @@ export default function Header() {
                     </div>
                     <Link
                       href="/dashboard"
-                      className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+                      className="block py-2 text-[#3a3c3e] hover:text-blue-600 font-medium"
                     >
                       Dashboard
                     </Link>
                     <Link
                       href="/dashboard/courses"
-                      className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+                      className="block py-2 text-[#3a3c3e] hover:text-blue-600 font-medium"
                     >
                       My Courses
                     </Link>
                     <Link
                       href="/dashboard"
-                      className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+                      className="block py-2 text-[#3a3c3e] hover:text-blue-600 font-medium"
                     >
                       Profile
                     </Link>

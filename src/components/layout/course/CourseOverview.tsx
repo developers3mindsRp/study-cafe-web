@@ -247,7 +247,7 @@ export default function CourseOverview({
         Course Description
       </h2>
 
-      <div className="bg-white rounded-lg p-3 md:p-6 text-[#6C6C6C] text-[16px] leading-[32px] mb-6 md:mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
+      <div className="bg-white rounded-lg p-3 md:p-6 text-[#3a3c3e] text-[16px] leading-[32px] mb-6 md:mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
         <div
           dangerouslySetInnerHTML={{ __html: description }}
           className="prose max-w-none"
@@ -255,9 +255,9 @@ export default function CourseOverview({
 
         {/* Bonuses */}
         <div className="p-0 sm:p-8 mt-8 md:mt-6">
-          <button className="flex items-center justify-center gap-2 mb-3 bg-[#F7AA0A] mx-auto px-4 py-2 rounded-[10px]">
-            <img src="/images/gift.png" alt="" className="w-5 h-5" />
-            <span className="text-sm font-normal text-white">
+          <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
+            <img src="/images/gift.svg" alt="" className="w-5 h-5" />
+            <span className="text-sm font-normal text-black">
               Exclusive bonuses
             </span>
           </button>
@@ -299,7 +299,7 @@ export default function CourseOverview({
           <h2 className="text-[25px] text-[#252525] font-semibold">
             How I will get the course:
           </h2>
-          <p className="text-[17px] text-[#6C6C6C] leading-[32px] mt-4">
+          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
             This is an online Certification course so there will not be any
             physical delivery of the lectures. After the purchase of this
             Certification course, you can see this course under my account
@@ -314,7 +314,7 @@ export default function CourseOverview({
           <h2 className="text-[25px] text-[#252525] font-semibold">
             Who is Eligible to Join this Certification Course:
           </h2>
-          <p className="text-[17px] text-[#6C6C6C] leading-[32px] mt-4">
+          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
             There is no bound on the eligibility from our side for this
             Certification Course. Any person who wants to learn and master in
             Taxation can join this course. However, it will be more beneficial

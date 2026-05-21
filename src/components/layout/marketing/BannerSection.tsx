@@ -56,7 +56,10 @@ export default function BannerSection_digital() {
                 <div className="mt-6">
                     <p className="font-medium text-[18px]">Register Before Tonight to</p>
 
-                    <button className="mt-2 bg-[#FF383C] px-4 py-2 rounded-md text-sm font-semibold">
+                    <button
+                        className="mt-2 bg-[#FF383C] px-4 py-2 rounded-md 
+    text-sm font-semibold bonus-btn text-white"
+                    >
                         Unblock Bonuses Worth Rs. 12,000
                     </button>
 

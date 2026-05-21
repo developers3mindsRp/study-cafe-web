@@ -1,4 +1,5 @@
 import type { Testimonial } from '@/types/models.types';
+import { useState, useEffect, useRef } from 'react';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
@@ -17,6 +18,22 @@ interface TestimonialsProps {
 
 export default function Testimonials({ testimonials: testimonialsProp }: TestimonialsProps) {
   const testimonials = testimonialsProp && testimonialsProp.length > 0 ? testimonialsProp : FALLBACK_TESTIMONIALS;
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [showButton, setShowButton] = useState<{ [key: number]: boolean }>({});
+  const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  useEffect(() => {
+    const newShowButton: { [key: number]: boolean } = {};
+
+    textRefs.current.forEach((el, i) => {
+      if (el) {
+        newShowButton[i] = el.scrollHeight > el.clientHeight;
+      }
+    });
+
+    setShowButton(newShowButton);
+  }, [testimonials]);
+
+
 
   return (
     <section className="py-12 xl:py-20 bg-white">
@@ -61,7 +78,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
           </div>
 
           {/* Desktop marquee */}
-          <div className='max-w-7xl mx-auto md:px-4 md:pt-6'>
+          <div className='max-w-7xl mx-auto md:px-4 md:pt-6 hidden md:block'>
             <Swiper           
               spaceBetween={30}
               slidesPerView={3}            
@@ -70,6 +87,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
                 delay: 2500,
                 disableOnInteraction: false,
               }}
+              
                 modules={[Autoplay]}
               className="testimonial-swiper"
             >
@@ -127,7 +145,28 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
                   className="marquee-card relative border border-[#17254E] rounded-xl p-6 text-left md:min-w-[250px] md:max-w-[350px] xl:min-w-[360px] xl:max-w-[400px] flex-shrink-0 flex flex-col justify-between"
                 >
                   <img src="/images/quote.png" alt="quote" className="absolute -top-6 -left-2 w-14 h-10" />
-                  <p className="text-[#696969] xl:text-[20px] mt-2 leading-relaxed">{item.quote}</p>
+                  <div>
+                    <p
+                      ref={(el) => (textRefs.current[index] = el)}
+                      className={`text-[#3a3c3e]  xl:text-[20px] mt-2 leading-relaxed ${expandedIndex === index ? "" : "line-clamp-4"
+                        }`}
+                    >
+                      {item.quote}
+                    </p>
+
+                    {showButton[index] && (
+                      <button
+                        onClick={() =>
+                          setExpandedIndex(expandedIndex === index ? null : index)
+                        }
+                        className="text-[#09339B] text-sm mt-2 font-medium"
+                      >
+                        {expandedIndex === index ? "Read less" : "Read more"}
+                      </button>
+                    )}
+                  </div>
+
+
                   <div className="mt-6 flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-gray-900 text-[30px]">{item.authorName}</h4>

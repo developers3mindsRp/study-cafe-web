@@ -1,9 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function StickyCTA() {
     const [visible, setVisible] = useState(true);
+      const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 min in seconds
+    
+        useEffect(() => {
+            if (timeLeft <= 0) return;
+    
+            const timer = setInterval(() => {
+                setTimeLeft((prev) => prev - 1);
+            }, 1000);
+    
+            return () => clearInterval(timer);
+        }, [timeLeft]);
+    
+        // Convert seconds into minutes & seconds
+        const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+        const seconds = String(timeLeft % 60).padStart(2, "0");
 
     return (
         <>
@@ -27,12 +42,12 @@ export default function StickyCTA() {
 
                         <div className="flex gap-2">
                             <div className="bg-yellow-400 text-black font-bold px-3 py-2 rounded-md text-center">
-                                <div className="text-lg leading-none">15</div>
+                                <div className="text-lg leading-none">{minutes}</div>
                                 <div className="text-[10px]">Min</div>
                             </div>
 
                             <div className="bg-yellow-400 text-black font-bold px-3 py-2 rounded-md text-center">
-                                <div className="text-lg leading-none">00</div>
+                                <div className="text-lg leading-none"> {seconds}</div>
                                 <div className="text-[10px]">Sec</div>
                             </div>
                         </div>

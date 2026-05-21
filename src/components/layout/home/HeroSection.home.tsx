@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { HomeHero } from "@/types/models.types";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const DEFAULT_HERO: HomeHero = {
   title: "Master Your Skills with Professional Courses",
@@ -36,25 +37,70 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
   return (
     <section className="relative bg-[url('/images/home/home-banner.png')] bg-cover bg-center bg-no-repeat md:h-auto xl:h-[800px]">
       <div className="container mx-auto px-4  md:py-12 lg:py-24 xl:py-24 2xl:py-24 flex flex-col lg:flex-row items-center">
-        {/* TEXT CONTENT */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 md:mt-0 ">
+ 
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.25,
+              },
+            },
+          }}
+          className="w-full lg:w-1/2 text-center lg:text-left mt-8 md:mt-0"
+        >
+          {/* Badge */}
           {h.badge && (
-            <p className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg xl:text-lg text-white border border-[#a5aab8]">
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+              className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg xl:text-lg text-white border border-[#a5aab8]"
+            >
               {h.badge}
-            </p>
+            </motion.p>
           )}
 
-          <h1 className="text-[30px] sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-semibold text-white leading-tight md:mb-10">
+          {/* Title */}
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+            className="text-[30px] sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-semibold text-white leading-tight md:mb-10"
+          >
             {h.title}
-          </h1>
+          </motion.h1>
 
+          {/* Description */}
           {h.description && (
-            <p className="mt-4 text-[16px] md:text-[18px] xl:text-[24px] 2xl:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0">
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+              className="mt-4 text-[16px] md:text-[18px] xl:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0"
+            >
               {h.description}
-            </p>
+            </motion.p>
           )}
 
-          <div className="mt-6 md:mt-10 flex flex-row md:flex-row justify-center lg:justify-start gap-4 px-2 md:px-0 ">
+          {/* Buttons */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+            className="mt-6 md:mt-10 flex flex-row justify-center lg:justify-start gap-4 px-2 md:px-0"
+          >
             <button
               onClick={handleClick}
               className="py-2 px-3 border-2 border-white rounded-[10px] text-[14px] md:text-[20px] font-medium text-white hover:bg-white/20 transition"
@@ -72,11 +118,20 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
                 />
               </button>
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* IMAGE */}
-        <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0 ">
+        <motion.div
+          initial={{ opacity: 0, y: 80 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 1.2,
+            delay: 0.4,
+            ease: [0.25, 0.8, 0.25, 1],
+          }}
+          className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0"
+        >
           <Image
             width={1000}
             height={1000}
@@ -87,7 +142,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             sizes="(max-width: 1023px) min(100vw, 28rem) 50vw"
             className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full h-auto object-contain max-w-full"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
