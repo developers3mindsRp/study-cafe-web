@@ -23,6 +23,7 @@ import { ApiResponse, PublicTrackingSettings } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockPlatformApi } from '@/mocks/api.mock';
 import { normalizeSeoPayload, pathnameForSeoLookup } from '@/lib/seo/normalize';
+import type { MarketingPagePublicPayload } from '@/lib/marketing/types';
 
 /**
  * Platform Service
@@ -408,6 +409,20 @@ export const getCoursesByCategory = async (params: CourseQueryParams = {}): Prom
     { params: query }
   );
   return response.data.data;
+};
+
+/** Marketing landing page by slug (includes linked course + shared page settings). */
+export const getMarketingPageBySlug = async (
+  slug: string,
+): Promise<MarketingPagePublicPayload | null> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<MarketingPagePublicPayload>>(
+      `/marketing-pages/slug/${encodeURIComponent(slug)}`,
+    );
+    return response.data.data ?? null;
+  } catch {
+    return null;
+  }
 };
 
 /** Fetch a single published course by its slug, optionally bypassing the published filter with a preview token */

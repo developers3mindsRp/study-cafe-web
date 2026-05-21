@@ -1,106 +1,32 @@
-"use client";
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
-import React, { useRef, useState, useEffect } from "react";
-import CountUp from "react-countup";
+interface Props {
+  data: ResolvedMarketingPage;
+}
 
-export default function Stats_marketing() {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [startCount, setStartCount] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Section viewport me aate hi counter start hoga
-        if (entry.isIntersecting) {
-          setStartCount(true);
-        }
-      },
-      {
-        threshold: 0.4, // 40% section visible hone pr start
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
+const Stats_marketing = ({ data }: Props) => {
+  const { stats } = data;
   return (
-    <section
-      ref={sectionRef}
-      className="py-4 md:py-4 px-4 md:w-[850px] mx-auto"
-    >
-      <div className="container mx-auto px-4 bg-[#09339B] rounded-full p-6">
-        <div className="grid grid-cols-3 gap-2 text-center px-2">
-
-          {/* People Coached */}
-          <div className="flex flex-col">
-            <h3 className="text-[18px] xl:text-[40px] font-bold text-white">
-              {startCount && (
-                <CountUp
-                  end={10000}
-                  duration={5} // slow animation
-                  separator=","
-                />
-              )}
-              +
-            </h3>
-
-            <p className="text-white text-[12px] md:text-[16px]">
-              People Coached
-            </p>
-          </div>
-
-          {/* AI Experts */}
-          <div className="flex flex-col">
-            <h3 className="text-[18px] xl:text-[40px] font-bold text-white">
-              {startCount && (
-                <CountUp
-                  end={150}
-                  duration={5}
-                />
-              )}
-              +
-            </h3>
-
-            <p className="text-white text-[12px] md:text-[16px]">
-              Preferred By AI Experts
-            </p>
-          </div>
-
-          {/* Attended */}
-          <div className="flex flex-col">
-            <h3 className="text-[18px] xl:text-[40px] font-bold text-white">
-              {startCount && (
-                <CountUp
-                  end={8500}
-                  duration={5}
-                  separator=","
-                />
-              )}
-              +
-            </h3>
-
-            <p className="text-white text-[12px] md:text-[16px]">
-              Attended
-            </p>
-          </div>
+    <section className="container mx-auto px-4 py-8">
+      <div className="bg-[#0099FF] rounded-full py-6 px-8 flex flex-col md:flex-row justify-around items-center gap-6 text-center">
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.people_coached}+</p>
+          <p className="text-sm">People Coached</p>
+        </div>
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.preferred_by}+</p>
+          <p className="text-sm">Prefered By AI Experts</p>
+        </div>
+        <div>
+          <p className="text-[28px] md:text-[36px] font-bold">{stats.attended}+</p>
+          <p className="text-sm">Attended</p>
         </div>
       </div>
-
-      {/* Bottom Heading */}
-      <div className="mx-auto mt-12 md:ml-12">
-        <h1 className="text-2xl md:text-[40px] font-medium leading-snug px-12 md:px-2 text-center mb-8">
-          <span className="text-yellow-400">REGISTER </span>
-          BEFORE TODAY'S MIDNIGHT
-        </h1>
-      </div>
+      <p className="text-center mt-8 text-[18px] md:text-[24px] font-semibold uppercase">
+        <span className="text-yellow-400">REGISTER</span> BEFORE TODAY&apos;S MIDNIGHT
+      </p>
     </section>
   );
-}
+};
+
+export default Stats_marketing;
