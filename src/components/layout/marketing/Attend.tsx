@@ -1,43 +1,40 @@
-import React from "react";
-import Link from "next/link";
-import { useState } from "react";
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
-const features = [
-    "Finance Professionals",
-    "Lawyers",
-    "Any Gradudate",
-    "Corporate Professionals",
-    "Qualified CA/CS/CMA",
-    "Any Student",
-    "Tax Professionals",
-    "Semi-qualified CA/CS/CMA",
-    "Anyone Not Listed in Above List",
+const DEFAULT_ATTEND = [
+  "Finance Professionals",
+  "Lawyers",
+  "Any Graduate",
+  "Corporate Professionals",
+  "Qualified CA/CS/CMA",
+  "Any Student",
+  "Tax Professionals",
+  "Semi-qualified CA/CS/CMA",
+  "Anyone Not Listed in Above List",
 ];
 
-const Attend_marketing = () => {
-    return (
-        <>
-            <h2 className="text-[20px] md:text-[40px] uppercase text-center font-semibold">Who Can Attend?</h2>
+interface Props {
+  data: ResolvedMarketingPage;
+}
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto py-4 " id="features">
-    
+const Attend_marketing = ({ data }: Props) => {
+  const items = data.whoCanAttend.length ? data.whoCanAttend : DEFAULT_ATTEND;
 
-
-                {features.map((feature, index) => (
-                    <div
-                        key={index}
-                        className="flex items-center gap-3 rounded-lg border  bg-white p-4"
-                    >
-                        <img src="/images/tick1.png" alt="" width="45" height="45" />
-                        <p className="text-[14px] text-black font-semibold">
-                            {feature}
-                        </p>
-                    </div>
-
-                ))}
-            </div>
-        </>
-    );
+  return (
+    <section className="container mx-auto px-4 py-8">
+      <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">Who Can Attend?</h2>
+      <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-3 bg-white rounded-lg p-4 text-black"
+          >
+            <img src="/images/tick1.png" alt="" width={32} height={32} />
+            <span className="font-medium">{item}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 };
 
 export default Attend_marketing;

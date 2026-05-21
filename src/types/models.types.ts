@@ -437,6 +437,7 @@ export interface CourseAuthorProfile {
   role: string | null;
   bio: string | null;
   image_url: string | null;
+  image: string | null;
 }
 
 /** Full course detail returned by GET /courses/:id */
