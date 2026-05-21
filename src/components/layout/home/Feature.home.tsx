@@ -34,16 +34,6 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
             </span>
           )}
         </div>
-        <Link href={href}>
-          <div className="relative w-full h-[180px]">
-            <Image src={thumbnail} alt={c.title} fill className="object-cover" />
-            {rating && (
-              <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow mt-2">
-                <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
-              </span>
-            )}
-          </div>
-        </Link>
         <div className="p-4 flex flex-col">
           {c.language && (
             <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
@@ -53,8 +43,6 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
             </div>
           )}
           <h3 className="text-[20px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
-          <Link href={href}>
-          <h3 className="text-[20px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3></Link>
           {enrolled && (
             <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
               <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -63,7 +51,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           <div className="flex justify-between items-center mt-4">
             <div>
               {newPrice && <span className="line-through text-[#AFAFAF] text-[15px]">{oldPrice}</span>}
-              <span className="text-[#252525] font-normal text-[15px] ml-2">{newPrice ?? oldPrice}</span>
+              <span className="text-[#3a3c3e] font-normal text-[15px] ml-2">{newPrice ?? oldPrice}</span>
             </div>
             <Link href={href}>
               <button className="bg-[#09339B] text-white px-4 py-2 rounded-md text-sm">View Course</button>
@@ -84,16 +72,6 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           </span>
         )}
       </div>
-      <Link href={href}>
-        <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
-          <Image src={thumbnail} alt={c.title} fill className="object-cover" />
-          {rating && (
-            <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
-              <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
-            </span>
-          )}
-        </div>
-      </Link>
       <div className="p-4 flex flex-col flex-1">
         {c.language && (
           <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
@@ -103,7 +81,6 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           </div>
         )}
         <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
-        <Link href={href}><h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">{c.title}</h3></Link>
         {enrolled && (
           <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
             <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
@@ -112,7 +89,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
         <div className="flex justify-between items-center mt-4">
           <div>
             {newPrice && <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{oldPrice}</span>}
-            <span className="text-[#252525] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
+            <span className="text-[#3a3c3e] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
           </div>
           <Link href={href}>
             <button className="bg-[#09339B] text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base">View Course</button>
@@ -186,7 +163,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Mobile: horizontal scroll */}
-          <div className="sm:hidden w-full relative px-2 w-full md:w-[65%]">
+          <div className="sm:hidden w-full relative px-2  md:w-[65%]">
             <div
               ref={catRef}
               className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth -ml-1"
@@ -198,7 +175,7 @@ export default function FeaturedCourses() {
                   key={cat.id}
                   role="option"
                   aria-selected={activeSlug === cat.slug}
-                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                  className={`snap-center flex-shrink-0 px-6 py-3 rounded-md whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#3a3c3e]"
                     }`}
                   onClick={() => handleCatClick(cat.slug)}
                 >
@@ -213,7 +190,7 @@ export default function FeaturedCourses() {
             {cats.map((cat) => (
               <button
                 key={cat.id}
-                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#767676]"
+                className={`px-5 py-2 rounded-[10px] whitespace-nowrap transition ${activeSlug === cat.slug ? "bg-[#09339B] text-white" : "bg-transparent text-[#3a3c3e]"
                   }`}
                 onClick={() => handleCatClick(cat.slug)}
               >
