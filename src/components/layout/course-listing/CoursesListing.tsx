@@ -62,7 +62,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
             </span>
           </div>
           <Link href={href}>
-            <button className="bg-[#09339B] text-white md:px-2 xl:px-4 py-2 rounded-md">View Course</button>
+            <button className="bg-[#09339B] text-white p-4 md:px-2 xl:px-4 py-2 rounded-md">View Course</button>
           </Link>
         </div>
       </div>

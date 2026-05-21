@@ -94,10 +94,10 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
       </div>
 
       {first ? (
-        <p className="text-[#6C6C6C] text-[16px] leading-relaxed">{first}</p>
+        <p className="text-[#3a3c3e] text-[16px] leading-relaxed">{first}</p>
       ) : null}
       {second ? (
-        <p className="text-[#6C6C6C] text-[16px] leading-relaxed">{second}</p>
+        <p className="text-[#3a3c3e] text-[16px] leading-relaxed">{second}</p>
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
@@ -127,10 +127,10 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
 
       <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4">
         {first ? (
-          <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-light">{first}</p>
+          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light">{first}</p>
         ) : null}
         {second ? (
-          <p className="text-[#6C6C6C] text-[17px] leading-[32px] font-light">{second}</p>
+          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light">{second}</p>
         ) : null}
         <div className="flex justify-center pt-2">
           <Link
@@ -169,7 +169,7 @@ export default function ArticleUpNextSection({ slug, limit }: Props) {
         </div>
 
         {isLoading && items.length === 0 ? (
-          <p className="text-sm text-[#6C6C6C] py-2">Loading suggestions…</p>
+          <p className="text-sm text-[#3a3c3e] py-2">Loading suggestions…</p>
         ) : (
           items.map((post) => <UpNextArticleBlock key={post.id} post={post} />)
         )}

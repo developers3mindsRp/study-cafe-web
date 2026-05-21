@@ -44,7 +44,7 @@ function BlogCard({
       className={
         isMobile
           ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
-          : "rounded-xl shadow-md border bg-white overflow-hidden text-left"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left min-w-[500px]"
       }
     >
       <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>
@@ -71,7 +71,7 @@ function BlogCard({
         </div>
 
         <h3
-          className={`font-medium text-[#252525] leading-tight mb-4 line-clamp-2 ${
+          className={`font-medium text-[#252525] leading-tight mb-4 line-clamp-2  ${
             isMobile ? "text-[14px]" : "md:text-[20px] xl:text-[26px]"
           }`}
         >
@@ -96,7 +96,7 @@ function BlogCardSkeleton({ size = "desktop" }: { size?: "mobile" | "desktop" })
       className={
         isMobile
           ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left animate-pulse"
-          : "rounded-xl shadow-md border bg-white overflow-hidden text-left animate-pulse"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left animate-pulse "
       }
     >
       <div className={`bg-gray-200 w-full ${isMobile ? "h-[200px]" : "xl:h-[233px] h-[160px]"}`} />
@@ -146,7 +146,7 @@ export default function BlogSection() {
   const progress = (step / totalSteps) * 100;
 
   return (
-    <section className="w-full py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center">
+    <section className="w-full py-8 md:py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center">
       <h2 className="text-[30px] xl:text-[40px] font-semibold text-[#1A1A1A]">
         Latest from Our Blog
       </h2>
@@ -169,7 +169,7 @@ export default function BlogSection() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="flex items-center container mx-auto mt-10 px-4">
+      <div className="flex items-center container mx-auto mt-4 md:mt-10 px-4">
         {/* Prev / Next */}
         <div className="hidden md:flex gap-3">
           <button

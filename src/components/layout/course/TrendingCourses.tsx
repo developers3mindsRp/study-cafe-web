@@ -65,7 +65,7 @@ const CourseCard = ({ course, size }: { course: any; size: 'sm' | 'lg' }) => {
   return (
     <div className="rounded-xl shadow-md border bg-white overflow-hidden text-left">
       <div className="relative w-full md:h-[200px] xl:h-[243px]">
-        <Image src={thumbnail} alt={course.title} fill className="object-cover" />
+        <Image src={thumbnail} alt={course.title} fill className="object-fit" />
         {course.ratings && (
           <span className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm shadow">
             ⭐ {Number(course.ratings).toFixed(1)}

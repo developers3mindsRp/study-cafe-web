@@ -379,7 +379,7 @@ export default function BannerSection({
                 </div>
 
                 {/* Description */}
-                <p className="text-[#929292] text-[16px] leading-[32px] mt-6">
+                <p className="text-[#3a3c3e] text-[16px] leading-[32px] mt-6">
                   {description}
                 </p>
 

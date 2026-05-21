@@ -6,7 +6,7 @@ export default function MapSection({ address, mapTitle, mapDescription }: Props)
   const q = address.trim() || "StudyCafe Nehru Place";
 
   return (
-    <section className="bg-white px-4 py-4">
+    <section className="bg-white px-4 py-4 mb-6">
       <div className="container mx-auto px-4">
         <div className="mb-8 text-center">
           <h2 className="text-[30px] font-semibold text-[#09339B] md:text-[62px]">{mapTitle}</h2>
