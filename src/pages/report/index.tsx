@@ -6,6 +6,7 @@ import { PublicLayout } from "@/components/layout";
 import AffiliateReportPage from "@/components/layout/account/Report";
 import Breadcrumbs from "@/components/Breadcrumb";
 import RequireAuth from "@/components/auth/RequireAuth";
+import RequireVerifiedEmail from "@/components/auth/RequireVerifiedEmail";
 
 export default function ReportPage() {
   return (
@@ -14,7 +15,9 @@ export default function ReportPage() {
         <Breadcrumbs />
       </div>
       <RequireAuth>
-        <AffiliateReportPage />
+        <RequireVerifiedEmail>
+          <AffiliateReportPage />
+        </RequireVerifiedEmail>
       </RequireAuth>
     </PublicLayout>
   );

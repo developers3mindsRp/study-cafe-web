@@ -10,6 +10,8 @@ import SignUpPage from '@/components/layout/Register';
 import LoginPage from '@/components/layout/Login';
 import EditProfile from '@/components/layout/account/EditProfile';
 import Breadcrumbs from '@/components/Breadcrumb';
+import RequireAuth from '@/components/auth/RequireAuth';
+import RequireVerifiedEmail from '@/components/auth/RequireVerifiedEmail';
 
 /**
  * Home Page - Course Listing
@@ -29,6 +31,8 @@ export default function Account() {
   
 
     <PublicLayout>
+      <RequireAuth>
+        <RequireVerifiedEmail>
       <div className="text-sm text-[#696969] bg-[#DDDDDD]  p-4  mx-auto">
         <Breadcrumbs />
       </div>
@@ -48,6 +52,8 @@ export default function Account() {
         <EditProfile />
 
       </div>
+        </RequireVerifiedEmail>
+      </RequireAuth>
     </PublicLayout>
 
  

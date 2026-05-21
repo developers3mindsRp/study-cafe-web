@@ -145,6 +145,8 @@ export default function LearningPage({ courseId, slug }: Props) {
   const heartbeat = useHeartbeat();
   const markComplete = useMarkSessionComplete();
 
+  console.log(courseId,"courseId")
+
   useEffect(() => {
     if (courseId && progress && overallInvalidatedFor.current !== courseId) {
       overallInvalidatedFor.current = courseId;
@@ -166,6 +168,7 @@ export default function LearningPage({ courseId, slug }: Props) {
       cancelled = true;
     };
   }, [courseId]);
+
 
   const sessions: ProgressSessionRow[] = progress?.sessions ?? [];
 
@@ -287,6 +290,7 @@ export default function LearningPage({ courseId, slug }: Props) {
       </PublicLayout>
     );
   }
+
 
   return (
     <PublicLayout>

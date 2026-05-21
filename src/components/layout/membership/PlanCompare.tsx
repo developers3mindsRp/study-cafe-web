@@ -32,6 +32,8 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
   // Fall back gracefully when no comparison features exist yet
   if (allFeatures.length === 0) return null;
 
+  console.log(memberships,"plan.comparison_features")
+
   return (
     <div className="w-full container px-4 mx-auto py-6 md:py-10">
       <h2 className="text-[30px] md:text-[40px] text-[#252525] font-bold text-center mb-2">Compare Plans</h2>
@@ -46,14 +48,20 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
               <th className="py-3 px-4 text-center sticky left-0 bg-gray-100 z-10">
                 Features
               </th>
-              {sortedPlans.map((p) => (
+             {sortedPlans.map((p) => {
+              const isUltimate = p?.name?.toLowerCase() === "ultimate";
+
+              return (
                 <th
                   key={p.id}
-                  className="py-3 px-4 text-center border-r border-gray-300"
+                  className={`py-3 px-4 text-center border-r border-gray-300 ${
+                    isUltimate ? "bg-[#2563eb] text-white" : ""
+                  }`}
                 >
                   {p.name}
                 </th>
-              ))}
+              );
+            })}
             </tr>
           </thead>
 
@@ -65,10 +73,22 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
                 </td>
 
                 {sortedPlans.map((plan) => {
-                  const cf = plan.comparison_features?.find((f) => f.id === feature.id);
+                  const cf = plan.comparison_features?.find(
+                    (f) => f.id === feature.id
+                  );
+
                   const available = cf?.available ?? false;
+
+                  // Highlight Ultimate plan column
+                  const isUltimate = plan?.name?.toLowerCase() === "ultimate";
+
                   return (
-                    <td key={plan.id} className="py-3 px-4 text-center border-r border-gray-300">
+                    <td
+                      key={plan.id}
+                      className={`py-3 px-4 text-center border-r border-gray-300 ${
+                        isUltimate ? "bg-[#fff]" : ""
+                      }`}
+                    >
                       {available ? <Check /> : <Cross />}
                     </td>
                   );

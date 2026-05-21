@@ -1,6 +1,9 @@
 import Link from "next/link";
 import React from "react";
+import type { SiteAdsSlot } from "@/types/models.types";
+import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { ArticleListItem, ArticleCategoryItem } from "@/services/platform.service";
+import { articleHref } from "@/lib/articlePaths";
 
 interface BlogListProps {
   articles: ArticleListItem[];
@@ -11,6 +14,8 @@ interface BlogListProps {
   onCategoryChange: (slug: string) => void;
   onPageChange: (page: number) => void;
   isLoading?: boolean;
+  /** Desktop right column + mobile block above listing */
+  listingSidebarAd?: SiteAdsSlot | null;
 }
 
 export default function Blog_list({
@@ -22,9 +27,11 @@ export default function Blog_list({
   onCategoryChange,
   onPageChange,
   isLoading = false,
+  listingSidebarAd,
 }: BlogListProps) {
 
-  const allCategories = [{ id: 0, name: "All", slug: "" }, ...categories];
+  const allCategories = [{ id: 0, name: "All", slug: "all" }, ...categories];
+  const hasListingAd = Boolean(listingSidebarAd?.image_url?.trim());
 
   const handlePageClick = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -37,6 +44,82 @@ export default function Blog_list({
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   };
 
+  const articlesGridBlock = (
+    <>
+      {!isLoading && hasListingAd && listingSidebarAd ? (
+        <div className="mb-6 text-left lg:hidden">
+          <SiteAdBanner slot={listingSidebarAd} />
+        </div>
+      ) : null}
+      {isLoading ? (
+        <div className={`grid grid-cols-1 gap-6 ${hasListingAd ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="overflow-hidden rounded-xl border bg-white shadow-md animate-pulse">
+              <div className="w-full h-[243px] bg-gray-200" />
+              <div className="space-y-3 p-4">
+                <div className="h-4 w-3/4 rounded bg-gray-200" />
+                <div className="h-6 w-full rounded bg-gray-200" />
+                <div className="h-8 w-1/3 rounded bg-gray-200" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : articles.length === 0 ? (
+        <div className="text-center md:py-20">
+          <h3 className="mb-2 text-2xl font-semibold text-gray-600">No Blog Found</h3>
+          <p className="text-gray-400">There are no blogs available in this category.</p>
+        </div>
+      ) : (
+        <div className={`grid grid-cols-1 gap-6 ${hasListingAd ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+          {articles.map((b) => (
+            <div
+              key={b.id}
+              className="overflow-hidden rounded-xl border bg-white text-left shadow-md"
+            >
+              <div className="relative w-full xl:h-[243px]">
+                <img
+                  src={b.cover_image_url || b.thumbnail_url || "/images/b1.jpg"}
+                  alt={b.title}
+                  className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                {b.categories && b.categories.length > 0 && (
+                  <span className="absolute left-4 top-4 rounded-[14px] bg-white px-2 py-1 text-[14px] font-normal text-[#252525]">
+                    {b.categories[0].name}
+                  </span>
+                )}
+              </div>
+
+              <div className="p-3 xl:p-4">
+                <div className="mb-3 flex items-center gap-2 text-[#AFAFAF] md:gap-2 xl:text-[16px]">
+                  <span className="flex gap-1">
+                    <img src="/images/user.svg" alt="" width="20" height="20" />
+                    {b.author_name || "Admin"}
+                  </span>
+                  <span className="flex gap-2">
+                    <img src="/images/calendar.svg" alt="" width="20" height="10" />
+                    {formatDate(b.published_at)}
+                  </span>
+                </div>
+
+                <h3 className="mb-4 line-clamp-2 text-[16px] font-medium leading-tight text-[#252525] md:text-[20px] xl:text-[26px]">
+                  {b.title}
+                </h3>
+
+                <Link href={articleHref(b.slug, b.id)}>
+                  <button className="flex items-center gap-2 rounded-md bg-[#09339B] px-4 py-2 text-sm text-white hover:bg-blue-700">
+                    Read More
+                    <img src="/images/arrow-left.svg" alt="" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+
   return (
     <section className="w-full py-6 md:py-12 px-2 md:px-6 text-center">
       {/* Category Filter */}
@@ -45,7 +128,7 @@ export default function Blog_list({
           {allCategories.map((cat) => (
             <button
               key={cat.id}
-              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${(activeCategory === cat.slug || (activeCategory === "" && cat.slug === ""))
+              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${(activeCategory === cat.slug || (activeCategory === "" && cat.slug === "all"))
                 ? "bg-[#09339B] text-white"
                 : "bg-transparent text-[#767676]"
                 }`}
@@ -58,75 +141,15 @@ export default function Blog_list({
       </div>
 
       <div className="mt-8 md:mt-10 mx-auto container px-4">
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-xl shadow-md border bg-white overflow-hidden animate-pulse">
-                <div className="w-full h-[243px] bg-gray-200" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-6 bg-gray-200 rounded w-full" />
-                  <div className="h-8 bg-gray-200 rounded w-1/3" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : articles.length === 0 ? (
-          <div className="text-center md:py-20">
-            <h3 className="text-2xl font-semibold text-gray-600 mb-2">
-              No Blog Found
-            </h3>
-            <p className="text-gray-400">
-              There are no blogs available in this category.
-            </p>
+        {hasListingAd ? (
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
+            <div className="space-y-8 lg:col-span-2 text-left">{articlesGridBlock}</div>
+            <aside className="hidden text-left lg:col-span-1 lg:block lg:self-start lg:sticky lg:top-24">
+              {listingSidebarAd ? <SiteAdBanner slot={listingSidebarAd} /> : null}
+            </aside>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {articles.map((b) => (
-              <div
-                key={b.id}
-                className="rounded-xl shadow-md border bg-white overflow-hidden text-left"
-              >
-                <div className="relative w-full xl:h-[243px]">
-                  <img
-                    src={b.cover_image_url || b.thumbnail_url || "/images/b1.jpg"}
-                    alt={b.title}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                  {b.categories && b.categories.length > 0 && (
-                    <span className="absolute top-4 left-4 bg-white text-[#252525] text-[14px] font-normal px-2 py-1 rounded-[14px]">
-                      {b.categories[0].name}
-                    </span>
-                  )}
-                </div>
-
-                <div className="p-3 xl:p-4">
-                  <div className="flex items-center gap-2 md:gap-2 xl:text-[16px] text-[#AFAFAF] mb-3">
-                    <span className="flex gap-1">
-                      <img src="/images/user.svg" alt="" width="20" height="20" />
-                      {b.author_name || "Admin"}
-                    </span>
-                    <span className="flex gap-2">
-                      <img src="/images/calendar.svg" alt="" width="20" height="10" />
-                      {formatDate(b.published_at)}
-                    </span>
-                  </div>
-
-                  <h3 className="font-medium text-[16px] text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2">
-                    {b.title}
-                  </h3>
-
-                  <Link href={`/blogs/${b.slug}`}>
-                    <button className="text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                      Read More
-                      <img src="/images/arrow-left.svg" alt="" />
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+          articlesGridBlock
         )}
       </div>
 

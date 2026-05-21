@@ -54,4 +54,11 @@ export interface QueryParams {
 export interface CertificateDetail  {
   certificate_url: string;
   // add more fields if API returns more
-};
+}
+
+/** Keys match course-service `CoursePageSetting` entries exposed at GET /courses/page-settings */
+export interface PublicTrackingSettings {
+  tracking_meta_pixel: string | null;
+  tracking_google_analytics: string | null;
+  tracking_linkedin_pixel: string | null;
+}

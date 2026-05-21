@@ -12,6 +12,8 @@ import EditProfile from '@/components/layout/account/EditProfile';
 import Commission from '@/components/layout/account/Report';
 import Breadcrumbs from '@/components/Breadcrumb';
 import UpgradePlan from '@/components/UpgradePlan';
+import RequireAuth from '@/components/auth/RequireAuth';
+import RequireVerifiedEmail from '@/components/auth/RequireVerifiedEmail';
 
 /**
  * Home Page - Course Listing
@@ -32,6 +34,9 @@ export default function Account() {
 
       <PublicLayout>
 
+          <RequireAuth>
+            <RequireVerifiedEmail>
+
           {/* Breadcrumbs */}
           <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
               <div className="container mx-auto">
@@ -41,6 +46,9 @@ export default function Account() {
           
           </div>
           <UpgradePlan />
+
+            </RequireVerifiedEmail>
+          </RequireAuth>
 
         
 

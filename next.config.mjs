@@ -1,6 +1,11 @@
 // next.config.mjs
 /** @type {import('next').NextConfig} */
 
+/**
+ * Where `/api/*` rewrites are forwarded (StudyCafe api-gateway).
+ * Default is port 3000 so the storefront can run on another port (`npm run dev` → 3001) without clashing.
+ * If the gateway runs elsewhere, set API_GATEWAY_ORIGIN (e.g. http://127.0.0.1:3000).
+ */
 function resolveGatewayOrigin() {
   if (process.env.API_GATEWAY_ORIGIN) {
     return process.env.API_GATEWAY_ORIGIN.replace(/\/$/, "");
@@ -30,6 +35,15 @@ const nextConfig = {
         source: "/api/:path*",
         destination: `${gatewayOrigin.replace(/\/$/, "")}/api/:path*`,
       },
+      /**
+       * Article URLs live at /{slug}-{id}.html but render blogs/[slug].
+       * Without this, client-side <Link> navigation matches pages/[slug] first
+       * and the router aborts with "Abort fetching component for route: /[slug]".
+       */
+      {
+        source: "/:slug.html",
+        destination: "/blogs/:slug",
+      },
     ];
   },
   async redirects() {
@@ -37,6 +51,11 @@ const nextConfig = {
       {
         source: "/course-detailPage",
         destination: "/courses",
+        permanent: true,
+      },
+      {
+        source: "/blogs/:slug.html",
+        destination: "/:slug.html",
         permanent: true,
       },
       // {

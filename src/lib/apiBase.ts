@@ -23,9 +23,24 @@ export function getBrowserApiBase(): string {
   return "/api";
 }
 
+/**
+ * Base URL for server-side fetches (GSSP, etc.).
+ *
+ * Priority:
+ * 1. `SERVER_API_BASE_URL` — optional; use when the browser hits the site on a hostname where `/api` is not routed to the gateway (Docker / split domains).
+ * 2. `NEXT_PUBLIC_API_BASE_URL` — normal production setup (same URL must be reachable from this Node process).
+ * 3. `API_GATEWAY_ORIGIN` — same as `next.config.mjs` rewrites; avoids relying on `Host` when the front domain ≠ API.
+ * 4. `x-forwarded-proto` + `Host` + `/api` — dev / single-host proxies only.
+ */
 export function getServerSideApiBaseUrl(req: IncomingMessage): string {
+  const serverOnly = normalizePublicApiBase(process.env.SERVER_API_BASE_URL);
+  if (serverOnly) return serverOnly;
+
   const fromEnv = getPublicApiBaseFromEnv();
   if (fromEnv) return fromEnv;
+
+  const fromGateway = normalizePublicApiBase(process.env.API_GATEWAY_ORIGIN);
+  if (fromGateway) return fromGateway;
 
   const forwardedProto = req.headers["x-forwarded-proto"];
   const proto =

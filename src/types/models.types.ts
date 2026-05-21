@@ -19,6 +19,8 @@ export interface User {
   state?: string | null;
   country?: string | null;
   referralCode?: string | null;
+  /** Explicit `false`: must complete email OTP verification (see `/verify-email`). */
+  emailVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -142,6 +144,11 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface LoginOtpCredentials {
+  email: string;
+  otp: string;
+}
+
 export interface RegisterData {
   name: string;
   email: string;
@@ -153,7 +160,7 @@ export interface RegisterData {
   designation?: string;
   city: string;
   state: string;
-  country: string;
+  country?: string;
 }
 
 export interface AuthResponse {
@@ -363,6 +370,14 @@ export interface CourseCat {
   is_featured?: boolean;
 }
 
+
+export interface Categories {
+  id: number;
+  name: string;
+  slug: string;
+  is_featured?: boolean;
+}
+
 /** Public course card */
 export interface PublicCourse {
   id: number;
@@ -532,6 +547,7 @@ export interface ArticleBySlug {
   excerpt?: string | null;
   sub_heading?: string | null;
   body: string;
+  citation:any;
   thumbnail_url?: string | null;
   cover_image_url?: string | null;
   author_name?: string | number | null;
@@ -545,6 +561,28 @@ export interface ArticleBySlug {
   /** Category-based suggestions when premium content is locked */
   related_articles?: RelatedArticle[];
   download_url?: string | null;
+  toc?:any;
+  whatsapp_link?:any;
+  telegram_link?:any;
+  google_news_url?:any;
+
+}
+
+/** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
+export interface SiteAdsSlot {
+  image_url: string;
+  link_url: string;
+}
+
+export interface SiteDisplayAds {
+  popup: SiteAdsSlot & { enabled: boolean };
+  article_detail_sidebar: SiteAdsSlot[];
+  article_listing_sidebar: SiteAdsSlot;
+  between_article: {
+    after_paragraph_3: SiteAdsSlot;
+    after_paragraph_6: SiteAdsSlot;
+    below_featured_post: SiteAdsSlot;
+  };
 }
 
 export interface FooterContent  {

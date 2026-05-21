@@ -51,13 +51,31 @@ export default function CoursePage({
       </div>
 
       <BannerSection course={course} batches={batches} />
-      <CourseTabs />
-      <CourseOverview course={course} batches={batches} />
-      <ReviewSection course={course} />
+      {
+        course?.learn_outcomes &&
+        <>
+          <CourseTabs course={course} />
+           <CourseOverview course={course} batches={batches} />
+        </>
+      }
+      {
+        course?.feedback &&
+        <ReviewSection course={course} />
+
+      }
+      
       <Testimonials_course />
-      <GSTRCoursePage course={course} />
+      {
+        course?.faqs &&
+         <GSTRCoursePage course={course} />
+      }
+     
       <Gallery />
-      <TrendingCourses courses={trendingCourses} />
+      {
+        trendingCourses &&
+          <TrendingCourses courses={trendingCourses} />
+      }
+    
     </PublicLayout>
   );
 }

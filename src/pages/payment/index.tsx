@@ -6,6 +6,8 @@ import { PublicLayout } from "@/components/layout";
 import Breadcrumbs from "@/components/Breadcrumb";
 import Paymentsection from "@/components/layout/course/payment/Paymentsection";
 import PriceCard from "@/components/layout/course/payment/SidebarPayment";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RequireVerifiedEmail from "@/components/auth/RequireVerifiedEmail";
 import {
   getCourseBySlug,
   getCourseSessionsBySlug,
@@ -62,6 +64,8 @@ export default function PaymentScreen() {
 
   return (
     <PublicLayout>
+      <RequireAuth>
+        <RequireVerifiedEmail>
         <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
           <Breadcrumbs
             content={[
@@ -103,6 +107,8 @@ export default function PaymentScreen() {
             </div>
           </div>
         )}
+        </RequireVerifiedEmail>
+      </RequireAuth>
     </PublicLayout>
   );
 }

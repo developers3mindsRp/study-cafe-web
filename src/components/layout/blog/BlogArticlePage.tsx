@@ -7,6 +7,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { getArticleBySlug } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
 import type { ArticleBySlug } from "@/types/models.types";
+import { articleHref } from "@/lib/articlePaths";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -125,7 +126,7 @@ export default function BlogArticlePage({
             {article.related_articles.map((r) => (
               <Link
                 key={r.id}
-                href={`/blogs/${encodeURIComponent(r.slug)}`}
+                href={articleHref(r.slug, r.id)}
                 className="block text-[15px] font-normal leading-snug text-[#09339B] no-underline hover:underline md:text-[16px]"
               >
                 {r.title}

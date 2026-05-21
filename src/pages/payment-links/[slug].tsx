@@ -5,22 +5,30 @@ import { PublicLayout } from "@/components/layout";
 import PaymentLinkCheckout from "@/components/layout/payment-links/PaymentLinkCheckout";
 import type { PublicPaymentLink } from "@/services/paymentLink.service";
 import { getServerSideApiBaseUrl } from "@/lib/apiBase";
+import { formatPaymentLinkExpiry } from "@/utils/paymentLinkExpiry";
 
 type Props = {
   link: PublicPaymentLink;
   /** Computed on the server so SSR and hydration agree on expiry state */
   initialExpired: boolean;
+  /** IST wall-clock string for expired UI, e.g. 2026-04-30 15:30:00 */
+  expiryDisplayLabel: string | null;
 };
 
-export default function PaymentLinkPage({ link, initialExpired }: Props) {
+export default function PaymentLinkPage({ link, initialExpired, expiryDisplayLabel }: Props) {
+  const titleBase = String(link.title ?? "Payment").replace(/[\r\n]+/g, " ").trim();
   return (
     <>
       <Head>
-        <title>{`${String(link.title ?? "Payment").replace(/[\r\n]+/g, " ").trim()} | Studycafe`}</title>
+        <title>{initialExpired ? `Expired — ${titleBase} | Studycafe` : `${titleBase} | Studycafe`}</title>
         <meta name="robots" content="noindex,follow" />
       </Head>
       <PublicLayout>
-        <PaymentLinkCheckout link={link} initialExpired={initialExpired} />
+        <PaymentLinkCheckout
+          link={link}
+          initialExpired={initialExpired}
+          expiryDisplayLabel={expiryDisplayLabel}
+        />
       </PublicLayout>
     </>
   );
@@ -42,9 +50,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
     const expiryMs = link.expires_at ? new Date(link.expires_at).getTime() : NaN;
     const initialExpired = Number.isFinite(expiryMs) && expiryMs <= Date.now();
+    const expiryDisplayLabel =
+      link.expires_at && Number.isFinite(expiryMs) ? formatPaymentLinkExpiry(link.expires_at) : null;
 
     return {
-      props: { link, initialExpired },
+      props: { link, initialExpired, expiryDisplayLabel },
     };
   } catch {
     return { notFound: true };

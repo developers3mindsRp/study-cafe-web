@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient as defaultQueryClient } from "@/lib/react-query";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { AppRouteSeo } from "@/components/seo/AppRouteSeo";
+import MarketingTrackingInjector from "@/components/marketing/MarketingTrackingInjector";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
         <AuthProvider>
+          <MarketingTrackingInjector />
           <AppRouteSeo />
           <div className={outfit.className}>
             <Component {...pageProps} />

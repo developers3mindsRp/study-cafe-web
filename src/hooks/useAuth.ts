@@ -1,10 +1,35 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
+import { useRouter, type NextRouter } from 'next/router';
 import * as authService from '@/services/auth.service';
 import { queryKeys } from '@/lib/react-query';
-import { LoginCredentials, RegisterData, ChangePasswordData } from '@/types/models.types';
+import {
+  LoginCredentials,
+  LoginOtpCredentials,
+  RegisterData,
+  ChangePasswordData,
+  User,
+} from '@/types/models.types';
 import { useAuth } from '@/providers/AuthProvider';
 import { getToken } from '@/utils/auth.utils';
+
+function postAuthRelativeTarget(router: NextRouter): string {
+  const next = router.query.next as string | undefined;
+  const redirectLegacy = router.query.redirect as string | undefined;
+  return (
+    (next && next.startsWith('/') ? next : null) ||
+    (redirectLegacy && redirectLegacy.startsWith('/') ? redirectLegacy : null) ||
+    '/dashboard'
+  );
+}
+
+function navigateAfterAuthenticated(router: NextRouter, user: User) {
+  const target = postAuthRelativeTarget(router);
+  if (user.emailVerified === false) {
+    void router.push(`/verify-email?next=${encodeURIComponent(target)}`);
+    return;
+  }
+  void router.push(target);
+}
 
 /**
  * Custom hooks for authentication
@@ -31,14 +56,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
       void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
-
-      const next = router.query.next as string | undefined;
-      const redirectLegacy = router.query.redirect as string | undefined;
-      const redirectTo =
-        (next && next.startsWith("/") ? next : null) ||
-        (redirectLegacy && redirectLegacy.startsWith("/") ? redirectLegacy : null) ||
-        "/dashboard";
-      void router.push(redirectTo);
+      navigateAfterAuthenticated(router, data.user);
     },
     onError: (error: any) => {
       console.error('Login failed:', error);
@@ -57,13 +75,61 @@ export const useRegister = () => {
       queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
       void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
       void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
-      const next = router.query.next as string | undefined;
-      const redirectTo = next && next.startsWith("/") ? next : "/dashboard";
-      void router.push(redirectTo);
+      const target = postAuthRelativeTarget(router);
+      void router.push(`/verify-email?next=${encodeURIComponent(target)}`);
     },
     onError: (error: any) => {
       console.error('Registration failed:', error);
     },
+  });
+};
+
+export const useLoginWithOtp = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (credentials: LoginOtpCredentials) => authService.loginWithEmailOtp(credentials),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
+      navigateAfterAuthenticated(router, data.user);
+    },
+    onError: (error: unknown) => {
+      console.error('OTP login failed:', error);
+    },
+  });
+};
+
+export const useRequestLoginOtp = () => {
+  return useMutation({
+    mutationFn: (email: string) => authService.requestLoginOtp(email),
+  });
+};
+
+export const useVerifyEmailOtp = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (otp: string) => authService.verifyEmailWithOtp(otp),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
+      const next = router.query.next as string | undefined;
+      const dest = next && next.startsWith('/') ? next : '/dashboard';
+      void router.push(dest);
+    },
+    onError: (error: unknown) => {
+      console.error('Email verification failed:', error);
+    },
+  });
+};
+
+export const useResendVerificationEmail = () => {
+  return useMutation({
+    mutationFn: () => authService.resendVerificationEmail(),
   });
 };
 

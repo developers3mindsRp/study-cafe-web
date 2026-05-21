@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect  } from "react";
 import { useRouter } from "next/router";
 import { X } from "lucide-react";
 import type { Membership } from "@/types/models.types";
@@ -10,10 +10,13 @@ import {
   applyCouponForMembership,
   createOrder,
   verifyOrder,
+
   type CouponInfo,
   type ApplyCouponResponse,
 } from "@/services/order.service";
 import { getReferralCode } from "@/utils/auth.utils";
+import {getMembershipSummaryById}  from "@/services/platform.service";
+
 
 const GST_RATE = 0.18;
 
@@ -52,14 +55,30 @@ function formatDuration(days: number, isLifetime?: boolean) {
 }
 
 interface Props {
-  plan?: Membership | null;
+  plan?: any | null;
 }
 
 export default function MemberPrice({ plan }: Props) {
+
+  console.log(plan,"plan details")
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
+  const [summaryData, setSummaryData] = useState(plan);
+  useEffect(() => {
+  setSummaryData(plan);
+}, [plan]);
 
-  const price = parseNum(plan?.price);
+  const pricing = summaryData?.pricing;
+  const currentPlan = summaryData?.currentPlan;
+  const targetPlan = summaryData?.targetPlan;
+
+  const price = parseNum(pricing?.targetAmount);
+  const deductAmount = parseNum(pricing?.deductAmount);
+  const finalAmount = parseNum(pricing?.finalAmount);
+  const gst = parseNum(pricing?.gstAmount);
+  const grandTotal = parseNum(pricing?.grandTotal);
+
+  // const price = parseNum(plan?.targetAmount);
   const durationStr = plan
     ? formatDuration(plan.duration_days, plan.is_lifetime)
     : "";
@@ -77,47 +96,95 @@ export default function MemberPrice({ plan }: Props) {
 
   const discount = appliedCoupon?.discount ?? 0;
   const afterDiscount = price - discount;
-  const gst = Number((afterDiscount * GST_RATE).toFixed(2));
-  const grandTotal = Number((afterDiscount + gst).toFixed(2));
+  // const gst = Number((afterDiscount * GST_RATE).toFixed(2));
+  // const grandTotal = Number((afterDiscount + gst).toFixed(2));
 
   const handleOpenCoupons = useCallback(async () => {
     setOpenCoupon(true);
-    if (!plan?.id) return;
+    if (!targetPlan?.id) return;
     setCouponsLoading(true);
     try {
-      const data = await getCouponsForMembership(plan.id);
+      const data = await getCouponsForMembership(targetPlan?.id);
       setAvailableCoupons(data.coupons ?? []);
     } catch {
       setAvailableCoupons([]);
     } finally {
       setCouponsLoading(false);
     }
-  }, [plan?.id]);
+  }, [targetPlan?.id]);
 
-  const handleApplyCoupon = useCallback(
-    async (code: string) => {
-      if (!code.trim() || !plan?.id) return;
-      setCouponError(null);
-      setCouponLoading(true);
-      try {
-        const result = await applyCouponForMembership(code.trim(), plan.id);
-        setAppliedCoupon(result);
-        setCouponInput(result.coupon.code);
-        setOpenCoupon(false);
-      } catch (err: any) {
-        setCouponError(err?.message || "Invalid coupon code");
-        setAppliedCoupon(null);
-      } finally {
-        setCouponLoading(false);
-      }
-    },
-    [plan?.id],
-  );
+  // const handleApplyCoupon = useCallback(
+  //   async (code: string) => {
+  //     if (!code.trim() || !targetPlan?.id) return;
+  //     setCouponError(null);
+  //     setCouponLoading(true);
+  //     try {
+  //       const result = await getMembershipSummaryById(code.trim(), targetPlan?.id);
+  //       setAppliedCoupon(result);
+  //       setCouponInput(result.coupon.code);
+  //       setOpenCoupon(false);
+  //     } catch (err: any) {
+  //       setCouponError(err?.message || "Invalid coupon code");
+  //       setAppliedCoupon(null);
+  //     } finally {
+  //       setCouponLoading(false);
+  //     }
+  //   },
+  //   [targetPlan?.id],
+  // );
 
+const handleApplyCoupon = useCallback(
+  async (code: string) => {
+    if (!code.trim() || !targetPlan?.id) return;
+
+    setCouponError(null);
+    setCouponLoading(true);
+
+    try {
+      const payload = {
+        targetPlanId: targetPlan.id,
+        code: code.trim(),
+      };
+
+      const result = await getMembershipSummaryById(payload);
+
+      const updatedData = result?.data || result;
+
+      // update pricing summary
+      setSummaryData(updatedData);
+
+      setAppliedCoupon({
+        coupon: {
+          code: code.trim(),
+          id: updatedData?.coupon?.id || 1,
+        },
+        discount:
+          updatedData?.coupon?.deductAmount ||
+          updatedData?.coupon?.discountAmount ||
+          0,
+      } as any);
+
+      setCouponInput(code.trim());
+      setOpenCoupon(false);
+
+    } catch (err: any) {
+      setCouponError(err?.message || "Invalid coupon code");
+
+      // reset original data on error
+      setSummaryData(plan);
+
+      setAppliedCoupon(null);
+    } finally {
+      setCouponLoading(false);
+    }
+  },
+  [targetPlan?.id, plan]
+);
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCouponInput("");
     setCouponError(null);
+      setSummaryData(plan);
   };
 
   const handleCopyAndApply = (code: string) => {
@@ -126,7 +193,7 @@ export default function MemberPrice({ plan }: Props) {
   };
 
   if (!plan) return null;
-
+console.log(appliedCoupon,"appliedCoupon")
   if (openCoupon) {
     return (
       <div className="w-full max-w-sm mx-auto">
@@ -237,18 +304,79 @@ export default function MemberPrice({ plan }: Props) {
     );
   }
 
+
+
+
   return (
     <div className="w-full max-w-sm mx-auto">
+
+      {
+        plan.canUpgrade == false ?
+        
+          <div className="mb-6 rounded-2xl border border-[#C7D7FE] bg-gradient-to-r from-[#EEF4FF] to-[#F8FBFF] p-5 shadow-sm">
+            
+            <div className="flex items-start gap-4">
+              
+              {/* Icon */}
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#09339B] text-white shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1">
+                <h3 className="text-[18px] font-semibold text-[#09339B]">
+                  Current Active Plan
+                </h3>
+
+                <p className="mt-1 text-[15px] text-[#4B5563] leading-6">
+                  You are already subscribed to this membership plan.
+                </p>
+
+                <div className="mt-4 inline-flex items-center rounded-full bg-white border border-[#D6E4FF] px-4 py-2 text-sm font-medium text-[#09339B]">
+                  No upgrade required
+                </div>
+              </div>
+            </div>
+          </div>
+       
+      :
       <div className="bg-[#F9F9FB] rounded-xl p-6">
         {/* Price */}
         <div className="text-center">
           <p className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
             {fmt(price)}
           </p>
-          <p className="text-[#929292] text-[16px] mt-1">{durationStr}</p>
+          {/* <p className="text-[#929292] text-[16px] mt-1">{currentPlan?.remainingDays} Days</p> */}
+          <p className="text-[#929292] text-[16px] mt-1">{targetPlan?.name}</p>
         </div>
 
         <div className="border-t border-[#AFAFAF] mt-6" />
+          <div className="mt-6 space-y-2 text-sm">
+            <h2 className="text-[20px] text-[#252525] font-medium mb-4">
+              Current Plan Summary
+            </h2>
+            <div className="flex justify-between">
+              <span>Name</span>
+              <span>{currentPlan?.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Price</span>
+              <span>{currentPlan?.price}</span>
+            </div>
+          </div>
 
         {/* Summary */}
         <div className="mt-6 space-y-2 text-sm">
@@ -259,6 +387,17 @@ export default function MemberPrice({ plan }: Props) {
             <span>Amount</span>
             <span>{fmt(price)}</span>
           </div>
+          {
+            deductAmount &&
+               <div className="flex justify-between">
+                <span>Deduct Amount</span>
+                <span className="text-green-600">
+                  -{fmt(deductAmount)}
+                </span>
+              </div>
+
+          }
+       
           {appliedCoupon && (
             <div className="flex justify-between">
               <span>{appliedCoupon.coupon.code}</span>
@@ -267,7 +406,7 @@ export default function MemberPrice({ plan }: Props) {
           )}
           <div className="flex justify-between">
             <span>Total</span>
-            <span>{fmt(afterDiscount)}</span>
+            <span>{fmt(finalAmount)}</span>
           </div>
           <div className="flex justify-between">
             <span>GST (18%)</span>
@@ -356,13 +495,13 @@ export default function MemberPrice({ plan }: Props) {
               router.push(`/login?next=${encodeURIComponent(returnPath)}`);
               return;
             }
-            if (!plan?.id || paymentLoading) return;
+            if (!targetPlan?.id || paymentLoading) return;
             setPaymentLoading(true);
             try {
               const refCode = getReferralCode() || undefined;
               const orderData = await createOrder({
                 type: "membership",
-                entityId: plan.id,
+                entityId: targetPlan?.id,
                 couponCode: appliedCoupon?.coupon.code || undefined,
                 referralCode: refCode,
               });
@@ -427,6 +566,7 @@ export default function MemberPrice({ plan }: Props) {
           {paymentLoading ? "Processing…" : "Buy Membership"}
         </button>
       </div>
+      }
     </div>
   );
 }

@@ -21,6 +21,7 @@ import {
   Purchase,
   DashboardStats,
   LoginCredentials,
+  LoginOtpCredentials,
   RegisterData,
   AuthResponse,
   UpdateProfileData,
@@ -60,13 +61,29 @@ export const mockAuthApi = {
     // Simple mock validation
     if (credentials.email && credentials.password) {
       return {
-        user: mockUser,
+        user: { ...mockUser, emailVerified: true },
         token: 'mock_jwt_token_' + Date.now(),
         refreshToken: 'mock_refresh_token_' + Date.now(),
       };
     }
     
     throw new Error('Invalid credentials');
+  },
+
+  requestLoginOtp: async (_email: string): Promise<void> => {
+    await delay(400);
+  },
+
+  loginWithEmailOtp: async (credentials: LoginOtpCredentials): Promise<AuthResponse> => {
+    await delay(800);
+    if (credentials.otp === '123456') {
+      return {
+        user: { ...mockUser, email: credentials.email.trim(), emailVerified: true },
+        token: 'mock_jwt_token_' + Date.now(),
+        refreshToken: 'mock_refresh_token_' + Date.now(),
+      };
+    }
+    throw new Error('Invalid or expired code');
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
@@ -84,10 +101,27 @@ export const mockAuthApi = {
         city: data.city || null,
         state: data.state || null,
         country: data.country || null,
+        emailVerified: false,
       },
       token: 'mock_jwt_token_' + Date.now(),
       refreshToken: 'mock_refresh_token_' + Date.now(),
     };
+  },
+
+  verifyEmailWithOtp: async (otp: string): Promise<AuthResponse> => {
+    await delay(600);
+    if (otp.trim() === '123456') {
+      return {
+        user: { ...mockUser, emailVerified: true },
+        token: 'mock_jwt_token_' + Date.now(),
+        refreshToken: 'mock_refresh_token_' + Date.now(),
+      };
+    }
+    throw new Error('Invalid or expired verification code');
+  },
+
+  resendVerificationEmail: async (): Promise<void> => {
+    await delay(400);
   },
 
   getCurrentUser: async (): Promise<User> => {
@@ -441,6 +475,29 @@ export const mockPlatformApi = {
     const noLead = normalized === '/' ? '/' : normalized.replace(/^\/+/, '');
     return mockSeoMetadata[normalized] ?? mockSeoMetadata[noLead] ?? null;
   },
+
+  getSiteDisplayAds: async (): Promise<import('@/types/models.types').SiteDisplayAds> => {
+    await delay(100);
+    return {
+      popup: { enabled: false, image_url: '', link_url: '' },
+      article_detail_sidebar: [
+        { image_url: '', link_url: '' },
+        { image_url: '', link_url: '' },
+      ],
+      article_listing_sidebar: { image_url: '', link_url: '' },
+      between_article: {
+        after_paragraph_3: { image_url: '', link_url: '' },
+        after_paragraph_6: { image_url: '', link_url: '' },
+        below_featured_post: { image_url: '', link_url: '' },
+      },
+    };
+  },
+
+  getPublicTrackingSettings: async (): Promise<import('@/types/api.types').PublicTrackingSettings> => ({
+    tracking_meta_pixel: null,
+    tracking_google_analytics: null,
+    tracking_linkedin_pixel: null,
+  }),
 
   getArticleBySlug: async (_slug: string): Promise<import('@/types/models.types').ArticleBySlug | null> => {
     await delay(200);

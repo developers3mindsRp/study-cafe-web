@@ -16,8 +16,10 @@ import {
   CoursePublicDetail,
   CourseBatch,
   FooterContent,
+  SiteDisplayAds,
+  Categories,
 } from '@/types/models.types';
-import { ApiResponse } from '@/types/api.types';
+import { ApiResponse, PublicTrackingSettings } from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockPlatformApi } from '@/mocks/api.mock';
 import { normalizeSeoPayload, pathnameForSeoLookup } from '@/lib/seo/normalize';
@@ -41,12 +43,12 @@ export const getHomePageData = async (): Promise<HomePageData> => {
 
 /** All active membership plans (for pricing page) */
 export const getMemberships = async (): Promise<Membership[]> => {
-  if (shouldUseMock()) {
-    return mockPlatformApi.getMemberships();
-  }
+ 
   const response = await axiosInstance.get<ApiResponse<Membership[]>>(
     '/platform/memberships'
   );
+
+
   return response.data.data;
 };
 
@@ -147,6 +149,77 @@ export const fetchSeoMetadataByPath = async (
 export const getSeoMetadata = async (pageSlug: string): Promise<SeoMetadata | null> => {
   const path = pageSlug.startsWith('/') ? pageSlug : `/${pageSlug}`;
   return fetchSeoMetadataByPath(path);
+};
+
+/** Browser fetch: same-origin `/api` rewrite + no Bearer header (avoids misconfigured cross-origin API URL and auth edge cases). */
+async function fetchSiteDisplayAdsInBrowser(): Promise<SiteDisplayAds | null> {
+  const paths = ['/api/platform/cms-display-placements', '/api/platform/site-ads'];
+  for (const path of paths) {
+    try {
+      const res = await fetch(path, {
+        method: 'GET',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) continue;
+      const json = (await res.json()) as ApiResponse<SiteDisplayAds>;
+      const data = json?.data ?? null;
+      if (data) return data;
+    } catch {
+      /* try next path */
+    }
+  }
+  return null;
+}
+
+/** Promotional placements: popup, article sidebars, in-article banners, listing sidebar */
+export const getSiteDisplayAds = async (): Promise<SiteDisplayAds | null> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getSiteDisplayAds();
+  }
+  try {
+    if (typeof window !== 'undefined') {
+      return await fetchSiteDisplayAdsInBrowser();
+    }
+    const paths = ['/platform/cms-display-placements', '/platform/site-ads'];
+    for (const p of paths) {
+      try {
+        const response = await axiosInstance.get<ApiResponse<SiteDisplayAds>>(p);
+        const data = response.data.data ?? null;
+        if (data) return data;
+      } catch {
+        /* try legacy path */
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+/** Marketing snippets from Admin → Global Settings (GTM, Meta, etc.) — GET /platform/global-settings/snippets */
+export const getPublicTrackingSettings = async (): Promise<PublicTrackingSettings> => {
+  if (shouldUseMock()) {
+    return mockPlatformApi.getPublicTrackingSettings();
+  }
+
+  const empty: PublicTrackingSettings = {
+    tracking_meta_pixel: null,
+    tracking_google_analytics: null,
+    tracking_linkedin_pixel: null,
+  };
+
+  try {
+    const response = await axiosInstance.get<ApiResponse<PublicTrackingSettings>>(
+      '/platform/global-settings/snippets'
+    );
+
+    return response.data.data ?? empty;
+  } catch {
+    /** Table missing, gateway down, or other — page still renders without third-party scripts */
+    return empty;
+  }
 };
 
 /** Public article by slug (body + related_articles for [related id="..."] shortcodes) */
@@ -293,9 +366,25 @@ export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => 
   return response.data.data;
 };
 
-/** All course categories (for filter tabs) */
+/** Featured course categories (nav dropdown, homepage tabs — matches GET /course-cats) */
 export const getCourseCats = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
+
+  console.log(response.data.data,"response.data.data")
+  return response.data.data;
+};
+
+
+/** get all category */
+export const getAllCategories = async (): Promise<Categories[]> => {
+  const response = await axiosInstance.get<ApiResponse<Categories[]>>('/course-cats/all');
+  return response.data.data;
+};
+
+
+/** Every course category for the public catalog filters on /courses only (GET /course-cats/all) */
+export const getCourseCatsForCatalog = async (): Promise<CourseCat[]> => {
+  const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats/all');
   return response.data.data;
 };
 
@@ -304,7 +393,7 @@ export interface CourseQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  sort?: 'latest' | 'newest' | 'oldest';
+  sort?: 'latest' | 'newest' | 'oldest' | 'popular';
   price?: 'all' | 'free' | '0-500' | '500-1000' | '1000+';
 }
 
@@ -394,6 +483,36 @@ export const getPublishedCourses = async (): Promise<PublicCourse[]> => {
     return [];
   }
 };
+
+/*---------MembershipSummaryType---------*/
+export interface MembershipSummaryType {
+  targetPlanId: number;
+  code?:string;
+  
+}
+
+export interface MembershipSummaryTypeResult {
+  data: string;
+  
+}
+
+export const getMembershipSummaryById = async (
+  body: MembershipSummaryType
+): Promise<any> => { 
+
+  console.log(body,"body")
+  const response = await axiosInstance.post<ApiResponse<any>>(
+    "/platform/membership/upgrade-summary",
+    {
+      targetPlanId: body.targetPlanId,
+      couponCode:body.code
+    }
+  );
+  return response.data.data;
+};
+
+
+
 
 /** Result of POST /platform/newsletter/subscribe (public, no auth) */
 export interface NewsletterSubscribeResult {

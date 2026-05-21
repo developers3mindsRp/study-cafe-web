@@ -141,6 +141,10 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     const priceStr = formatPrice(plan.price, plan.currency);
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
     const features = normalizeFeatures(plan.features);
+    const [showAll, setShowAll] = useState(false);
+    const visibleFeatures = showAll ? features : features.slice(0, 10);
+    const [showPopup, setShowPopup] = useState(false);
+
 
     if (mobile) {
       return (
@@ -214,6 +218,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
               ))}
             </ul>
           )}
+         
         </div>
       );
     }
@@ -222,7 +227,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     return (
       <div
         ref={ref}
-        className={`flex flex-col h-full relative rounded-2xl overflow-hidden bg-white shadow-xl p-2 ${highlight ? "-mt-4 scale-105 z-10" : ""
+        className={`flex flex-col h-full relative rounded-2xl bg-white p-2 ${highlight ? "  z-10" : ""
           }`}
       >
         {highlight && (
@@ -270,10 +275,41 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
           </div>
         </div>
 
-        {!highlight && <div className="-mx-6 h-[1px] bg-black" />}
-
+        {!highlight && <div className=" h-[1px] bg-black" />}
         {features.length > 0 && (
-          <ul className="px-6 py-6 space-y-4 text-[#3a3c3e] md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF]">
+          <div className="flex-1 bg-[#F6F9FF]">
+            <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px]">
+              {visibleFeatures.map((f, i) => (
+                <li key={i} className="flex gap-3">
+                  <span>
+                    <img
+                      className="w-6 h-6 min-w-[24px] min-h-[24px] object-contain flex-shrink-0"
+                      src="/images/tick.svg"
+                      alt=""
+                    />
+                  </span>
+
+                  <p className="text-md text-[#3a3c3e]">{f}</p>
+                </li>
+              ))}
+            </ul>
+
+           
+            {features.length > 10 && (
+              <div className="px-6 pb-6">
+                <button
+                  onClick={() => setShowPopup(true)}
+                  className="text-blue-600 font-medium hover:underline"
+                >
+                  Read More
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* {features.length > 0 && (
+          <ul className="px-6 py-6 space-y-4 text-gray-400 md:text-[14px] xl:text-[16px] flex-1 bg-[#F6F9FF] ">
             {features.map((f, i) => (
               <li key={i} className="flex gap-3">
                 <span>
@@ -288,7 +324,45 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
               </li>
             ))}
           </ul>
-        )}
+        )} */}
+         {/* Popup Modal */}
+          {showPopup && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-xl">
+                
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                  <h3 className="text-xl font-semibold">All Features</h3>
+
+                  <button
+                    onClick={() => setShowPopup(false)}
+                    className="text-gray-500 hover:text-black text-2xl leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-6 overflow-y-auto max-h-[65vh]">
+                  <ul className="space-y-4">
+                    {features.map((f, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span>
+                          <img
+                            className="w-6 h-6 min-w-[24px] min-h-[24px] object-contain flex-shrink-0"
+                            src="/images/tick.svg"
+                            alt=""
+                          />
+                        </span>
+
+                        <p className="text-md text-[#3a3c3e]">{f}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
       </div>
     );
   }

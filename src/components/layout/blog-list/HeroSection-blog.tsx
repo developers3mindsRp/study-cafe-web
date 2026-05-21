@@ -1,5 +1,5 @@
 import { resolveBlogImageSrc } from "./blogImage";
-
+import TableOfContents from "./TableOfContent";
 type HeroSectionBlogProps = {
   title: string;
   subtitle?: string;
@@ -10,6 +10,7 @@ type HeroSectionBlogProps = {
   date: string;
   update: string;
   image: string;
+  toc?:any;
 };
 
 const HeroSection_blog = ({
@@ -22,6 +23,7 @@ const HeroSection_blog = ({
   date,
   update,
   image,
+  toc
 }: HeroSectionBlogProps) => {
   const bannerSrc = resolveBlogImageSrc(image) || "/images/s-court.png";
 
@@ -87,6 +89,8 @@ const HeroSection_blog = ({
       </div>
 
       {/* Desktop Banner Image (only on md+) */}
+
+      <TableOfContents toc={toc} />
       <div className="hidden md:block rounded-[10px] overflow-hidden shadow ">{heroBanner()}</div>
     </section>
   );

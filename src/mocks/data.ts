@@ -30,6 +30,7 @@ export const mockUser: User = {
   role: 'user',
   permissions: [],
   hasActiveMembership: false,
+  emailVerified: true,
   createdAt: '2024-01-15T00:00:00Z',
   updatedAt: '2024-11-20T00:00:00Z',
 };

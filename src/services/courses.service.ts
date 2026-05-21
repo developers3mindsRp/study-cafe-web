@@ -1,6 +1,10 @@
 import axiosInstance from '@/lib/axios';
 import { Course, CourseDetail, CertificateDetail } from '@/types/models.types';
-import { ApiResponse, PaginatedResponse, CourseFilters } from '@/types/api.types';
+import {
+  ApiResponse,
+  PaginatedResponse,
+  CourseFilters,
+} from '@/types/api.types';
 import { shouldUseMock } from '@/config/app.config';
 import { mockCoursesApi } from '@/mocks/api.mock';
 
@@ -152,4 +156,6 @@ export const getRelatedCourses = async (
   
   return response.data.data;
 };
+
+
 

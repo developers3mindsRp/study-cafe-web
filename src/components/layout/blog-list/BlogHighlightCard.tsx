@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/providers/AuthProvider";
 import type { BlogSpotlightArticleCard } from "@/types/models.types";
 import { cardThumb } from "@/components/layout/blog-list/blogImage";
+import { articleHref } from "@/lib/articlePaths";
 
 type BlogHighlightCardProps = {
   title: string;
@@ -159,6 +160,8 @@ export default function BlogHighlightCard({
 
       </div>
 
+     
+
 
 
       {upNextPosts !== undefined ? (
@@ -177,7 +180,7 @@ export default function BlogHighlightCard({
               {upNextPosts.map((post) => (
                 <li key={post.id}>
                   <Link
-                    href={`/blogs/${encodeURIComponent(post.slug)}`}
+                    href={articleHref(post.slug, post.id)}
                     className="flex gap-3 rounded-lg border border-[#E5E5E5] p-3 hover:border-[#09339B] transition"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}

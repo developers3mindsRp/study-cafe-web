@@ -330,6 +330,7 @@ export default function CourseDetailProfile({
               title="Video length"
             >
               <img src="/images/time.png" alt="" className="h-4 w-4" />
+              
               {formatVideoClock(vimeoDurationSeconds ?? active?.durationSeconds)}
             </span>
           </div>

@@ -96,7 +96,7 @@ export interface VerifyOrderResponse {
 
 export interface OrderInvoice {
   orderId: string;
-  type: 'course' | 'membership';
+  type: 'course' | 'membership' | 'payment_link';
   entityId: string;
   itemName: string;
   itemCategory?: string;
@@ -300,3 +300,6 @@ export const createWithdrawalRequest = async (amount: number) => {
   );
   return response.data.data;
 };
+
+
+

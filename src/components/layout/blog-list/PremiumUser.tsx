@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "@/providers/AuthProvider";
@@ -9,9 +9,12 @@ import type {
   BlogSpotlightArticleCard,
   BlogSpotlightAuthor,
   RelatedArticle,
+  SiteDisplayAds,
 } from "@/types/models.types";
 import { resolveBlogImageSrc } from "./blogImage";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import { injectBetweenArticleAdsIntoHtml } from "@/lib/siteDisplayAds";
+import { articleHref } from "@/lib/articlePaths";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -33,30 +36,38 @@ function authorHeadline(a: BlogSpotlightAuthor) {
 }
 
 /* ─── Social Buttons ────────────────────────────────────────────── */
-function SocialButtons() {
+function SocialButtons({whatsapp_link,telegram_link,google_news_url}: {whatsapp_link:any,telegram_link:any,google_news_url:any}) {
   return (
     <div className="flex flex-col sm:flex-row justify-center items-center pt-2 gap-4">
-      <button
-        type="button"
-        className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#34C759] px-6 md:px-6 py-2 rounded-[10px] text-[#34C759] font-medium hover:bg-[#34C759] hover:text-white transition"
-      >
-        <img src="/images/whatsapp.png" alt="" className="w-4 h-4" />
-        <span>Join WhatsApp Group</span>
-      </button>
-      <button
-        type="button"
-        className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#039BE5] px-6 md:px-6 py-2 rounded-[10px] text-[#039BE5] font-medium hover:bg-[#039BE5] hover:text-white transition"
-      >
-        <img src="/images/telegram-round.png" alt="" className="w-4 h-4" />
-        <span>Join Telegram Group</span>
-      </button>
-      <button
-        type="button"
-        className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#252525] px-6 md:px-6 py-2 rounded-[10px] text-[#252525] font-medium hover:bg-[#252525] hover:text-white transition"
-      >
-        <img src="/images/google.png" alt="" className="w-4 h-4" />
-        <span>Follow On Google News</span>
-      </button>
+      <a href={whatsapp_link}>
+        <button
+          type="button"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#34C759] px-6 md:px-6 py-2 rounded-[10px] text-[#34C759] font-medium hover:bg-[#34C759] hover:text-white transition"
+        >
+          <img src="/images/whatsapp.png" alt="" className="w-4 h-4" />
+          <span>Join WhatsApp Group </span>
+        </button>
+      </a>
+      <a href={telegram_link}>
+          <button
+            type="button"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#039BE5] px-6 md:px-6 py-2 rounded-[10px] text-[#039BE5] font-medium hover:bg-[#039BE5] hover:text-white transition"
+          >
+            <img src="/images/telegram-round.png" alt="" className="w-4 h-4" />
+            <span>Join Telegram Group</span>
+          </button>
+      </a>
+      <a href={google_news_url}>
+          <button
+          type="button"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#252525] px-6 md:px-6 py-2 rounded-[10px] text-[#252525] font-medium hover:bg-[#252525] hover:text-white transition"
+        >
+          <img src="/images/google.png" alt="" className="w-4 h-4" />
+          <span>Follow On Google News</span>
+        </button>
+      </a>
+      
+     
     </div>
   );
 }
@@ -73,7 +84,7 @@ function AlsoReadBlock({ related }: { related: RelatedArticle[] }) {
         {related.map((r) => (
           <Link
             key={r.id}
-            href={`/blogs/${encodeURIComponent(r.slug)}`}
+            href={articleHref(r.slug, r.id)}
             className="block text-[15px] font-normal leading-snug text-[#09339B] no-underline hover:underline md:text-[16px]"
           >
             {r.title}
@@ -236,7 +247,7 @@ function PostListBlock({
               className="border border-[#AFAFAF] rounded-[10px] p-3"
             >
               <Link
-                href={`/blogs/${encodeURIComponent(post.slug)}`}
+                href={articleHref(post.slug, post.id)}
                 className="inline-flex flex-wrap items-center gap-2 text-[#09339B] text-[15px] md:text-[17px] font-medium hover:underline"
               >
                 {post.title}
@@ -290,20 +301,29 @@ function TagsBlock({
 
 type Props = {
   article: ArticleBySlug | null;
+  /** Inline banners injected after selected paragraphs — applied on the client after refetches. */
+  betweenArticleAds?: SiteDisplayAds["between_article"] | null;
   authorSpotlight: BlogSpotlightAuthor | null;
   authorRecent: BlogSpotlightArticleCard[];
   recentPosts?: BlogSpotlightArticleCard[];
   allPosts?: BlogSpotlightArticleCard[];
   popularTags?: import("@/types/models.types").BlogSpotlightTag[];
+  whatsapp_link:string;
+  telegram_link:string;
+  google_news_url:string;
 };
 
 export default function Premium_user({
   article,
+  betweenArticleAds,
   authorSpotlight,
   authorRecent,
   recentPosts = [],
   allPosts = [],
   popularTags = [],
+  whatsapp_link,
+  telegram_link,
+  google_news_url
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
@@ -317,6 +337,12 @@ export default function Premium_user({
     authorSpotlight?.display_name ||
     authorSpotlight?.name ||
     (article?.author_name != null ? String(article.author_name) : null);
+
+  const articleBodyHtml = useMemo(() => {
+    const raw = article?.body ?? "";
+    if (!betweenArticleAds) return raw;
+    return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
+  }, [article?.body, betweenArticleAds]);
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">
@@ -340,7 +366,7 @@ export default function Premium_user({
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#3a3c3e] md:text-[17px]"
                     suppressHydrationWarning
-                    dangerouslySetInnerHTML={{ __html: article.body }}
+                    dangerouslySetInnerHTML={{ __html: articleBodyHtml }}
                   />
 
                   {/* Read More button → Premium modal */}
@@ -362,7 +388,7 @@ export default function Premium_user({
                     />
                   )}
 
-                  <SocialButtons />
+                  <SocialButtons  whatsapp_link={whatsapp_link}  telegram_link={telegram_link} google_news_url={google_news_url}/>
                 </div>
 
                 {article.related_articles &&
@@ -383,9 +409,9 @@ export default function Premium_user({
                     {article.title}
                   </h2>
                   <div
-                    className="article-rich-text max-w-none text-[16px] text-[#3a3c3e]"
+                    // className="article-rich-text max-w-none text-[16px] text-[#454545]"
                     suppressHydrationWarning
-                    dangerouslySetInnerHTML={{ __html: article.body }}
+                    dangerouslySetInnerHTML={{ __html: articleBodyHtml }}
                   />
 
                   {/* Download PDF — always premium-gated */}
@@ -402,7 +428,7 @@ export default function Premium_user({
                       <AlsoReadBlock related={article.related_articles} />
                     )}
 
-                  <SocialButtons />
+                    <SocialButtons  whatsapp_link={whatsapp_link}  telegram_link={telegram_link} google_news_url={google_news_url}/>
                 </div>
               </>
             )}
@@ -518,7 +544,7 @@ export default function Premium_user({
                 className="border border-[#AFAFAF] p-3 rounded-[10px]"
               >
                 <Link
-                  href={`/blogs/${row.slug}`}
+                  href={articleHref(row.slug, row.id)}
                   className="inline-flex flex-wrap items-center gap-2"
                 >
                   {row.title}
