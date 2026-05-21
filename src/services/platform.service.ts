@@ -225,14 +225,18 @@ export const getPublicTrackingSettings = async (): Promise<PublicTrackingSetting
 
 /** Public article by slug (body + related_articles for [related id="..."] shortcodes) */
 export const getArticleBySlug = async (
-  slug: string
+  slug: string,
+  previewToken?: string | null
 ): Promise<ArticleBySlug | null> => {
   if (shouldUseMock()) {
     return mockPlatformApi.getArticleBySlug?.(slug) ?? null;
   }
   try {
+    const params: Record<string, string> = {};
+    if (previewToken) params.preview_token = previewToken;
     const response = await axiosInstance.get<ApiResponse<ArticleBySlug>>(
-      `/platform/articles/${encodeURIComponent(slug)}`
+      `/platform/articles/${encodeURIComponent(slug)}`,
+      Object.keys(params).length ? { params } : undefined
     );
     return response.data.data ?? null;
   } catch {

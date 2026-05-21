@@ -17,10 +17,13 @@ export function bearerFromCookieHeader(cookieHeader?: string): string | undefine
 /** Server-side article fetch (pass-through membership logic on the API). */
 export async function fetchArticleBySlugSSR(
   slug: string,
-  opts: { baseUrl: string; token?: string }
+  opts: { baseUrl: string; token?: string; previewToken?: string | null }
 ): Promise<ArticleBySlug | null> {
   const base = opts.baseUrl.replace(/\/?$/, "");
-  const url = `${base}/platform/articles/${encodeURIComponent(slug)}`;
+  const params = new URLSearchParams();
+  if (opts.previewToken) params.set("preview_token", opts.previewToken);
+  const q = params.toString();
+  const url = `${base}/platform/articles/${encodeURIComponent(slug)}${q ? `?${q}` : ""}`;
   const headers: Record<string, string> = {};
   if (opts.token) headers.Authorization = `Bearer ${opts.token}`;
   try {
