@@ -258,7 +258,7 @@ export default function CourseOverview({
           <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
             <img src="/images/gift.svg" alt="" className="w-5 h-5" />
             <span className="text-sm font-normal text-black">
-              Exclusive bonuses
+              Exclusive Bonuses
             </span>
           </button>
           <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">

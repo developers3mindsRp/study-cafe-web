@@ -141,14 +141,14 @@ export default function Footer({ footerData }: FooterProps) {
                 
                 {appLinks?.googlePlay && (
                   <a href={appLinks.googlePlay} target="_blank" rel="noopener noreferrer" >
-                    <img src="/images/google-play.png" alt="Download on Google Play" width="130" height="40" />
+                    <img src="/images/google-play.svg" alt="Download on Google Play" width="130" height="40" />
                   </a>
                 )}
               
                
                 {appLinks?.appStore && (
                   <a href={appLinks.appStore} target="_blank" rel="noopener noreferrer" >
-                       <img src="/images/app-store.png" alt="Download on app store" width="130" height="40" />
+                       <img src="/images/app-store.svg" alt="Download on app store" width="130" height="40" />
                   </a>
                 )}
               
