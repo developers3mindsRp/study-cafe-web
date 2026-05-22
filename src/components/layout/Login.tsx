@@ -341,7 +341,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
+        <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-[#09339B]">
             Sign up

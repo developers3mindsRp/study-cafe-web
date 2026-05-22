@@ -163,7 +163,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Mobile: horizontal scroll */}
-          <div className="sm:hidden w-full relative px-2 w-full md:w-[65%]">
+          <div className="sm:hidden w-full relative px-2  md:w-[65%]">
             <div
               ref={catRef}
               className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth -ml-1"

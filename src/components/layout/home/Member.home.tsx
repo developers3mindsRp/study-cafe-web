@@ -340,7 +340,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                     />
                   </span>
 
-                  <p className="text-md">{f}</p>
+                  <p className="text-md text-[#3a3c3e]">{f}</p>
                 </li>
               ))}
             </ul>
@@ -406,7 +406,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                           />
                         </span>
 
-                        <p className="text-md text-gray-700">{f}</p>
+                        <p className="text-md text-[#3a3c3e]">{f}</p>
                       </li>
                     ))}
                   </ul>
