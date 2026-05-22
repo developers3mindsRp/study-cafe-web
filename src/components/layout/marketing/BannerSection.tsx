@@ -17,11 +17,11 @@ export default function BannerSection_digital({ data }: Props) {
         <p className="animate-marquee">{ticker}</p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-10 text-center">
+      <div className="max-w-4xl mx-auto px-4 py-10 text-center">
         <h1 className="text-[20px] md:text-[40px] font-medium leading-snug">
           {data.headline}
         </h1>
-
+      
         {data.subheadline ? (
           <p className="text-[16px] text-white mt-4">{data.subheadline}</p>
         ) : null}
@@ -55,14 +55,14 @@ export default function BannerSection_digital({ data }: Props) {
               </>
             )}
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <Link
               href={data.checkoutUrl}
               className="inline-block bg-[#FF383C] px-6 py-3 rounded-md font-semibold text-white"
             >
               REGISTER NOW
             </Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-6">

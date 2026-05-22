@@ -5,6 +5,8 @@ interface Props {
 }
 
 const Reviews_marketing = ({ data }: Props) => {
+
+  console.log(data,"testimonials")
   const testimonials = data.textTestimonials;
   if (!testimonials.length) return null;
 

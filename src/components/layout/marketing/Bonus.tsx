@@ -16,15 +16,15 @@ const Bonus_marketing = ({ data }: Props) => {
 
   return (
     <section className="container mx-auto px-4 py-8">
-      <h2 className="text-center text-[24px] md:text-[32px] font-semibold mb-2 uppercase">
+      <h2 className="text-center text-[20px] sm:text-[28px] lg:text-[40px] font-bold px-8 mt-8 uppercase">
         <span className="text-yellow-400">Register</span> before Today&apos;s Midnight
       </h2>
-      <p className="text-center text-white mb-4">{data.bonusBannerText}</p>
+      <p className="text-center text-[20px] sm:text-[28px] lg:text-[24px] font-regular  mt-8 px-12 ">{data.bonusBannerText}</p>
 
-      <div className="flex items-center justify-center gap-2 mb-8">
+      {/* <div className="flex items-center justify-center gap-2 mb-8">
         <img src="/images/gift.svg" alt="" className="w-5 h-5" />
         <span className="text-sm text-white/90">Exclusive bonuses</span>
-      </div>
+      </div> */}
 
       {totalWorth > 0 ? (
         <p className="text-center text-white text-lg md:text-2xl font-bold mb-8">
@@ -32,7 +32,7 @@ const Bonus_marketing = ({ data }: Props) => {
         </p>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-8 px-4 sm:px-8 xl:px-32 mt-10 sm:mt-12 pb-12">
         {items.map((bonus, index) => (
           <div
             key={index}

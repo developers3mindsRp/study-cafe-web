@@ -13,7 +13,7 @@ const Google_review = ({ data, globalReviews = [] }: Props) => {
 
   return (
     <section className="container mx-auto px-4 py-8">
-      <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">Google Reviews</h2>
+      <h2 className="text-center text-[30px] md:text-[40px] uppercase font-semibold mb-8">Google Reviews</h2>
       <div className="grid md:grid-cols-3 gap-6">
         {reviews.map((item, index) => (
           <div key={`${item.name}-${index}`} className="bg-white rounded-lg p-5 text-black">
