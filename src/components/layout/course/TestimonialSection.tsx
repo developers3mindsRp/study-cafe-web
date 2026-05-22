@@ -1,8 +1,8 @@
 import MediaTestimonials from "@/components/layout/marketing/MediaTestimonials";
-import type { MediaTestimonialItem } from "@/lib/parseCourseContent";
+import type { MediaTestimonial } from "@/types/models.types";
 
 interface Props {
-  items?: MediaTestimonialItem[];
+  items?: MediaTestimonial[];
 }
 
 export default function Testimonials_course({ items = [] }: Props) {

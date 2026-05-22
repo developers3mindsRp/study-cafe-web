@@ -45,7 +45,7 @@ function parseFeedback(raw?: string | null): ResolvedMarketingPage['googleReview
     role: r.role || '',
     rating: Math.min(5, Math.max(1, r.rating ?? 5)),
     text: r.review || r.text || '',
-    ago: r.ago,
+    ago: r.ago ?? null,
   }));
 }
 

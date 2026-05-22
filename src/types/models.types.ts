@@ -318,7 +318,7 @@ export interface GoogleReview {
   role: string;
   rating: number;
   text: string;
-  ago?: string;
+  ago?: string | null;
   avatarUrl?: string | null;
 }
 

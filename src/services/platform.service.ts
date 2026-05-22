@@ -96,7 +96,7 @@ function mapGoogleReview(row: Record<string, unknown>): GoogleReview {
     role: String(row.role ?? ''),
     rating: Math.min(5, Math.max(1, Number(row.rating) || 5)),
     text: String(row.text ?? ''),
-    ago: row.ago != null ? String(row.ago) : undefined,
+    ago: row.ago != null && String(row.ago).trim() ? String(row.ago) : null,
     avatarUrl: row.avatar_url != null ? String(row.avatar_url) : null,
   };
 }

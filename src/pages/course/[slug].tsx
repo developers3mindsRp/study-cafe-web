@@ -15,10 +15,12 @@ import {
   getCoursePageSettingsPublic,
   getCourseSessionsForResolvedCourse,
   getPublishedCourses,
+  getTestimonials,
 } from "@/services/platform.service";
 import type {
   CoursePublicDetail,
   CourseBatch,
+  MediaTestimonial,
   PublicCourse,
 } from "@/types/models.types";
 
@@ -27,6 +29,7 @@ interface CoursePageProps {
   batches: CourseBatch[];
   trendingCourses: PublicCourse[];
   galleryImages: string[];
+  testimonials: MediaTestimonial[];
   isPreview?: boolean;
 }
 
@@ -35,6 +38,7 @@ export default function CoursePage({
   batches,
   trendingCourses,
   galleryImages,
+  testimonials,
   isPreview,
 }: CoursePageProps) {
   return (
@@ -72,7 +76,7 @@ export default function CoursePage({
 
       }
       
-      <Testimonials_course />
+      <Testimonials_course items={testimonials} />
       {
         course?.faqs &&
          <GSTRCoursePage course={course} />
@@ -109,10 +113,11 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
       return { redirect: { destination: dest, permanent: false } };
     }
 
-    const [batches, allCourses, pageSettings] = await Promise.all([
+    const [batches, allCourses, pageSettings, testimonials] = await Promise.all([
       getCourseSessionsForResolvedCourse(course),
       getPublishedCourses(),
       getCoursePageSettingsPublic(),
+      getTestimonials().catch(() => []),
     ]);
 
     const trendingCourses = allCourses
@@ -125,6 +130,7 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         batches,
         trendingCourses,
         galleryImages: pageSettings.gallery_images ?? [],
+        testimonials,
         isPreview: !!previewToken,
       },
     };
