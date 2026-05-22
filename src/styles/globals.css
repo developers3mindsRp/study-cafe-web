@@ -285,6 +285,18 @@
   padding-left: 1.5em;
 }
 
+.article-rich-text ul {
+  list-style-type: disc;
+}
+
+.article-rich-text ol {
+  list-style-type: decimal;
+}
+
+.article-rich-text li {
+  margin-bottom: 0.25em;
+}
+
 .article-rich-text blockquote {
   border-left: 4px solid #d4d4d8;
   margin: 1em 0;
