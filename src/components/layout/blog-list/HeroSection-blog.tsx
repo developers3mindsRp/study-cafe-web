@@ -68,17 +68,17 @@ const HeroSection_blog = ({
 
       {/* Author + Date */}
       <div
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 md:text-[16px] text-[#AFAFAF]  "
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 md:text-[16px] text-[#6a6969]  "
         suppressHydrationWarning
       >
         <div className="flex gap-4 flex-wrap md:flex-nowrap">
           <span className="flex items-center gap-2 whitespace-nowrap">
-            <img src="/images/user.svg" alt="author" width={20} height={20} />
+            <img src="/images/user-black.svg" alt="author" width={20} height={20} className=" " />
             {author}
           </span>
 
           <span className="flex items-center gap-2 whitespace-nowrap" suppressHydrationWarning>
-            <img src="/images/calendar.svg" alt="date" width={20} height={20} />
+            <img src="/images/calendar-black.svg" alt="date" width={20} height={20} />
             {date}
           </span>
         </div>

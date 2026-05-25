@@ -91,13 +91,13 @@ export default function Blog_list({
               </div>
 
               <div className="p-3 xl:p-4">
-                <div className="mb-3 flex items-center gap-2 text-[#AFAFAF] md:gap-2 xl:text-[16px]">
+                <div className="mb-3 flex items-center gap-2 text-[#6a6969] md:gap-2 xl:text-[16px]">
                   <span className="flex gap-1">
-                    <img src="/images/user.svg" alt="" width="20" height="20" />
+                    <img src="/images/user-black.svg" alt="" width="20" height="20" />
                     {b.author_name || "Admin"}
                   </span>
                   <span className="flex gap-2">
-                    <img src="/images/calendar.svg" alt="" width="20" height="10" />
+                    <img src="/images/calendar-black.svg" alt="" width="20" height="10" />
                     {formatDate(b.published_at)}
                   </span>
                 </div>

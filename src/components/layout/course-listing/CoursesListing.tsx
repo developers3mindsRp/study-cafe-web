@@ -36,9 +36,9 @@ function CourseCard({ c }: { c: PublicCourse }) {
       </div></Link> 
       <div className="p-3">
         {c.language && (
-          <div className="flex items-center gap-4 text-[#AFAFAF] text-[14px] md:text-[16px]">
+          <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px]">
             <span className="flex items-center gap-1">
-              <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" />
+              <img src="/images/eng-dark.svg" alt="" width="20" height="20" />
               {Array.isArray(c.language) ? c.language.join(", ") : c.language}
             </span>
           </div>
@@ -47,8 +47,8 @@ function CourseCard({ c }: { c: PublicCourse }) {
           {c.title}
         </h3></Link>
         {enrolled && (
-          <div className="flex items-center gap-2 text-[#AFAFAF] text-[14px] md:text-[16px]">
-            <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />
+          <div className="flex items-center gap-2 text-[#6a6969] text-[14px] md:text-[16px]">
+            <img src="/images/user-dark.svg" alt="" width="20" height="20" />
             {enrolled} students
           </div>
         )}

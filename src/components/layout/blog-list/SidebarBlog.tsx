@@ -43,7 +43,7 @@ export default function SidebarBlog({
       ) : null}
 
       <div className="bg-[#F9F9FB] space-y-3">
-        <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
+        <p className="font-bold text-[26px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
           Recent Posts
         </p>
 
@@ -65,7 +65,7 @@ export default function SidebarBlog({
                     decoding="async"
                     referrerPolicy="no-referrer"
                   />
-                  <p className="text-[16px] font-bold mt-2 xl:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">
+                  <p className="text-[16px] font-medium mt-2 xl:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">
                     {post.title}
                     {post.blog_access_tier === "premium" && (
                       <span className="text-[10px] font-semibold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
@@ -86,7 +86,7 @@ export default function SidebarBlog({
       </div>
 
       <div className="bg-[#F9F9FB] md:px-5 space-y-3">
-        <p className="font-medium text-[20px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
+        <p className="font-bold text-[26px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
           All Posts
         </p>
 
@@ -108,7 +108,7 @@ export default function SidebarBlog({
                     decoding="async"
                     referrerPolicy="no-referrer"
                   />
-                  <p className="text-[15px] font-bold mt-2 md:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">
+                  <p className="text-[15px] font-medium mt-2 md:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">
                     {post.title}
                     {/* {post.blog_access_tier === "premium" && (
                       <span className="text-[10px] font-semibold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
