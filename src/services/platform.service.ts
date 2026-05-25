@@ -277,9 +277,9 @@ export const getArticleBySlug = async (
   slug: string,
   previewToken?: string | null
 ): Promise<ArticleBySlug | null> => {
-  if (shouldUseMock()) {
-    return mockPlatformApi.getArticleBySlug?.(slug) ?? null;
-  }
+  // if (shouldUseMock()) {
+  //   return mockPlatformApi.getArticleBySlug?.(slug) ?? null;
+  // }
   try {
     const params: Record<string, string> = {};
     if (previewToken) params.preview_token = previewToken;

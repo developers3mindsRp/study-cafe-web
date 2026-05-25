@@ -278,7 +278,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     return (
       <div
         ref={ref}
-        className={`flex flex-col h-full relative rounded-2xl bg-white p-2 ${highlight ? "  z-10" : ""
+        className={`flex flex-col h-full relative rounded-2xl bg-white p-2 ${highlight ? "" : ""
           }`}
       >
         {highlight && (
