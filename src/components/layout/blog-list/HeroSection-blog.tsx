@@ -68,7 +68,7 @@ const HeroSection_blog = ({
 
       {/* Author + Date */}
       <div
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 md:text-[16px] text-[#AFAFAF]  "
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 md:text-[16px] text-[#6a6969]  "
         suppressHydrationWarning
       >
         <div className="flex gap-4 flex-wrap md:flex-nowrap">

@@ -54,7 +54,7 @@ export default function StatsSection({ stats: statsProp }) {
         scrollBehavior: "smooth",
       }}
     >
-      <div className="container mx-auto px-4 bg-[#09339B] rounded-[10px] md:rounded-full p-6">
+      <div className="container mx-auto px-4 bg-[#09339B] rounded-[10px] md:rounded-full p-6 ">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center px-2">
           {stats.map((stat, i) => (
             <div
@@ -70,7 +70,7 @@ export default function StatsSection({ stats: statsProp }) {
               </div>
 
               <div className="md:flex flex-col">
-                <h3 className="whitespace-nowrap text-[15px] xl:text-[40px] text-left font-bold text-[#FFFFFF]">
+                <h3 className="whitespace-nowrap text-[15px] xl:text-[40px] md:text-left font-bold text-[#FFFFFF]">
                   <CountUp
                     end={parseStatValue(stat.value)}
                     duration={5}

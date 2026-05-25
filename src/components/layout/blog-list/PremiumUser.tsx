@@ -458,7 +458,7 @@ export default function Premium_user({
           </h2>
 
           <div className="flex items-start gap-4">
-            <div className="rounded-[10px] p-2 md:p-3 bg-[#F9F9FB] w-full">
+            <div className="rounded-[10px] p-2 md:p-3 bg-[#d4d4d4] w-full">
               <div className="flex flex-row items-center gap-6 md:gap-4 ml-6 pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
