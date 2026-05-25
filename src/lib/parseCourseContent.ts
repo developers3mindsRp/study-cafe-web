@@ -3,6 +3,8 @@
  * Matches logic used on the course detail page.
  */
 
+import { resolveApiAssetUrl } from '@/utils/mediaUrl';
+
 export interface StructuredBonusItem {
   label: string;
   title: string;
@@ -125,12 +127,5 @@ export function parseGalleryImages(raw: unknown): string[] {
 }
 
 export function resolveImageUrl(path?: string | null): string {
-  if (!path) return '';
-  if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  if (path.startsWith('/api/')) {
-    const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
-    const serverRoot = base.replace(/\/api\/?$/, '');
-    return `${serverRoot}${path}`;
-  }
-  return path;
+  return resolveApiAssetUrl(path);
 }

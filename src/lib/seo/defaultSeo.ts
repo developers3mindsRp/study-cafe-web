@@ -1,4 +1,5 @@
 import type { SeoMetadata } from "@/types/models.types";
+import { getSiteUrl } from "@/config/env";
 
 export const SITE_BRAND = "StudyCafe";
 
@@ -29,7 +30,7 @@ export function defaultMetaTitleForPath(pathname: string): string {
 
 /** Absolute canonical when `NEXT_PUBLIC_SITE_URL` is set and API omitted one. */
 export function defaultCanonicalUrlForPath(pathname: string): string | undefined {
-  const base = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  const base = getSiteUrl();
   if (!base) return undefined;
   let path = pathname.split("?")[0] ?? "/";
   if (!path.startsWith("/")) path = `/${path}`;
