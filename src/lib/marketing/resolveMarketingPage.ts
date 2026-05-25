@@ -1,4 +1,10 @@
 import type { CoursePublicDetail, FAQ } from '@/types/models.types';
+import {
+  parseGalleryImages,
+  parseIncludesInfo,
+  parseListField,
+  type StructuredBonusItem,
+} from '@/lib/parseCourseContent';
 import type {
   MarketingPageMeta,
   MarketingPagePublicPayload,
@@ -13,29 +19,6 @@ function parseJsonArray<T>(raw?: string | null, fallback: T[] = []): T[] {
   } catch {
     return fallback;
   }
-}
-
-function parseLearnOutcomes(raw?: string | null): string[] {
-  if (!raw?.trim()) return [];
-  const lines = raw
-    .split(/\n|<br\s*\/?>/i)
-    .map((s) => s.replace(/<[^>]+>/g, '').trim())
-    .filter(Boolean);
-  if (lines.length) return lines;
-  return parseJsonArray<string>(raw, []);
-}
-
-function parseIncludesBonuses(raw?: string | null): ResolvedMarketingPage['bonusItems'] {
-  const items = parseJsonArray<{ title?: string; description?: string; worth?: string; icon?: string; label?: string }>(
-    raw,
-    [],
-  );
-  return items.map((b, i) => ({
-    label: b.label || `Bonus ${i + 1}`,
-    icon: b.icon || '',
-    description: b.description || b.title || '',
-    worth: b.worth || '',
-  }));
 }
 
 function parseCourseFaqs(raw?: string | null): { q: string; a: string }[] {
@@ -62,7 +45,7 @@ function parseFeedback(raw?: string | null): ResolvedMarketingPage['googleReview
     role: r.role || '',
     rating: Math.min(5, Math.max(1, r.rating ?? 5)),
     text: r.review || r.text || '',
-    ago: r.ago,
+    ago: r.ago ?? null,
   }));
 }
 
@@ -104,6 +87,46 @@ function formatDateFromCourse(dateStr?: string | null): string {
   }
 }
 
+function mergeUniqueStrings(...groups: string[][]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const group of groups) {
+    for (const line of group) {
+      const key = line.trim();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(key);
+    }
+  }
+  return out;
+}
+
+function mapMetaBonusItems(
+  meta: MarketingPageMeta,
+): ResolvedMarketingPage['bonusItems'] {
+  return (meta.bonus_items ?? [])
+    .map((b, i) => {
+      const title = String(b.description ?? b.title ?? '').trim();
+      if (!title) return null;
+      return {
+        label: b.label || `Bonus ${i + 1}`,
+        image: b.icon || '',
+        title,
+        worth: b.worth || '',
+      };
+    })
+    .filter((b): b is ResolvedMarketingPage['bonusItems'][number] => b != null);
+}
+
+function mapStructuredBonuses(items: StructuredBonusItem[]): ResolvedMarketingPage['bonusItems'] {
+  return items.map((b) => ({
+    label: b.label,
+    image: b.image,
+    title: b.title,
+    worth: b.worth,
+  }));
+}
+
 export function resolveMarketingPage(
   payload: MarketingPagePublicPayload,
   globalFaqs: FAQ[],
@@ -112,8 +135,8 @@ export function resolveMarketingPage(
   const meta: MarketingPageMeta = page.meta ?? {};
   const author = course.authors?.[0];
 
-  const learningFromCourse = parseLearnOutcomes(course.learn_outcomes);
-  const bonusesFromCourse = parseIncludesBonuses(course.includes_info);
+  const learningFromCourse = parseListField(course.learn_outcomes);
+  const { benefitLines, structuredBonuses } = parseIncludesInfo(course.includes_info);
 
   const videoUrl = meta.video_url?.trim() || course.youtube_url || null;
   const courseSlug = course.slug || page.slug;
@@ -134,13 +157,32 @@ export function resolveMarketingPage(
 
   const feedbackReviews = parseFeedback(course.feedback);
 
+  const metaBullets = meta.learning_bullets?.filter(Boolean) ?? [];
+  const learningBullets =
+    metaBullets.length > 0
+      ? metaBullets
+      : mergeUniqueStrings(learningFromCourse, benefitLines);
+
+  const metaStructured = mapMetaBonusItems(meta);
+  const bonusItems =
+    metaStructured.length > 0 ? metaStructured : mapStructuredBonuses(structuredBonuses);
+
+  const bonusesTotalWorth = bonusItems.reduce((sum, b) => {
+    const n = Number(String(b.worth).replace(/[^0-9.]/g, ''));
+    return sum + (Number.isFinite(n) ? n : 0);
+  }, 0);
+
   return {
     slug: page.slug,
     courseId: course.id,
     announcementText: meta.announcement_text || `Join now for just ${formatPrice(course)} Only`,
     headline: meta.headline || course.title || '',
     subheadline: meta.subheadline || course.brief_description || '',
-    bonusBannerText: meta.bonus_banner_text || 'Unblock Bonuses Worth Rs. 12,000',
+    bonusBannerText:
+      meta.bonus_banner_text ||
+      (bonusesTotalWorth > 0
+        ? `Unblock Bonuses Worth Rs. ${bonusesTotalWorth.toLocaleString('en-IN')}`
+        : 'Unblock Bonuses Worth Rs. 12,000'),
     masterclassDate: meta.masterclass_date || formatDateFromCourse(course.start_date),
     masterclassTime: meta.masterclass_time || '',
     ctaTitle: meta.cta_title || 'Become a Certified AI Expert',
@@ -152,24 +194,17 @@ export function resolveMarketingPage(
     videoUrl,
     youtubeEmbedUrl: youtubeEmbed(videoUrl, true),
     thumbnailUrl: course.thumbnail_url || '/images/c1.png',
-    learningBullets:
-      meta.learning_bullets?.filter(Boolean)?.length
-        ? meta.learning_bullets!.filter(Boolean)
-        : learningFromCourse,
+    learningBullets,
     featureCards: (meta.feature_cards ?? [])
       .filter((c) => c.text)
       .map((c) => ({ icon: c.icon || '/images/tick1.png', text: c.text! })),
-    bonusItems:
-      meta.bonus_items?.filter((b) => b.description)?.length
-        ? meta.bonus_items!.map((b, i) => ({
-            label: b.label || `Bonus ${i + 1}`,
-            icon: b.icon || '',
-            description: b.description || '',
-            worth: b.worth || '',
-          }))
-        : bonusesFromCourse,
+    bonusItems,
     whoCanAttend: meta.who_can_attend?.filter(Boolean) ?? [],
-    galleryImages: meta.gallery_images?.filter(Boolean) ?? [],
+    galleryImages: (() => {
+      const fromSettings = parseGalleryImages(ps.gallery_images);
+      const fromMeta = meta.gallery_images?.filter(Boolean) ?? [];
+      return fromSettings.length > 0 ? fromSettings : fromMeta;
+    })(),
     stats: {
       people_coached: meta.stats?.people_coached || String(course.enrolled_count || '10000'),
       preferred_by: meta.stats?.preferred_by || '150',
@@ -189,7 +224,7 @@ export function resolveMarketingPage(
       imageUrl: meta.trainer?.image_url || author?.image || '/images/trainer.png',
       highlights:
         meta.trainer?.highlights?.filter(Boolean) ??
-        [author?.role, author?.name].filter(Boolean) as string[],
+        ([author?.role, author?.name].filter(Boolean) as string[]),
       bioPoints:
         meta.trainer?.bio_points?.filter(Boolean) ??
         (author?.bio ? [author.bio] : []),

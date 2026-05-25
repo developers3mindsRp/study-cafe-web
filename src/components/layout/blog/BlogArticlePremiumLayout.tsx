@@ -93,34 +93,41 @@ export default function BlogArticlePremiumLayout({
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6">
       <div className="lg:col-span-2 space-y-10">
         <div className="space-y-10">
-          <HeroSection_blog
-            title={article.title}
-            subtitle={article.sub_heading || ""}
-            description={articleTeaserPlain(article, 560)}
-            author={String(article.author_name ?? "Editor")}
-            date={formatDate(article.published_at)}
-            update={formatDate(article.updated_at)}
-            image={cardThumb(article.thumbnail_url || article.cover_image_url)}
-            toc={article.toc}
-          />
+          {
+            article &&
+             <HeroSection_blog
+              title={article.title}
+              subtitle={article.sub_heading || ""}
+              description={articleTeaserPlain(article, 560)}
+              author={String(article.author_name ?? "Editor")}
+              date={formatDate(article.published_at)}
+              update={formatDate(article.updated_at)}
+              image={cardThumb(article.thumbnail_url || article.cover_image_url)}
+              toc={article.toc}
+            />
+          }
+         
+
+          {
+            article &&
+            <Premium_user
+              article={article}
+              betweenArticleAds={siteAds?.between_article ?? null}
+              authorSpotlight={spotlight?.author ?? null}
+              authorRecent={spotlight?.author_recent_articles ?? []}
+              recentPosts={spotlight?.recent_posts ?? []}
+              allPosts={spotlight?.all_posts ?? []}
+              popularTags={spotlight?.popular_tags ?? []}
+              whatsapp_link={whatsapp_link}
+              telegram_link={telegram_link}
+              google_news_url={google_news_url}
+
+
+            />
+
+          }
 
           
-
-          <Premium_user
-            article={article}
-            betweenArticleAds={siteAds?.between_article ?? null}
-            authorSpotlight={spotlight?.author ?? null}
-            authorRecent={spotlight?.author_recent_articles ?? []}
-            recentPosts={spotlight?.recent_posts ?? []}
-            allPosts={spotlight?.all_posts ?? []}
-            popularTags={spotlight?.popular_tags ?? []}
-            whatsapp_link={whatsapp_link}
-            telegram_link={telegram_link}
-            google_news_url={google_news_url}
-
-
-          />
-
       {
         citation &&
               <div className="w-full bg-white container mx-auto px-4">
@@ -205,10 +212,13 @@ export default function BlogArticlePremiumLayout({
 
          
           
-
-
+      {
+        slug &&
           <ArticleUpNextSection slug={slug} />
+      }
 
+        {
+          spotlight &&
           <div className="block lg:hidden">
             <SidebarBlog
               recentPosts={spotlight?.recent_posts}
@@ -217,16 +227,23 @@ export default function BlogArticlePremiumLayout({
               detailSidebarAds={siteAds?.article_detail_sidebar}
             />
           </div>
+        }
+
+          
         </div>
       </div>
 
       <div className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
-        <SidebarBlog
-          recentPosts={spotlight?.recent_posts}
-          allPosts={spotlight?.all_posts}
-          popularTags={spotlight?.popular_tags}
-          detailSidebarAds={siteAds?.article_detail_sidebar}
-        />
+        {
+          spotlight &&
+           <SidebarBlog
+            recentPosts={spotlight?.recent_posts}
+            allPosts={spotlight?.all_posts}
+            popularTags={spotlight?.popular_tags}
+            detailSidebarAds={siteAds?.article_detail_sidebar}
+          />
+        }
+       
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const Alumini_marketing = ({ data }: Props) => {
   if (!logos.length) return null;
 
   return (
-    <section className="py-12 bg-gradient-to-r from-[#4facfe] to-[#00f2fe]">
+    <section className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8 mt-12">
       <h2 className="text-center text-white text-[24px] md:text-[32px] font-semibold mb-8">
         Our Alumni at Leading Companies
       </h2>

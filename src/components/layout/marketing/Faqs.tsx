@@ -18,7 +18,7 @@ const Faqs_marketing = ({ data }: Props) => {
   return (
     <section className="container px-4 mx-auto pb-8">
       <div className="mx-auto md:mt-2">
-        <h2 className="text-center text-[30px] md:text-[40px] mb-6">FAQ&apos;s</h2>
+        <h2 className="text-center text-[30px] md:text-[40px] uppercase font-semibold mb-8">FAQ&apos;s</h2>
         <div className="space-y-4">
           {faqs.map((item, index) => (
             <div key={index} className="border rounded-lg overflow-hidden shadow-md">

@@ -1,4 +1,4 @@
-import type { ResolvedMarketingPage } from "@/lib/marketing/types";
+import type { ResolvedMarketingPage } from '@/lib/marketing/types';
 
 interface Props {
   data: ResolvedMarketingPage;
@@ -18,8 +18,11 @@ const Features_marketing = ({ data }: Props) => {
           key={index}
           className="flex items-center gap-3 rounded-lg border bg-white p-4"
         >
-          <img src="/images/tick1.png" alt="" width={45} height={45} />
-          <p className="text-[14px] text-black font-semibold">{feature}</p>
+          <img src="/images/tick1.png" alt="" width={45} height={45} className="flex-shrink-0" />
+          <p
+            className="text-[14px] text-black font-semibold"
+            dangerouslySetInnerHTML={{ __html: feature }}
+          />
         </div>
       ))}
     </div>

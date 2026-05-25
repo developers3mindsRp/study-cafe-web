@@ -12,12 +12,15 @@ import Breadcrumbs from "@/components/Breadcrumb";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
 import {
   getCourseBySlugOrId,
+  getCoursePageSettingsPublic,
   getCourseSessionsForResolvedCourse,
   getPublishedCourses,
+  getTestimonials,
 } from "@/services/platform.service";
 import type {
   CoursePublicDetail,
   CourseBatch,
+  MediaTestimonial,
   PublicCourse,
 } from "@/types/models.types";
 
@@ -25,17 +28,26 @@ interface CoursePageProps {
   course: CoursePublicDetail | null;
   batches: CourseBatch[];
   trendingCourses: PublicCourse[];
+  galleryImages: string[];
+  testimonials: MediaTestimonial[];
+  isPreview?: boolean;
 }
 
 export default function CoursePage({
   course,
   batches,
   trendingCourses,
+  galleryImages,
+  testimonials,
+  isPreview,
 }: CoursePageProps) {
-
-  console.log(course,"course")
   return (
     <PublicLayout>
+      {isPreview && (
+        <div className="w-full bg-yellow-400 text-yellow-900 text-center text-sm font-semibold py-2 px-4">
+           Preview — this is preview link.
+        </div>
+      )}
       <div className="text-sm text-[#696969] bg-[#DDDDDD] px-1 p-4 mx-auto">
         <Breadcrumbs
           content={[
@@ -64,13 +76,13 @@ export default function CoursePage({
 
       }
       
-      <Testimonials_course />
+      <Testimonials_course items={testimonials} />
       {
         course?.faqs &&
          <GSTRCoursePage course={course} />
       }
      
-      <Gallery />
+      <Gallery images={galleryImages.length > 0 ? galleryImages : undefined} />
       {
         trendingCourses &&
           <TrendingCourses courses={trendingCourses} />
@@ -87,23 +99,25 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
     const segment = ctx.params?.slug as string;
     if (!segment) return { notFound: true };
 
-    const course = await getCourseBySlugOrId(segment);
+    const previewToken = typeof ctx.query.preview_token === "string" ? ctx.query.preview_token : null;
+
+    const course = await getCourseBySlugOrId(segment, previewToken);
     if (!course) return { notFound: true };
 
     const isNumericSegment = /^\d+$/.test(segment);
     const canonical = course.slug?.trim();
     if (isNumericSegment && canonical) {
-      return {
-        redirect: {
-          destination: `/course/${encodeURIComponent(canonical)}`,
-          permanent: false,
-        },
-      };
+      const dest = previewToken
+        ? `/course/${encodeURIComponent(canonical)}?preview_token=${encodeURIComponent(previewToken)}`
+        : `/course/${encodeURIComponent(canonical)}`;
+      return { redirect: { destination: dest, permanent: false } };
     }
 
-    const [batches, allCourses] = await Promise.all([
+    const [batches, allCourses, pageSettings, testimonials] = await Promise.all([
       getCourseSessionsForResolvedCourse(course),
       getPublishedCourses(),
+      getCoursePageSettingsPublic(),
+      getTestimonials().catch(() => []),
     ]);
 
     const trendingCourses = allCourses
@@ -115,6 +129,9 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         course,
         batches,
         trendingCourses,
+        galleryImages: pageSettings.gallery_images ?? [],
+        testimonials,
+        isPreview: !!previewToken,
       },
     };
   });
