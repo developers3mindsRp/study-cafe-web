@@ -102,11 +102,11 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
 
       <div className="flex flex-wrap items-center gap-2 text-[16px] text-[#6a6969] mb-3">
         <span className="flex items-center gap-2">
-          <img src="/images/user.svg" alt="" width={20} height={20} />
+          <img src="/images/user-black.svg" alt="" width={20} height={20} />
           {post.author_name?.trim() || "Editor"}
         </span>
         <span className="flex items-center gap-2">
-          <img src="/images/calendar.svg" alt="" width={20} height={20} />
+          <img src="/images/calendar-black.svg" alt="" width={20} height={20} />
           {formatDate(post.published_at)}
         </span>
       </div>
@@ -162,11 +162,21 @@ export default function ArticleUpNextSection({ slug, limit }: Props) {
   return (
     <section className="w-full bg-white  container mx-auto px-4" aria-label="Up next articles">
       <div className="space-y-6">
-        <div className="flex items-center gap-4 my-6">
-          <span className="flex-1 h-px bg-[#000000]" />
-          <span className="text-[#09339B] text-[20px] font-medium whitespace-nowrap">Up Next</span>
-          <span className="flex-1 h-px bg-[#000000]" />
-        </div>
+       <div className="relative flex items-center justify-center my-10">
+  
+  {/* Left Line */}
+  <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#09339B] to-[#09339B]" />
+
+  {/* Center Badge */}
+  <div className="px-5 py-2 mx-4 rounded-full bg-[#09339B] shadow-lg shadow-blue-200">
+    <span className="text-white text-[18px] font-semibold tracking-wide uppercase">
+      Up Next
+    </span>
+  </div>
+
+  {/* Right Line */}
+  <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#09339B] to-[#09339B]" />
+</div>
 
         {isLoading && items.length === 0 ? (
           <p className="text-sm text-[#3a3c3e] py-2">Loading suggestions…</p>

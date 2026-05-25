@@ -21,7 +21,7 @@ export function bannerSnippetFromSlot(slot: SiteAdsSlot | undefined): string | n
   const srcRaw = slot?.image_url?.trim();
   if (!srcRaw) return null;
   const resolved = resolveApiAssetUrl(srcRaw);
-  const img = `<img src="${escapeHtmlAttr(resolved)}" alt="" class="max-w-full h-auto rounded-[10px] block mx-auto" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
+  const img = `<img src="${escapeHtmlAttr(resolved)}" alt="" class="max-w-full h-auto  rounded-[10px] block mx-auto" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
   const link = slot?.link_url?.trim();
   const href = link ? safeHref(link) : '';
   if (href && href !== '#') {

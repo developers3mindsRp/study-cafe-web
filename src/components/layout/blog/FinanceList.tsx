@@ -149,7 +149,7 @@ export default function Finance_list() {
 
 
               <div className="flex items-center gap-2 text-[16px] text-[#AFAFAF] mb-3">
-                <span className="flex gap-1"> <img src="/images/user.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-1 xl:gap-2"><img src="/images/calendar.svg" alt="" width="20" height="10" />{b.date}</span>
+                <span className="flex gap-1"> <img src="/images/user-black.svg" alt="" width="20" height="20" /> {b.author}</span>  <span className="flex gap-1 xl:gap-2"><img src="/images/calendar-black.svg" alt="" width="20" height="10" />{b.date}</span>
 
               </div>
 

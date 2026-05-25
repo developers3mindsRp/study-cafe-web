@@ -73,12 +73,12 @@ const HeroSection_blog = ({
       >
         <div className="flex gap-4 flex-wrap md:flex-nowrap">
           <span className="flex items-center gap-2 whitespace-nowrap">
-            <img src="/images/user.svg" alt="author" width={20} height={20} />
+            <img src="/images/user-black.svg" alt="author" width={20} height={20} className=" " />
             {author}
           </span>
 
           <span className="flex items-center gap-2 whitespace-nowrap" suppressHydrationWarning>
-            <img src="/images/calendar.svg" alt="date" width={20} height={20} />
+            <img src="/images/calendar-black.svg" alt="date" width={20} height={20} />
             {date}
           </span>
         </div>

@@ -195,7 +195,7 @@ export default function MembershipCourses() {
                                 {c.title}
                             </h3>
 
-                            <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
+                            <div className="flex items-center gap-1 text-[#6a6969] text-sm">
                                 <img
                                     src="/images/icons/user-light.svg"
                                     alt=""

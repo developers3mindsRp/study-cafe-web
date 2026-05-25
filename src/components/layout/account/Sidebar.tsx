@@ -123,14 +123,14 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
             <div className="mt-2 md:mt-10 space-y-4 md:self-start md:text-left">
               <div className="flex gap-1 md:gap-2 items-center">
                 <img src="/images/mail.png" alt="" className="w-4 md:w-5 h-4 md:h-5" />
-                <p className="text-[#AFAFAF] text-[14px] md:text-[16px] text-ellipsis overflow-hidden">
+                <p className="text-[#6a6969] text-[14px] md:text-[16px] text-ellipsis overflow-hidden">
                   {user?.email || "—"}
                 </p>
               </div>
 
               <div className="flex gap-1 md:gap-2 items-center">
                 <img src="/images/phone.png" alt="" className="w-4 h-4 md:w-5 md:h-5" />
-                <p className="text-[#AFAFAF] text-[14px] md:text-[16px]">
+                <p className="text-[#6a6969] text-[14px] md:text-[16px]">
                   {user?.phone
                     ? user.phone.startsWith("+91")
                       ? "+91 " + user.phone.slice(3)

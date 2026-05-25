@@ -141,10 +141,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.appeal_number && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className="text-[16px] font-medium text-[#111827]  mb-1">
                     Appeal Number
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827]">
+                  <p className="text-[#6a6969] text-sm">
                     {citation?.appeal_number}
                   </p>
                 </div>
@@ -152,10 +152,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.assessment_year && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className="mb-1 text-[16px] font-medium text-[#111827]">
                     Assessment Year
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827]">
+                  <p className="text-sm text-[#6a6969] ">
                     {citation?.assessment_year}
                   </p>
                 </div>
@@ -163,10 +163,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.case_citation && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
                     Case Citation
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827] break-words">
+                  <p className="text-sm text-[#6a6969] break-words">
                     {citation?.case_citation}
                   </p>
                 </div>
@@ -174,10 +174,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.case_name && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className="text-[16px] font-medium text-[#111827] mb-1">
                     Case Name
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827] break-words">
+                  <p className="text-sm text-[#6a6969]  break-words">
                     {citation?.case_name}
                   </p>
                 </div>
@@ -185,10 +185,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.court && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
                     Court
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827]">
+                  <p className="text-sm text-[#6a6969]">
                     {citation?.court}
                   </p>
                 </div>
@@ -196,10 +196,10 @@ export default function BlogArticlePremiumLayout({
 
               {citation?.judgement_date && (
                 <div>
-                  <p className="text-sm text-[#6a6969] mb-1">
+                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
                     Judgement Date
                   </p>
-                  <p className="text-[16px] font-medium text-[#111827]">
+                  <p className="text-sm text-[#6a6969]">
                     {citation?.judgement_date}
                   </p>
                 </div>
