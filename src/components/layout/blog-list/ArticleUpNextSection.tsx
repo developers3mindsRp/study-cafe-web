@@ -162,7 +162,7 @@ export default function ArticleUpNextSection({ slug, limit }: Props) {
   return (
     <section className="w-full bg-white  container mx-auto px-4" aria-label="Up next articles">
       <div className="space-y-6">
-       <div className="relative flex items-center justify-center my-10">
+       <div className="relative flex items-center justify-center py-[20px]">
   
   {/* Left Line */}
   <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#09339B] to-[#09339B]" />
