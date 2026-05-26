@@ -233,15 +233,68 @@ export default function SignUpPage() {
   const fe = fieldErrors;
   return (
     <div className="h-screen flex flex-col md:flex-row mx-auto  ">
-      <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center ">
-         <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
-         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
-            <div className="relative z-10">
-                <img src="/images/study-logo.svg" alt="" width="221px" height="250px" className="mx-auto mt-[11px]"/>
-                <h1 className="text-[30px] xl:text-4xl font-bold mb-4 pt-[12px] xl:pb-[18px]">Join Our Learning <br />Community</h1>
-                <p className="text-[18px] xl:text-[24px] pb-2 px-4 ">Create your account and get access to premium <br className="hidden" /> courses and exclusive content</p>
-            </div>
-            </div>
+            <div className="hidden md:flex md:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#0A2E8A] via-[#09339B] to-[#061B52] px-8 py-10 flex-col ">
+
+        {/* Gradient Blur Effects */}
+        <div className="absolute top-[-120px] left-[-80px] w-[300px] h-[300px] bg-blue-400/20 rounded-full blur-3xl"></div>
+
+        <div className="absolute bottom-[-100px] right-[-100px] w-[320px] h-[320px] bg-cyan-400/20 rounded-full blur-3xl"></div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-[22%] right-[20%] w-5 h-5 rounded-full bg-purple-400"></div>
+
+        <div className="absolute bottom-[25%] left-[18%] w-6 h-6 rounded-full bg-cyan-300"></div>
+
+        {/* Content Wrapper */}
+        <div className="relative z-10 flex flex-col h-full w-full px-4 justify-between">
+
+          {/* TOP CONTENT */}
+          <div>
+
+            {/* Logo */}
+            <img
+              src="/images/study-logo.svg"
+              alt="StudyCafe"
+              className="w-[200px] mb-8"
+            />
+
+            {/* Heading */}
+            <h1 className="text-[42px] xl:text-[54px] leading-[52px] xl:leading-[64px] font-bold text-white ">
+
+              Start Your
+
+              <span className="bg-gradient-to-r from-[#60A5FA] via-[#93C5FD] to-[#FFFFFF] bg-clip-text text-transparent ml-4">
+                Learning
+              </span>
+
+              <br />
+
+              Journey
+
+            </h1>
+
+            {/* Description */}
+            <p className="text-white/80 text-[20px] leading-[34px] mt-7 max-w-[580px]">
+              Access thousands of courses, get certified,
+              and advance your career with StudyCafe.
+            </p>
+
+          </div>
+
+          {/* ILLUSTRATION */}
+  
+        <div className="relative z-10 flex justify-center items-end flex-1 pt-6">
+
+          <img
+            src="/images/bg-image.png"
+            alt=""
+            className="w-full max-w-[650px] xl:max-w-[760px] h-auto object-contain"
+          />
+
+        </div>
+
+        </div>
+
       </div>
 
       <div className="md:w-1/2 p-6 md:p-12 flex flex-col justify-center mx-auto">
