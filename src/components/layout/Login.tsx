@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import { useLogin, useLoginWithOtp, useRequestLoginOtp } from "@/hooks/useAuth";
+import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
 
 type SignInMode = "password" | "otp";
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const login = useLogin();
   const loginWithOtp = useLoginWithOtp();
   const requestOtp = useRequestLoginOtp();
+  const requestPasswordReset = useRequestPasswordReset();
 
   const [mode, setMode] = useState<SignInMode>("password");
   const [showPwd, setShowPwd] = useState(false);
@@ -24,6 +25,9 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotError, setForgotError] = useState<string | null>(null);
+  const [forgotInfo, setForgotInfo] = useState<string | null>(null);
 
   function pickMode(next: SignInMode) {
     setMode(next);
@@ -95,6 +99,26 @@ export default function LoginPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleForgotSubmit() {
+    setForgotError(null);
+    setForgotInfo(null);
+    const email = forgotEmail.trim() || form.email.trim();
+    if (!email) {
+      setForgotError("Enter your email address.");
+      return;
+    }
+    try {
+      await requestPasswordReset.mutateAsync(email);
+      setForgotInfo("If an account exists for this email, you will receive a reset link shortly.");
+    } catch (err: unknown) {
+      const msg =
+        (err as ApiError)?.message ||
+        (err as Error)?.message ||
+        "Could not send reset link. Try again.";
+      setForgotError(msg);
+    }
   }
 
   return (
@@ -224,12 +248,18 @@ export default function LoginPage() {
                 Remember me
               </label>
 
-              <a
-                onClick={() => setShowForgot(true)}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForgot(true);
+                  setForgotEmail(form.email.trim());
+                  setForgotError(null);
+                  setForgotInfo(null);
+                }}
                 className="text-[16px] text-[#09339B] cursor-pointer"
               >
                 Forgot Password ?
-              </a>
+              </button>
 
               {showForgot && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -240,10 +270,21 @@ export default function LoginPage() {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full border px-3 py-2 rounded mb-4"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      required
                     />
 
-                    <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
-                      Send Reset Link
+                    {forgotError && <p className="text-red-600 text-sm mb-2">{forgotError}</p>}
+                    {forgotInfo && <p className="text-gray-700 text-sm mb-2">{forgotInfo}</p>}
+
+                    <button
+                      type="button"
+                      onClick={handleForgotSubmit}
+                      disabled={requestPasswordReset.isPending}
+                      className="w-full bg-[#09339B] text-white py-2 rounded mb-2 disabled:opacity-60"
+                    >
+                      {requestPasswordReset.isPending ? "Sending..." : "Send Reset Link"}
                     </button>
 
                     <button type="button" onClick={() => setShowForgot(false)} className="w-full text-gray-500">
