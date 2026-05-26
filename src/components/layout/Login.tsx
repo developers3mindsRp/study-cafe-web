@@ -133,7 +133,7 @@ export default function LoginPage() {
 
         <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px" />
         <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
-        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-4 pt-[10px]">
+        <p className="text-[16px] md:text-[24px] text-[#3a3c3e] mb-4 pt-[10px]">
           Sign in to your account to continue learning
         </p>
 
@@ -219,7 +219,7 @@ export default function LoginPage() {
             </div>
 
             <div className="flex justify-between items-center mt-4 pb-5">
-              <label className="flex items-center gap-2 text-[16px] text-[#AFAFAF]">
+              <label className="flex items-center gap-2 text-[16px] text-[#3a3c3e]">
                 <input type="checkbox" />
                 Remember me
               </label>
@@ -341,7 +341,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <p className="mt-4 text-[16px] text-[#AFAFAF] text-center">
+        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-[#09339B]">
             Sign up
