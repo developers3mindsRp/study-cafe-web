@@ -331,8 +331,8 @@ export default function Footer({ footerData }: FooterProps) {
                 disabled={newsletterStatus === 'loading'}
                 className="
                     whitespace-nowrap
-                    w-full md:w-1/2
-                    text-[18px] sm:text-[20px]
+                    w-1/2
+                    text-[18px] sm:text-[20px] mt-2
                     px-4 py-2 sm:px-6 sm:py-3
                     bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
                     rounded-[10px] transition
