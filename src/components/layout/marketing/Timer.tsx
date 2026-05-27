@@ -28,26 +28,26 @@ const Timer_marketing = ({ data }: Props) => {
   const sec = remaining % 60;
 
   return (
-    <section className="container mx-auto px-4 py-8 text-center">
-      <p className="text-[18px] md:text-[22px] font-semibold uppercase mb-4">
+    <section className="container mx-auto px-4 text-center">
+      <p className="text-white text-[20px] xl:text-[40px] font-semibold mb-2 px-12 uppercase ">
         Time is running out. Reserve your seat <span className="text-yellow-400">now!</span>
       </p>
       <div className="flex justify-center gap-4 mb-4">
-        <div className="bg-yellow-400 text-black font-bold px-6 py-4 rounded-lg text-center min-w-[80px]">
-          <div className="text-3xl">{pad(min)}</div>
+        <div className="bg-yellow-400 text-black font-bold px-2 py-4 rounded-lg text-center w-[90px]">
+          <div className="text-[40px] md:text-[40px] font-bold leading-none mb-2">{pad(min)}</div>
           <div className="text-xs">Min</div>
         </div>
-        <div className="bg-yellow-400 text-black font-bold px-6 py-4 rounded-lg text-center min-w-[80px]">
-          <div className="text-3xl">{pad(sec)}</div>
+        <div className="bg-yellow-400 text-black font-bold px-2 py-4 rounded-lg text-center w-[90px]">
+          <div className="text-[40px] md:text-[40px] font-bold leading-none mb-2">{pad(sec)}</div>
           <div className="text-xs">Sec</div>
         </div>
       </div>
-      <p className="text-white mb-8">
+      <p className="text-[24px] mt-4 px-4 mb-10">
         Fee will increase to{" "}
         <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once the
         timer hits <span className="text-yellow-400">ZERO</span>.
       </p>
-      <Expert_marketing data={data} />
+      {/* <Expert_marketing data={data} /> */}
     </section>
   );
 };

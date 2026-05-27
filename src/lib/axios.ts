@@ -17,26 +17,21 @@ import {
 
 // ================= BASE URL =================
 const getApiBaseUrl = (): string => {
-  // When set, talk directly to the real gateway (deployed or local). Avoids Next.js
-  // /api rewrites that proxy every request through the dev server (EMFILE / ECONNRESET).
   const fromEnv = getPublicApiBaseFromEnv();
   if (fromEnv) return fromEnv;
 
   if (typeof window !== 'undefined') {
-    return '/api';
+    throw new Error(
+      'Missing NEXT_PUBLIC_API_BASE_URL in study-cafe-web/.env',
+    );
   }
+
   const fromSsrContext = getServerApiBaseFromContext();
   if (fromSsrContext) return fromSsrContext;
 
-  if (
-    typeof import.meta !== 'undefined' &&
-    (import.meta as any).env?.VITE_API_BASE_URL
-  ) {
-    const url = (import.meta as any).env.VITE_API_BASE_URL as string;
-    return url.replace(/\/?$/, '') + (url.endsWith('/api') ? '' : '/api');
-  }
-
-  return 'http://localhost:3000/api';
+  throw new Error(
+    'Missing NEXT_PUBLIC_API_BASE_URL in study-cafe-web/.env',
+  );
 };
 
 // ================= AXIOS INSTANCE =================

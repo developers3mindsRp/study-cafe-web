@@ -458,7 +458,7 @@ export default function Premium_user({
           </h2>
 
           <div className="flex items-start gap-4">
-            <div className="rounded-[10px] p-2 md:p-3 bg-[#F9F9FB] w-full">
+            <div className="rounded-[10px] p-2 md:p-3 bg-[#eff1fa] w-full">
               <div className="flex flex-row items-center gap-6 md:gap-4 ml-6 pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -537,7 +537,7 @@ export default function Premium_user({
             My Recent Articles
           </h3>
 
-          <ul className="space-y-4 text-[#09339B] text-[15px] md:text-[20px] font-medium">
+          <ul className="space-y-4 text-[#09339B] text-[15px] md:text-[16px] font-medium">
             {authorRecent.map((row) => (
               <li
                 key={row.id}

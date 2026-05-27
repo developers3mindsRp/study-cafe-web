@@ -11,92 +11,125 @@ interface Props {
 
 function youtubeEmbed(url: string): string | null {
   if (!url?.trim()) return null;
+
   let id = "";
+
   if (url.includes("youtu.be/")) {
     id = url.split("youtu.be/")[1]?.split(/[?&#]/)[0] ?? "";
   } else if (url.includes("youtube.com")) {
     const m = url.match(/[?&]v=([^&]+)/);
     id = m?.[1] ?? url.split("/embed/")[1]?.split(/[?&#]/)[0] ?? "";
   }
+
   if (!id) return null;
+
   return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&playsinline=1&rel=0`;
 }
 
-function TestimonialCard({
-  item,
-  onPlay,
-}: {
-  item: MediaTestimonial;
-  onPlay: (embed: string) => void;
-}) {
-  const isVideo = item.mediaType === "video" && !!item.videoUrl?.trim();
-  const embed = isVideo ? youtubeEmbed(item.videoUrl!) : null;
-
-  return (
-    <div className="relative h-[280px] md:h-[320px] min-w-[220px] md:min-w-[260px] flex-shrink-0 rounded-2xl overflow-hidden bg-[#1a1a1a]">
-      <img
-        src={item.mediaUrl}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-90"
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="relative z-10 flex h-full items-center justify-center p-3">
-        <div className="relative h-[92%] max-h-[280px] aspect-[9/16] rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
-          <img
-            src={item.mediaUrl}
-            alt={item.title || "Testimonial"}
-            className="w-full h-full object-cover"
-          />
-          <Image
-            src="/images/studycafe_logo.svg"
-            alt="StudyCafe"
-            width={72}
-            height={20}
-            className="absolute top-2 right-2 h-4 w-auto opacity-95"
-          />
-          {isVideo && embed ? (
-            <button
-              type="button"
-              onClick={() => onPlay(embed)}
-              className="absolute inset-0 flex items-center justify-center bg-black/20 transition hover:bg-black/35"
-              aria-label="Play testimonial video"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/75 text-white shadow-lg">
-                <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-current" aria-hidden>
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </span>
-            </button>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function MediaTestimonials({ items, variant = "marketing" }: Props) {
+export default function MediaTestimonials({
+  items,
+  variant = "marketing",
+}: Props) {
   const [activeEmbed, setActiveEmbed] = useState<string | null>(null);
 
   if (!items.length) return null;
 
   const isCourse = variant === "course";
+
   const headingClass = isCourse
-    ? "text-[20px] md:text-[30px] font-semibold mb-6 md:mb-8 text-gray-900"
-    : "text-[30px] md:text-[40px] font-semibold mb-6 md:mb-8 text-white";
+    ? "text-[20px] md:text-[30px] font-semibold mb-6 md:mb-8 text-gray-900 text-center uppercase"
+    : "text-[30px] md:text-[40px] font-semibold mb-6 md:mb-8 text-white text-center uppercase";
 
   return (
-    <section className={isCourse ? "container mx-auto px-4 py-6 md:py-12" : "container mx-auto px-4 py-8"}>
+    <section
+      className=""
+    >
       <h2 className={headingClass}>Testimonials</h2>
-      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin">
-        {items.map((item) => (
-          <div key={item.id} className="snap-start">
-            <TestimonialCard item={item} onPlay={setActiveEmbed} />
-          </div>
-        ))}
+
+      {/* Mobile Slider */}
+      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden px-2 scrollbar-hide mb-12">
+        {items.map((item) => {
+          const isVideo =
+            item.mediaType === "video" && !!item.videoUrl?.trim();
+
+          const embed = isVideo
+            ? youtubeEmbed(item.videoUrl || "")
+            : null;
+
+          return (
+            <div
+              key={item.id}
+              className="w-[250px] snap-center flex-shrink-0 text-left"
+            >
+              <div className="mt-6 relative flex items-center justify-between">
+                {/* IMAGE */}
+                <img
+                  src={item.mediaUrl}
+                  alt={item.title || ""}
+                  className="object-cover w-full h-[210px] rounded-lg"
+                />
+
+                {/* PLAY BUTTON ONLY FOR VIDEO */}
+                {isVideo && embed && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-lg">
+                    <button
+                      onClick={() => setActiveEmbed(embed)}
+                      className="bg-black w-12 h-12 flex items-center justify-center rounded-full"
+                    >
+                      <span className="text-white text-[20px]">▶</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {activeEmbed ? (
+      {/* Desktop Marquee */}
+      <div className="hidden md:block overflow-hidden relative">
+        <div className="flex gap-8 animate-marquee hover:[animation-play-state:paused] w-max">
+          {[...items, ...items].map((item, index) => {
+            const isVideo =
+              item.mediaType === "video" && !!item.videoUrl?.trim();
+
+            const embed = isVideo
+              ? youtubeEmbed(item.videoUrl || "")
+              : null;
+
+            return (
+              <div
+                key={index}
+                className="md:min-w-[350px] xl:min-w-[460px] relative"
+              >
+                <div className="mt-6 relative flex items-center justify-between">
+                  {/* IMAGE */}
+                  <img
+                    src={item.mediaUrl}
+                    alt={item.title || ""}
+                    className="object-cover w-full h-[280px] rounded-lg"
+                  />
+
+                  {/* PLAY BUTTON ONLY FOR VIDEO */}
+                  {isVideo && embed && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-lg">
+                      <button
+                        onClick={() => setActiveEmbed(embed)}
+                        className="bg-black w-16 h-16 flex items-center justify-center rounded-full"
+                      >
+                        <span className="text-white text-[30px]">▶</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* VIDEO MODAL */}
+      {activeEmbed && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
           role="dialog"
@@ -114,6 +147,7 @@ export default function MediaTestimonials({ items, variant = "marketing" }: Prop
             >
               Close
             </button>
+
             <iframe
               src={activeEmbed}
               title="Testimonial video"
@@ -123,7 +157,32 @@ export default function MediaTestimonials({ items, variant = "marketing" }: Prop
             />
           </div>
         </div>
-      ) : null}
+      )}
+
+      {/* CUSTOM CSS */}
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </section>
   );
 }

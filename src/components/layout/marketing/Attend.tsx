@@ -21,14 +21,14 @@ const Attend_marketing = ({ data }: Props) => {
 
   return (
     <section className="container mx-auto px-4 py-8">
-      <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">Who Can Attend?</h2>
-      <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+      <h2 className="text-[20px] md:text-[40px] uppercase text-center font-semibold">Who Can Attend?</h2>
+      <div className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto py-4 ">
         {items.map((item, index) => (
           <div
             key={index}
             className="flex items-center gap-3 bg-white rounded-lg p-4 text-black"
           >
-            <img src="/images/tick1.png" alt="" width={32} height={32} />
+            <img src="/images/tick1.png" alt="" width={45} height={45} />
             <span className="font-medium">{item}</span>
           </div>
         ))}

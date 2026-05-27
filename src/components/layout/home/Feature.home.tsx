@@ -36,7 +36,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
         </div>
         <div className="p-4 flex flex-col">
           {c.language && (
-            <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-[#6a6969] text-sm">
               <span className="flex items-center gap-1">
                 <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
               </span>
@@ -44,13 +44,13 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           )}
           <h3 className="text-[20px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
           {enrolled && (
-            <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
+            <div className="flex items-center gap-1 text-[#6a6969]text-sm">
               <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
             </div>
           )}
           <div className="flex justify-between items-center mt-4">
             <div>
-              {newPrice && <span className="line-through text-[#AFAFAF] text-[15px]">{oldPrice}</span>}
+              {newPrice && <span className="line-through text-[#6a6969] text-[15px]">{oldPrice}</span>}
               <span className="text-[#3a3c3e] font-normal text-[15px] ml-2">{newPrice ?? oldPrice}</span>
             </div>
             <Link href={href}>
@@ -74,16 +74,16 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
       </div>
       <div className="p-4 flex flex-col flex-1">
         {c.language && (
-          <div className="flex flex-wrap items-center gap-4 text-[#AFAFAF] text-sm">
+          <div className="flex flex-wrap items-center gap-4 text-[#6a6969] text-sm">
             <span className="flex items-center gap-1">
-              <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
+              <img src="/images/eng-dark.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
             </span>
           </div>
         )}
         <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
         {enrolled && (
-          <div className="flex items-center gap-1 text-[#AFAFAF] text-sm">
-            <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
+          <div className="flex items-center gap-1 text-[#6a6969] text-sm">
+            <img src="/images/user-dark.svg" alt="" width="20" height="20" />{enrolled} students
           </div>
         )}
         <div className="flex justify-between items-center mt-4">
@@ -163,7 +163,7 @@ export default function FeaturedCourses() {
           </div>
 
           {/* Mobile: horizontal scroll */}
-          <div className="sm:hidden w-full relative px-2 w-full md:w-[65%]">
+          <div className="sm:hidden w-full relative px-2  md:w-[65%]">
             <div
               ref={catRef}
               className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth -ml-1"

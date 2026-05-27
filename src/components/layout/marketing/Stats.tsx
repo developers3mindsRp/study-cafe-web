@@ -24,26 +24,30 @@ const Stats_marketing = ({ data }: Props) => {
   const { stats } = data;
 
   return (
-    <section className="container mx-auto px-4 py-10 md:py-14">
-      <div className="mx-auto max-w-5xl rounded-full bg-[#1685FF] px-6 py-8 md:px-14 md:py-10">
+    <section className=" py-4 md:py-4 px-4 md:w-[850px] mx-auto">
+      <div className="mx-auto max-w-5xl rounded-full bg-[#09339B] px-6 py-6 md:px-14 md:py-8">
         <div className="grid grid-cols-3 gap-2 md:gap-4">
           {STAT_ITEMS.map(({ key, label }) => (
             <div key={key} className="flex flex-col items-center justify-center px-1 text-center text-white sm:px-3">
               <p className="text-[22px] font-bold leading-none sm:text-[28px] md:text-[36px] lg:text-[40px]">
                 {formatStatValue(stats[key])}
               </p>
-              <p className="mt-2 text-[10px] font-normal leading-snug sm:text-xs md:text-sm md:mt-3">
+              <p className="mt-2 text-[14px] font-normal leading-snug sm:text-xs md:text-[16px] md:mt-3">
                 {label}
               </p>
             </div>
           ))}
         </div>
       </div>
+      <div className="mx-auto mt-12 md:ml-12">
+         <p className="text-2xl md:text-[40px] font-medium leading-snug  px-12 md:px-2 text-center mb-8">
+          <span className="text-[#FFCC00]">REGISTER</span>{" "}
+          <span className="text-white">BEFORE TODAY&apos;S MIDNIGHT</span>
+        </p>
 
-      <p className="mt-8 text-center text-base font-bold uppercase tracking-wide sm:text-lg md:mt-10 md:text-[22px] lg:text-[26px]">
-        <span className="text-[#FFCC00]">REGISTER</span>{" "}
-        <span className="text-white">BEFORE TODAY&apos;S MIDNIGHT</span>
-      </p>
+      </div>
+
+     
     </section>
   );
 };

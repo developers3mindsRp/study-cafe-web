@@ -44,7 +44,7 @@ function BlogCard({
       className={
         isMobile
           ? "min-w-[320px] snap-center rounded-xl shadow-md border bg-white overflow-hidden text-left"
-          : "rounded-xl shadow-md border bg-white overflow-hidden text-left min-w-[500px]"
+          : "rounded-xl shadow-md border bg-white overflow-hidden text-left w-full max-w-[500px]"
       }
     >
       <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>
@@ -56,16 +56,16 @@ function BlogCard({
 
       <div className="p-4">
         <div
-          className={`flex items-center gap-2 text-[#AFAFAF] mb-3 ${
+          className={`flex items-center gap-2 text-[#6a6969] mb-3 ${
             isMobile ? "text-[12px]" : "md:text-[14px] xl:text-[16px]"
           }`}
         >
           <span className="flex gap-1">
-            <img src="/images/user.svg" alt="" width={isMobile ? 10 : 20} height={isMobile ? 10 : 20} />
+            <img src="/images/user-black.svg" alt="" width={isMobile ? 10 : 20} height={isMobile ? 10 : 20} />
             {author}
           </span>
           <span className="flex gap-1 md:gap-2">
-            <img src="/images/calendar.svg" alt="" width={isMobile ? 10 : 20} height={10} />
+            <img src="/images/calendar-black.svg" alt="" width={isMobile ? 10 : 20} height={10} />
             {date}
           </span>
         </div>

@@ -114,7 +114,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
                       ))}
                     </div>
 
-                    <p className="text-[#696969] text-[14px] mt-2 leading-relaxed min-h-[117px]">
+                    <p className="text-[#3a3c3e] text-[14px] mt-2 leading-relaxed min-h-[117px]">
                       {item.quote}
                     </p>
 

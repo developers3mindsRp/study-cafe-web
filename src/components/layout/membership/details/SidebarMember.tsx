@@ -308,51 +308,113 @@ console.log(appliedCoupon,"appliedCoupon")
 
 
   return (
-    <div className="w-full max-w-sm mx-auto">
+    <>
+    
+  
 
       {
-        plan.canUpgrade == false ?
-        
-          <div className="mb-6 rounded-2xl border border-[#C7D7FE] bg-gradient-to-r from-[#EEF4FF] to-[#F8FBFF] p-5 shadow-sm">
+         plan.requiresAdminAction == true &&  plan.canUpgrade == false ?
+         <div className="mb-6 min-h-[420px] rounded-3xl bg-gradient-to-br from-[#EEF4FF] via-white to-[#F5F9FF] p-8 shadow-[0_10px_40px_rgba(9,51,155,0.08)] border border-[#DCE7FF] flex items-center justify-center relative overflow-hidden group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(9,51,155,0.15)]">
             
-            <div className="flex items-start gap-4">
+            {/* Background Blur Effects */}
+            <div className="absolute top-0 right-0 h-40 w-40 bg-[#09339B]/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 h-32 w-32 bg-blue-200/30 rounded-full blur-2xl"></div>
+
+            <div className="relative z-10 text-center max-w-[500px]">
               
               {/* Icon */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#09339B] text-white shrink-0">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
+              <div className="relative inline-flex items-center justify-center mb-6">
+                <div className="absolute inset-0 rounded-full bg-[#09339B]/20 animate-ping"></div>
 
-              {/* Content */}
-              <div className="flex-1">
-                <h3 className="text-[18px] font-semibold text-[#09339B]">
-                  Current Active Plan
-                </h3>
-
-                <p className="mt-1 text-[15px] text-[#4B5563] leading-6">
-                  You are already subscribed to this membership plan.
-                </p>
-
-                <div className="mt-4 inline-flex items-center rounded-full bg-white border border-[#D6E4FF] px-4 py-2 text-sm font-medium text-[#09339B]">
-                  No upgrade required
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#09339B] to-[#1D4ED8] text-white shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
                 </div>
               </div>
+
+              {/* Heading */}
+            
+
+              {/* Message */}
+              <p className="text-[15px] md:text-[17px] text-[#4B5563] leading-7 font-normal">
+                {plan.message}
+              </p>
+
+              {/* Optional Button */}
+             <a href="/plans">
+                <button className="mt-8 px-6 py-3 rounded-full bg-[#09339B] text-white text-sm font-medium shadow-md hover:bg-[#0A2B80] transition-all duration-300 hover:scale-105">
+                  Continue
+                </button>
+              </a>
+            </div>
+          </div>
+
+        :
+
+        plan.canUpgrade == false ?
+        
+          <div className="mb-6 min-h-[420px] rounded-3xl bg-gradient-to-br from-[#EEF4FF] via-white to-[#F5F9FF] p-8 shadow-[0_10px_40px_rgba(9,51,155,0.08)] border border-[#DCE7FF] flex items-center justify-center relative overflow-hidden group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(9,51,155,0.15)]">
+            
+            {/* Background Blur Effects */}
+            <div className="absolute top-0 right-0 h-40 w-40 bg-[#09339B]/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 h-32 w-32 bg-blue-200/30 rounded-full blur-2xl"></div>
+
+            <div className="relative z-10 text-center max-w-[500px]">
+              
+              {/* Icon */}
+              <div className="relative inline-flex items-center justify-center mb-6">
+                <div className="absolute inset-0 rounded-full bg-[#09339B]/20 animate-ping"></div>
+
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#09339B] to-[#1D4ED8] text-white shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Heading */}
+            
+
+              {/* Message */}
+              <p className="text-[15px] md:text-[17px] text-[#4B5563] leading-7 font-normal">
+                {plan.message}
+              </p>
+
+              {/* Optional Button */}
+              <a href="/plans">
+                <button className="mt-8 px-6 py-3 rounded-full bg-[#09339B] text-white text-sm font-medium shadow-md hover:bg-[#0A2B80] transition-all duration-300 hover:scale-105">
+                  Continue
+                </button>
+              </a>
+              
             </div>
           </div>
        
       :
+    <div className="w-full max-w-sm mx-auto">
       <div className="bg-[#F9F9FB] rounded-xl p-6">
         {/* Price */}
         <div className="text-center">
@@ -566,7 +628,9 @@ console.log(appliedCoupon,"appliedCoupon")
           {paymentLoading ? "Processing…" : "Buy Membership"}
         </button>
       </div>
+       </div>
       }
-    </div>
+   
+    </>
   );
 }

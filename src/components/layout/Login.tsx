@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import { useLogin, useLoginWithOtp, useRequestLoginOtp } from "@/hooks/useAuth";
+import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
 
 type SignInMode = "password" | "otp";
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const login = useLogin();
   const loginWithOtp = useLoginWithOtp();
   const requestOtp = useRequestLoginOtp();
+  const requestPasswordReset = useRequestPasswordReset();
 
   const [mode, setMode] = useState<SignInMode>("password");
   const [showPwd, setShowPwd] = useState(false);
@@ -24,6 +25,9 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotError, setForgotError] = useState<string | null>(null);
+  const [forgotInfo, setForgotInfo] = useState<string | null>(null);
 
   function pickMode(next: SignInMode) {
     setMode(next);
@@ -97,29 +101,90 @@ export default function LoginPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  async function handleForgotSubmit() {
+    setForgotError(null);
+    setForgotInfo(null);
+    const email = forgotEmail.trim() || form.email.trim();
+    if (!email) {
+      setForgotError("Enter your email address.");
+      return;
+    }
+    try {
+      await requestPasswordReset.mutateAsync(email);
+      setForgotInfo("If an account exists for this email, you will receive a reset link shortly.");
+    } catch (err: unknown) {
+      const msg =
+        (err as ApiError)?.message ||
+        (err as Error)?.message ||
+        "Could not send reset link. Try again.";
+      setForgotError(msg);
+    }
+  }
+
   return (
     <div className="h-screen flex flex-col md:flex-row   mx-auto  ">
-      <div className="hidden md:w-1/2 bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat  text-white p-8 md:flex flex-col justify-center">
-       <div className="relative border border-white/20 xl:w-[548px] h-auto xl:h-[280px] rounded-[35px] text-center mx-auto overflow-hidden bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.4)]">
-      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
-          <div className="relative z-10">
+        <div className="hidden md:flex md:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#0A2E8A] via-[#09339B] to-[#061B52] px-8 py-10 flex-col ">
+
+        {/* Gradient Blur Effects */}
+        <div className="absolute top-[-120px] left-[-80px] w-[300px] h-[300px] bg-blue-400/20 rounded-full blur-3xl"></div>
+
+        <div className="absolute bottom-[-100px] right-[-100px] w-[320px] h-[320px] bg-cyan-400/20 rounded-full blur-3xl"></div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-[22%] right-[20%] w-5 h-5 rounded-full bg-purple-400"></div>
+
+        <div className="absolute bottom-[25%] left-[18%] w-6 h-6 rounded-full bg-cyan-300"></div>
+
+        {/* Content Wrapper */}
+        <div className="relative z-10 flex flex-col h-full w-full px-4 justify-between">
+
+          {/* TOP CONTENT */}
+          <div>
+
+            {/* Logo */}
             <img
               src="/images/study-logo.svg"
-              alt=""
-              width="221px"
-              height="250px"
-              className="mx-auto mt-[11px]"
+              alt="StudyCafe"
+              className="w-[200px] mb-8"
             />
-            <h1 className="text-[30px] md:text-4xl font-bold mb-4 pt-[12px] md:pb-[18px]">
-              Start Your Learning <br />
+
+            {/* Heading */}
+            <h1 className="text-[42px] xl:text-[54px] leading-[52px] xl:leading-[64px] font-bold text-white ">
+
+              Start Your
+
+              <span className="bg-gradient-to-r from-[#60A5FA] via-[#93C5FD] to-[#FFFFFF] bg-clip-text text-transparent ml-4">
+                Learning
+              </span>
+
+              <br />
+
               Journey
+
             </h1>
-            <p className="text-[18px] md:text-[24px] pb-2 ">
-              Access thousands of courses, get certified, <br className="hidden" /> and advance your
-              career with StudyCafe{" "}
+
+            {/* Description */}
+            <p className="text-white/80 text-[20px] leading-[34px] mt-7 max-w-[580px]">
+              Access thousands of courses, get certified,
+              and advance your career with StudyCafe.
             </p>
+
           </div>
+
+          {/* ILLUSTRATION */}
+  
+        <div className="relative z-10 flex justify-center items-end flex-1 pt-6">
+
+          <img
+            src="/images/bg-image.png"
+            alt=""
+            className="w-full max-w-[650px] xl:max-w-[760px] h-auto object-contain"
+          />
+
         </div>
+
+        </div>
+
       </div>
 
       <div className="xl:w-1/3 p-6 flex flex-col justify-center md:mx-auto relative">
@@ -133,7 +198,7 @@ export default function LoginPage() {
 
         <img src="/images/studycafe_logo.svg" alt="" width="200px" height="200px" />
         <h2 className="text-[30px] md:text-[40px] font-semibold  pt-[8px]">Welcome</h2>
-        <p className="text-[16px] md:text-[24px] text-[#AFAFAF] mb-4 pt-[10px]">
+        <p className="text-[16px] md:text-[24px] text-[#3a3c3e] mb-4 pt-[10px]">
           Sign in to your account to continue learning
         </p>
 
@@ -219,17 +284,23 @@ export default function LoginPage() {
             </div>
 
             <div className="flex justify-between items-center mt-4 pb-5">
-              <label className="flex items-center gap-2 text-[16px] text-[#AFAFAF]">
+              <label className="flex items-center gap-2 text-[16px] text-[#3a3c3e]">
                 <input type="checkbox" />
                 Remember me
               </label>
 
-              <a
-                onClick={() => setShowForgot(true)}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForgot(true);
+                  setForgotEmail(form.email.trim());
+                  setForgotError(null);
+                  setForgotInfo(null);
+                }}
                 className="text-[16px] text-[#09339B] cursor-pointer"
               >
                 Forgot Password ?
-              </a>
+              </button>
 
               {showForgot && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -240,10 +311,21 @@ export default function LoginPage() {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full border px-3 py-2 rounded mb-4"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      required
                     />
 
-                    <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
-                      Send Reset Link
+                    {forgotError && <p className="text-red-600 text-sm mb-2">{forgotError}</p>}
+                    {forgotInfo && <p className="text-gray-700 text-sm mb-2">{forgotInfo}</p>}
+
+                    <button
+                      type="button"
+                      onClick={handleForgotSubmit}
+                      disabled={requestPasswordReset.isPending}
+                      className="w-full bg-[#09339B] text-white py-2 rounded mb-2 disabled:opacity-60"
+                    >
+                      {requestPasswordReset.isPending ? "Sending..." : "Send Reset Link"}
                     </button>
 
                     <button type="button" onClick={() => setShowForgot(false)} className="w-full text-gray-500">

@@ -141,14 +141,14 @@ export default function Footer({ footerData }: FooterProps) {
                 
                 {appLinks?.googlePlay && (
                   <a href={appLinks.googlePlay} target="_blank" rel="noopener noreferrer" >
-                    <img src="/images/google-play.png" alt="Download on Google Play" width="130" height="40" />
+                    <img src="/images/google-play.svg" alt="Download on Google Play" width="130" height="40" />
                   </a>
                 )}
               
                
                 {appLinks?.appStore && (
                   <a href={appLinks.appStore} target="_blank" rel="noopener noreferrer" >
-                       <img src="/images/app-store.png" alt="Download on app store" width="130" height="40" />
+                       <img src="/images/app-store.svg" alt="Download on app store" width="130" height="40" />
                   </a>
                 )}
               
@@ -331,8 +331,8 @@ export default function Footer({ footerData }: FooterProps) {
                 disabled={newsletterStatus === 'loading'}
                 className="
                     whitespace-nowrap
-                    w-full
-                    text-[18px] sm:text-[20px]
+                    w-1/2
+                    text-[18px] sm:text-[20px] mt-2
                     px-4 py-2 sm:px-6 sm:py-3
                     bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
                     rounded-[10px] transition

@@ -85,15 +85,15 @@ export default function Earning() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-          <h2 className="xl:text-[20px] text-[#AFAFAF]">Total Order</h2>
+          <h2 className="xl:text-[20px] text-[#6a6969]">Total Order</h2>
           <h3 className="font-bold">{dashboard?.totalOrders ?? 0}</h3>
         </div>
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-          <h2 className="xl:text-[20px] text-[#AFAFAF]">Order Value</h2>
+          <h2 className="xl:text-[20px] text-[#6a6969]">Order Value</h2>
           <h3 className="font-bold">₹{dashboard?.totalOrderValue?.toLocaleString("en-IN") ?? "0"}</h3>
         </div>
         <div className="border border-[#E5E7EB] px-4 p-2 rounded-lg">
-            <h2 className="xl:text-[20px] text-[#AFAFAF]">Total Commission</h2>
+            <h2 className="xl:text-[20px] text-[#6a6969]">Total Commission</h2>
             <h3 className="font-bold">₹{dashboard?.totalCommission?.toLocaleString("en-IN") ?? "0"}</h3>
         </div>
       </div>

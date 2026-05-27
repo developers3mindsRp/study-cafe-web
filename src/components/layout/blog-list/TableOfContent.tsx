@@ -61,7 +61,7 @@ export default function TableOfContents({
         Table of Contents
       </h3>
 
-      <ul className="space-y-2 list-decimal text-[#6c6c6c]">
+      <ul className="space-y-2 list-decimal text-[#3a3c3e]  px-4">
         {toc.map((item) => (
           <li
             key={item.id}
