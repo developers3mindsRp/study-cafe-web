@@ -33,6 +33,7 @@ export interface Course {
   slug?: string | null;
   description: string;
   thumbnail: string;
+  thumbnail_url?: string | null;
   price: number;
   discountPrice?: number;
   category: string;
@@ -46,6 +47,7 @@ export interface Course {
   };
   rating?: number;
   totalStudents: number;
+  totalLessons?: number;
   featured: boolean;
   status: 'draft' | 'published' | 'archived';
   createdAt: string;
@@ -117,6 +119,8 @@ export interface UserCourse extends Purchase {
   lastAccessedAt?: string;
   completedLessons: string[];
   completedAt?: string;
+  /** True when course was admin-granted (no paid order). From GET /user/courses. */
+  isAdminGranted?: boolean;
 }
 
 // Progress tracking
