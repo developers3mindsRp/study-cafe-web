@@ -463,10 +463,13 @@ export default function Premium_user({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={
-                    resolveBlogImageSrc(
-                      authorSpotlight?.profile_pic_url?.trim(),
-                    ) || "/images/author.png"
-                  }
+                      resolveBlogImageSrc(
+                        authorSpotlight?.profile_pic_url?.trim(),
+                      ) || "/images/defultuser.png"
+                    }
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/defultuser.png";
+                    }}
                   width={54}
                   height={54}
                   alt=""

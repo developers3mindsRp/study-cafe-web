@@ -99,7 +99,7 @@ useEffect(() => {
 
     <>
         {
-          course.learn_outcomes &&
+          tabs &&
 
         <div className={`${isSticky ? "hidden md:block md:sticky top-20 z-50" : ""} border-b bg-white mt-4`}>
           <div className="container mx-auto px-4">

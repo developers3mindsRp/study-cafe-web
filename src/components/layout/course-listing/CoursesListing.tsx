@@ -25,15 +25,16 @@ function CourseCard({ c }: { c: PublicCourse }) {
   const newPrice = formatPrice(c.sale_price);
 
   return (
+  <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden">
-      <Link href={href}><div className="relative w-full h-[200px] xl:h-[243px]">
+     <div className="relative w-full h-[200px] xl:h-[243px]">
         <Image src={thumbnail} alt={c.title} fill className="object-cover" />
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
             <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
           </span>
         )}
-      </div></Link> 
+      </div>
       <div className="p-3">
         {c.language && (
           <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px]">
@@ -43,9 +44,9 @@ function CourseCard({ c }: { c: PublicCourse }) {
             </span>
           </div>
         )}
-         <Link href={href}><h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
+         <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
           {c.title}
-        </h3></Link>
+        </h3>
         {enrolled && (
           <div className="flex items-center gap-2 text-[#6a6969] text-[14px] md:text-[16px]">
             <img src="/images/user-dark.svg" alt="" width="20" height="20" />
@@ -61,12 +62,14 @@ function CourseCard({ c }: { c: PublicCourse }) {
               {newPrice ?? oldPrice}
             </span>
           </div>
-          <Link href={href}>
+        
             <button className="bg-[#09339B] text-white p-4 md:px-2 xl:px-4 py-2 rounded-md">View Course</button>
-          </Link>
+         
         </div>
       </div>
+    
     </div>
+  </Link> 
   );
 }
 

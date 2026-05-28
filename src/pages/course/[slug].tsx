@@ -63,13 +63,10 @@ export default function CoursePage({
       </div>
 
       <BannerSection course={course} batches={batches} />
-      {
-        course?.learn_outcomes &&
-        <>
-          <CourseTabs course={course} />
+        <CourseTabs course={course} />
+      
            <CourseOverview course={course} batches={batches} />
-        </>
-      }
+        
       {
         course?.feedback &&
         <ReviewSection course={course} />

@@ -72,10 +72,12 @@ export default function Blog_list({
       ) : (
         <div className={`grid grid-cols-1 gap-6 ${hasListingAd ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
           {articles.map((b) => (
+          <Link href={articleHref(b.slug, b.id)}>
             <div
               key={b.id}
               className="overflow-hidden rounded-xl border bg-white text-left shadow-md"
             >
+            
               <div className="relative w-full xl:h-[243px]">
                 <img
                   src={b.cover_image_url || b.thumbnail_url || "/images/b1.jpg"}
@@ -89,6 +91,7 @@ export default function Blog_list({
                   </span>
                 )}
               </div>
+             
 
               <div className="p-3 xl:p-4">
                 <div className="mb-3 flex items-center gap-2 text-[#6a6969] md:gap-2 xl:text-[16px]">
@@ -101,19 +104,22 @@ export default function Blog_list({
                     {formatDate(b.published_at)}
                   </span>
                 </div>
+              
+                  <h3 className="mb-4 line-clamp-2 text-[16px] font-medium leading-tight text-[#252525] md:text-[20px] xl:text-[26px]">
+                    {b.title}
+                  </h3>
+               
 
-                <h3 className="mb-4 line-clamp-2 text-[16px] font-medium leading-tight text-[#252525] md:text-[20px] xl:text-[26px]">
-                  {b.title}
-                </h3>
-
-                <Link href={articleHref(b.slug, b.id)}>
+            
                   <button className="flex items-center gap-2 rounded-md bg-[#09339B] px-4 py-2 text-sm text-white hover:bg-blue-700">
                     Read More
                     <img src="/images/arrow-left.svg" alt="" />
                   </button>
-                </Link>
+               
               </div>
+               
             </div>
+          </Link>
           ))}
         </div>
       )}
