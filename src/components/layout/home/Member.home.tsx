@@ -87,7 +87,7 @@ export default function MembershipPricing({ memberships: initialData }: Membersh
           {/* Mobile slider */}
           <div
             ref={containerRef}
-            className="flex gap-8 overflow-x-auto overflow-y-hidden  md:hidden mt-4 pb-4 scrollbar-hide pt-0 pl-6"
+            className="flex gap-8 overflow-x-auto overflow-y-hidden  md:hidden mt-4 pb-4 scrollbar-hide pt-0 pl-6 px-6"
           >
             {plans.map((plan) => (
               <PlanCard
@@ -142,7 +142,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
     const features = normalizeFeatures(plan.features);
     const [showAll, setShowAll] = useState(false);
-    const visibleFeatures = showAll ? features : features.slice(0, 10);
+    const visibleFeatures = showAll ? features : features.slice(0, 6);
     const [showPopup, setShowPopup] = useState(false);
 
 
@@ -150,7 +150,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
       return (
         <div
           ref={ref}
-          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl  min-h-[480px] p-2 `}
+          className={`w-[320px] snap-center flex-shrink-0 relative rounded-[6px] overflow-hidden bg-white shadow-xl  min-h-[480px] p-2  `}
         >
           {highlight && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[#09339B] text-[16px] font-bold px-4 py-1">
@@ -214,13 +214,13 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                     />
                   </span>
 
-                  <p className="text-md">{f}</p>
+                  <p className="text-md text-[#3a3c3e]">{f}</p>
                 </li>
               ))}
             </ul>
 
            
-            {features.length > 10 && (
+            {features.length > 6 && (
               <div className="px-6 pb-6">
                 <button
                   onClick={() => setShowPopup(true)}
@@ -261,7 +261,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                           />
                         </span>
 
-                        <p className="text-md text-gray-700">{f}</p>
+                        <p className="text-md text-[#3a3c3e]">{f}</p>
                       </li>
                     ))}
                   </ul>

@@ -1,10 +1,11 @@
 import CourseCard from "@/components/CourseCard";
-import { useUserPurchases } from "@/hooks/usePurchases";
+import { useUserPurchases, useUserCourses } from "@/hooks/usePurchases";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import { isUserCourseOrderPurchase } from "@/utils/purchaseGuards";
 import type { MyCourseCardModel } from "@/components/CourseCard";
+import type { UserCourse } from "@/types/models.types";
 
-function purchaseToCard(p: any): MyCourseCardModel {
+function purchaseToCard(p: UserCourse): MyCourseCardModel {
   const c = p.course || {};
   return {
     image:
@@ -20,10 +21,23 @@ function purchaseToCard(p: any): MyCourseCardModel {
 }
 
 export default function MyCoursesSection() {
-  const { data: purchasesRaw, isLoading, error: errP } = useUserPurchases();
+  const { data: purchasesRaw, isLoading: loadingPurchases, error: errP } = useUserPurchases();
+  const { data: userCoursesRaw, isLoading: loadingCourses } = useUserCourses();
 
-  /** Only direct course purchases — not membership plan orders (same API). */
+  const isLoading = loadingPurchases || loadingCourses;
+
+  // Paid course purchases (excludes membership plan orders)
   const purchases = (purchasesRaw ?? []).filter(isUserCourseOrderPurchase);
+
+  // courseIds already covered by paid purchases — avoid duplicates
+  const purchasedCourseIds = new Set(purchases.map((p) => String(p.courseId)));
+
+  // Admin-granted courses from /user/courses that have no paid order
+  const adminGranted = (userCoursesRaw ?? []).filter(
+    (c) => c.isAdminGranted && !purchasedCourseIds.has(String(c.courseId))
+  );
+
+  const allCourses = [...purchases, ...adminGranted];
 
   return (
     <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
@@ -42,15 +56,15 @@ export default function MyCoursesSection() {
         <div className="text-center py-8 text-red-500">Could not load purchases.</div>
       )}
 
-      {!isLoading && !errP && purchases.length === 0 && (
+      {!isLoading && !errP && allCourses.length === 0 && (
         <div className="text-center py-8 text-gray-400">
           You haven&apos;t purchased any courses yet.
         </div>
       )}
 
-      {!isLoading && purchases.length > 0 && (
+      {!isLoading && allCourses.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-          {purchases.map((p, i) => (
+          {allCourses.map((p, i) => (
             <CourseCard key={p.courseId ?? i} course={purchaseToCard(p)} />
           ))}
         </div>

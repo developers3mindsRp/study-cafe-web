@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
+import { getApiServerOrigin } from "@/config/env";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 interface CourseOverviewProps {
   course?: CoursePublicDetail | null;
@@ -52,10 +54,9 @@ const FALLBACK_BONUSES = [
 function resolveImageUrl(path?: string | null): string {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  const base =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
-  // Strip the trailing "/api" segment to get the server root
-  const serverRoot = base.replace(/\/api\/?$/, "");
+  const fromEnv = resolveApiAssetUrl(path);
+  if (fromEnv !== path.trim()) return fromEnv;
+  const serverRoot = getApiServerOrigin();
   return `${serverRoot}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
@@ -276,7 +277,7 @@ export default function CourseOverview({
                 <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
                   Bonus {index + 1}
                 </span>
-                <div className="flex items-start items-center gap-3 mt-4">
+                <div className="flex items-center gap-3 mt-4">
                   <img
                     src={resolveImageUrl(bonus.image)}
                     alt=""

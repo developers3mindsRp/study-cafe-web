@@ -7,6 +7,7 @@ import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
 import { useUserPurchases } from "@/hooks/usePurchases";
 import { getToken } from "@/utils/auth.utils";
 import { isUserCourseOrderPurchase } from "@/utils/purchaseGuards";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
@@ -72,15 +73,7 @@ const FALLBACK_COURSE_INCLUDES = [
 ];
 
 function resolveIncludeImageUrl(path?: string | null): string {
-  if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  if (path.startsWith("/api/")) {
-    const base =
-      process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
-    const serverRoot = base.replace(/\/api\/?$/, "");
-    return `${serverRoot}${path}`;
-  }
-  return path;
+  return resolveApiAssetUrl(path);
 }
 
 function parseCourseIncludesJson(

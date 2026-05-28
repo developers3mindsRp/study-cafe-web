@@ -94,10 +94,10 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
       </div>
 
       {first ? (
-        <p className="text-[#3a3c3e] text-[16px] leading-relaxed">{first}</p>
+        <p className="text-[#3a3c3e] text-[16px] leading-relaxed break-words">{first}</p>
       ) : null}
       {second ? (
-        <p className="text-[#3a3c3e] text-[16px] leading-relaxed">{second}</p>
+        <p className="text-[#3a3c3e] text-[16px] leading-relaxed break-words">{second}</p>
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2 text-[16px] text-[#6a6969] mb-3">
@@ -127,10 +127,10 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
 
       <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4">
         {first ? (
-          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light">{first}</p>
+          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light break-words">{first}</p>
         ) : null}
         {second ? (
-          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light">{second}</p>
+          <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-light break-words">{second}</p>
         ) : null}
         <div className="flex justify-center pt-2">
           <Link

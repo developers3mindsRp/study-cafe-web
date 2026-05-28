@@ -279,7 +279,7 @@ export default function PriceCard({ course }: Props) {
             />
             {appliedCoupon ? (
               <>
-                <div className="absolute left-24 xl:right-24 2xl:right-44 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
+                <div className="absolute right-24 top-1/2 -translate-y-1/2 bg-[#D8E3FF] text-[#09339B] px-2 py-1 rounded-md text-xs font-medium">
                   Applied
                 </div>
                 <button

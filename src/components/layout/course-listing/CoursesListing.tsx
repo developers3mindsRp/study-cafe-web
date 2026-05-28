@@ -186,28 +186,65 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:flex md:gap-4 px-4 md:px-0 md:flex-wrap md:items-center">
 
           {/* Sort */}
-          <select
+            <div className="relative inline-block w-full sm:w-auto">
+              <select
             value={sortLabel}
             onChange={(e) => {
               const val = SORT_OPTIONS.find((o) => o.label === e.target.value)?.value ?? "latest";
               navigate({ sort: val, page: 1 });
             }}
-            className="border p-2 m-2 md:m-0 rounded-[10px]"
+               className="border p-2 pr-8 m-2 md:m-0 rounded-[10px] text-ellipsis appearance-none w-full sm:w-[180px] md:w-[200px] lg:w-[200px] truncate"
           >
             {SORT_OPTIONS.map((o) => <option key={o.label}>{o.label}</option>)}
           </select>
+          
+            <svg
+              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+         </div>
 
           {/* Category */}
-          <select
-            value={activeCatName}
-            onChange={(e) => {
-              const cat = allCats.find((c) => c.name === e.target.value) ?? ALL_CAT;
-              navigate({ category: cat.slug, page: 1 });
-            }}
-            className="border p-2 m-2 md:m-0 rounded-[10px]"
-          >
-            {allCats.map((c) => <option key={c.id}>{c.name}</option>)}
-          </select>
+          <div className="relative inline-block w-full sm:w-auto">
+
+            <select
+              value={activeCatName}
+              onChange={(e) => {
+                const cat = allCats.find((c) => c.name === e.target.value) ?? ALL_CAT;
+                navigate({ category: cat.slug, page: 1 });
+              }}
+              className="border p-2 pr-8 m-2 md:m-0 rounded-[10px] text-ellipsis appearance-none w-full sm:w-[180px] md:w-[200px] lg:w-[200px] truncate"
+            >
+              {allCats.map((c) => (
+                <option key={c.id}>{c.name}</option>
+              ))}
+            </select>
+
+            <svg
+              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+
+          </div>
+          
 
           {/* Level — UI only (backend doesn't track level yet) */}
           {/* <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
@@ -218,16 +255,32 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           </select> */}
 
           {/* Price */}
-          <select
+              <div className="relative inline-block w-full sm:w-auto">
+              <select
             value={priceLabel}
             onChange={(e) => {
               const val = PRICE_OPTIONS.find((o) => o.label === e.target.value)?.value ?? "all";
               navigate({ price: val, page: 1 });
             }}
-            className="border p-2 m-2 md:m-0 rounded-[10px]"
+             className="border p-2 pr-8 m-2 md:m-0 rounded-[10px] text-ellipsis appearance-none w-full sm:w-[180px] md:w-[200px] lg:w-[200px] truncate"
           >
             {PRICE_OPTIONS.map((o) => <option key={o.label}>{o.label}</option>)}
           </select>
+                   
+            <svg
+              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+        </div>
 
           {/* Author — placeholder */}
           {/* <select className="border p-2 m-2 md:m-0 rounded-[10px]" disabled>
