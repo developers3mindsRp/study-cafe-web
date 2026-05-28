@@ -231,27 +231,7 @@ export default function LoginPage() {
                 Forgot Password ?
               </a>
 
-              {showForgot && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                  <div className="bg-white p-6 rounded-lg w-[90%] max-w-md">
-                    <h2 className="text-xl font-bold mb-3">Forgot Password</h2>
-
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="w-full border px-3 py-2 rounded mb-4"
-                    />
-
-                    <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
-                      Send Reset Link
-                    </button>
-
-                    <button type="button" onClick={() => setShowForgot(false)} className="w-full text-gray-500">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
+              
             </div>
 
             {errors && <p className="text-red-600 text-sm">{errors}</p>}
@@ -347,6 +327,28 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
+
+        {showForgot && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg w-[90%] max-w-md">
+                <h2 className="text-xl font-bold mb-3">Forgot Password</h2>
+
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full border px-3 py-2 rounded mb-4"
+                />
+
+                <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
+                  Send Reset Link
+                </button>
+
+                <button type="button" onClick={() => setShowForgot(false)} className="w-full text-gray-500">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
       </div>
     </div>
   );

@@ -349,19 +349,23 @@ export default function CourseDetailProfile({
               <img src="/images/left.svg" alt="" className="w-4 md:w-auto" />
               Previous
             </button>
+            {
+              canPrev && canNext &&
+              <button
+                type="button"                
+                onClick={onMarkComplete}
+                className="flex w-full items-center justify-center gap-2 rounded-md border border-[#9FBBFF] px-4 py-2 text-[14px] font-medium text-[#09339B] transition hover:bg-[#f0f4ff] xl:text-[20px] sm:w-auto"
+              >
+                <span>Mark as completed</span>
+                <img
+                  src="/images/checkmark.png"
+                  alt=""
+                  className="h-5 w-5 md:h-6 md:w-6"
+                />
+              </button>
+            }
 
-            <button
-              type="button"
-              onClick={onMarkComplete}
-              className="flex w-full items-center justify-center gap-2 rounded-md border border-[#9FBBFF] px-4 py-2 text-[14px] font-medium text-[#09339B] transition hover:bg-[#f0f4ff] xl:text-[20px] sm:w-auto"
-            >
-              <span>Mark as completed</span>
-              <img
-                src="/images/checkmark.png"
-                alt=""
-                className="h-5 w-5 md:h-6 md:w-6"
-              />
-            </button>
+            
 
             <button
               type="button"

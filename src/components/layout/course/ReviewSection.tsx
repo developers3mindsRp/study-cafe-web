@@ -6,17 +6,26 @@ export default function ReviewSection({
 }: {
   course: CoursePublicDetail | null;
 }) {
+
+  // console.log(course,"coursesdfsf")
   let reviews: { name: string; designation: string; review: string }[] = [];
   if (course?.feedback) {
     try {
       const parsed = JSON.parse(course.feedback);
+      // console.log(parsed,"parsed")
       reviews = Array.isArray(parsed) ? parsed : [];
     } catch {
       reviews = [];
     }
   }
+  console.log(reviews.length,"reviews.length")
+  if(reviews.length < 0) {
+    return null;
+  }
   return (
     <section className="container px-4 mx-auto py-6 md:py-12 ">
+
+  
       <h2
         className="          text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
             px-4 py-3 text-white

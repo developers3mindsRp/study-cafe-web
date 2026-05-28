@@ -128,7 +128,7 @@ const handleDownload = async () => {
             </button>
           </div>
 
-        <div className="flex justify-center gap-3 pt-3 ">
+        {/* <div className="flex justify-center gap-3 pt-3 ">
           <button
             type="button"
             className="px-4 py-2 bg-[#09339B] text-white rounded"
@@ -146,7 +146,7 @@ const handleDownload = async () => {
           >
             Close
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
