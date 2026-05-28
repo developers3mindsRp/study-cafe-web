@@ -40,6 +40,7 @@ function BlogCard({
 }) {
   const isMobile = size === "mobile";
   return (
+  <Link href={articleHref(slug, id)}>
     <div
       className={
         isMobile
@@ -77,15 +78,15 @@ function BlogCard({
         >
           {title}
         </h3>
-
-        <Link href={articleHref(slug, id)}>
+       
           <button className="text-[12px] md:text-sm bg-[#09339B] hover:bg-blue-700 text-white px-4 py-1 md:py-2 rounded-md flex items-center gap-2">
             Read More
             <img src="/images/arrow-left.svg" alt="" />
           </button>
-        </Link>
+   
       </div>
     </div>
+  </Link>
   );
 }
 
