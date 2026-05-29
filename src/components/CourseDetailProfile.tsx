@@ -350,7 +350,7 @@ export default function CourseDetailProfile({
               Previous
             </button>
             {
-              canPrev && canNext &&
+            //  videoId &&
               <button
                 type="button"                
                 onClick={onMarkComplete}
