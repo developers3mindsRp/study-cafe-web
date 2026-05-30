@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { EyeIcon, EyeSlashIcon , EnvelopeIcon } from "@heroicons/react/24/solid";
 import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
 
@@ -202,7 +202,7 @@ export default function LoginPage() {
           Sign in to your account to continue learning
         </p>
 
-        <div className="flex gap-2 mb-6 px-4">
+        {/* <div className="flex gap-2 mb-6 px-4">
           <button
             type="button"
             onClick={() => pickMode("password")}
@@ -214,18 +214,8 @@ export default function LoginPage() {
           >
             Password
           </button>
-          <button
-            type="button"
-            onClick={() => pickMode("otp")}
-            className={`flex-1 py-2 rounded-md border text-sm font-medium ${
-              mode === "otp"
-                ? "border-[#09339B] bg-[#09339B] text-white"
-                : "border-gray-300 text-gray-700 bg-white"
-            }`}
-          >
-            Email code
-          </button>
-        </div>
+        
+        </div> */}
 
         {mode === "password" ? (
           <form
@@ -422,13 +412,32 @@ export default function LoginPage() {
             </form>
           </div>
         )}
+        <div>
+           <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="text-[#09339B]">
+                Sign up
+              </Link>
+            </p>
+            {
+              mode === "password" &&
+                 <button
+                type="button"
+                onClick={() => pickMode("otp")}
+                className={`flex py-3 rounded-md border text-sm font-medium px-4 m-auto mt-4 block w-[95%]  items-center justify-center`}
+              >
+                 <img
+                  src="/images/mail1.svg"
+                  alt=""
+                  className="w-5 h-5 mr-2"
+                /> Login With OTP
+              </button>
+            }
+             
 
-        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#09339B]">
-            Sign up
-          </Link>
-        </p>
+        </div>
+
+       
       </div>
     </div>
   );

@@ -63,40 +63,42 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
   }
 
   return (
-    <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
-      <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
-        <Image src={thumbnail} alt={c.title} fill className="object-fit" />
-        {rating && (
-          <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
-            <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
-          </span>
-        )}
-      </div>
-      <div className="p-4 flex flex-col flex-1">
-        {c.language && (
-          <div className="flex flex-wrap items-center gap-4 text-[#6a6969] text-sm">
-            <span className="flex items-center gap-1">
-              <img src="/images/eng-dark.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
+    <Link href={href}>
+      <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
+        <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
+          <Image src={thumbnail} alt={c.title} fill className="object-fit" />
+          {rating && (
+            <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
+              <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
             </span>
+          )}
+        </div>
+        <div className="p-4 flex flex-col flex-1">
+          {c.language && (
+            <div className="flex flex-wrap items-center gap-4 text-[#6a6969] text-sm">
+              <span className="flex items-center gap-1">
+                <img src="/images/eng-dark.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
+              </span>
+            </div>
+          )}
+          <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+          {enrolled && (
+            <div className="flex items-center gap-1 text-[#6a6969] text-sm">
+              <img src="/images/user-dark.svg" alt="" width="20" height="20" />{enrolled} students
+            </div>
+          )}
+          <div className="flex justify-between items-center mt-4">
+            <div>
+              {newPrice && <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{oldPrice}</span>}
+              <span className="text-[#3a3c3e] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
+            </div>
+          
+              <button className="bg-[#09339B] text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base">View Course</button>
+            
           </div>
-        )}
-        <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
-        {enrolled && (
-          <div className="flex items-center gap-1 text-[#6a6969] text-sm">
-            <img src="/images/user-dark.svg" alt="" width="20" height="20" />{enrolled} students
-          </div>
-        )}
-        <div className="flex justify-between items-center mt-4">
-          <div>
-            {newPrice && <span className="line-through text-[#AFAFAF] sm:text-[16px] xl:text-[26px]">{oldPrice}</span>}
-            <span className="text-[#3a3c3e] font-normal text-[22px] sm:text-[16px] xl:text-[26px] ml-2">{newPrice ?? oldPrice}</span>
-          </div>
-          <Link href={href}>
-            <button className="bg-[#09339B] text-white sm:px-1 md:px-2 xl:px-4 sm:py-1 md:py-2 xl:py-2 rounded-md sm:text-sm md:text-[14px] xl:text-base">View Course</button>
-          </Link>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

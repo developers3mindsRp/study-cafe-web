@@ -80,13 +80,13 @@ export default function CourseSection({
         <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
           <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
             <img
-              src={primaryAuthor?.image_url || "/images/author.png"}
+              src={primaryAuthor?.image_url || ""}
               width={54}
               height={54}
               alt={primaryAuthor?.name || "Author"}
               className="rounded-full object-cover"
               referrerPolicy="no-referrer"
-              onError={(e) => { e.currentTarget.src = "/images/author.png"; }}
+              onError={(e) => { e.currentTarget.src = ""; }}
             />
 
             <div className="text-left">
