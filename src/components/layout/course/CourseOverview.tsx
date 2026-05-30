@@ -50,6 +50,101 @@ const FALLBACK_BONUSES = [
   },
 ];
 
+// ── Detail Sections ───────────────────────────────────────────────────────────
+
+type DetailSectionType = "text" | "cards";
+
+interface DetailSectionCard {
+  icon: string;
+  title: string;
+  content: string;
+}
+
+interface DetailSection {
+  type: DetailSectionType;
+  title: string;
+  content: string;
+  items: DetailSectionCard[];
+}
+
+const FALLBACK_DETAIL_SECTIONS: DetailSection[] = [
+  {
+    type: "text",
+    title: "How I will get the course:",
+    content:
+      "This is an online Certification course so there will not be any physical delivery of the lectures. After the purchase of this Certification course, you can see this course under my account option under purchased courses. All the videos, study materials, PDF files and PPTs, will be uploaded there for quick access by participants. This Certification Course's Recording is valid for 1 Year.",
+    items: [],
+  },
+  {
+    type: "cards",
+    title: "",
+    content: "",
+    items: [
+      { icon: "/images/duration.png", title: "Course Duration", content: "The course duration is 2 Days and around 4+ hours." },
+      { icon: "/images/view.png", title: "Views Limitation", content: "This is a fully online course with 1-year unlimited access, available anytime and anywhere." },
+      { icon: "/images/time.png", title: "Course Timing", content: "Timing: 6:00 pm to 8:00 pm" },
+    ],
+  },
+];
+
+function parseDetailSections(raw?: string | null): DetailSection[] | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed as DetailSection[];
+  } catch { /* ignore */ }
+  return null;
+}
+
+function DetailSections({ course }: { course?: import("@/types/models.types").CoursePublicDetail | null }) {
+  const sections = parseDetailSections(course?.detail_sections) ?? FALLBACK_DETAIL_SECTIONS;
+
+  return (
+    <>
+      {sections.map((sec, idx) => {
+        if (sec.type === "cards") {
+          const cols =
+            sec.items.length === 1 ? "md:grid-cols-1" :
+            sec.items.length === 2 ? "md:grid-cols-2" :
+            "md:grid-cols-3";
+          return (
+            <div key={idx} className={`grid ${cols} gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12`}>
+              {sec.items.map((card, ci) => (
+                <div key={ci} className="bg-[#F9F9FB] p-4 md:p-8">
+                  {card.icon && (
+                    card.icon.startsWith("http") || card.icon.startsWith("/") ? (
+                      <img src={card.icon} alt="" />
+                    ) : (
+                      <span className="text-4xl">{card.icon}</span>
+                    )
+                  )}
+                  <h2 className="font-bold text-[20px] text-black mb-4 mt-4">{card.title}</h2>
+                  <p className="leading-relaxed">{card.content}</p>
+                </div>
+              ))}
+            </div>
+          );
+        }
+
+        // type === "text"
+        return (
+          <div key={idx} className="mt-12">
+            {sec.title && (
+              <h2 className="text-[25px] text-[#252525] font-semibold">{sec.title}</h2>
+            )}
+            {sec.content && (
+              <div
+                dangerouslySetInnerHTML={{ __html: sec.content }}
+                className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4 prose max-w-none"
+              />
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 /** Resolve a potentially relative backend path to a full URL. */
 function resolveImageUrl(path?: string | null): string {
   if (!path) return "";
@@ -296,80 +391,7 @@ export default function CourseOverview({
           </div>
         </div>
 
-        <div className="mt-12">
-          <h2 className="text-[25px] text-[#252525] font-semibold">
-            How I will get the course:
-          </h2>
-          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
-            This is an online Certification course so there will not be any
-            physical delivery of the lectures. After the purchase of this
-            Certification course, you can see this course under my account
-            option under purchased courses. All the videos, study materials, PDF
-            files and PPTs, will be uploaded there for quick access by
-            participants. This Certification Course&apos;s Recording is valid
-            for 1 Year.
-          </p>
-        </div>
-
-        <div className="mt-12">
-          <h2 className="text-[25px] text-[#252525] font-semibold">
-            Who is Eligible to Join this Certification Course:
-          </h2>
-          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
-            There is no bound on the eligibility from our side for this
-            Certification Course. Any person who wants to learn and master in
-            Taxation can join this course. However, it will be more beneficial
-            for the below-mentioned persons:
-          </p>
-          {course?.requirements ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: course.requirements }}
-              className="mt-8 prose max-w-none"
-            />
-          ) : (
-            <ul className="list-disc pl-4 mt-8">
-              <li>Commerce Graduates/CA/CS/CMA/Law students</li>
-              <li>Tax professionals whether in JOB or Practice</li>
-              <li>Qualified CA/CS/CMA/LLB</li>
-              <li>
-                Semi-qualified CA/CS/CMA working in CA Firms or in Industry
-              </li>
-              <li>
-                Any other person not covered above can join the course if
-                interested.
-              </li>
-            </ul>
-          )}
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12">
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/duration.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Course Duration
-            </h2>
-            <p className="leading-relaxed">
-              The course duration is 2 Days and around 4+ hours.
-            </p>
-          </div>
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/view.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Views Limitation
-            </h2>
-            <p className="leading-relaxed">
-              This is a fully online course with 1-year unlimited access,
-              available anytime and anywhere.
-            </p>
-          </div>
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/time.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Course Timing
-            </h2>
-            <p className="leading-relaxed">Timing: 6:00 pm to 8:00 pm</p>
-          </div>
-        </div>
+        <DetailSections course={course} />
       </div>
 
       {/* Course Content */}

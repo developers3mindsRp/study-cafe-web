@@ -504,6 +504,11 @@ export interface CoursePublicDetail {
   author_role?: string | null;
   author_bio?: string | null;
   author_image?: string | null;
+  /** Computed: true when validity === 'lifetime'. */
+  is_lifetime?: boolean;
+  validity?: 'lifetime' | '1year';
+  /** JSON string of DetailSection[] for the course detail page dynamic sections. */
+  detail_sections?: string | null;
 }
 
 /** List / spotlight card (public); `access` reflects optional JWT + membership. */
