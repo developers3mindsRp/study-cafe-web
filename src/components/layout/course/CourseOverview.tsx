@@ -365,10 +365,18 @@ export default function CourseOverview({
                   </span>
                 </button>
                 <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
-                  Register Fast to unlock bonuses worth ₹
-                  {bonuses
-                    .map((bonus: any) => Number(bonus.worth))
-                    .reduce((a: number, b: number) => a + b, 0)}
+                  {(() => {
+                    const total = bonuses
+                      .map((bonus: any) => {
+                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                        const num = parseFloat(raw);
+                        return isNaN(num) ? 0 : num;
+                      })
+                      .reduce((a: number, b: number) => a + b, 0);
+                    return total > 0
+                      ? `Register Fast to unlock bonuses worth ₹${total.toLocaleString("en-IN")}`
+                      : "Register Fast to unlock exclusive bonuses";
+                  })()}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
                   {bonuses.map((bonus: any, index: number) => (
@@ -390,9 +398,20 @@ export default function CourseOverview({
                           dangerouslySetInnerHTML={{ __html: bonus.title }}
                         />
                       </div>
-                      <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
-                        Worth ₹{bonus.worth}
-                      </span>
+                      {(() => {
+                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                        const num = parseFloat(raw);
+                        const displayWorth = !isNaN(num) && num > 0
+                          ? `Worth ₹${num.toLocaleString("en-IN")}`
+                          : bonus.worth && String(bonus.worth).trim() !== ""
+                            ? `Worth ${bonus.worth}`
+                            : null;
+                        return displayWorth ? (
+                          <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
+                            {displayWorth}
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                   ))}
                 </div>
