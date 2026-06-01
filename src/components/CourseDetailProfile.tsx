@@ -350,7 +350,7 @@ export default function CourseDetailProfile({
               Previous
             </button>
             {
-            //  videoId &&
+             videoId &&
               <button
                 type="button"                
                 onClick={onMarkComplete}
