@@ -207,16 +207,31 @@ export default function CourseOverview({
     }
   }
 
+  /** Format total_duration (minutes integer) → "1 hr 20 min" / "45 min" */
+  function formatDuration(minutes?: number | null): string {
+    if (!minutes || minutes <= 0) return "";
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h > 0 && m > 0) return `${h} hr ${m} min`;
+    if (h > 0) return `${h} hr`;
+    return `${m} min`;
+  }
+
   const contentItems: { title: string; duration: string; bullets: string[] }[] =
     [];
 
   // ── Curriculum rendering rule ──────────────────────────────────────────────
+  // curriculum is returned as a parsed array by the API (or legacy JSON string).
   // For each day:
-  //   - if it has `sections[]` (subsections) → bullets are the subsection TITLES ONLY.
-  //   - else fall back to `points[]` or the day-level description.
+  //   - bullets = subsection titles from sections[] if present
+  //   - duration shown = total_duration (sum of section durations, added by API)
   if (course?.curriculum) {
     try {
-      const parsed = JSON.parse(course.curriculum);
+      const parsed: any[] =
+        Array.isArray(course.curriculum)
+          ? course.curriculum
+          : JSON.parse(course.curriculum as string);
+
       if (Array.isArray(parsed)) {
         parsed.forEach((item: any) => {
           const sections = Array.isArray(item.sections) ? item.sections : [];
@@ -239,8 +254,7 @@ export default function CourseOverview({
 
           contentItems.push({
             title: item.title ?? "",
-            duration:
-              item.duration ?? (item.minutes ? `${item.minutes} min` : ""),
+            duration: formatDuration(item.total_duration) || (item.minutes ? `${item.minutes} min` : ""),
             bullets,
           });
         });
@@ -298,6 +312,23 @@ export default function CourseOverview({
         });
       });
   }
+
+  // Total course duration from all curriculum days
+  const totalCourseMinutes: number = (() => {
+    if (!course?.curriculum) return 0;
+    try {
+      const parsed: any[] = Array.isArray(course.curriculum)
+        ? course.curriculum
+        : JSON.parse(course.curriculum as string);
+      if (!Array.isArray(parsed)) return 0;
+      return parsed.reduce((sum: number, day: any) => {
+        const n = parseInt(String(day?.total_duration ?? ""), 10);
+        return sum + (Number.isFinite(n) && n > 0 ? n : 0);
+      }, 0);
+    } catch {
+      return 0;
+    }
+  })();
 
   // Fallback static content if nothing from API
   const FALLBACK_CONTENT = [
@@ -452,6 +483,20 @@ export default function CourseOverview({
             >
               Course Content
             </h2>
+             {totalCourseMinutes > 0 && (
+                <p className="text-[14px] md:text-[16px] text-[#3a3c3e] mb-4">
+                  Total Duration:{" "}
+                  <span className="font-semibold">
+                    {(() => {
+                      const h = Math.floor(totalCourseMinutes / 60);
+                      const m = totalCourseMinutes % 60;
+                      if (h > 0 && m > 0) return `${h} hr ${m} min`;
+                      if (h > 0) return `${h} hr`;
+                      return `${m} min`;
+                    })()}
+                  </span>
+                </p>
+              )}
              <div className="w-full md:mt-10 space-y-3 text-left container px-4">
                 {displayContent.map((item, index) => (
                   <div key={index} className="shadow-md rounded-lg overflow-hidden">

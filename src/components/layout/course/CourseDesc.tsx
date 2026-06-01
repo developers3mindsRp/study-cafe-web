@@ -131,44 +131,34 @@ export default function CourseTabs({
       bullets: string[];
     }[] = [];
 
-    // Curriculum JSON
+    // Curriculum JSON (API returns parsed array or legacy JSON string)
     if (course?.curriculum) {
       try {
-        const parsed =
-          typeof course.curriculum === "string"
-            ? JSON.parse(course.curriculum)
-            : course.curriculum;
+        const parsed: any[] = Array.isArray(course.curriculum)
+          ? course.curriculum
+          : JSON.parse(course.curriculum);
 
         if (Array.isArray(parsed)) {
           parsed.forEach((item: any) => {
-            const sections = Array.isArray(item.sections)
-              ? item.sections
-              : [];
+            const sections = Array.isArray(item.sections) ? item.sections : [];
 
             let bullets: string[] = [];
-
             if (sections.length > 0) {
               bullets = sections
-                .map((section: any) =>
-                  String(section?.title ?? "").trim()
-                )
+                .map((section: any) => String(section?.title ?? "").trim())
                 .filter(Boolean);
             } else if (Array.isArray(item.points)) {
               bullets = item.points.map(String).filter(Boolean);
             } else if (typeof item.description === "string") {
               bullets = item.description
                 .split(/\r?\n+/)
-                .map((line: string) =>
-                  line.replace(/<[^>]*>/g, "").trim()
-                )
+                .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
                 .filter(Boolean);
             }
 
             items.push({
               title: item.title ?? "",
-              duration:
-                item.duration ??
-                (item.minutes ? `${item.minutes} min` : ""),
+              duration: item.minutes ? `${item.minutes} min` : "",
               bullets,
             });
           });

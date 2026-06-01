@@ -1,3 +1,17 @@
+export interface CurriculumSection {
+  title: string;
+  description?: string;
+  duration?: string | number | null;
+  videoId?: string;
+}
+
+export interface CurriculumDay {
+  title: string;
+  sections?: CurriculumSection[];
+  files?: any[];
+  total_duration?: number | null;
+}
+
 // User Model (auth-service / public site)
 export interface User {
   id: string;
@@ -473,7 +487,7 @@ export interface CoursePublicDetail {
   slug?: string | null;
   brief_description?: string | null;
   description?: string | null;
-  curriculum?: string | null;
+  curriculum?: CurriculumDay[] | string | null;
   learn_outcomes?: string | null;
   requirements?: string | null;
   terms_conditions?: string | null;
