@@ -58,7 +58,7 @@ export default function CourseSection({
                 const card = (
                   <div
                     key={idx}
-                    className="h-[70px] sm:h-[80px] w-full max-w-[140px]
+                    className=" w-full max-w-full
                          border p-3 sm:p-4 rounded-[10px]
                          flex items-center justify-center
                          shadow-sm bg-white"
@@ -75,7 +75,7 @@ export default function CourseSection({
                   </div>
                 );
                 return logo.link ? (
-                  <a key={idx} href={logo.link} target="_blank" rel="noopener noreferrer">
+                  <a key={idx} href={logo.link} target="_blank" rel="noopener noreferrer" className="w-full">
                     {card}
                   </a>
                 ) : card;
@@ -101,15 +101,30 @@ export default function CourseSection({
 
         <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
           <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
-            <img
-              src={primaryAuthor?.image_url || ""}
-              width={54}
-              height={54}
-              alt={primaryAuthor?.name || "Author"}
-              className="rounded-full object-cover"
-              referrerPolicy="no-referrer"
-              onError={(e) => { e.currentTarget.src = ""; }}
-            />
+            {
+              primaryAuthor?.image_url ?
+              <img
+                src={primaryAuthor?.image_url || ""}
+                width={54}
+                height={54}
+                alt={primaryAuthor?.name || "Author"}
+                className="rounded-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = ""; }}
+              />
+              :
+              <img
+                src="/images/defultuser.png"
+                width={54}
+                height={54}
+                alt={primaryAuthor?.name || "Author"}
+                className="rounded-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = ""; }}
+              />
+
+            }
+            
 
             <div className="text-left">
               <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">

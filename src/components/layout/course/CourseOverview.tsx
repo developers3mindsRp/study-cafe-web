@@ -97,11 +97,11 @@ function parseDetailSections(raw?: string | null): DetailSection[] | null {
 }
 
 function DetailSections({ course }: { course?: import("@/types/models.types").CoursePublicDetail | null }) {
-  const sections = parseDetailSections(course?.detail_sections) ?? FALLBACK_DETAIL_SECTIONS;
+  const sections = parseDetailSections(course?.detail_sections);
 
   return (
     <>
-      {sections.map((sec, idx) => {
+      {sections?.map((sec, idx) => {
         if (sec.type === "cards") {
           const cols =
             sec.items.length === 1 ? "md:grid-cols-1" :
@@ -191,9 +191,11 @@ export default function CourseOverview({
 
   // --- Features ---
   const features = parseListField(course?.learn_outcomes);
-  const displayFeatures = features.length > 0 ? features : FALLBACK_FEATURES;
+  const displayFeatures = features;
 
-  const description = course?.description ?? FALLBACK_DESCRIPTION;
+  
+
+  const description = course?.description;
 
   let bonuses = FALLBACK_BONUSES;
   if (course?.includes_info) {
@@ -252,17 +254,33 @@ export default function CourseOverview({
   if (contentItems.length === 0 && batches.length > 0) {
     const byDay = new Map<
       number,
-      { title: string; bullets: string[]; time: string }
+      { title: string; bullets: string[]; duration: string }
     >();
     batches.forEach((batch) => {
       batch.sessions.forEach((session) => {
         const day = session.day_number || 1;
-        const dayBucket =
-          byDay.get(day) ?? {
-            title: session.title || `Day ${day}`,
-            bullets: [],
-            time: formatSessionTime(session.scheduled_at) ?? "",
-          };
+        // const dayBucket =
+        //   byDay.get(day) ?? {
+        //     title: session.title || `Day ${day}`,
+        //     bullets: [],
+        //     duration: session.duration,
+        //   };
+
+
+    const dayBucket: {
+      title: string;
+      bullets: string[];
+      duration: string;
+    } =
+      byDay.get(day) ?? {
+        title: session.title || `Day ${day}`,
+        bullets: [] as string[],
+        duration: session?.duration
+          ? `${session.duration}`
+          : "",
+      };
+
+          
         if (!byDay.has(day)) byDay.set(day, dayBucket);
         const subtitle = (session.section_title ?? "").trim();
         if (subtitle && !dayBucket.bullets.includes(subtitle)) {
@@ -275,7 +293,7 @@ export default function CourseOverview({
       .forEach(([, v]) => {
         contentItems.push({
           title: v.title,
-          duration: v.time,
+          duration: v.duration,
           bullets: v.bullets,
         });
       });
@@ -304,8 +322,9 @@ export default function CourseOverview({
       ],
     },
   ];
-  const displayContent =
-    contentItems.length > 0 ? contentItems : FALLBACK_CONTENT;
+  const displayContent =  contentItems;
+
+  console.log(displayContent,"displayContent")
 
   return (
     <section className="container px-4 mx-auto">
@@ -450,7 +469,7 @@ export default function CourseOverview({
                       <div className="flex items-center gap-2 md:gap-32">
                         {item.duration && (
                           <span className="font-medium text-[14px] md:text-[20px] whitespace-nowrap">
-                            {item.duration}
+                            {item.duration} 
                           </span>
                         )}
                         <svg

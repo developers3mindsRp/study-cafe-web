@@ -42,7 +42,7 @@ export default function MediaTestimonials({
 
   return (
     <section
-      className=""
+      className="pb-10"
     >
       <h2 className={headingClass}>Testimonials</h2>
 

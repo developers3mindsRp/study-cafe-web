@@ -65,9 +65,9 @@ export default function CoursePage({
       </div>
 
       <BannerSection course={course} batches={batches} />
-        <CourseTabs course={course} />
+      <CourseTabs course={course} batches={batches} />
       
-           <CourseOverview course={course} batches={batches} />
+      <CourseOverview course={course} batches={batches} />
         
       {
         course?.feedback &&
