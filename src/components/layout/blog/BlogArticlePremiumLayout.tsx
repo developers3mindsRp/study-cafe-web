@@ -86,6 +86,10 @@ export default function BlogArticlePremiumLayout({
 
   const google_news_url = initialArticle?.google_news_url
 
+  // Map the article's own tags (from API) to the BlogSpotlightTag shape used by SidebarBlog
+  const articleTags: import("@/types/models.types").BlogSpotlightTag[] =
+    (article.tags ?? []).map((t) => ({ id: t.id, name: t.name, article_count: 0 }));
+
 
   console.log(initialArticle,"initialArticle")
 
@@ -104,6 +108,7 @@ export default function BlogArticlePremiumLayout({
               update={formatDate(article.updated_at)}
               image={cardThumb(article.thumbnail_url || article.cover_image_url)}
               toc={article.toc}
+              tags={article.tags}
             />
           }
          
@@ -223,7 +228,7 @@ export default function BlogArticlePremiumLayout({
             <SidebarBlog
               recentPosts={spotlight?.recent_posts}
               allPosts={spotlight?.all_posts}
-              popularTags={spotlight?.popular_tags}
+              popularTags={articleTags}
               detailSidebarAds={siteAds?.article_detail_sidebar}
             />
           </div>
@@ -239,7 +244,7 @@ export default function BlogArticlePremiumLayout({
            <SidebarBlog
             recentPosts={spotlight?.recent_posts}
             allPosts={spotlight?.all_posts}
-            popularTags={spotlight?.popular_tags}
+            popularTags={articleTags}
             detailSidebarAds={siteAds?.article_detail_sidebar}
           />
         }

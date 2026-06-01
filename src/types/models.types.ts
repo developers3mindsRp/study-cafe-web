@@ -596,6 +596,8 @@ export interface ArticleBySlug {
   whatsapp_link?:any;
   telegram_link?:any;
   google_news_url?:any;
+  /** Article's own tags — used for clickable tag links on the detail page. */
+  tags?: { id: number; name: string }[];
 
 }
 
