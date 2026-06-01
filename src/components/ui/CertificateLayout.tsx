@@ -12,7 +12,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
 }) => {
   return (
     <div className="w-full flex justify-center items-center p-0">
-      <div className="relative w-[835px] h-[585px] bg-white ">
+      <div className="relative w-[822px] h-[583px] bg-white ">
         {/* Background Image */}
         <img
           src="/images/bgcertificate.png"

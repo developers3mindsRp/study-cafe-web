@@ -45,7 +45,7 @@ const handleDownload = async () => {
   try {
     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
       cacheBust: true,
-      pixelRatio: 2, // better quality
+      pixelRatio: 3, // better quality
     });
 
     const link = document.createElement("a");
@@ -92,7 +92,7 @@ const handleDownload = async () => {
                     className="rounded"
                   /> */}
                   {/* <CertificateLayout name="Sushma" course="AI" date="25/01/2016"/> */}
-                  <div ref={certificateRef}>
+                  <div ref={certificateRef} className="pb-6">
                    {loading ? (
                     <p className="text-center">Loading...</p>
                   ) : certificateData ? (
