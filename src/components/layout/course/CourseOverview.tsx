@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useMemo} from "react";
 import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
 import { getApiServerOrigin } from "@/config/env";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
@@ -96,42 +96,73 @@ function parseDetailSections(raw?: string | null): DetailSection[] | null {
   return null;
 }
 
-function DetailSections({ course }: { course?: import("@/types/models.types").CoursePublicDetail | null }) {
+
+function DetailSections({
+  course,
+}: {
+  course?: import("@/types/models.types").CoursePublicDetail | null;
+}) {
   const sections = parseDetailSections(course?.detail_sections);
+
+  const fallbackIcons: Record<string, string> = {
+    "Course Duration": "/images/duration.png",
+    "Views Limitation": "/images/view.png",
+    "Course Timing": "/images/time.png",
+  };
 
   return (
     <>
       {sections?.map((sec, idx) => {
         if (sec.type === "cards") {
           const cols =
-            sec.items.length === 1 ? "md:grid-cols-1" :
-            sec.items.length === 2 ? "md:grid-cols-2" :
-            "md:grid-cols-3";
+            sec.items.length === 1
+              ? "md:grid-cols-1"
+              : sec.items.length === 2
+              ? "md:grid-cols-2"
+              : "md:grid-cols-3";
+
           return (
-            <div key={idx} className={`grid ${cols} gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12`}>
-              {sec.items.map((card, ci) => (
-                <div key={ci} className="bg-[#F9F9FB] p-4 md:p-8">
-                  {card.icon && (
-                    card.icon.startsWith("http") || card.icon.startsWith("/") ? (
-                      <img src={card.icon} alt="" />
-                    ) : (
-                      <span className="text-4xl">{card.icon}</span>
-                    )
-                  )}
-                  <h2 className="font-bold text-[20px] text-black mb-4 mt-4">{card.title}</h2>
-                  <p className="leading-relaxed">{card.content}</p>
-                </div>
-              ))}
+            <div
+              key={idx}
+              className={`grid ${cols} gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12`}
+            >
+              {sec.items.map((card, ci) => {
+                const iconSrc =
+                  card.icon?.trim() ||
+                  fallbackIcons[card.title] ||
+                  "/images/default-icon.png";
+
+                return (
+                  <div key={ci} className="bg-[#F9F9FB] p-4 md:p-8">
+                    <img
+                      src={iconSrc}
+                      alt={card.title}
+                      className="w-12 h-12 object-contain"
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/default-icon.png";
+                      }}
+                    />
+
+                    <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
+                      {card.title}
+                    </h2>
+
+                    <p className="leading-relaxed">{card.content}</p>
+                  </div>
+                );
+              })}
             </div>
           );
         }
 
-        // type === "text"
         return (
-          <div key={idx} className="mt-12">
+          <div key={idx} className="mt-0">
             {sec.title && (
-              <h2 className="text-[25px] text-[#252525] font-semibold">{sec.title}</h2>
+              <h2 className="text-[25px] text-[#252525] font-semibold">
+                {sec.title}
+              </h2>
             )}
+
             {sec.content && (
               <div
                 dangerouslySetInnerHTML={{ __html: sec.content }}
@@ -330,6 +361,109 @@ export default function CourseOverview({
     }
   })();
 
+
+  const contentItems1 = useMemo(() => {
+      const items: {
+        title: string;
+        duration: string;
+        bullets: string[];
+      }[] = [];
+  
+      // Curriculum JSON (API returns parsed array or legacy JSON string)
+      if (course?.curriculum) {
+        try {
+          const parsed: any[] = Array.isArray(course.curriculum)
+            ? course.curriculum
+            : JSON.parse(course.curriculum);
+  
+          if (Array.isArray(parsed)) {
+            parsed.forEach((item: any) => {
+              const sections = Array.isArray(item.sections) ? item.sections : [];
+  
+              let bullets: string[] = [];
+              if (sections.length > 0) {
+                bullets = sections
+                  .map((section: any) => String(section?.title ?? "").trim())
+                  .filter(Boolean);
+              } else if (Array.isArray(item.points)) {
+                bullets = item.points.map(String).filter(Boolean);
+              } else if (typeof item.description === "string") {
+                bullets = item.description
+                  .split(/\r?\n+/)
+                  .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
+                  .filter(Boolean);
+              }
+  
+              items.push({
+                title: item.title ?? "",
+                duration: item.minutes ? `${item.minutes} min` : "",
+                bullets,
+              });
+            });
+          }
+        } catch (error) {
+          console.error("Curriculum parse error:", error);
+        }
+      }
+  
+      // Fallback from batches
+      if (items.length === 0 && batches.length > 0) {
+        const byDay = new Map<
+          number,
+          {
+            title: string;
+            bullets: string[];
+            time: string;
+          }
+        >();
+  
+        batches.forEach((batch: any) => {
+          batch?.sessions?.forEach((session: any) => {
+            const day = session.day_number || 1;
+  
+            const bucket:
+              {
+                title: string;
+                bullets: string[];
+                time: string;
+              } =
+                byDay.get(day) ?? {
+                  title: session.title || `Day ${day}`,
+                  bullets: [],
+                  time: formatSessionTime(session.scheduled_at) ?? "",
+                };
+  
+            if (!byDay.has(day)) {
+              byDay.set(day, bucket);
+            }
+  
+            const subtitle = (
+              session.section_title || ""
+            ).trim();
+  
+            if (
+              subtitle &&
+              !bucket.bullets.includes(subtitle)
+            ) {
+              bucket.bullets.push(subtitle);
+            }
+          });
+        });
+  
+        Array.from(byDay.entries())
+          .sort((a, b) => a[0] - b[0])
+          .forEach(([, value]) => {
+            items.push({
+              title: value.title,
+              duration: value.time,
+              bullets: value.bullets,
+            });
+          });
+      }
+  
+      return items;
+    }, [course?.curriculum, batches]);
+
   // Fallback static content if nothing from API
   const FALLBACK_CONTENT = [
     {
@@ -353,9 +487,10 @@ export default function CourseOverview({
       ],
     },
   ];
-  const displayContent =  contentItems;
+  // const displayContent =  contentItems;
+  const displayContent = contentItems.length > 0 && contentItems1;
 
-  console.log(displayContent,"displayContent")
+  console.log(displayContent,"contentItems")
 
   return (
     <section className="container px-4 mx-auto">
@@ -391,16 +526,20 @@ export default function CourseOverview({
 
       {/* Course Description */}
 
-      {
-        description &&
-        <>
+         {
+            description &&
+        
           <h2
           className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
           id="description"
           >
             Course Description
           </h2>
-          <div className="bg-white rounded-lg p-3 md:p-6 text-[#3a3c3e] text-[16px] leading-[32px] mb-6 md:mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
+        }
+          <div className="bg-white rounded-lg p-3 md:p-6  mb-6 md:mb-12  shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
+            {
+                description &&
+              <>
               <div
                 dangerouslySetInnerHTML={{ __html: description }}
                 className="prose max-w-none"
@@ -466,12 +605,12 @@ export default function CourseOverview({
                   ))}
                 </div>
               </div>
+              </>
+            }
 
               <DetailSections course={course} />
             </div>
-        </>
-      }
-
+       
       {/* Course Content */}
 
     {

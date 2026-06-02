@@ -43,6 +43,12 @@ export default function CourseSection({
       }
       : null);
 
+  const termsConditions = course?.terms_conditions
+  ? JSON.parse(course.terms_conditions)
+  : [];
+  const featuredinlogos = course?.featured_in_logos
+
+
   return (
     <div className="lg:col-span-2 space-y-6">
       {/* Alumni Logos */}
@@ -84,6 +90,8 @@ export default function CourseSection({
           </div>
         </div>
       )}
+
+   
 
       {/* Author Section */}
       <div className="container mx-auto px-4 mt-10">
@@ -214,6 +222,66 @@ export default function CourseSection({
           </div>
         </div>
       )}
+
+ {featuredinlogos.length > 0 && (
+        <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8">
+          <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
+            Featured In
+          </h2>
+
+          <div className="container mx-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
+              {featuredinlogos.map((logo:any, idx:any) => {
+                const card = (
+                  <div
+                    key={idx}
+                    className=" w-full max-w-full h-full
+                         border p-3 sm:p-4 rounded-[10px]
+                         flex items-center justify-center
+                         shadow-sm bg-white"
+                  >
+                    {logo.logo_url ? (
+                      <img
+                        src={logo.logo_url}
+                        alt={logo.name || `Company ${idx + 1}`}
+                        
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-500 text-center">{logo.name}</span>
+                    )}
+                  </div>
+                );
+                return logo.link ? (
+                  <a key={idx} href={logo.link} target="_blank" rel="noopener noreferrer" className="w-full h-full">
+                    {card}
+                  </a>
+                ) : card;
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+       {termsConditions.length > 0 && (
+          <div className=" container mx-auto px-4 py-10 ">
+            <h2   className="
+                text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+                px-4 py-3 text-white
+              
+                bg-gradient-to-r from-[#253D8E] to-transparent
+                md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
+              ">
+              Terms & Conditions
+            </h2>
+
+            <ul className="list-disc pl-5 space-y-2">
+              {termsConditions.map(
+                (item: { title: string }, index: number) => (
+                  <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
     </div>
   );
 }

@@ -513,6 +513,8 @@ export interface CoursePublicDetail {
   created_at?: string;
   updated_at?: string;
   authors?: CourseAuthorProfile[];
+  featured_in_logos:any;
+
   author_user_id?: number | null;
   author_name?: string | null;
   author_role?: string | null;
