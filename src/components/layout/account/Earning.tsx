@@ -71,7 +71,7 @@ export default function Earning() {
   }
 
   const visibleCourses = showAllCourses ? (links?.courses ?? []) : (links?.courses ?? []).slice(0, 4);
-
+ console.log(links, "linkslinks")
   return (
     <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">

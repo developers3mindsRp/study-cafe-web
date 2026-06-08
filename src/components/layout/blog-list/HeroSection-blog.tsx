@@ -51,7 +51,7 @@ const HeroSection_blog = ({
       <h1 className="text-[20px] md:text-[24px] xl:text-[28px] font-medium text-gray-900 leading-snug pt-4">
         {subtitle ? (
           <>
-            {title}: <br className="hidden xl:block" /> {subtitle}
+            {title}: <br className="hidden xl:block" /> 
           </>
         ) : (
           title
@@ -67,6 +67,8 @@ const HeroSection_blog = ({
           {description}
         </p>
       ) : null}
+
+      <p className="text-[#3a3c3e] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-bold ">{subtitle}</p>
       {para1 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para1}</p> : null}
       {para2 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para2}</p> : null}
 

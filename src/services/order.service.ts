@@ -172,6 +172,7 @@ export interface ReferralLinkCourse {
   originalPrice: number;
   discountedPrice: number;
   url: string;
+   image?: string;
 }
 
 export interface ReferralLinksData {
@@ -283,6 +284,7 @@ export const getMyReferralLinks = async (): Promise<ReferralLinksData> => {
   const response = await axiosInstance.get<ApiResponse<ReferralLinksData>>(
     '/affiliate/my-links',
   );
+  console.log(response.data.data,"response.data.data")
   return response.data.data;
 };
 

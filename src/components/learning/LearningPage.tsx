@@ -290,7 +290,7 @@ export default function LearningPage({ courseId, slug }: Props) {
       </PublicLayout>
     );
   }
-
+  console.log(course,"CourseDetailProfile")
 
   return (
     <PublicLayout>
