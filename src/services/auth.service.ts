@@ -50,6 +50,7 @@ type AuthPayload = {
     city?: string | null;
     state?: string | null;
     country?: string | null;
+    gst?: string | null;
   };
   expiresIn?: number;
 };
@@ -69,6 +70,7 @@ function toUser(u: AuthPayload['user']): User {
     city: u.city || null,
     state: u.state || null,
     country: u.country || null,
+    gst: u.gst || null,
     role: u.role || 'user',
     permissions: u.permissions ?? [],
     hasActiveMembership: !!u.has_active_membership,
@@ -203,6 +205,7 @@ export const getCurrentUser = async (): Promise<User> => {
       city?: string | null;
       state?: string | null;
       country?: string | null;
+      gst?: string | null;
     }>
   >('/auth/me', {
     headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
@@ -224,6 +227,7 @@ export const getCurrentUser = async (): Promise<User> => {
     city: d.city || null,
     state: d.state || null,
     country: d.country || null,
+    gst: d.gst || null,
     role: d.role || 'user',
     permissions: d.permissions ?? [],
     hasActiveMembership: !!d.has_active_membership,

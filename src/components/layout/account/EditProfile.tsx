@@ -32,6 +32,9 @@ const PROFESSIONS = [
   "Other",
 ];
 
+/** Official Indian GSTIN pattern: 15 chars, starts with 2-digit state code */
+const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
 const TABS: {
   key: AccountTabKey;
   label: string;
@@ -77,6 +80,7 @@ export default function EditProfile({
     city: "",
     state: "",
     country: "",
+    gst: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -96,6 +100,7 @@ export default function EditProfile({
         city: (user as any).city ?? "",
         state: (user as any).state ?? "",
         country: (user as any).country ?? "",
+        gst: (user as any).gst ?? "",
       });
     }
   }, [user?.id]);
@@ -111,7 +116,9 @@ export default function EditProfile({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    // Auto-uppercase GST number as the user types
+    const finalValue = name === "gst" ? value.toUpperCase() : value;
+    setForm((prev) => ({ ...prev, [name]: finalValue }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   }
 
@@ -120,6 +127,11 @@ export default function EditProfile({
     if (!form.fullName.trim()) errs.fullName = "Name is required";
     if (!form.email.trim()) errs.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = "Invalid email";
+    // GST: if filled in, must be a valid 15-character GSTIN
+    const gstVal = form.gst.trim().toUpperCase();
+    if (gstVal !== "" && !GSTIN_REGEX.test(gstVal)) {
+      errs.gst = "Enter a valid 15-character GSTIN (e.g. 22AAAAA0000A1Z5)";
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -139,6 +151,7 @@ export default function EditProfile({
         city: form.city.trim() || undefined,
         state: form.state || undefined,
         country: form.country || undefined,
+        gst: form.gst.trim() || undefined,
       },
       {
         onSuccess: () => {
@@ -396,6 +409,26 @@ export default function EditProfile({
                         <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* GST Number */}
+                  <div>
+                    <label className="text-sm font-medium">GST Number <span className="text-gray-400 text-xs font-normal">(Optional)</span></label>
+                    <input
+                      type="text"
+                      name="gst"
+                      value={form.gst}
+                      onChange={handleChange}
+                      className={`w-full border px-3 py-2 rounded-md mt-1 uppercase tracking-widest ${errors.gst ? "border-red-500" : "border-[#1A1A1A]"}`}
+                      placeholder="15-character GSTIN, e.g. 22AAAAA0000A1Z5"
+                      maxLength={15}
+                      spellCheck={false}
+                      autoCapitalize="characters"
+                    />
+                    {errors.gst
+                      ? <p className="text-red-500 text-xs mt-1">{errors.gst}</p>
+                      : <p className="text-xs text-gray-500 mt-1">Leave blank if not applicable.</p>
+                    }
                   </div>
                 </div>
 

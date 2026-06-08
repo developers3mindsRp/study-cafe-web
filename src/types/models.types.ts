@@ -32,6 +32,8 @@ export interface User {
   city?: string | null;
   state?: string | null;
   country?: string | null;
+  /** 15-character GSTIN (optional). */
+  gst?: string | null;
   referralCode?: string | null;
   /** Explicit `false`: must complete email OTP verification (see `/verify-email`). */
   emailVerified?: boolean;
@@ -179,6 +181,8 @@ export interface RegisterData {
   city: string;
   state: string;
   country?: string;
+  /** 15-character GSTIN (optional). */
+  gst?: string;
 }
 
 export interface AuthResponse {
@@ -200,6 +204,8 @@ export interface UpdateProfileData {
   city?: string;
   state?: string;
   country?: string;
+  /** 15-character GSTIN (optional). */
+  gst?: string;
 }
 
 export interface UserSubscription {

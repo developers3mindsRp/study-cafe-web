@@ -58,6 +58,7 @@ export default function SignUpPage() {
     city: "",
     state: "",
     country: "",
+    gst: "",
     password: "",
     confirmPassword: "",
   });
@@ -168,6 +169,7 @@ export default function SignUpPage() {
         designation: form.designation.trim() || undefined,
         city: form.city.trim(),
         state: form.state,
+        gst: form.gst.trim() || undefined,
         // country: form.country,
       });
     } catch (err: unknown) {
@@ -428,6 +430,21 @@ export default function SignUpPage() {
                placeholder="Enter your city"
             />
             {fe.city && <p className="text-red-600 text-sm mt-1" role="alert">{fe.city}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="gst" className="block mb-1">GST Number <span className="text-gray-400 text-xs font-normal">(Optional)</span></label>
+            <input
+              id="gst"
+              name="gst"
+              type="text"
+              value={form.gst}
+              onChange={handleChange}
+              className={INPUT_CLASS}
+              placeholder="15-character GSTIN, e.g. 22AAAAA0000A1Z5"
+              maxLength={15}
+            />
+            <p className="text-gray-500 text-xs mt-1">Leave blank if not applicable.</p>
           </div>
 
           
