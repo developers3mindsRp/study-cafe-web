@@ -172,7 +172,7 @@ export interface ReferralLinkCourse {
   originalPrice: number;
   discountedPrice: number;
   url: string;
-   image?: string;
+   imageUrl?: string;
 }
 
 export interface ReferralLinksData {

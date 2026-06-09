@@ -71,7 +71,7 @@ export default function Earning() {
   }
 
   const visibleCourses = showAllCourses ? (links?.courses ?? []) : (links?.courses ?? []).slice(0, 4);
- console.log(links, "linkslinks")
+
   return (
     <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">
@@ -215,6 +215,7 @@ export default function Earning() {
           <div className="grid grid-cols-1 gap-6 mt-4">
             {visibleCourses.map((item) => (
               <div key={item.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
+                 <img src={item?.imageUrl}/>
                 {item.originalPrice > 0 && (
                   <div className="flex flex-col">
                     {item.originalPrice !== item.discountedPrice && (
@@ -227,6 +228,7 @@ export default function Earning() {
                     </span>
                   </div>
                 )}
+               
 
                 <h2 className="text-[16px] font-bold">{item.title}</h2>
                 <p>{item.description}</p>
