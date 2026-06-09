@@ -162,6 +162,7 @@ export interface ReferralLinkCategory {
   id: number;
   title: string;
   description: string;
+  imageUrl: string | null;
   url: string;
 }
 
@@ -169,6 +170,7 @@ export interface ReferralLinkCourse {
   id: number;
   title: string;
   description: string;
+  imageUrl: string | null;
   originalPrice: number;
   discountedPrice: number;
   url: string;
