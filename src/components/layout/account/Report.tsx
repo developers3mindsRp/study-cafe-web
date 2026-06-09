@@ -21,6 +21,14 @@ function formatDate(dateStr: string) {
   });
 }
 
+function getApiErrorMessage(error: unknown, fallback: string) {
+  if (!isAxiosError(error) || !error.response?.data) return fallback;
+  const data = error.response.data as { error?: string; message?: string };
+  if (typeof data.error === "string" && data.error.trim()) return data.error;
+  if (typeof data.message === "string" && data.message.trim()) return data.message;
+  return fallback;
+}
+
 function isoDateLocal(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -115,7 +123,17 @@ export default function AffiliateReportPage() {
 
   const periodCommission = useMemo(
     () =>
-      orders.reduce((s, o) => s + parseFloat(String(o.commission_amount || 0)), 0),
+      orders
+        .filter((o) => o.status !== "expired")
+        .reduce((s, o) => s + parseFloat(String(o.commission_amount || 0)), 0),
+    [orders],
+  );
+
+  const periodExpiredCommission = useMemo(
+    () =>
+      orders
+        .filter((o) => o.status === "expired")
+        .reduce((s, o) => s + parseFloat(String(o.commission_amount || 0)), 0),
     [orders],
   );
 
@@ -126,6 +144,9 @@ export default function AffiliateReportPage() {
       parseFloat(String(dashboard?.balance?.current_balance ?? 0)) -
         (dashboard?.pending_withdrawal_total ?? 0),
     );
+
+  const minWithdrawal = dashboard?.settings?.minWithdrawal ?? 1000;
+  const earningsExpiryDays = dashboard?.settings?.earningsExpiryDays ?? 90;
 
   const handleSearch = useCallback(async () => {
     setSuccess(null);
@@ -157,6 +178,10 @@ export default function AffiliateReportPage() {
       setError("Enter a valid withdrawal amount.");
       return;
     }
+    if (amount + 1e-6 < minWithdrawal) {
+      setError(`Minimum withdrawal amount is ₹${minWithdrawal.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}.`);
+      return;
+    }
     if (amount > available + 1e-6) {
       setError(`Amount cannot exceed available balance (₹${available.toFixed(2)}).`);
       return;
@@ -171,17 +196,11 @@ export default function AffiliateReportPage() {
       await loadSummary();
       await fetchOrders({ all: allTime });
     } catch (e: unknown) {
-      const msg =
-        isAxiosError(e) &&
-        e.response?.data &&
-        typeof (e.response.data as { message?: string }).message === "string"
-          ? (e.response.data as { message: string }).message
-          : "Could not submit withdrawal. Please try again.";
-      setError(msg);
+      setError(getApiErrorMessage(e, "Could not submit withdrawal. Please try again."));
     } finally {
       setWithdrawSubmitting(false);
     }
-  }, [withdrawAmount, available, loadSummary, fetchOrders, allTime]);
+  }, [withdrawAmount, available, minWithdrawal, loadSummary, fetchOrders, allTime]);
 
   if (initialLoading) {
     return (
@@ -209,10 +228,13 @@ export default function AffiliateReportPage() {
       <p className="text-[#454545] text-[15px] md:text-[18px] mb-6">
         Filter referral commissions by period and request payouts. Withdrawals stay pending until
         staff marks them approved in admin after paying you manually.
+        {earningsExpiryDays > 0 && (
+          <> Each commission expires {earningsExpiryDays} days after it is earned if not withdrawn.</>
+        )}
       </p>
 
       {/* Balance overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
         <div className="border border-[#E5E7EB] rounded-xl p-4">
           <p className="text-sm text-[#717171]">Current balance</p>
           <p className="text-xl font-semibold text-[#252525]">
@@ -237,7 +259,23 @@ export default function AffiliateReportPage() {
             ₹{parseFloat(String(bal?.total_earned ?? 0)).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
           </p>
         </div>
+        {(dashboard?.expired_commission_total ?? 0) > 0 && (
+          <div className="border border-[#FECACA] rounded-xl p-4 bg-[#FEF2F2]">
+            <p className="text-sm text-[#B91C1C]">Expired commission</p>
+            <p className="text-xl font-semibold text-[#B91C1C]">
+              ₹{(dashboard?.expired_commission_total ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+            </p>
+          </div>
+        )}
       </div>
+
+      {earningsExpiryDays > 0 && dashboard?.next_expiry_at && (
+        <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-6">
+          Your earliest active commission expires on{" "}
+          <span className="font-semibold">{formatDate(dashboard.next_expiry_at)}</span>.
+          Withdraw before expiry to avoid losing that amount.
+        </p>
+      )}
 
       {(error || success) && (
         <div className="mb-6 space-y-2">
@@ -296,10 +334,19 @@ export default function AffiliateReportPage() {
         {!loading && orders.length > 0 && (
           <p className="mt-4 text-[15px] text-[#252525]">
             <span className="font-semibold">{orders.length}</span> order
-            {orders.length !== 1 ? "s" : ""} in this view · Commission total in period:{" "}
+            {orders.length !== 1 ? "s" : ""} in this view · Active commission:{" "}
             <span className="font-semibold text-[#275934]">
               ₹{periodCommission.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
+            {periodExpiredCommission > 0 && (
+              <>
+                {" "}
+                · Expired in period:{" "}
+                <span className="font-semibold text-[#B91C1C]">
+                  ₹{periodExpiredCommission.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+              </>
+            )}
           </p>
         )}
       </div>
@@ -310,26 +357,26 @@ export default function AffiliateReportPage() {
         <p className="text-sm text-[#616161] mb-4">
           Submit the amount you want paid out. Admin will transfer funds offline and mark the request
           approved in the system (which updates your balance). Rejected requests do not change your
-          balance.
+          balance. Minimum withdrawal: ₹{minWithdrawal.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:items-end max-w-xl">
           <div className="flex-1">
             <label className="text-sm text-[#555]">Amount (₹)</label>
             <input
               type="number"
-              min={0}
+              min={minWithdrawal}
               step={0.01}
               max={available}
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
-              placeholder={`Max ₹${available.toFixed(2)}`}
+              placeholder={`Min ₹${minWithdrawal.toLocaleString("en-IN")} · Max ₹${available.toFixed(2)}`}
               className="mt-1 w-full h-[44px] px-3 border border-gray-300 rounded-xl"
             />
           </div>
           <button
             type="button"
             onClick={handleWithdraw}
-            disabled={withdrawSubmitting || available <= 0}
+            disabled={withdrawSubmitting || available < minWithdrawal}
             className="bg-[#09339B] text-white px-6 py-2.5 rounded-xl hover:bg-[#0F2E75] disabled:opacity-50 h-[44px]"
           >
             {withdrawSubmitting ? "Submitting…" : "Submit request"}
@@ -397,7 +444,22 @@ export default function AffiliateReportPage() {
         >
           <div className="flex justify-between md:text-[18px] flex-wrap gap-2">
             <p className="font-bold">Order — {order.order_id}</p>
-            <p className="text-[#555]">{formatDate(order.created_at)}</p>
+            <div className="text-right">
+              <p className="text-[#555]">Earned {formatDate(order.created_at)}</p>
+              {order.status === "expired" && order.expires_at && (
+                <p className="text-xs text-red-600 font-medium">
+                  Expired on {formatDate(order.expires_at)}
+                </p>
+              )}
+              {order.status === "expired" && !order.expires_at && (
+                <p className="text-xs text-red-600 font-medium">Expired</p>
+              )}
+              {order.status === "confirmed" && order.expires_at && (
+                <p className="text-xs text-amber-700">
+                  Expires {formatDate(order.expires_at)}
+                </p>
+              )}
+            </div>
           </div>
 
           <p className="font-medium">{order.buyer_name}</p>
@@ -423,7 +485,13 @@ export default function AffiliateReportPage() {
               </p>
               <p className="text-xs text-gray-500 mt-0.5 capitalize">Type: {order.entity_type}</p>
             </div>
-            <p className="bg-[#C5FFD4] px-3 md:px-5 py-1.5 rounded-lg text-[#275934] font-medium whitespace-nowrap shrink-0">
+            <p
+              className={`px-3 md:px-5 py-1.5 rounded-lg font-medium whitespace-nowrap shrink-0 ${
+                order.status === "expired"
+                  ? "bg-[#FEE2E2] text-[#B91C1C] line-through"
+                  : "bg-[#C5FFD4] text-[#275934]"
+              }`}
+            >
               ₹
               {parseFloat(String(order.commission_amount)).toLocaleString("en-IN", {
                 minimumFractionDigits: 2,
@@ -431,6 +499,11 @@ export default function AffiliateReportPage() {
               commission
             </p>
           </div>
+          {order.status === "expired" && (
+            <p className="text-sm text-red-600">
+              This commission expired before withdrawal and is no longer available.
+            </p>
+          )}
         </div>
       ))}
     </section>

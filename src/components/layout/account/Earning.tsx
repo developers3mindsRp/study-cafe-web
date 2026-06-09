@@ -111,7 +111,8 @@ export default function Earning() {
       </div>
 
       {(dashboard?.available_for_withdrawal != null ||
-        dashboard?.pending_withdrawal_total != null) && (
+        dashboard?.pending_withdrawal_total != null ||
+        dashboard?.settings) && (
         <div className="mt-4 px-2 flex flex-wrap gap-6 text-sm text-[#555]">
           <p>
             Available to withdraw:{" "}
@@ -125,6 +126,40 @@ export default function Earning() {
               ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN")}
             </span>
           </p>
+          {dashboard?.settings?.minWithdrawal != null && (
+            <p>
+              Minimum withdrawal:{" "}
+              <span className="font-semibold">
+                ₹{dashboard.settings.minWithdrawal.toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.expired_commission_total ?? 0) > 0 && (
+            <p>
+              Expired commission:{" "}
+              <span className="font-semibold text-[#B91C1C]">
+                ₹{(dashboard?.expired_commission_total ?? 0).toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.settings?.earningsExpiryDays ?? 0) > 0 && (
+            <p>
+              Commission expires{" "}
+              <span className="font-semibold">{dashboard?.settings?.earningsExpiryDays} days</span> after each earning if not withdrawn.
+            </p>
+          )}
+          {dashboard?.next_expiry_at && (
+            <p>
+              Next expiry:{" "}
+              <span className="font-semibold text-amber-700">
+                {new Date(dashboard.next_expiry_at).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </p>
+          )}
         </div>
       )}
 

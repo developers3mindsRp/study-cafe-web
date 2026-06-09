@@ -131,10 +131,16 @@ export interface AffiliateHistoryItem {
   commission_amount: string;
   status: string;
   created_at: string;
+  expires_at?: string | null;
   buyer_name: string;
   buyer_email: string;
   buyer_phone: string;
   item_title: string;
+}
+
+export interface AffiliateProgramSettings {
+  minWithdrawal: number;
+  earningsExpiryDays: number;
 }
 
 export interface AffiliateDashboardData {
@@ -143,10 +149,17 @@ export interface AffiliateDashboardData {
   pending_withdrawal_total?: number;
   /** current_balance − pending_withdrawal_total */
   available_for_withdrawal?: number;
+  /** Lifetime commission that has expired and is no longer withdrawable. */
+  expired_commission_total?: number;
+  /** Sum of confirmed (non-expired) commission rows. */
+  active_commission_total?: number;
+  /** Earliest expiry among active confirmed commissions, if any. */
+  next_expiry_at?: string | null;
   totalOrders: number;
   totalOrderValue: number;
   totalCommission: number;
   history: AffiliateHistoryItem[];
+  settings?: AffiliateProgramSettings;
 }
 
 export interface UserWithdrawalRequest {
