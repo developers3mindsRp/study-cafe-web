@@ -8,6 +8,12 @@ import { useUserPurchases } from "@/hooks/usePurchases";
 import { getToken } from "@/utils/auth.utils";
 import { isUserCourseOrderPurchase } from "@/utils/purchaseGuards";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import {
+  getEffectiveCoursePrice,
+  getCourseListPrice,
+  hasCourseSalePrice,
+  parseCoursePrice,
+} from "@/utils/coursePrice.utils";
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
@@ -166,7 +172,9 @@ export default function BannerSection({
 
     const embedUrl = `https://www.youtube.com/embed/${videoId}`;
   const price = formatPrice(course?.price);
-  const salePrice = formatPrice(course?.sale_price);
+  const salePrice = hasCourseSalePrice(course ?? {})
+    ? formatPrice(getEffectiveCoursePrice(course ?? {}))
+    : null;
   const displayBatch = resolveDisplayBatch(batches);
   const startDate = formatDate(displayBatch?.date ?? null);
   const dateLabel =
@@ -191,7 +199,9 @@ export default function BannerSection({
   const courseIncludes =
     parsedIncludes.length > 0 && parsedIncludes;
   const displayPrice = salePrice ?? price;
-  const originalPrice = salePrice ? price : null;
+  const originalPrice = hasCourseSalePrice(course ?? {})
+    ? formatPrice(getCourseListPrice(course ?? {}) ?? parseCoursePrice(course?.price))
+    : null;
 
   const statBadges = (size: "sm" | "lg") => {
     const cls =
