@@ -7,8 +7,20 @@ import {
   type AffiliateDashboardData,
   type ReferralLinksData,
 } from "@/services/order.service";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 const BASE_URL = typeof window !== "undefined" ? window.location.origin : "https://studycafe.io";
+
+function ReferralImage({ src, alt }: { src?: string | null; alt: string }) {
+  const resolved = resolveApiAssetUrl(src);
+  if (!resolved) return null;
+  return (
+    <div className="relative w-full h-[140px] rounded-md overflow-hidden border border-[#E5E7EB]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={resolved} alt={alt} className="w-full h-full object-cover" />
+    </div>
+  );
+}
 
 export default function Earning() {
   const router = useRouter();
@@ -99,7 +111,8 @@ export default function Earning() {
       </div>
 
       {(dashboard?.available_for_withdrawal != null ||
-        dashboard?.pending_withdrawal_total != null) && (
+        dashboard?.pending_withdrawal_total != null ||
+        dashboard?.settings) && (
         <div className="mt-4 px-2 flex flex-wrap gap-6 text-sm text-[#555]">
           <p>
             Available to withdraw:{" "}
@@ -113,6 +126,40 @@ export default function Earning() {
               ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN")}
             </span>
           </p>
+          {dashboard?.settings?.minWithdrawal != null && (
+            <p>
+              Minimum withdrawal:{" "}
+              <span className="font-semibold">
+                ₹{dashboard.settings.minWithdrawal.toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.expired_commission_total ?? 0) > 0 && (
+            <p>
+              Expired commission:{" "}
+              <span className="font-semibold text-[#B91C1C]">
+                ₹{(dashboard?.expired_commission_total ?? 0).toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.settings?.earningsExpiryDays ?? 0) > 0 && (
+            <p>
+              Commission expires{" "}
+              <span className="font-semibold">{dashboard?.settings?.earningsExpiryDays} days</span> after each earning if not withdrawn.
+            </p>
+          )}
+          {dashboard?.next_expiry_at && (
+            <p>
+              Next expiry:{" "}
+              <span className="font-semibold text-amber-700">
+                {new Date(dashboard.next_expiry_at).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </p>
+          )}
         </div>
       )}
 
@@ -183,6 +230,7 @@ export default function Earning() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             {links!.categories.map((category) => (
               <div key={category.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
+                <ReferralImage src={category.imageUrl} alt={category.title} />
                 <h2 className="text-[16px] font-bold">{category.title}</h2>
                 <p className="line-clamp-2">{category.description}</p>
                 <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md break-all">
