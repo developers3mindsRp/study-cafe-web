@@ -233,122 +233,131 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <div className="mb-8 rounded-xl bg-sky-50 border border-sky-100 p-6 md:p-8">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900">{link.title}</h1>
-        {link.description && (
-          <div
-            className="mt-3 prose prose-sm max-w-none text-gray-700 [&_a]:text-blue-600"
-            dangerouslySetInnerHTML={{ __html: link.description }}
-          />
-        )}
-        <p className="mt-4 text-sm md:text-base">
-          {link.total_seats > 0 ? (
-            <>
-              Hurry Up!,{" "}
-              <span className="font-bold text-red-600">{link.display_sold}</span> Sold out of{" "}
-              <span className="font-semibold">{link.total_seats}</span>
-            </>
-          ) : (
-            <>
-              <span className="font-bold text-red-600">{link.display_sold}</span> seats claimed so far (unlimited
-              capacity)
-            </>
-          )}
-        </p>
-        {!expired && Number.isFinite(expiryMs) && (
-          <p className="mt-2 text-sm font-bold text-red-600">
-            {mounted ? (
-              <>This Payment Link will Expire in {countdownLabel}</>
-            ) : (
-              <>This payment link expires soon — timer updates in a moment.</>
-            )}
-          </p>
-        )}
-        {soldOut && <p className="mt-2 text-sm font-bold text-red-600">All seats are booked.</p>}
-        <div className="mt-6 flex flex-wrap items-baseline gap-3">
-          <span className="text-2xl font-bold text-red-600">{fmt(sale)}</span>
-          {mrp > sale && (
-            <span className="text-lg text-gray-400 line-through">{fmt(mrp)}</span>
-          )}
-        </div>
-        <p className="mt-2 text-xs text-gray-500">
-          Plus GST (18%): {fmt(gst)} · You pay: <span className="font-semibold text-gray-800">{fmt(grandTotal)}</span>
-        </p>
-      </div>
-
-      <h2 className="text-lg font-bold text-gray-900 mb-4">Enter Your Details</h2>
-      <form onSubmit={onSubmit} className="space-y-4 max-w-lg">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Full Name <span className="text-red-600">*</span>
-          </label>
-          <input
-            {...register("fullName")}
-            placeholder="eg. Amit Kumar"
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
-          {errors.fullName && <p className="mt-1 text-xs text-red-600">{errors.fullName.message}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Email <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="email"
-            {...register("email")}
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
-          {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Mobile Number <span className="text-red-600">*</span>
-          </label>
-          <Controller
-            name="mobile"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <PhoneInput
-                international
-                defaultCountry="IN"
-                value={value || undefined}
-                onChange={(v) => onChange(v || "")}
-                className="mt-1 payment-link-phone"
+    <div className="p-[50px_0]">
+        <div className="container mx-auto grid md:grid-cols-2 gap-8 mb-10">
+          <div className="mb-8 rounded-xl bg-sky-50 border border-sky-100 p-6 h-full">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">{link.title}</h1>
+            {link.description && (
+              <div
+                className="mt-3 prose prose-sm max-w-none text-gray-700 [&_a]:text-blue-600"
+                dangerouslySetInnerHTML={{ __html: link.description }}
               />
             )}
-          />
-          {errors.mobile && <p className="mt-1 text-xs text-red-600">{errors.mobile.message}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">GST number</label>
-          <input
-            {...register("gstNumber")}
-            placeholder="15-character GSTIN (optional)"
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
-          {errors.gstNumber && <p className="mt-1 text-xs text-red-600">{errors.gstNumber.message}</p>}
-        </div>
+            <p className="mt-4 text-sm md:text-base">
+              {link.total_seats > 0 ? (
+                <>
+                  Hurry Up!,{" "}
+                  <span className="font-bold text-[#09339B]">{link.display_sold}</span> Sold out of{" "}
+                  <span className="font-semibold">{link.total_seats}</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-bold text-[#09339B]">{link.display_sold}</span> seats claimed so far (unlimited
+                  capacity)
+                </>
+              )}
+            </p>
+            {!expired && Number.isFinite(expiryMs) && (
+              <p className="mt-2 text-sm font-bold text-[#09339B]">
+                {mounted ? (
+                  <>This Payment Link will Expire in {countdownLabel}</>
+                ) : (
+                  <>This payment link expires soon — timer updates in a moment.</>
+                )}
+              </p>
+            )}
+            {soldOut && <p className="mt-2 text-sm font-bold text-[#09339B]">All seats are booked.</p>}
+            <div className="mt-6 flex flex-wrap items-baseline gap-3">
+              <span className="text-2xl font-bold text-[#09339B]">{fmt(sale)}</span>
+              {mrp > sale && (
+                <span className="text-lg text-gray-400 line-through">{fmt(mrp)}</span>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Plus GST (18%): {fmt(gst)} · You pay: <span className="font-semibold text-gray-800">{fmt(grandTotal)}</span>
+            </p>
+          </div>
+          <div className="p-4">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Enter Your Details</h2>
+              <form onSubmit={onSubmit} className="space-y-4 ">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Full Name <span className="text-[#09339B]">*</span>
+                  </label>
+                  <input
+                    {...register("fullName")}
+                    placeholder="eg. Amit Kumar"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  {errors.fullName && <p className="mt-1 text-xs text-[#09339B]">{errors.fullName.message}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Email <span className="text-[#09339B]">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    {...register("email")}
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  {errors.email && <p className="mt-1 text-xs text-[#09339B]">{errors.email.message}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Mobile Number <span className="text-[#09339B]">*</span>
+                  </label>
+                  <Controller
+                    name="mobile"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <PhoneInput
+                        international
+                        defaultCountry="IN"
+                        value={value || undefined}
+                        onChange={(v) => onChange(v || "")}
+                        className="mt-1 payment-link-phone"
+                      />
+                    )}
+                  />
+                  {errors.mobile && <p className="mt-1 text-xs text-[#09339B]">{errors.mobile.message}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">GST number</label>
+                  <input
+                    {...register("gstNumber")}
+                    placeholder="15-character GSTIN (optional)"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  {errors.gstNumber && <p className="mt-1 text-xs text-[#09339B]">{errors.gstNumber.message}</p>}
+                </div>
 
-        {submitError && <p className="text-sm text-red-600">{submitError}</p>}
+                {submitError && <p className="text-sm text-[#09339B]">{submitError}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting || disabledCheckout}
-          className="rounded-lg bg-red-600 px-6 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
-        >
-          {isSubmitting ? "Processing…" : "Checkout"}
-        </button>
-      </form>
-      <style jsx global>{`
-        .payment-link-phone input.PhoneInputInput {
-          width: 100%;
-          border-radius: 0.5rem;
-          border: 1px solid #d1d5db;
-          padding: 0.5rem 0.75rem;
-          font-size: 0.875rem;
-        }
-      `}</style>
+                <button
+                  type="submit"
+                  disabled={isSubmitting || disabledCheckout}
+                  className="rounded-lg bg-[#09339B] border border-[#09339B] px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#09339B] disabled:opacity-50 w-full"
+                >
+                  {isSubmitting ? "Processing…" : "Checkout"}
+                </button>
+              </form>
+            <style jsx global>{`
+            .payment-link-phone{
+              border: 1px solid #d1d5db;
+              border-radius: 0.5rem;
+              
+                padding:10px 10px ;
+            }
+              .payment-link-phone input.PhoneInputInput {
+                width: 100%;
+                  padding:0;
+                font-size: 0.875rem;
+              }
+            `}</style>
+          </div>
+
+        
+        </div>
     </div>
   );
 }
