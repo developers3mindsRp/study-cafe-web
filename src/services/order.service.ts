@@ -183,11 +183,11 @@ export interface ReferralLinkCourse {
   id: number;
   title: string;
   description: string;
-  imageUrl: string | null;
+  imageUrl?: string;
   originalPrice: number;
   discountedPrice: number;
   url: string;
-   image?: string;
+   
 }
 
 export interface ReferralLinksData {

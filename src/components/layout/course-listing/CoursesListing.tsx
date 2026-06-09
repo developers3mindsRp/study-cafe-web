@@ -27,8 +27,8 @@ function CourseCard({ c }: { c: PublicCourse }) {
   return (
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden">
-     <div className="relative w-full h-[200px] xl:h-[243px]">
-        <Image src={thumbnail} alt={c.title} fill className="object-cover" />
+     <div className="relative ">
+        <img src={thumbnail} alt={c.title} width="100%" />
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
             <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
