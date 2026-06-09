@@ -6,6 +6,7 @@ import { useLogout } from "@/hooks/useAuth";
 import { useAuth } from "@/providers/AuthProvider";
 import { getCourseCats } from "@/services/platform.service";
 import type { CourseCat } from "@/types/models.types";
+import UserDropdown from "./profileDropdown";
 
 /**
  * Header Component - with Courses dropdown (desktop + mobile)
@@ -14,6 +15,7 @@ import type { CourseCat } from "@/types/models.types";
 export default function Header() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
+
   const logout = useLogout();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -180,7 +182,7 @@ export default function Header() {
               <div className="h-10 w-24 animate-pulse rounded-lg bg-gray-200" aria-hidden />
             ) : user ? (
               <div className="relative" ref={userRef}>
-                <Link
+                {/* <Link
                   href="/dashboard"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-gray-50"
                 >
@@ -190,10 +192,9 @@ export default function Header() {
                   <span className="max-w-[140px] truncate text-sm font-medium text-gray-900">
                     {user.name || "Account"}
                   </span>
-                  {/* <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg> */}
-                </Link>
+                
+                </Link> */}
+                <UserDropdown user={user}/>
               </div>
             ) : (
               <Link

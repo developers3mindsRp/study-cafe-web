@@ -126,94 +126,14 @@ export default function BlogArticlePremiumLayout({
               whatsapp_link={whatsapp_link}
               telegram_link={telegram_link}
               google_news_url={google_news_url}
-
+              citation={citation}
 
             />
 
           }
 
           
-      {
-        citation &&
-              <div className="w-full bg-white container mx-auto px-4">
-          <div className="border border-[#d4d4d4] rounded-xl p-6 bg-white shadow-sm">
-            
-            <h2 className="text-2xl font-semibold text-[#111827] mb-6">
-              Citation Details
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-              {citation?.appeal_number && (
-                <div>
-                  <p className="text-[16px] font-medium text-[#111827]  mb-1">
-                    Appeal Number
-                  </p>
-                  <p className="text-[#6a6969] text-sm">
-                    {citation?.appeal_number}
-                  </p>
-                </div>
-              )}
-
-              {citation?.assessment_year && (
-                <div>
-                  <p className="mb-1 text-[16px] font-medium text-[#111827]">
-                    Assessment Year
-                  </p>
-                  <p className="text-sm text-[#6a6969] ">
-                    {citation?.assessment_year}
-                  </p>
-                </div>
-              )}
-
-              {citation?.case_citation && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Case Citation
-                  </p>
-                  <p className="text-sm text-[#6a6969] break-words">
-                    {citation?.case_citation}
-                  </p>
-                </div>
-              )}
-
-              {citation?.case_name && (
-                <div>
-                  <p className="text-[16px] font-medium text-[#111827] mb-1">
-                    Case Name
-                  </p>
-                  <p className="text-sm text-[#6a6969]  break-words">
-                    {citation?.case_name}
-                  </p>
-                </div>
-              )}
-
-              {citation?.court && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Court
-                  </p>
-                  <p className="text-sm text-[#6a6969]">
-                    {citation?.court}
-                  </p>
-                </div>
-              )}
-
-              {citation?.judgement_date && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Judgement Date
-                  </p>
-                  <p className="text-sm text-[#6a6969]">
-                    {citation?.judgement_date}
-                  </p>
-                </div>
-              )}
-
-            </div>
-          </div>
-        </div>
-      }
+      
 
          
           
