@@ -14,6 +14,10 @@ import {
   type ApplyCouponResponse,
 } from "@/services/order.service";
 import { getReferralCode } from "@/utils/auth.utils";
+import {
+  getCourseListPrice,
+  getEffectiveCoursePrice,
+} from "@/utils/coursePrice.utils";
 
 const GST_RATE = 0.18;
 
@@ -28,12 +32,6 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 
-function parseNum(val?: string | number | null): number {
-  if (val == null) return 0;
-  const n = typeof val === "string" ? parseFloat(val) : val;
-  return isNaN(n) ? 0 : n;
-}
-
 function fmt(n: number) {
   return `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -46,8 +44,8 @@ export default function PriceCard({ course }: Props) {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
 
-  const price = parseNum(course?.sale_price) || parseNum(course?.price);
-  const originalPrice = course?.sale_price ? parseNum(course.price) : 0;
+  const price = getEffectiveCoursePrice(course ?? {});
+  const originalPrice = getCourseListPrice(course ?? {}) ?? 0;
 
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<ApplyCouponResponse | null>(null);
