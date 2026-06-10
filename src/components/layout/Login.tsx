@@ -49,7 +49,7 @@ export default function LoginPage() {
       const msg =
         (err as ApiError)?.message ||
         (err as Error)?.message ||
-        "Sign in failed. Check your email and password.";
+        "Sign in failed. Check your email or StudyCafe ID and password.";
       setErrors(msg);
     }
   }
@@ -224,18 +224,18 @@ export default function LoginPage() {
           >
             <div>
               <label htmlFor="email" className="block mb-1">
-                Email <span className="text-red-600">*</span>
+                Email or StudyCafe ID <span className="text-red-600">*</span>
               </label>
               <div className="relative">
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   value={form.email}
                   onChange={handleChange}
                   required
-                  autoComplete="email"
-                  placeholder="Enter your Email"
+                  autoComplete="username"
+                  placeholder="Enter your email or StudyCafe ID"
                   className="w-full border px-3 py-2 pr-10 rounded-md"
                 />
                 <img
