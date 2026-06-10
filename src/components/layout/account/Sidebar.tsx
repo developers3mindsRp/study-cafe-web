@@ -25,11 +25,11 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
   const { data: stats } = useDashboardStats({ enabled: !!user });
   const { data: subscription } = useSubscriptionStatus({ enabled: !!user });
 
-  const resolvedAvatar = resolveApiAssetUrl(user?.avatar) || "/images/profile.png";
+  const resolvedAvatar = resolveApiAssetUrl(user?.avatar) || "/images/userplaceholder.png";
   const [avatarSrc, setAvatarSrc] = useState(resolvedAvatar);
 
   useEffect(() => {
-    setAvatarSrc(resolveApiAssetUrl(user?.avatar) || "/images/profile.png");
+    setAvatarSrc(resolveApiAssetUrl(user?.avatar) || "/images/userplaceholder.png");
   }, [user?.avatar]);
 
   function handleLogout() {
@@ -78,6 +78,8 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
     ? Math.min(100, ((totalDays - daysRemaining) / totalDays) * 100)
     : 0;
 
+
+    console.log(user,"user")
   return (
     <div className="sticky top-20 space-y-6">
       {/* PROFILE BOX */}
@@ -91,14 +93,14 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
         <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
           {/* Profile Image Wrapper */}
           <div className="relative w-32 h-32 xl:w-40 xl:h-40 flex-shrink-0">
-            <div className="w-full h-full rounded-full overflow-hidden">
+            <div className="w-full h-full rounded-full overflow-hidden border border-[#9a9a9a]">
               <Image
                 src={avatarSrc}
                 alt="Profile"
                 width={160}
                 height={160}
                 className="object-cover w-full h-full"
-                onError={() => setAvatarSrc("/images/profile.png")}
+                onError={() => setAvatarSrc("/images/userplaceholder.png")}
               />
             </div>
 

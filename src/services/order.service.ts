@@ -295,14 +295,17 @@ export const getMyCommissionOrders = async (
   return response.data.data ?? [];
 };
 
-export const getMyReferralLinks = async (): Promise<ReferralLinksData> => {
+export const getMyReferralLinks = async (
+  search: string = ""
+): Promise<ReferralLinksData> => {
   const response = await axiosInstance.get<ApiResponse<ReferralLinksData>>(
-    '/affiliate/my-links',
+    `/affiliate/my-links?search=${encodeURIComponent(search)}`
   );
-  console.log(response.data.data,"response.data.data")
+
+  console.log(response.data.data, "response.data.data");
+
   return response.data.data;
 };
-
 export const getMyWithdrawals = async (): Promise<UserWithdrawalRequest[]> => {
   const response = await axiosInstance.get<ApiResponse<UserWithdrawalRequest[]>>(
     '/affiliate/my-withdrawals',

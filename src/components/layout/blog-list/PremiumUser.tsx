@@ -334,6 +334,8 @@ export default function Premium_user({
   const canDownload = access?.can_download ?? false;
   const downloadUrl = article?.download_url ?? null;
 
+
+
   // Fallback author name from the article itself when a full profile isn't available
   const fallbackAuthorName =
     authorSpotlight?.display_name ||

@@ -36,6 +36,7 @@ function formatTotalDuration(seconds: number): string {
 
 export type CourseDetailProfileProps = {
   courseTitle: string;
+  certificate_enabled:any;
   instructorLine?: string | null;
   courseId: string;
   courseThumbnailUrl?: string | null;
@@ -67,6 +68,7 @@ export type CourseDetailProfileProps = {
 
 export default function CourseDetailProfile({
   courseTitle,
+  certificate_enabled,
   instructorLine,
   courseId,
   courseThumbnailUrl,
@@ -214,25 +216,29 @@ export default function CourseDetailProfile({
               onClose={() => setIsReviewOpen(false)}
             />
           )}
+          {
+            certificate_enabled == true &&
+             <button
+              type="button"
+              disabled={!isCourseComplete}
+              title={
+                isCourseComplete
+                  ? undefined
+                  : "Complete the course to download your certificate"
+              }
+              onClick={() => isCourseComplete && setIsCertificateOpen(true)}
+              className="flex items-center gap-2 rounded-md border px-4 py-2 text-[#09339B] transition hover:bg-[#f0f4ff] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <img
+                src="/images/award.png"
+                alt="Certificate icon"
+                className="h-5 w-5"
+              />
+              <span className="font-medium">Certificate</span>
+            </button>
+          }
 
-          <button
-            type="button"
-            disabled={!isCourseComplete}
-            title={
-              isCourseComplete
-                ? undefined
-                : "Complete the course to download your certificate"
-            }
-            onClick={() => isCourseComplete && setIsCertificateOpen(true)}
-            className="flex items-center gap-2 rounded-md border px-4 py-2 text-[#09339B] transition hover:bg-[#f0f4ff] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <img
-              src="/images/award.png"
-              alt="Certificate icon"
-              className="h-5 w-5"
-            />
-            <span className="font-medium">Certificate</span>
-          </button>
+         
 
           {isCertificateOpen && (
             <Certificate

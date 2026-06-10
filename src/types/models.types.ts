@@ -520,7 +520,7 @@ export interface CoursePublicDetail {
   updated_at?: string;
   authors?: CourseAuthorProfile[];
   featured_in_logos:any;
-
+certificate_enabled:any;
   author_user_id?: number | null;
   author_name?: string | null;
   author_role?: string | null;
