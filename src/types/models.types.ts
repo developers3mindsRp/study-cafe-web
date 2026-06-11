@@ -620,6 +620,15 @@ export interface ArticleBySlug {
   google_news_url?:any;
   /** Article's own tags — used for clickable tag links on the detail page. */
   tags?: { id: number; name: string }[];
+  /** Tax notification metadata (number, date, type). */
+  notification?: {
+    noti_no?: string | null;
+    noti_date?: string | null;
+    type_of_tax?: string | null;
+  } | null;
+  noti_no?: string | null;
+  noti_date?: string | null;
+  type_of_tax?: string | null;
 
 }
 
