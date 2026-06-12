@@ -380,12 +380,12 @@ export interface SeoMetadata {
   pageName: string;
   metaTitle: string;
   metaDescription: string;
-  metaKeywords?: string;
-  robots?: string;
-  canonicalUrl?: string;
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImageUrl?: string;
+  metaKeywords?: string | null;
+  robots?: string | null;
+  canonicalUrl?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  ogImageUrl?: string | null;
 }
 
 /** Resolved "Also Read" / category suggestions */

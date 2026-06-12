@@ -61,9 +61,9 @@ export function mergeGlobalSeoDefaults(
     metaKeywords: api?.metaKeywords?.trim() || DEFAULT_META_KEYWORDS,
     robots: api?.robots?.trim() || DEFAULT_ROBOTS,
     canonicalUrl:
-      api?.canonicalUrl?.trim() || defaultCanonicalUrlForPath(pathname),
-    ogTitle: api?.ogTitle?.trim(),
-    ogDescription: api?.ogDescription?.trim(),
-    ogImageUrl: api?.ogImageUrl?.trim(),
+      api?.canonicalUrl?.trim() || defaultCanonicalUrlForPath(pathname) || null,
+    ogTitle: api?.ogTitle?.trim() || null,
+    ogDescription: api?.ogDescription?.trim() || null,
+    ogImageUrl: api?.ogImageUrl?.trim() || null,
   };
 }
