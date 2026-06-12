@@ -80,18 +80,15 @@ export default function BlogArticlePremiumLayout({
     initialData: initialSpotlight,
     staleTime: 5 * 60 * 1000,
   });
-  const citation = initialArticle?.citation;
-  const whatsapp_link = initialArticle?.whatsapp_link
-  const telegram_link = initialArticle?.telegram_link
-
-  const google_news_url = initialArticle?.google_news_url
+  const citation = article?.citation;
+  const whatsapp_link = article?.whatsapp_link;
+  const telegram_link = article?.telegram_link;
+  const google_news_url = article?.google_news_url;
 
   // Map the article's own tags (from API) to the BlogSpotlightTag shape used by SidebarBlog
   const articleTags: import("@/types/models.types").BlogSpotlightTag[] =
     (article.tags ?? []).map((t) => ({ id: t.id, name: t.name, article_count: 0 }));
 
-
-  console.log(initialArticle,"initialArticle")
 
   return (
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 pb-10 mt-6">

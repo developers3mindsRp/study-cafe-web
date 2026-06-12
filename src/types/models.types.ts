@@ -621,15 +621,21 @@ export interface ArticleBySlug {
   /** Article's own tags — used for clickable tag links on the detail page. */
   tags?: { id: number; name: string }[];
   /** Tax notification metadata (number, date, type). */
-  notification?: {
-    noti_no?: string | null;
-    noti_date?: string | null;
-    type_of_tax?: string | null;
-  } | null;
+  notification?: ArticleNotification | null;
+  /** Convenience mirrors of `notification` for simple field access. */
   noti_no?: string | null;
   noti_date?: string | null;
   type_of_tax?: string | null;
+  /** True when any notification field is present. */
+  has_notification?: boolean;
 
+}
+
+/** Article tax notification block from `GET /platform/articles/:slug`. */
+export interface ArticleNotification {
+  noti_no: string | null;
+  noti_date: string | null;
+  type_of_tax: string | null;
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
