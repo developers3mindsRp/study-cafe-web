@@ -38,14 +38,14 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
           {c.language && (
             <div className="flex flex-wrap items-center gap-4 text-[#6a6969] text-sm">
               <span className="flex items-center gap-1">
-                <img src="/images/icons/eng-light.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
+                <img src="/images/eng-dark.svg" alt="" width="20" height="20" /> {c.language.join(", ")}
               </span>
             </div>
           )}
           <h3 className="text-[20px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
           {enrolled && (
             <div className="flex items-center gap-1 text-[#6a6969]text-sm">
-              <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />{enrolled} students
+              <img src="/images/user-dark.svg" alt="" width="20" height="20" />{enrolled} students
             </div>
           )}
           <div className="flex justify-between items-center mt-4">
@@ -157,7 +157,7 @@ export default function FeaturedCourses() {
             <h2 className="text-[36px] xl:text-[40px] text-center md:text-left font-semibold text-[#121B31]">
               Featured Courses
             </h2>
-            <p className="text-[#6A7181] mt-2 mb-6 text-[18px] xl:text-[20px] leading-6 text-center md:text-left px-8 md:px-0">
+            <p className="text-[#3a3c3e] mt-2 mb-6 text-[18px] xl:text-[20px] leading-6 text-center md:text-left px-8 md:px-0">
               Explore our most popular courses designed by industry experts
             </p>
           </div>

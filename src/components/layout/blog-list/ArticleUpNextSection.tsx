@@ -85,7 +85,7 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
   return (
     <article className="space-y-4">
       <div className="flex flex-wrap items-start gap-2 gap-y-1">
-        <h3 className="text-[30px] font-medium text-[#252525]">{post.title}</h3>
+        <h3 className="text-[20px] font-medium text-[#252525]">{post.title}</h3>
         {post.blog_access_tier === "premium" ? (
           <span className="text-[10px] font-semibold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0 self-center">
             Premium

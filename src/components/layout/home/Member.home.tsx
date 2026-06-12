@@ -142,7 +142,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
     const features = normalizeFeatures(plan.features);
     const [showAll, setShowAll] = useState(false);
-    const visibleFeatures = showAll ? features : features.slice(0, 6);
+    const visibleFeatures = showAll ? features : features.slice(0, 10);
     const [showPopup, setShowPopup] = useState(false);
 
 

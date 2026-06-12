@@ -62,7 +62,7 @@ export default function BlogDesc() {
           <span className="flex-1 h-px bg-[#000000]" />
         </div>
 
-        <h3 className="text-[30px] font-medium text-[#252525]">
+        <h3 className="text-[20px] font-medium text-[#252525]">
           PSBs Approve Rs 52,300 Crore in MSME Loans Using New Credit Assessment
           Model
         </h3>
