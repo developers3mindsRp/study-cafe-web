@@ -73,7 +73,7 @@ export default function CourseSection({
                       <img
                         src={logo.logo_url}
                         alt={logo.name || `Company ${idx + 1}`}
-                        className="h-full object-contain"
+                       className="h-12 w-auto object-contain"
                       />
                     ) : (
                       <span className="text-xs text-gray-500 text-center">{logo.name}</span>
@@ -235,16 +235,16 @@ export default function CourseSection({
                 const card = (
                   <div
                     key={idx}
-                    className=" w-full max-w-full h-full
-                         border p-3 sm:p-4 rounded-[10px]
-                         flex items-center justify-center
-                         shadow-sm bg-white"
+                          className=" w-full max-w-full h-full
+                              border p-3 sm:p-4 rounded-[10px]
+                              flex items-center justify-center
+                              shadow-sm bg-white"
                   >
                     {logo.logo_url ? (
                       <img
                         src={logo.logo_url}
                         alt={logo.name || `Company ${idx + 1}`}
-                        
+                        className="h-auto max-w-full object-contain"
                       />
                     ) : (
                       <span className="text-xs text-gray-500 text-center">{logo.name}</span>
