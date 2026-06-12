@@ -1,5 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
+import {
+  getCourseListPrice,
+  getEffectiveCoursePrice,
+} from '@/utils/coursePrice.utils';
 import type { PublicCourse } from '@/types/models.types';
 
 interface TrendingCoursesProps {
@@ -20,8 +24,9 @@ function formatPrice(val?: string | number | null) {
 }
 
 const CourseCard = ({ course, size }: { course: any; size: 'sm' | 'lg' }) => {
-  const price = formatPrice(course.sale_price ?? course.price);
-  const originalPrice = course.sale_price ? formatPrice(course.price) : null;
+  const price = formatPrice(getEffectiveCoursePrice(course));
+  const listPrice = getCourseListPrice(course);
+  const originalPrice = listPrice != null ? formatPrice(listPrice) : null;
   const thumbnail = course.thumbnail_url ?? '/images/home/f1.jpg';
   const href = `/course/${course.slug ?? course.id}`;
 

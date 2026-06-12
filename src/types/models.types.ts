@@ -1,3 +1,17 @@
+export interface CurriculumSection {
+  title: string;
+  description?: string;
+  duration?: string | number | null;
+  videoId?: string;
+}
+
+export interface CurriculumDay {
+  title: string;
+  sections?: CurriculumSection[];
+  files?: any[];
+  total_duration?: number | null;
+}
+
 // User Model (auth-service / public site)
 export interface User {
   id: string;
@@ -18,6 +32,8 @@ export interface User {
   city?: string | null;
   state?: string | null;
   country?: string | null;
+  /** 15-character GSTIN (optional). */
+  gst?: string | null;
   referralCode?: string | null;
   /** Explicit `false`: must complete email OTP verification (see `/verify-email`). */
   emailVerified?: boolean;
@@ -33,6 +49,7 @@ export interface Course {
   slug?: string | null;
   description: string;
   thumbnail: string;
+  thumbnail_url?: string | null;
   price: number;
   discountPrice?: number;
   category: string;
@@ -46,6 +63,7 @@ export interface Course {
   };
   rating?: number;
   totalStudents: number;
+  totalLessons?: number;
   featured: boolean;
   status: 'draft' | 'published' | 'archived';
   createdAt: string;
@@ -117,6 +135,8 @@ export interface UserCourse extends Purchase {
   lastAccessedAt?: string;
   completedLessons: string[];
   completedAt?: string;
+  /** True when course was admin-granted (no paid order). From GET /user/courses. */
+  isAdminGranted?: boolean;
 }
 
 // Progress tracking
@@ -161,6 +181,8 @@ export interface RegisterData {
   city: string;
   state: string;
   country?: string;
+  /** 15-character GSTIN (optional). */
+  gst?: string;
 }
 
 export interface AuthResponse {
@@ -182,6 +204,8 @@ export interface UpdateProfileData {
   city?: string;
   state?: string;
   country?: string;
+  /** 15-character GSTIN (optional). */
+  gst?: string;
 }
 
 export interface UserSubscription {
@@ -469,7 +493,7 @@ export interface CoursePublicDetail {
   slug?: string | null;
   brief_description?: string | null;
   description?: string | null;
-  curriculum?: string | null;
+  curriculum?: CurriculumDay[] | string | null;
   learn_outcomes?: string | null;
   requirements?: string | null;
   terms_conditions?: string | null;
@@ -495,11 +519,18 @@ export interface CoursePublicDetail {
   created_at?: string;
   updated_at?: string;
   authors?: CourseAuthorProfile[];
+  featured_in_logos:any;
+certificate_enabled:any;
   author_user_id?: number | null;
   author_name?: string | null;
   author_role?: string | null;
   author_bio?: string | null;
   author_image?: string | null;
+  /** Computed: true when validity === 'lifetime'. */
+  is_lifetime?: boolean;
+  validity?: 'lifetime' | '1year';
+  /** JSON string of DetailSection[] for the course detail page dynamic sections. */
+  detail_sections?: string | null;
 }
 
 /** List / spotlight card (public); `access` reflects optional JWT + membership. */
@@ -587,6 +618,17 @@ export interface ArticleBySlug {
   whatsapp_link?:any;
   telegram_link?:any;
   google_news_url?:any;
+  /** Article's own tags — used for clickable tag links on the detail page. */
+  tags?: { id: number; name: string }[];
+  /** Tax notification metadata (number, date, type). */
+  notification?: {
+    noti_no?: string | null;
+    noti_date?: string | null;
+    type_of_tax?: string | null;
+  } | null;
+  noti_no?: string | null;
+  noti_date?: string | null;
+  type_of_tax?: string | null;
 
 }
 

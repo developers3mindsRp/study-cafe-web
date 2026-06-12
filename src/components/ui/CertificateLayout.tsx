@@ -12,26 +12,31 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
 }) => {
   return (
     <div className="w-full flex justify-center items-center p-0">
-      <div className="relative w-[835px] h-[585px] bg-white ">
+      <div className="relative w-[822px] h-[583px] bg-white ">
         {/* Background Image */}
         <img
-          src="/images/Certificatebg-img.svg"
+          src="/images/bgcertificate.png"
           alt="certificate-bg"
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
 
+          <div className="absolute left-[41px] top-[35px]">
+              <p className="text-[12px]">Certificate Serial No. <b>4987</b></p>
+              <img src="/images/ISOCertified.png" className="w-[70px] m-[auto] mt-[8px]"/> 
+          </div>
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-10">
 
          
 
           {/* Title */}
-          <h1 className="text-[60px] leading-[72px] font-[500]  text-[#1C232B]">
+            <img src="/images/studycafe_logo.svg" className="w-full max-w-[100px] "/>
+          <h1 className="text-[50px] leading-[65px] font-[500]  text-[#1C232B]">
             CERTIFICATE
           </h1>
-          <p className="text-[30px]  text-[#1C232B]">OF APPRECIATION</p>
+          <p className="text-[20px]  text-[#1C232B]">OF APPRECIATION</p>
 
-          <p className="text-[#808285] text-[18px] mt-2 mb-4">
+          <p className="text-[#808285] text-[16px] mt-0 mb-4">
             THIS CERTIFICATE IS PROUDLY PRESENTED TO
           </p>
 
@@ -49,7 +54,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
           </p>
 
           {/* Footer */}
-          <div className=" w-[80%]  flex justify-between  mt-8 px-10 text-sm text-gray-600 mb-8">
+          <div className=" w-[80%]  flex justify-between items-center  mt-8 px-10 text-sm text-gray-600 mb-8">
             <div className="text-center  w-[30%]">
               <p className="font-semibold  text-[#000000]">{date}</p>
               <div className="border-t border-[#404041]  mt-1 w-full mx-auto"></div>
@@ -57,7 +62,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
             </div>
 
             <div className="text-center font-semibold text-lg">
-             <img src="/images/studycafe_logo.svg" className="w-full max-w-[70%] m-auto"/>
+             <img src="/images/award_1.png" className="w-full max-w-[30%] m-auto"/>
             </div>
 
             <div className="text-center w-[30%]">
@@ -69,9 +74,9 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
           </div>
 
           {/* Bottom Info */}
-          <p className="pl-12 w-[80%] text-xs text-black text-left px-10">
+          <p className="pl-12 w-[80%] text-xs text-black text-left px-10 text-center">
             Contact Us: Studycafe Private Limited, 1003, Modi Tower, 98, Nehru
-            Place, New Delhi-110019 | E: contact@studycafe.in | W:
+            Place, New Delhi-110019 | <br /> E: contact@studycafe.in | W:
             www.studycafe.in | Mo: +91 11 43710666
           </p>
         </div>

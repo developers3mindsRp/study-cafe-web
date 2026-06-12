@@ -1,149 +1,300 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const tabs = [
-  { label: "Course Key Features", target: "features" },
-  { label: "Course Description", target: "description" },
-  { label: "Course Content", target: "content" },
-  { label: "Certificate", target: "certificate" },
-];
+interface CourseTabsProps {
+  course: any;
+  batches?: any[];
+}
 
+/** Parse a JSON or newline-separated text field into a string array. */
+function parseListField(raw?: string | null): string[] {
+  if (!raw) return [];
 
+  try {
+    const parsed = JSON.parse(raw);
 
+    if (Array.isArray(parsed)) {
+      return parsed.map(String).filter(Boolean);
+    }
+  } catch {
+    // Ignore JSON parse errors
+  }
 
-export default function CourseTabs(course:any) {
+  return raw
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+/** Format a scheduled_at date as HH:MM */
+function formatSessionTime(scheduledAt?: string | null): string | null {
+  if (!scheduledAt) return null;
+
+  const date = new Date(scheduledAt);
+
+  if (isNaN(date.getTime())) return null;
+
+  const h = date.getHours().toString().padStart(2, "0");
+  const m = date.getMinutes().toString().padStart(2, "0");
+
+  return `${h}:${m}`;
+}
+
+export default function CourseTabs({
+  course,
+  batches = [],
+}: CourseTabsProps) {
   const [activeTab, setActiveTab] = useState("features");
   const [isSticky, setIsSticky] = useState(true);
 
   const handleScroll = (id: string) => {
     const element = document.getElementById(id);
 
-    if (element) {
-      const headerOffset = 140; // adjust (top-20 ≈ 80px, so 90–110 is safe)
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - headerOffset;
+    if (!element) return;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+    const headerOffset = 140;
 
-      setActiveTab(id); // optional but recommended
-    }
+    const elementPosition =
+      element.getBoundingClientRect().top + window.pageYOffset;
+
+    const offsetPosition = elementPosition - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+
+    setActiveTab(id);
   };
 
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveTab(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-50% 0px -50% 0px",
+      }
+    );
 
-useEffect(() => {
+    const sections = [
+      "features",
+      "description",
+      "content",
+      "certificate",
+    ];
 
-  const observerTabs = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) setActiveTab(entry.target.id);
-      });
-    },
-    { rootMargin: "-50% 0px -50% 0px" }
-  );
+    sections.forEach((id) => {
+      const section = document.getElementById(id);
 
-  tabs.forEach((tab) => {
-    const sec = document.getElementById(tab.target);
-    if (sec) observerTabs.observe(sec);
-  });
+      if (section) {
+        sectionObserver.observe(section);
+      }
+    });
 
-  let stopObserver: IntersectionObserver | null = null;
-  let checkInterval: number;
+    let stopObserver: IntersectionObserver | null = null;
 
-  const observeStopSection = () => {
-    const stopSection = document.getElementById("certificate");
-    if (stopSection) {
+    const certificateSection =
+      document.getElementById("certificate");
+
+    if (certificateSection) {
       stopObserver = new IntersectionObserver(
         ([entry]) => {
-          const rectTop = entry.boundingClientRect.top;
-
-          // SCROLL DOWN — certificate reached top → stop sticky
-          if (rectTop <= 0) {
-            setIsSticky(false);
-          }
-          // SCROLL UP — certificate moved above viewport → start sticky
-          else if (rectTop > 0) {
-            setIsSticky(true);
-          }
+          setIsSticky(entry.boundingClientRect.top > 0);
         },
         {
-          root: null,
-          threshold: [0],
-          rootMargin: "0px 0px -100% 0px",
+          threshold: 0,
         }
       );
 
-      stopObserver.observe(stopSection);
-      clearInterval(checkInterval);
+      stopObserver.observe(certificateSection);
     }
-  };
 
-  checkInterval = window.setInterval(observeStopSection, 100);
+    return () => {
+      sectionObserver.disconnect();
 
-  return () => {
-    observerTabs.disconnect();
-    if (stopObserver) stopObserver.disconnect();
-    clearInterval(checkInterval);
-  };
+      if (stopObserver) {
+        stopObserver.disconnect();
+      }
+    };
+  }, []);
 
-}, []);
+  const contentItems = useMemo(() => {
+    const items: {
+      title: string;
+      duration: string;
+      bullets: string[];
+    }[] = [];
 
+    // Curriculum JSON (API returns parsed array or legacy JSON string)
+    if (course?.curriculum) {
+      try {
+        const parsed: any[] = Array.isArray(course.curriculum)
+          ? course.curriculum
+          : JSON.parse(course.curriculum);
 
+        if (Array.isArray(parsed)) {
+          parsed.forEach((item: any) => {
+            const sections = Array.isArray(item.sections) ? item.sections : [];
 
+            let bullets: string[] = [];
+            if (sections.length > 0) {
+              bullets = sections
+                .map((section: any) => String(section?.title ?? "").trim())
+                .filter(Boolean);
+            } else if (Array.isArray(item.points)) {
+              bullets = item.points.map(String).filter(Boolean);
+            } else if (typeof item.description === "string") {
+              bullets = item.description
+                .split(/\r?\n+/)
+                .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
+                .filter(Boolean);
+            }
 
+            items.push({
+              title: item.title ?? "",
+              duration: item.minutes ? `${item.minutes} min` : "",
+              bullets,
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Curriculum parse error:", error);
+      }
+    }
+
+    // Fallback from batches
+    if (items.length === 0 && batches.length > 0) {
+      const byDay = new Map<
+        number,
+        {
+          title: string;
+          bullets: string[];
+          time: string;
+        }
+      >();
+
+      batches.forEach((batch: any) => {
+        batch?.sessions?.forEach((session: any) => {
+          const day = session.day_number || 1;
+
+          const bucket:
+            {
+              title: string;
+              bullets: string[];
+              time: string;
+            } =
+              byDay.get(day) ?? {
+                title: session.title || `Day ${day}`,
+                bullets: [],
+                time: formatSessionTime(session.scheduled_at) ?? "",
+              };
+
+          if (!byDay.has(day)) {
+            byDay.set(day, bucket);
+          }
+
+          const subtitle = (
+            session.section_title || ""
+          ).trim();
+
+          if (
+            subtitle &&
+            !bucket.bullets.includes(subtitle)
+          ) {
+            bucket.bullets.push(subtitle);
+          }
+        });
+      });
+
+      Array.from(byDay.entries())
+        .sort((a, b) => a[0] - b[0])
+        .forEach(([, value]) => {
+          items.push({
+            title: value.title,
+            duration: value.time,
+            bullets: value.bullets,
+          });
+        });
+    }
+
+    return items;
+  }, [course?.curriculum, batches]);
+
+  const features = parseListField(course?.learn_outcomes);
+
+  const hasFeatures = features.length > 0;
+  const hasDescription = Boolean(course?.description);
+  const hasContent = contentItems.length > 0;
 
   return (
-
     <>
-        {
-          course.learn_outcomes &&
+      <div
+        className={`${
+          isSticky
+            ? "hidden md:block md:sticky top-20 z-50"
+            : ""
+        } border-b bg-white mt-4`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex gap-6 py-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            {hasFeatures && (
+              <button
+                onClick={() => handleScroll("features")}
+                className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all ${
+                  activeTab === "features"
+                    ? "text-[#252525] font-semibold after:scale-x-100"
+                    : "text-[#6C6C6C] after:scale-x-0"
+                } after:content-[''] after:absolute after:left-0 after:-bottom-4 after:w-full after:h-[2px] after:bg-[#252525] after:origin-left after:transition-transform`}
+              >
+                Course Key Features
+              </button>
+            )}
 
-        <div className={`${isSticky ? "hidden md:block md:sticky top-20 z-50" : ""} border-b bg-white mt-4`}>
-          <div className="container mx-auto px-4">
-            <div
-              className="
-                flex gap-6 py-4
-                overflow-x-auto
-                whitespace-nowrap
-                scrollbar-hide
-              "
+            {hasDescription && (
+              <button
+                onClick={() => handleScroll("description")}
+                className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all ${
+                  activeTab === "description"
+                    ? "text-[#252525] font-semibold after:scale-x-100"
+                    : "text-[#6C6C6C] after:scale-x-0"
+                } after:content-[''] after:absolute after:left-0 after:-bottom-4 after:w-full after:h-[2px] after:bg-[#252525] after:origin-left after:transition-transform`}
+              >
+                Course Description
+              </button>
+            )}
+
+            {hasContent && (
+              <button
+                onClick={() => handleScroll("content")}
+                className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all ${
+                  activeTab === "content"
+                    ? "text-[#252525] font-semibold after:scale-x-100"
+                    : "text-[#6C6C6C] after:scale-x-0"
+                } after:content-[''] after:absolute after:left-0 after:-bottom-4 after:w-full after:h-[2px] after:bg-[#252525] after:origin-left after:transition-transform`}
+              >
+                Course Content
+              </button>
+            )}
+
+            <button
+              onClick={() => handleScroll("certificate")}
+              className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all ${
+                activeTab === "certificate"
+                  ? "text-[#252525] font-semibold after:scale-x-100"
+                  : "text-[#6C6C6C] after:scale-x-0"
+              } after:content-[''] after:absolute after:left-0 after:-bottom-4 after:w-full after:h-[2px] after:bg-[#252525] after:origin-left after:transition-transform`}
             >
-              {tabs.map((tab) => (
-                <button
-                  key={tab.target}
-                  onClick={() => handleScroll(tab.target)}
-                  className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all
-                    ${
-                      activeTab === tab.target
-                        ? "text-[#252525] font-semibold after:scale-x-100"
-                        : "text-[#6C6C6C] after:scale-x-0"
-                    }
-                    after:content-['']
-                    after:absolute
-                    after:left-0
-                    after:-bottom-4
-                    after:w-full
-                    after:h-[2px]
-                    after:bg-[#252525]
-                    after:origin-left
-                    after:transition-transform
-                    hover:text-[#252525]
-                    hover:after:scale-x-100
-                  `}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+              Certificate
+            </button>
           </div>
         </div>
-        }
-    
-    
+      </div>
     </>
-   
   );
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { resolveBlogImageSrc } from "./blogImage";
 import TableOfContents from "./TableOfContent";
 type HeroSectionBlogProps = {
@@ -10,7 +11,9 @@ type HeroSectionBlogProps = {
   date: string;
   update: string;
   image: string;
-  toc?:any;
+  toc?: any;
+  /** Article-specific tags — rendered as clickable links to /blogs?search=Tag */
+  tags?: { id: number; name: string }[];
 };
 
 const HeroSection_blog = ({
@@ -23,7 +26,8 @@ const HeroSection_blog = ({
   date,
   update,
   image,
-  toc
+  toc,
+  tags,
 }: HeroSectionBlogProps) => {
   const bannerSrc = resolveBlogImageSrc(image) || "/images/s-court.png";
 
@@ -47,7 +51,7 @@ const HeroSection_blog = ({
       <h1 className="text-[20px] md:text-[24px] xl:text-[28px] font-medium text-gray-900 leading-snug pt-4">
         {subtitle ? (
           <>
-            {title}: <br className="hidden xl:block" /> {subtitle}
+            {title}: <br className="hidden xl:block" /> 
           </>
         ) : (
           title
@@ -63,6 +67,8 @@ const HeroSection_blog = ({
           {description}
         </p>
       ) : null}
+
+      <p className="text-[#3a3c3e] text-[16px] md:text-[17px] leading-[27px] md:leading-[32px] font-bold ">{subtitle}</p>
       {para1 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para1}</p> : null}
       {para2 ? <p className="text-[#3a3c3e] text-[17px] leading-[32px] font-normal">{para2}</p> : null}
 
@@ -87,6 +93,22 @@ const HeroSection_blog = ({
           Last update on {update}
         </span>
       </div>
+
+      {/* Tags */}
+      {tags && tags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="text-[13px] font-medium text-[#6a6969] shrink-0">Tags:</span>
+          {tags.map((t) => (
+            <Link
+              key={t.id}
+              href={{ pathname: "/blogs", query: { search: t.name } }}
+              className="inline-block rounded-full border border-[#AFAFAF] px-3 py-0.5 text-[13px] text-[#252525] hover:border-[#09339B] hover:text-[#09339B] transition-colors"
+            >
+              {t.name}
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Desktop Banner Image (only on md+) */}
 

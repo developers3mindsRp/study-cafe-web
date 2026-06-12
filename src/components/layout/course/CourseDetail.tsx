@@ -1,12 +1,21 @@
 import { CourseBatch, CoursePublicDetail } from "@/types/models.types";
 import { useState } from "react";
+
+export interface AlumniLogo {
+  name?: string;
+  logo_url?: string;
+  link?: string;
+}
+
 interface CourseOverviewProps {
   course?: CoursePublicDetail | null;
   batches?: CourseBatch[];
+  alumniLogos?: AlumniLogo[];
 }
 
 export default function CourseSection({
   course,
+  alumniLogos = [],
 }: CourseOverviewProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const faqItems: { q: string; a: string }[] = [];
@@ -34,34 +43,55 @@ export default function CourseSection({
       }
       : null);
 
+  const termsConditions = course?.terms_conditions
+  ? JSON.parse(course.terms_conditions)
+  : [];
+  const featuredinlogos = course?.featured_in_logos
+
+
   return (
     <div className="lg:col-span-2 space-y-6">
       {/* Alumni Logos */}
-      <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8 ">
-        <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
-          Our Alumni at Leading Companies
-        </h2>
+      {alumniLogos.length > 0 && (
+        <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8">
+          <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
+            Our Alumni at Leading Companies
+          </h2>
 
-        <div className="container mx-auto">
-          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <div
-                key={num}
-                className="h-[70px] sm:h-[80px] w-full max-w-[140px]
-                     border p-3 sm:p-4 rounded-[10px]
-                     flex items-center justify-center
-                     shadow-sm bg-white"
-              >
-                <img
-                  src={`/images/brand_${num}.svg`}
-                  alt={`brand_${num}`}
-                  className="h-full object-contain"
-                />
-              </div>
-            ))}
+          <div className="container mx-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
+              {alumniLogos.map((logo, idx) => {
+                const card = (
+                  <div
+                    key={idx}
+                    className=" w-full max-w-full
+                         border p-3 sm:p-4 rounded-[10px]
+                         flex items-center justify-center
+                         shadow-sm bg-white"
+                  >
+                    {logo.logo_url ? (
+                      <img
+                        src={logo.logo_url}
+                        alt={logo.name || `Company ${idx + 1}`}
+                        className="h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-500 text-center">{logo.name}</span>
+                    )}
+                  </div>
+                );
+                return logo.link ? (
+                  <a key={idx} href={logo.link} target="_blank" rel="noopener noreferrer" className="w-full">
+                    {card}
+                  </a>
+                ) : card;
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+   
 
       {/* Author Section */}
       <div className="container mx-auto px-4 mt-10">
@@ -79,15 +109,30 @@ export default function CourseSection({
 
         <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
           <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
-            <img
-              src={primaryAuthor?.image_url || "/images/author.png"}
-              width={54}
-              height={54}
-              alt={primaryAuthor?.name || "Author"}
-              className="rounded-full object-cover"
-              referrerPolicy="no-referrer"
-              onError={(e) => { e.currentTarget.src = "/images/author.png"; }}
-            />
+            {
+              primaryAuthor?.image_url ?
+              <img
+                src={primaryAuthor?.image_url || ""}
+                width={54}
+                height={54}
+                alt={primaryAuthor?.name || "Author"}
+                className="rounded-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = ""; }}
+              />
+              :
+              <img
+                src="/images/defultuser.png"
+                width={54}
+                height={54}
+                alt={primaryAuthor?.name || "Author"}
+                className="rounded-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = ""; }}
+              />
+
+            }
+            
 
             <div className="text-left">
               <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
@@ -107,44 +152,45 @@ export default function CourseSection({
         </div>
       </div>
 
-      <div className="w-full bg-white  container mx-auto px-4 py-1">
-        {/* FAQ Section */}
-        <div className=" mx-auto md:px-4 md:mt-2">
-          <h2
-            className="
+      {faqItems.length > 0 && (
+        <div className="w-full bg-white  container mx-auto px-4 py-1">
+          {/* FAQ Section */}
+          <div className=" mx-auto md:px-4 md:mt-2">
+            <h2
+              className="
             text-[20px] md:text-[30px] font-semibold mb-6 md:mb-6
             px-4 py-3 text-white
            
             bg-gradient-to-r from-[#253D8E] to-transparent
             md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
           "
-          >
-            FAQ's
-          </h2>
-          <div className="space-y-4">
-            {faqItems.map((item, index) => (
-              <div
-                key={index}
-                className="border rounded-lg overflow-hidden shadow-md"
-              >
-                {/* Question Button */}
-                <button
-                  onClick={() =>
-                    setOpenIndex(openIndex === index ? null : index)
-                  }
-                  className={`
+            >
+              FAQ's
+            </h2>
+            <div className="space-y-4">
+              {faqItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="border rounded-lg overflow-hidden shadow-md"
+                >
+                  {/* Question Button */}
+                  <button
+                    onClick={() =>
+                      setOpenIndex(openIndex === index ? null : index)
+                    }
+                    className={`
                     w-full flex justify-between items-center p-4 transition
                     ${openIndex === index
-                      ? "bg-[#09339B] text-white" // Active
-                      : "bg-white text-[#09339B]"
-                    }   // Inactive
+                        ? "bg-[#09339B] text-white" // Active
+                        : "bg-white text-[#09339B]"
+                      }   // Inactive
                   `}
-                >
-                  <span className="font-medium text-[20px] text-left">
-                    {index + 1}. {item.q}
-                  </span>
+                  >
+                    <span className="font-medium text-[20px] text-left">
+                      {index + 1}. {item.q}
+                    </span>
 
-                  {/* Arrow Icon */}
+                    {/* Arrow Icon */}
          <div className="w-8 h-8 min-w-8 flex items-center justify-center">
         <svg
           className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
@@ -162,19 +208,80 @@ export default function CourseSection({
           />
         </svg>
       </div>
-                </button>
+                  </button>
 
-                {/* Answer */}
-                {openIndex === index && (
-                  <div className="px-4 pb-4 text-[16px] text-[#6C6C6C] leading-[28px] border-t p-4">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {/* Answer */}
+                  {openIndex === index && (
+                    <div className="px-4 pb-4 text-[16px] text-[#6C6C6C] leading-[28px] border-t p-4">
+                      {item.a}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+ {featuredinlogos.length > 0 && (
+        <div className="bg-[url('/images/alumini-bg.png')] bg-no-repeat bg-cover py-3 md:py-12 px-4 md:px-8 pb-8 md:pb-20 mb-8">
+          <h2 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-center mb-6 text-white px-2 mt-4">
+            Featured In
+          </h2>
+
+          <div className="container mx-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 place-items-center">
+              {featuredinlogos.map((logo:any, idx:any) => {
+                const card = (
+                  <div
+                    key={idx}
+                    className=" w-full max-w-full h-full
+                         border p-3 sm:p-4 rounded-[10px]
+                         flex items-center justify-center
+                         shadow-sm bg-white"
+                  >
+                    {logo.logo_url ? (
+                      <img
+                        src={logo.logo_url}
+                        alt={logo.name || `Company ${idx + 1}`}
+                        
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-500 text-center">{logo.name}</span>
+                    )}
+                  </div>
+                );
+                return logo.link ? (
+                  <a key={idx} href={logo.link} target="_blank" rel="noopener noreferrer" className="w-full h-full">
+                    {card}
+                  </a>
+                ) : card;
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+       {termsConditions.length > 0 && (
+          <div className=" container mx-auto px-4 py-10 ">
+            <h2   className="
+                text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+                px-4 py-3 text-white
+              
+                bg-gradient-to-r from-[#253D8E] to-transparent
+                md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
+              ">
+              Terms & Conditions
+            </h2>
+
+            <ul className="list-disc pl-5 space-y-2">
+              {termsConditions.map(
+                (item: { title: string }, index: number) => (
+                  <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
     </div>
   );
 }

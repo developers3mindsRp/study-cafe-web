@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState,useMemo} from "react";
 import type { CoursePublicDetail, CourseBatch } from "@/types/models.types";
+import { getApiServerOrigin } from "@/config/env";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 interface CourseOverviewProps {
   course?: CoursePublicDetail | null;
@@ -48,14 +50,139 @@ const FALLBACK_BONUSES = [
   },
 ];
 
+// ── Detail Sections ───────────────────────────────────────────────────────────
+
+type DetailSectionType = "text" | "cards";
+
+interface DetailSectionCard {
+  icon: string;
+  title: string;
+  content: string;
+}
+
+interface DetailSection {
+  type: DetailSectionType;
+  title: string;
+  content: string;
+  items: DetailSectionCard[];
+}
+
+const FALLBACK_DETAIL_SECTIONS: DetailSection[] = [
+  {
+    type: "text",
+    title: "How I will get the course:",
+    content:
+      "This is an online Certification course so there will not be any physical delivery of the lectures. After the purchase of this Certification course, you can see this course under my account option under purchased courses. All the videos, study materials, PDF files and PPTs, will be uploaded there for quick access by participants. This Certification Course's Recording is valid for 1 Year.",
+    items: [],
+  },
+  {
+    type: "cards",
+    title: "",
+    content: "",
+    items: [
+      { icon: "/images/duration.png", title: "Course Duration", content: "The course duration is 2 Days and around 4+ hours." },
+      { icon: "/images/view.png", title: "Views Limitation", content: "This is a fully online course with 1-year unlimited access, available anytime and anywhere." },
+      { icon: "/images/time.png", title: "Course Timing", content: "Timing: 6:00 pm to 8:00 pm" },
+    ],
+  },
+];
+
+function parseDetailSections(raw?: string | null): DetailSection[] | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed as DetailSection[];
+  } catch { /* ignore */ }
+  return null;
+}
+
+
+function DetailSections({
+  course,
+}: {
+  course?: import("@/types/models.types").CoursePublicDetail | null;
+}) {
+  const sections = parseDetailSections(course?.detail_sections);
+
+  const fallbackIcons: Record<string, string> = {
+    "Course Duration": "/images/duration.png",
+    "Views Limitation": "/images/view.png",
+    "Course Timing": "/images/time.png",
+  };
+
+  return (
+    <>
+      {sections?.map((sec, idx) => {
+        if (sec.type === "cards") {
+          const cols =
+            sec.items.length === 1
+              ? "md:grid-cols-1"
+              : sec.items.length === 2
+              ? "md:grid-cols-2"
+              : "md:grid-cols-3";
+
+          return (
+            <div
+              key={idx}
+              className={`grid ${cols} gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12`}
+            >
+              {sec.items.map((card, ci) => {
+                const iconSrc =
+                  card.icon?.trim() ||
+                  fallbackIcons[card.title] ||
+                  "/images/default-icon.png";
+
+                return (
+                  <div key={ci} className="bg-[#F9F9FB] p-4 md:p-8">
+                    <img
+                      src={iconSrc}
+                      alt={card.title}
+                      className="w-12 h-12 object-contain"
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/default-icon.png";
+                      }}
+                    />
+
+                    <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
+                      {card.title}
+                    </h2>
+
+                    <p className="leading-relaxed">{card.content}</p>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+
+        return (
+          <div key={idx} className="mt-0">
+            {sec.title && (
+              <h2 className="text-[25px] text-[#252525] font-semibold">
+                {sec.title}
+              </h2>
+            )}
+
+            {sec.content && (
+              <div
+                dangerouslySetInnerHTML={{ __html: sec.content }}
+                className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4 prose max-w-none [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1"
+              />
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 /** Resolve a potentially relative backend path to a full URL. */
 function resolveImageUrl(path?: string | null): string {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  const base =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
-  // Strip the trailing "/api" segment to get the server root
-  const serverRoot = base.replace(/\/api\/?$/, "");
+  const fromEnv = resolveApiAssetUrl(path);
+  if (fromEnv !== path.trim()) return fromEnv;
+  const serverRoot = getApiServerOrigin();
   return `${serverRoot}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
@@ -95,9 +222,11 @@ export default function CourseOverview({
 
   // --- Features ---
   const features = parseListField(course?.learn_outcomes);
-  const displayFeatures = features.length > 0 ? features : FALLBACK_FEATURES;
+  const displayFeatures = features;
 
-  const description = course?.description ?? FALLBACK_DESCRIPTION;
+  
+
+  const description = course?.description;
 
   let bonuses = FALLBACK_BONUSES;
   if (course?.includes_info) {
@@ -109,16 +238,31 @@ export default function CourseOverview({
     }
   }
 
+  /** Format total_duration (minutes integer) → "1 hr 20 min" / "45 min" */
+  function formatDuration(minutes?: number | null): string {
+    if (!minutes || minutes <= 0) return "";
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h > 0 && m > 0) return `${h} hr ${m} min`;
+    if (h > 0) return `${h} hr`;
+    return `${m} min`;
+  }
+
   const contentItems: { title: string; duration: string; bullets: string[] }[] =
     [];
 
   // ── Curriculum rendering rule ──────────────────────────────────────────────
+  // curriculum is returned as a parsed array by the API (or legacy JSON string).
   // For each day:
-  //   - if it has `sections[]` (subsections) → bullets are the subsection TITLES ONLY.
-  //   - else fall back to `points[]` or the day-level description.
+  //   - bullets = subsection titles from sections[] if present
+  //   - duration shown = total_duration (sum of section durations, added by API)
   if (course?.curriculum) {
     try {
-      const parsed = JSON.parse(course.curriculum);
+      const parsed: any[] =
+        Array.isArray(course.curriculum)
+          ? course.curriculum
+          : JSON.parse(course.curriculum as string);
+
       if (Array.isArray(parsed)) {
         parsed.forEach((item: any) => {
           const sections = Array.isArray(item.sections) ? item.sections : [];
@@ -141,8 +285,7 @@ export default function CourseOverview({
 
           contentItems.push({
             title: item.title ?? "",
-            duration:
-              item.duration ?? (item.minutes ? `${item.minutes} min` : ""),
+            duration: formatDuration(item.total_duration) || (item.minutes ? `${item.minutes} min` : ""),
             bullets,
           });
         });
@@ -156,17 +299,33 @@ export default function CourseOverview({
   if (contentItems.length === 0 && batches.length > 0) {
     const byDay = new Map<
       number,
-      { title: string; bullets: string[]; time: string }
+      { title: string; bullets: string[]; duration: string }
     >();
     batches.forEach((batch) => {
       batch.sessions.forEach((session) => {
         const day = session.day_number || 1;
-        const dayBucket =
-          byDay.get(day) ?? {
-            title: session.title || `Day ${day}`,
-            bullets: [],
-            time: formatSessionTime(session.scheduled_at) ?? "",
-          };
+        // const dayBucket =
+        //   byDay.get(day) ?? {
+        //     title: session.title || `Day ${day}`,
+        //     bullets: [],
+        //     duration: session.duration,
+        //   };
+
+
+    const dayBucket: {
+      title: string;
+      bullets: string[];
+      duration: string;
+    } =
+      byDay.get(day) ?? {
+        title: session.title || `Day ${day}`,
+        bullets: [] as string[],
+        duration: session?.duration
+          ? `${session.duration}`
+          : "",
+      };
+
+          
         if (!byDay.has(day)) byDay.set(day, dayBucket);
         const subtitle = (session.section_title ?? "").trim();
         if (subtitle && !dayBucket.bullets.includes(subtitle)) {
@@ -179,11 +338,131 @@ export default function CourseOverview({
       .forEach(([, v]) => {
         contentItems.push({
           title: v.title,
-          duration: v.time,
+          duration: v.duration,
           bullets: v.bullets,
         });
       });
   }
+
+  // Total course duration from all curriculum days
+  const totalCourseMinutes: number = (() => {
+    if (!course?.curriculum) return 0;
+    try {
+      const parsed: any[] = Array.isArray(course.curriculum)
+        ? course.curriculum
+        : JSON.parse(course.curriculum as string);
+      if (!Array.isArray(parsed)) return 0;
+      return parsed.reduce((sum: number, day: any) => {
+        const n = parseInt(String(day?.total_duration ?? ""), 10);
+        return sum + (Number.isFinite(n) && n > 0 ? n : 0);
+      }, 0);
+    } catch {
+      return 0;
+    }
+  })();
+
+
+  const contentItems1 = useMemo(() => {
+      const items: {
+        title: string;
+        duration: string;
+        bullets: string[];
+      }[] = [];
+  
+      // Curriculum JSON (API returns parsed array or legacy JSON string)
+      if (course?.curriculum) {
+        try {
+          const parsed: any[] = Array.isArray(course.curriculum)
+            ? course.curriculum
+            : JSON.parse(course.curriculum);
+  
+          if (Array.isArray(parsed)) {
+            parsed.forEach((item: any) => {
+              const sections = Array.isArray(item.sections) ? item.sections : [];
+  
+              let bullets: string[] = [];
+              if (sections.length > 0) {
+                bullets = sections
+                  .map((section: any) => String(section?.title ?? "").trim())
+                  .filter(Boolean);
+              } else if (Array.isArray(item.points)) {
+                bullets = item.points.map(String).filter(Boolean);
+              } else if (typeof item.description === "string") {
+                bullets = item.description
+                  .split(/\r?\n+/)
+                  .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
+                  .filter(Boolean);
+              }
+  
+              items.push({
+                title: item.title ?? "",
+                duration: item.minutes ? `${item.minutes} min` : "",
+                bullets,
+              });
+            });
+          }
+        } catch (error) {
+          console.error("Curriculum parse error:", error);
+        }
+      }
+  
+      // Fallback from batches
+      if (items.length === 0 && batches.length > 0) {
+        const byDay = new Map<
+          number,
+          {
+            title: string;
+            bullets: string[];
+            time: string;
+          }
+        >();
+  
+        batches.forEach((batch: any) => {
+          batch?.sessions?.forEach((session: any) => {
+            const day = session.day_number || 1;
+  
+            const bucket:
+              {
+                title: string;
+                bullets: string[];
+                time: string;
+              } =
+                byDay.get(day) ?? {
+                  title: session.title || `Day ${day}`,
+                  bullets: [],
+                  time: formatSessionTime(session.scheduled_at) ?? "",
+                };
+  
+            if (!byDay.has(day)) {
+              byDay.set(day, bucket);
+            }
+  
+            const subtitle = (
+              session.section_title || ""
+            ).trim();
+  
+            if (
+              subtitle &&
+              !bucket.bullets.includes(subtitle)
+            ) {
+              bucket.bullets.push(subtitle);
+            }
+          });
+        });
+  
+        Array.from(byDay.entries())
+          .sort((a, b) => a[0] - b[0])
+          .forEach(([, value]) => {
+            items.push({
+              title: value.title,
+              duration: value.time,
+              bullets: value.bullets,
+            });
+          });
+      }
+  
+      return items;
+    }, [course?.curriculum, batches]);
 
   // Fallback static content if nothing from API
   const FALLBACK_CONTENT = [
@@ -208,224 +487,207 @@ export default function CourseOverview({
       ],
     },
   ];
-  const displayContent =
-    contentItems.length > 0 ? contentItems : FALLBACK_CONTENT;
+  // const displayContent =  contentItems;
+  const displayContent = contentItems.length > 0 && contentItems1;
+
+  console.log(displayContent,"contentItems")
 
   return (
     <section className="container px-4 mx-auto">
       {/* Course Key Features */}
-      <h2
-        className="md:hidden container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-2 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
-       
-      >
-        Course Key Features
-      </h2>
-
-      <div
-        className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 "
-        id="features"
-      >
-        {displayFeatures.map((feature, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-3 rounded-lg border border-[#09B285] bg-[#E9FCF0] p-4"
+      {
+        displayFeatures &&
+        <>
+         <h2 className="md:hidden container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-2 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
           >
-            <img src="/images/tick1.png" alt="" width="45" height="45" />
-            <p
-              className="text-[14px] text-black font-medium"
-              dangerouslySetInnerHTML={{ __html: feature }}
-            />
-          </div>
-        ))}
-      </div>
+          Course Key Features
+        </h2>
+
+        <div
+          className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 "
+          id="features"
+        >
+          {displayFeatures.map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-3 rounded-lg border border-[#09B285] bg-[#E9FCF0] p-4"
+            >
+              <img src="/images/tick1.png" alt="" width="45" height="45" />
+              <p
+                className="text-[14px] text-black font-medium"
+                dangerouslySetInnerHTML={{ __html: feature }}
+              />
+            </div>
+          ))}
+        </div>
+        </>
+      }
+     
 
       {/* Course Description */}
-      <h2
-        className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
-        id="description"
-      >
-        Course Description
-      </h2>
 
-      <div className="bg-white rounded-lg p-3 md:p-6 text-[#3a3c3e] text-[16px] leading-[32px] mb-6 md:mb-12 font-normal shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
-        <div
-          dangerouslySetInnerHTML={{ __html: description }}
-          className="prose max-w-none"
-        />
-
-        {/* Bonuses */}
-        <div className="p-0 sm:p-8 mt-8 md:mt-6">
-          <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
-            <img src="/images/gift.svg" alt="" className="w-5 h-5" />
-            <span className="text-sm font-normal text-black">
-              Exclusive Bonuses
-            </span>
-          </button>
-          <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
-            Register Fast to unlock bonuses worth ₹
-            {bonuses
-              .map((bonus: any) => Number(bonus.worth))
-              .reduce((a: number, b: number) => a + b, 0)}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
-            {bonuses.map((bonus: any, index: number) => (
+         {
+            description &&
+        
+          <h2
+          className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
+          id="description"
+          >
+            Course Description
+          </h2>
+        }
+          <div className="bg-white rounded-lg p-3 md:p-6  mb-6 md:mb-12  shadow-[0px_2px_6px_2px_rgba(60,64,67,0.15)]">
+            {
+                description &&
+              <>
               <div
-                key={index}
-                className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm"
-              >
-                <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
-                  Bonus {index + 1}
-                </span>
-                <div className="flex items-start items-center gap-3 mt-4">
-                  <img
-                    src={resolveImageUrl(bonus.image)}
-                    alt=""
-                    className="w-[36px] h-[36px] sm:w-[43px] sm:h-[43px]"
-                  />
-                  <h4
-                    className="text-sm sm:text-base font-semibold text-left"
-                    dangerouslySetInnerHTML={{ __html: bonus.title }}
-                  />
-                </div>
-                <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
-                  Worth ₹{bonus.worth}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+                dangerouslySetInnerHTML={{ __html: description }}
+                className="prose max-w-none"
+              />
 
-        <div className="mt-12">
-          <h2 className="text-[25px] text-[#252525] font-semibold">
-            How I will get the course:
-          </h2>
-          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
-            This is an online Certification course so there will not be any
-            physical delivery of the lectures. After the purchase of this
-            Certification course, you can see this course under my account
-            option under purchased courses. All the videos, study materials, PDF
-            files and PPTs, will be uploaded there for quick access by
-            participants. This Certification Course&apos;s Recording is valid
-            for 1 Year.
-          </p>
-        </div>
-
-        <div className="mt-12">
-          <h2 className="text-[25px] text-[#252525] font-semibold">
-            Who is Eligible to Join this Certification Course:
-          </h2>
-          <p className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4">
-            There is no bound on the eligibility from our side for this
-            Certification Course. Any person who wants to learn and master in
-            Taxation can join this course. However, it will be more beneficial
-            for the below-mentioned persons:
-          </p>
-          {course?.requirements ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: course.requirements }}
-              className="mt-8 prose max-w-none"
-            />
-          ) : (
-            <ul className="list-disc pl-4 mt-8">
-              <li>Commerce Graduates/CA/CS/CMA/Law students</li>
-              <li>Tax professionals whether in JOB or Practice</li>
-              <li>Qualified CA/CS/CMA/LLB</li>
-              <li>
-                Semi-qualified CA/CS/CMA working in CA Firms or in Industry
-              </li>
-              <li>
-                Any other person not covered above can join the course if
-                interested.
-              </li>
-            </ul>
-          )}
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-12 md:mb-12">
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/duration.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Course Duration
-            </h2>
-            <p className="leading-relaxed">
-              The course duration is 2 Days and around 4+ hours.
-            </p>
-          </div>
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/view.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Views Limitation
-            </h2>
-            <p className="leading-relaxed">
-              This is a fully online course with 1-year unlimited access,
-              available anytime and anywhere.
-            </p>
-          </div>
-          <div className="bg-[#F9F9FB] p-4 md:p-8">
-            <img src="/images/time.png" alt="" />
-            <h2 className="font-bold text-[20px] text-black mb-4 mt-4">
-              Course Timing
-            </h2>
-            <p className="leading-relaxed">Timing: 6:00 pm to 8:00 pm</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Course Content */}
-      <h2
-        className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
-        id="content"
-      >
-        Course Content
-      </h2>
-
-      <div className="w-full md:mt-10 space-y-3 text-left container px-4">
-        {displayContent.map((item, index) => (
-          <div key={index} className="shadow-md rounded-lg overflow-hidden">
-            <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className={`w-full flex justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left ${
-                openIndex === index
-                  ? "bg-[#09339B] text-white"
-                  : "bg-white text-[#09339B]"
-              }`}
-            >
-              <span className="font-medium text-[14px] md:text-[20px]">
-                {item.title}
-              </span>
-              <div className="flex items-center gap-2 md:gap-32">
-                {item.duration && (
-                  <span className="font-medium text-[14px] md:text-[20px] whitespace-nowrap">
-                    {item.duration}
+              {/* Bonuses */}
+              <div className="p-0 sm:p-8 mt-8 md:mt-6">
+                <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
+                  <img src="/images/gift.svg" alt="" className="w-5 h-5" />
+                  <span className="text-sm font-normal text-black">
+                    Exclusive Bonuses
                   </span>
-                )}
-                <svg
-                  className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </button>
-            {openIndex === index && item.bullets.length > 0 && (
-              <div className="px-4 pb-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                <ul className="list-disc pl-5 mt-2 space-y-1">
-                  {item.bullets.map((text, i) => (
-                    <li key={i}>{text}</li>
+                </button>
+                <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
+                  {(() => {
+                    const total = bonuses
+                      .map((bonus: any) => {
+                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                        const num = parseFloat(raw);
+                        return isNaN(num) ? 0 : num;
+                      })
+                      .reduce((a: number, b: number) => a + b, 0);
+                    return total > 0
+                      ? `Register Fast to unlock bonuses worth ₹${total.toLocaleString("en-IN")}`
+                      : "Register Fast to unlock exclusive bonuses";
+                  })()}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
+                  {bonuses.map((bonus: any, index: number) => (
+                    <div
+                      key={index}
+                      className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm"
+                    >
+                      <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
+                        Bonus {index + 1}
+                      </span>
+                      <div className="flex items-center gap-3 mt-4">
+                        <img
+                          src={resolveImageUrl(bonus.image)}
+                          alt=""
+                          className="w-[36px] h-[36px] sm:w-[43px] sm:h-[43px]"
+                        />
+                        <h4
+                          className="text-sm sm:text-base font-semibold text-left"
+                          dangerouslySetInnerHTML={{ __html: bonus.title }}
+                        />
+                      </div>
+                      {(() => {
+                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                        const num = parseFloat(raw);
+                        const displayWorth = !isNaN(num) && num > 0
+                          ? `Worth ₹${num.toLocaleString("en-IN")}`
+                          : bonus.worth && String(bonus.worth).trim() !== ""
+                            ? `Worth ${bonus.worth}`
+                            : null;
+                        return displayWorth ? (
+                          <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
+                            {displayWorth}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+              </>
+            }
+
+              <DetailSections course={course} />
+            </div>
+       
+      {/* Course Content */}
+
+    {
+      displayContent &&
+      <>
+            <h2
+              className="container scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
+              id="content"
+            >
+              Course Content
+            </h2>
+             {totalCourseMinutes > 0 && (
+                <p className="text-[14px] md:text-[16px] text-[#3a3c3e] mb-4">
+                  Total Duration:{" "}
+                  <span className="font-semibold">
+                    {(() => {
+                      const h = Math.floor(totalCourseMinutes / 60);
+                      const m = totalCourseMinutes % 60;
+                      if (h > 0 && m > 0) return `${h} hr ${m} min`;
+                      if (h > 0) return `${h} hr`;
+                      return `${m} min`;
+                    })()}
+                  </span>
+                </p>
+              )}
+             <div className="w-full md:mt-10 space-y-3 text-left container px-4">
+                {displayContent.map((item, index) => (
+                  <div key={index} className="shadow-md rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                      className={`w-full flex justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left ${
+                        openIndex === index
+                          ? "bg-[#09339B] text-white"
+                          : "bg-white text-[#09339B]"
+                      }`}
+                    >
+                      <span className="font-medium text-[14px] md:text-[20px]">
+                        {item.title}
+                      </span>
+                      <div className="flex items-center gap-2 md:gap-32">
+                        {item.duration && (
+                          <span className="font-medium text-[14px] md:text-[20px] whitespace-nowrap">
+                            {item.duration} 
+                          </span>
+                        )}
+                        <svg
+                          className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : "rotate-0"}`}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                    {openIndex === index && item.bullets.length > 0 && (
+                      <div className="px-4 pb-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
+                        <ul className="list-disc pl-5 mt-2 space-y-1">
+                          {item.bullets.map((text, i) => (
+                            <li key={i}>{text}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+      </>
+    }
+      
+     
 
       {/* Certificate */}
       <h2
@@ -437,7 +699,7 @@ export default function CourseOverview({
       <p className="text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">
         Certificate to be provided to all the participants.
       </p>
-      <img src="/images/certificatee.svg" alt="" className="mx-auto" />
+      <img src="/images/democertificate.png" alt="" className="mx-auto mb-14" />
     </section>
   );
 }

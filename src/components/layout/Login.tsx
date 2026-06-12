@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import { useLogin, useLoginWithOtp, useRequestLoginOtp } from "@/hooks/useAuth";
+import { EyeIcon, EyeSlashIcon , EnvelopeIcon } from "@heroicons/react/24/solid";
+import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
 
 type SignInMode = "password" | "otp";
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const login = useLogin();
   const loginWithOtp = useLoginWithOtp();
   const requestOtp = useRequestLoginOtp();
+  const requestPasswordReset = useRequestPasswordReset();
 
   const [mode, setMode] = useState<SignInMode>("password");
   const [showPwd, setShowPwd] = useState(false);
@@ -24,6 +25,9 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotError, setForgotError] = useState<string | null>(null);
+  const [forgotInfo, setForgotInfo] = useState<string | null>(null);
 
   function pickMode(next: SignInMode) {
     setMode(next);
@@ -45,7 +49,7 @@ export default function LoginPage() {
       const msg =
         (err as ApiError)?.message ||
         (err as Error)?.message ||
-        "Sign in failed. Check your email and password.";
+        "Sign in failed. Check your email or StudyCafe ID and password.";
       setErrors(msg);
     }
   }
@@ -95,6 +99,26 @@ export default function LoginPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleForgotSubmit() {
+    setForgotError(null);
+    setForgotInfo(null);
+    const email = forgotEmail.trim() || form.email.trim();
+    if (!email) {
+      setForgotError("Enter your email address.");
+      return;
+    }
+    try {
+      await requestPasswordReset.mutateAsync(email);
+      setForgotInfo("If an account exists for this email, you will receive a reset link shortly.");
+    } catch (err: unknown) {
+      const msg =
+        (err as ApiError)?.message ||
+        (err as Error)?.message ||
+        "Could not send reset link. Try again.";
+      setForgotError(msg);
+    }
   }
 
   return (
@@ -178,7 +202,7 @@ export default function LoginPage() {
           Sign in to your account to continue learning
         </p>
 
-        <div className="flex gap-2 mb-6 px-4">
+        {/* <div className="flex gap-2 mb-6 px-4">
           <button
             type="button"
             onClick={() => pickMode("password")}
@@ -190,18 +214,8 @@ export default function LoginPage() {
           >
             Password
           </button>
-          <button
-            type="button"
-            onClick={() => pickMode("otp")}
-            className={`flex-1 py-2 rounded-md border text-sm font-medium ${
-              mode === "otp"
-                ? "border-[#09339B] bg-[#09339B] text-white"
-                : "border-gray-300 text-gray-700 bg-white"
-            }`}
-          >
-            Email code
-          </button>
-        </div>
+        
+        </div> */}
 
         {mode === "password" ? (
           <form
@@ -210,18 +224,18 @@ export default function LoginPage() {
           >
             <div>
               <label htmlFor="email" className="block mb-1">
-                Email <span className="text-red-600">*</span>
+                Email or StudyCafe ID <span className="text-red-600">*</span>
               </label>
               <div className="relative">
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   value={form.email}
                   onChange={handleChange}
                   required
-                  autoComplete="email"
-                  placeholder="Enter your Email"
+                  autoComplete="username"
+                  placeholder="Enter your email or StudyCafe ID"
                   className="w-full border px-3 py-2 pr-10 rounded-md"
                 />
                 <img
@@ -265,12 +279,18 @@ export default function LoginPage() {
                 Remember me
               </label>
 
-              <a
-                onClick={() => setShowForgot(true)}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForgot(true);
+                  setForgotEmail(form.email.trim());
+                  setForgotError(null);
+                  setForgotInfo(null);
+                }}
                 className="text-[16px] text-[#09339B] cursor-pointer"
               >
                 Forgot Password ?
-              </a>
+              </button>
 
               {showForgot && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -281,10 +301,21 @@ export default function LoginPage() {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full border px-3 py-2 rounded mb-4"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      required
                     />
 
-                    <button className="w-full bg-[#09339B] text-white py-2 rounded mb-2">
-                      Send Reset Link
+                    {forgotError && <p className="text-red-600 text-sm mb-2">{forgotError}</p>}
+                    {forgotInfo && <p className="text-gray-700 text-sm mb-2">{forgotInfo}</p>}
+
+                    <button
+                      type="button"
+                      onClick={handleForgotSubmit}
+                      disabled={requestPasswordReset.isPending}
+                      className="w-full bg-[#09339B] text-white py-2 rounded mb-2 disabled:opacity-60"
+                    >
+                      {requestPasswordReset.isPending ? "Sending..." : "Send Reset Link"}
                     </button>
 
                     <button type="button" onClick={() => setShowForgot(false)} className="w-full text-gray-500">
@@ -381,13 +412,32 @@ export default function LoginPage() {
             </form>
           </div>
         )}
+        <div>
+           <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="text-[#09339B]">
+                Sign up
+              </Link>
+            </p>
+            {
+              mode === "password" &&
+                 <button
+                type="button"
+                onClick={() => pickMode("otp")}
+                className={`flex py-3 rounded-md border text-sm font-medium px-4 m-auto mt-4 block w-[95%]  items-center justify-center`}
+              >
+                 <img
+                  src="/images/mail1.svg"
+                  alt=""
+                  className="w-5 h-5 mr-2"
+                /> Login With OTP
+              </button>
+            }
+             
 
-        <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#09339B]">
-            Sign up
-          </Link>
-        </p>
+        </div>
+
+       
       </div>
     </div>
   );

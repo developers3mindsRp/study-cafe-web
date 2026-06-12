@@ -86,6 +86,10 @@ export default function BlogArticlePremiumLayout({
 
   const google_news_url = initialArticle?.google_news_url
 
+  // Map the article's own tags (from API) to the BlogSpotlightTag shape used by SidebarBlog
+  const articleTags: import("@/types/models.types").BlogSpotlightTag[] =
+    (article.tags ?? []).map((t) => ({ id: t.id, name: t.name, article_count: 0 }));
+
 
   console.log(initialArticle,"initialArticle")
 
@@ -104,6 +108,7 @@ export default function BlogArticlePremiumLayout({
               update={formatDate(article.updated_at)}
               image={cardThumb(article.thumbnail_url || article.cover_image_url)}
               toc={article.toc}
+              tags={article.tags}
             />
           }
          
@@ -121,94 +126,14 @@ export default function BlogArticlePremiumLayout({
               whatsapp_link={whatsapp_link}
               telegram_link={telegram_link}
               google_news_url={google_news_url}
-
+              citation={citation}
 
             />
 
           }
 
           
-      {
-        citation &&
-              <div className="w-full bg-white container mx-auto px-4">
-          <div className="border border-[#d4d4d4] rounded-xl p-6 bg-white shadow-sm">
-            
-            <h2 className="text-2xl font-semibold text-[#111827] mb-6">
-              Citation Details
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-              {citation?.appeal_number && (
-                <div>
-                  <p className="text-[16px] font-medium text-[#111827]  mb-1">
-                    Appeal Number
-                  </p>
-                  <p className="text-[#6a6969] text-sm">
-                    {citation?.appeal_number}
-                  </p>
-                </div>
-              )}
-
-              {citation?.assessment_year && (
-                <div>
-                  <p className="mb-1 text-[16px] font-medium text-[#111827]">
-                    Assessment Year
-                  </p>
-                  <p className="text-sm text-[#6a6969] ">
-                    {citation?.assessment_year}
-                  </p>
-                </div>
-              )}
-
-              {citation?.case_citation && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Case Citation
-                  </p>
-                  <p className="text-sm text-[#6a6969] break-words">
-                    {citation?.case_citation}
-                  </p>
-                </div>
-              )}
-
-              {citation?.case_name && (
-                <div>
-                  <p className="text-[16px] font-medium text-[#111827] mb-1">
-                    Case Name
-                  </p>
-                  <p className="text-sm text-[#6a6969]  break-words">
-                    {citation?.case_name}
-                  </p>
-                </div>
-              )}
-
-              {citation?.court && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Court
-                  </p>
-                  <p className="text-sm text-[#6a6969]">
-                    {citation?.court}
-                  </p>
-                </div>
-              )}
-
-              {citation?.judgement_date && (
-                <div>
-                  <p className=" mb-1 text-[16px] font-medium text-[#111827]">
-                    Judgement Date
-                  </p>
-                  <p className="text-sm text-[#6a6969]">
-                    {citation?.judgement_date}
-                  </p>
-                </div>
-              )}
-
-            </div>
-          </div>
-        </div>
-      }
+      
 
          
           
@@ -223,7 +148,7 @@ export default function BlogArticlePremiumLayout({
             <SidebarBlog
               recentPosts={spotlight?.recent_posts}
               allPosts={spotlight?.all_posts}
-              popularTags={spotlight?.popular_tags}
+              popularTags={articleTags}
               detailSidebarAds={siteAds?.article_detail_sidebar}
             />
           </div>
@@ -239,7 +164,7 @@ export default function BlogArticlePremiumLayout({
            <SidebarBlog
             recentPosts={spotlight?.recent_posts}
             allPosts={spotlight?.all_posts}
-            popularTags={spotlight?.popular_tags}
+            popularTags={articleTags}
             detailSidebarAds={siteAds?.article_detail_sidebar}
           />
         }

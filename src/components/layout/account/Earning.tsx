@@ -7,36 +7,81 @@ import {
   type AffiliateDashboardData,
   type ReferralLinksData,
 } from "@/services/order.service";
+import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 
 const BASE_URL = typeof window !== "undefined" ? window.location.origin : "https://studycafe.io";
+
+function ReferralImage({ src, alt }: { src?: string | null; alt: string }) {
+  const resolved = resolveApiAssetUrl(src);
+  if (!resolved) return null;
+  return (
+    <div className="relative w-full h-[140px] rounded-md overflow-hidden border border-[#E5E7EB]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={resolved} alt={alt} className="w-full h-full object-cover" />
+    </div>
+  );
+}
 
 export default function Earning() {
   const router = useRouter();
   const [dashboard, setDashboard] = useState<AffiliateDashboardData | null>(null);
+
   const [links, setLinks] = useState<ReferralLinksData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAllCourses, setShowAllCourses] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+const [search, setSearch] = useState("");
+const [searchLoading, setSearchLoading] = useState(false);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const [dashData, linkData] = await Promise.all([
+  //         getMyAffiliateDashboard(),
+  //         getMyReferralLinks(search)
+  //       ]);
+  //       setDashboard(dashData);
+  //       setLinks(linkData);
+  //     } catch (err: any) {
+  //       console.error("Failed to load affiliate data:", err);
+  //       setError(err?.response?.data?.message || "Failed to load affiliate data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   })();
+  // }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [dashData, linkData] = await Promise.all([
-          getMyAffiliateDashboard(),
-          getMyReferralLinks(),
-        ]);
-        setDashboard(dashData);
-        setLinks(linkData);
-      } catch (err: any) {
-        console.error("Failed to load affiliate data:", err);
-        setError(err?.response?.data?.message || "Failed to load affiliate data");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+useEffect(() => {
+  const timer = setTimeout(async () => {
+    try {
+      setSearchLoading(true);
 
+      const data = await getMyReferralLinks(search);
+      setLinks(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSearchLoading(false);
+    }
+  }, 500); // 500ms debounce
+
+  return () => clearTimeout(timer);
+}, [search]);
+
+useEffect(() => {
+  const fetchDashboard = async () => {
+    try {
+      const dashData = await getMyAffiliateDashboard();
+      setDashboard(dashData);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Failed to load affiliate data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchDashboard();
+}, []);
   const copyUrl = useCallback((path: string, key: string) => {
     const url = `${BASE_URL}${path}`;
     navigator.clipboard.writeText(url).then(() => {
@@ -77,10 +122,10 @@ export default function Earning() {
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">
        Affiliate Dashboard
       </h2>
-      <p className="text-gray-500 text-[16px] mb-6">
+      <p className="text-gray-500 text-[16px] mb-2">
         Manage your referral links and track your performance.
       </p>
-
+     
       <h2 className="text-[16px] font-bold mb-4">Overall Earning</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
@@ -99,7 +144,8 @@ export default function Earning() {
       </div>
 
       {(dashboard?.available_for_withdrawal != null ||
-        dashboard?.pending_withdrawal_total != null) && (
+        dashboard?.pending_withdrawal_total != null ||
+        dashboard?.settings) && (
         <div className="mt-4 px-2 flex flex-wrap gap-6 text-sm text-[#555]">
           <p>
             Available to withdraw:{" "}
@@ -113,6 +159,40 @@ export default function Earning() {
               ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN")}
             </span>
           </p>
+          {dashboard?.settings?.minWithdrawal != null && (
+            <p>
+              Minimum withdrawal:{" "}
+              <span className="font-semibold">
+                ₹{dashboard.settings.minWithdrawal.toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.expired_commission_total ?? 0) > 0 && (
+            <p>
+              Expired commission:{" "}
+              <span className="font-semibold text-[#B91C1C]">
+                ₹{(dashboard?.expired_commission_total ?? 0).toLocaleString("en-IN")}
+              </span>
+            </p>
+          )}
+          {(dashboard?.settings?.earningsExpiryDays ?? 0) > 0 && (
+            <p>
+              Commission expires{" "}
+              <span className="font-semibold">{dashboard?.settings?.earningsExpiryDays} days</span> after each earning if not withdrawn.
+            </p>
+          )}
+          {dashboard?.next_expiry_at && (
+            <p>
+              Next expiry:{" "}
+              <span className="font-semibold text-amber-700">
+                {new Date(dashboard.next_expiry_at).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </p>
+          )}
         </div>
       )}
 
@@ -127,8 +207,43 @@ export default function Earning() {
 
       {/* Affiliate Links */}
       <div>
-        <div className="flex mt-4 px-2">
-          <img src="/images/link.svg" alt="" /> <span className="font-bold">Affiliate URLs</span>
+        <div className="flex mt-4 px-2 items-center justify-between">
+          <p className="flex"><img src="/images/link.svg" alt="" /> <span className="font-bold">Affiliate URLs</span></p>
+           <div className="relative w-[50%]">
+
+            <div className="relative mt-4 sm:mt-0 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+             
+
+               <input
+                type="text"
+                placeholder="Search..."
+               className="border border-gray-300 rounded-lg px-10 py-2 text-[16px] w-full placeholder-black"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              
+            </div>
+             
+
+              {searchLoading && (
+                <div className="absolute right-3 top-3">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#09339B] border-t-transparent" />
+                </div>
+              )}
+            </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 items-stretch">
@@ -183,6 +298,7 @@ export default function Earning() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             {links!.categories.map((category) => (
               <div key={category.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
+                <ReferralImage src={category.imageUrl} alt={category.title} />
                 <h2 className="text-[16px] font-bold">{category.title}</h2>
                 <p className="line-clamp-2">{category.description}</p>
                 <p className="bg-[#F3F4F6] p-2 text-[12px] text-[#4B5563] border rounded-md break-all">
@@ -215,6 +331,7 @@ export default function Earning() {
           <div className="grid grid-cols-1 gap-6 mt-4">
             {visibleCourses.map((item) => (
               <div key={item.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
+                 <img src={item?.imageUrl}/>
                 {item.originalPrice > 0 && (
                   <div className="flex flex-col">
                     {item.originalPrice !== item.discountedPrice && (
@@ -227,6 +344,7 @@ export default function Earning() {
                     </span>
                   </div>
                 )}
+               
 
                 <h2 className="text-[16px] font-bold">{item.title}</h2>
                 <p>{item.description}</p>

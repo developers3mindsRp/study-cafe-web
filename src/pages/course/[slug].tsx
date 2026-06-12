@@ -29,6 +29,7 @@ interface CoursePageProps {
   batches: CourseBatch[];
   trendingCourses: PublicCourse[];
   galleryImages: string[];
+  alumniLogos: { name?: string; logo_url?: string; link?: string }[];
   testimonials: MediaTestimonial[];
   isPreview?: boolean;
 }
@@ -38,6 +39,7 @@ export default function CoursePage({
   batches,
   trendingCourses,
   galleryImages,
+  alumniLogos,
   testimonials,
   isPreview,
 }: CoursePageProps) {
@@ -63,13 +65,10 @@ export default function CoursePage({
       </div>
 
       <BannerSection course={course} batches={batches} />
-      {
-        course?.learn_outcomes &&
-        <>
-          <CourseTabs course={course} />
-           <CourseOverview course={course} batches={batches} />
-        </>
-      }
+      <CourseTabs course={course} batches={batches} />
+      
+      <CourseOverview course={course} batches={batches} />
+        
       {
         course?.feedback &&
         <ReviewSection course={course} />
@@ -77,10 +76,7 @@ export default function CoursePage({
       }
       
       <Testimonials_course items={testimonials} />
-      {
-        course?.faqs &&
-         <GSTRCoursePage course={course} />
-      }
+      <GSTRCoursePage course={course} alumniLogos={alumniLogos} />
      
       <Gallery images={galleryImages.length > 0 ? galleryImages : undefined} />
       {
@@ -130,6 +126,7 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         batches,
         trendingCourses,
         galleryImages: pageSettings.gallery_images ?? [],
+        alumniLogos: pageSettings.alumni_logos ?? [],
         testimonials,
         isPreview: !!previewToken,
       },
