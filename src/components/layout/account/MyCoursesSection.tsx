@@ -82,6 +82,17 @@ export default function MyCoursesSection() {
     );
   }, [allCourses, search]);
 
+  // Split into active vs expired access (expired = access window has ended).
+  const isExpired = (c: UserCourse) => c.accessStatus === "expired";
+  const activeCourses = useMemo(
+    () => filteredCourses.filter((c) => !isExpired(c)),
+    [filteredCourses]
+  );
+  const expiredCourses = useMemo(
+    () => filteredCourses.filter((c) => isExpired(c)),
+    [filteredCourses]
+  );
+
   return (
     <section className="mx-auto max-w-6xl rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
       <h2 className="mb-1 text-[26px] font-normal text-gray-800">
@@ -151,14 +162,38 @@ export default function MyCoursesSection() {
         </div>
       )}
 
-      {!isLoading && filteredCourses.length > 0 && (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-          {filteredCourses.map((course, index) => (
-            <CourseCard
-              key={`${course.courseId}-${index}`}
-              course={purchaseToCard(course)}
-            />
-          ))}
+      {!isLoading && activeCourses.length > 0 && (
+        <div className="mb-8">
+          <h3 className="mb-4 text-[20px] font-medium text-gray-800">
+            Active Courses
+          </h3>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            {activeCourses.map((course, index) => (
+              <CourseCard
+                key={`active-${course.courseId}-${index}`}
+                course={purchaseToCard(course)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!isLoading && expiredCourses.length > 0 && (
+        <div className="mb-2">
+          <h3 className="mb-1 text-[20px] font-medium text-gray-800">
+            Expired Courses
+          </h3>
+          <p className="mb-4 text-[14px] text-gray-500">
+            Access to these courses has ended. Renew to regain access.
+          </p>
+          <div className="grid gap-6 opacity-70 sm:grid-cols-2 lg:grid-cols-2">
+            {expiredCourses.map((course, index) => (
+              <CourseCard
+                key={`expired-${course.courseId}-${index}`}
+                course={purchaseToCard(course)}
+              />
+            ))}
+          </div>
         </div>
       )}
     </section>

@@ -127,6 +127,10 @@ export interface Purchase {
   batchId?: number | null;
   /** Enriched batch schedule + phase for My Courses UI. */
   enrolledBatch?: EnrolledBatchInfo | null;
+  /** Course access window end (ISO) — null means lifetime. */
+  accessExpiresAt?: string | null;
+  /** Whether course access is currently 'active' or 'expired'. */
+  accessStatus?: 'active' | 'expired';
 }
 
 // User's purchased course with progress
