@@ -165,12 +165,12 @@ export default function MyCoursesSection() {
       {!isLoading && activeCourses.length > 0 && (
         <div className="mb-8">
           <h3 className="mb-4 text-[20px] font-medium text-gray-800">
-            Active Courses
+            ({activeCourses.length}) Purchased Course(s)
           </h3>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {activeCourses.map((course, index) => (
               <CourseCard
-                key={`active-${course.courseId}-${index}`}
+                key={`active-${course.id ?? course.courseId}-${index}`}
                 course={purchaseToCard(course)}
               />
             ))}
@@ -181,7 +181,7 @@ export default function MyCoursesSection() {
       {!isLoading && expiredCourses.length > 0 && (
         <div className="mb-2">
           <h3 className="mb-1 text-[20px] font-medium text-gray-800">
-            Expired Courses
+            ({expiredCourses.length}) Expired Course(s)
           </h3>
           <p className="mb-4 text-[14px] text-gray-500">
             Access to these courses has ended. Renew to regain access.
@@ -189,7 +189,7 @@ export default function MyCoursesSection() {
           <div className="grid gap-6 opacity-70 sm:grid-cols-2 lg:grid-cols-2">
             {expiredCourses.map((course, index) => (
               <CourseCard
-                key={`expired-${course.courseId}-${index}`}
+                key={`expired-${course.id ?? course.courseId}-${index}`}
                 course={purchaseToCard(course)}
               />
             ))}

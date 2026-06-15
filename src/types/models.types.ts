@@ -131,6 +131,8 @@ export interface Purchase {
   accessExpiresAt?: string | null;
   /** Whether course access is currently 'active' or 'expired'. */
   accessStatus?: 'active' | 'expired';
+  /** Legacy WP workflow status carried from migration: 'publish' | 'draft' | null. */
+  wpPostStatus?: string | null;
 }
 
 // User's purchased course with progress
