@@ -10,17 +10,22 @@ export function normalizeSeoPayload(raw: Record<string, unknown> | null | undefi
   const metaTitle = String(raw.meta_title ?? raw.metaTitle ?? "").trim();
   const metaDescription = String(raw.meta_description ?? raw.metaDescription ?? "").trim();
 
+  // Coalesce optional fields to `null` (never `undefined`) so the object stays
+  // JSON-serializable for Next.js getStaticProps/getServerSideProps.
+  const nn = (v: unknown): string | null =>
+    v === undefined || v === null ? null : String(v);
+
   return {
     pageSlug,
     pageName: String(raw.page_name ?? raw.pageName ?? "").trim(),
     metaTitle,
     metaDescription,
-    metaKeywords: (raw.meta_keywords ?? raw.metaKeywords) as string | undefined,
-    robots: (raw.robots as string | undefined) || undefined,
-    canonicalUrl: (raw.canonical_url ?? raw.canonicalUrl) as string | undefined,
-    ogTitle: (raw.og_title ?? raw.ogTitle) as string | undefined,
-    ogDescription: (raw.og_description ?? raw.ogDescription) as string | undefined,
-    ogImageUrl: (raw.og_image_url ?? raw.ogImageUrl) as string | undefined,
+    metaKeywords: nn(raw.meta_keywords ?? raw.metaKeywords),
+    robots: nn(raw.robots),
+    canonicalUrl: nn(raw.canonical_url ?? raw.canonicalUrl),
+    ogTitle: nn(raw.og_title ?? raw.ogTitle),
+    ogDescription: nn(raw.og_description ?? raw.ogDescription),
+    ogImageUrl: nn(raw.og_image_url ?? raw.ogImageUrl),
   };
 }
 

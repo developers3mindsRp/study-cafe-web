@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/providers/AuthProvider";
 import type {
   ArticleBySlug,
+  ArticleNotification,
   BlogSpotlightArticleCard,
   BlogSpotlightAuthor,
   RelatedArticle,
@@ -295,6 +296,57 @@ function TagsBlock({
   );
 }
 
+function resolveArticleNotification(article: ArticleBySlug): ArticleNotification | null {
+  if (article.notification) return article.notification;
+  if (!article.has_notification && !article.noti_no && !article.noti_date && !article.type_of_tax) {
+    return null;
+  }
+  return {
+    noti_no: article.noti_no ?? null,
+    noti_date: article.noti_date ?? null,
+    type_of_tax: article.type_of_tax ?? null,
+  };
+}
+
+function NotificationDetailsBlock({ article }: { article: ArticleBySlug }) {
+  const notification = resolveArticleNotification(article);
+  if (!notification && !article.has_notification) return null;
+  const { noti_no, noti_date, type_of_tax } = notification ?? {
+    noti_no: null,
+    noti_date: null,
+    type_of_tax: null,
+  };
+  if (!noti_no && !noti_date && !type_of_tax) return null;
+
+  return (
+    <div className="w-full">
+      <div className="border-t border-[#d4d4d4] pt-6">
+        <h2 className="text-2xl font-semibold text-[#111827] mb-6">Notification</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {noti_no ? (
+            <div>
+              <p className="text-[16px] font-medium text-[#111827] mb-1">Notification Number</p>
+              <p className="text-[#6a6969] text-sm">{noti_no}</p>
+            </div>
+          ) : null}
+          {type_of_tax ? (
+            <div>
+              <p className="text-[16px] font-medium text-[#111827] mb-1">Type of Tax</p>
+              <p className="text-[#6a6969] text-sm">{type_of_tax}</p>
+            </div>
+          ) : null}
+          {noti_date ? (
+            <div>
+              <p className="text-[16px] font-medium text-[#111827] mb-1">Notification Date</p>
+              <p className="text-[#6a6969] text-sm">{formatDate(noti_date) || noti_date}</p>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════════ */
@@ -473,6 +525,7 @@ export default function Premium_user({
                         </div>
                       }
 
+                  <NotificationDetailsBlock article={article} />
                  
                   <SocialButtons  whatsapp_link={whatsapp_link}  telegram_link={telegram_link} google_news_url={google_news_url}/>
                 </div>
@@ -588,8 +641,7 @@ export default function Premium_user({
                   </div>
                 }
 
-                  {/* Download PDF — always premium-gated */}
-                 
+                  <NotificationDetailsBlock article={article} />
 
                   {article.related_articles &&
                     article.related_articles.length > 0 && (

@@ -577,11 +577,15 @@ export default function CourseOverview({
                         Bonus {index + 1}
                       </span>
                       <div className="flex items-center gap-3 mt-4">
-                        <img
+                        {
+                          bonus.image &&
+                          <img
                           src={resolveImageUrl(bonus.image)}
                           alt=""
                           className="w-[36px] h-[36px] sm:w-[43px] sm:h-[43px]"
                         />
+                        }
+                        
                         <h4
                           className="text-sm sm:text-base font-semibold text-left"
                           dangerouslySetInnerHTML={{ __html: bonus.title }}

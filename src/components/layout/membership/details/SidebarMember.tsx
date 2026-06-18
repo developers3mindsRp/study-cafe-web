@@ -221,7 +221,7 @@ console.log(appliedCoupon,"appliedCoupon")
                 Loading coupons…
               </p>
             ) : availableCoupons.length === 0 ? (
-              <p className="text-sm text-[#929292] py-4 text-center">
+              <p className="text-sm text-[#929292] py-4 text-center h-full flex items-center justify-center">
                 No coupons available right now.
               </p>
             ) : (

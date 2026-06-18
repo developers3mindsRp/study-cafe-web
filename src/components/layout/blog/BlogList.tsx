@@ -1,9 +1,11 @@
 import Link from "next/link";
-import React from "react";
+import React, {useEffect} from "react";
 import type { SiteAdsSlot } from "@/types/models.types";
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { ArticleListItem, ArticleCategoryItem } from "@/services/platform.service";
 import { articleHref } from "@/lib/articlePaths";
+import { useRouter } from "next/router";
+
 
 interface BlogListProps {
   articles: ArticleListItem[];
@@ -30,6 +32,8 @@ export default function Blog_list({
   listingSidebarAd,
 }: BlogListProps) {
 
+  const router = useRouter();
+
   const allCategories = [{ id: 0, name: "All", slug: "all" }, ...categories];
   const hasListingAd = Boolean(listingSidebarAd?.image_url?.trim());
 
@@ -43,6 +47,21 @@ export default function Blog_list({
     const d = new Date(dateStr);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   };
+
+  useEffect(() => {
+    const handleRouteComplete = () => {
+      window.scrollTo({
+        top: 600, // or your offset value
+        behavior: "smooth",
+      });
+    };
+  
+    router.events.on("routeChangeComplete", handleRouteComplete);
+  
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteComplete);
+    };
+  }, [router.events]);
 
   const articlesGridBlock = (
     <>

@@ -478,6 +478,27 @@ export default function BannerSection({
                       </>
                     ) : (
                       <>
+                      <div className="block md:hidden">
+                        <p className="text-[30px] md:text-[26px] xl:text-[30px] text-center">
+                            {originalPrice && (
+                              <span className="line-through text-[#929292] font-medium mr-2">
+                                {originalPrice}
+                              </span>
+                            )}
+                            {displayPrice && (
+                              <span className="text-black font-bold text-[30px] xl:text-[40px]">
+                                {displayPrice}
+                              </span>
+                            )}
+                          </p>
+
+                        <p className=" text-[#252525] bg-[#FFF6E5] w-fit m-auto px-4 py-[5px] rounded-lg text-[12px] font-medium border border-dashed border-black mt-1 md:mt-3">
+                          Hurry up, few days left at this price!
+                        </p>
+
+                      </div>
+                          
+                  
                         <div className="mt-3 md:mt-4 mb-2 flex flex-row justify-center lg:justify-start gap-4">
                           <button
                             type="button"

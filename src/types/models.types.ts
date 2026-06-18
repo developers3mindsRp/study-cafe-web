@@ -127,6 +127,12 @@ export interface Purchase {
   batchId?: number | null;
   /** Enriched batch schedule + phase for My Courses UI. */
   enrolledBatch?: EnrolledBatchInfo | null;
+  /** Course access window end (ISO) — null means lifetime. */
+  accessExpiresAt?: string | null;
+  /** Whether course access is currently 'active' or 'expired'. */
+  accessStatus?: 'active' | 'expired';
+  /** Legacy WP workflow status carried from migration: 'publish' | 'draft' | null. */
+  wpPostStatus?: string | null;
 }
 
 // User's purchased course with progress
@@ -376,12 +382,12 @@ export interface SeoMetadata {
   pageName: string;
   metaTitle: string;
   metaDescription: string;
-  metaKeywords?: string;
-  robots?: string;
-  canonicalUrl?: string;
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImageUrl?: string;
+  metaKeywords?: string | null;
+  robots?: string | null;
+  canonicalUrl?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  ogImageUrl?: string | null;
 }
 
 /** Resolved "Also Read" / category suggestions */
@@ -621,15 +627,21 @@ export interface ArticleBySlug {
   /** Article's own tags — used for clickable tag links on the detail page. */
   tags?: { id: number; name: string }[];
   /** Tax notification metadata (number, date, type). */
-  notification?: {
-    noti_no?: string | null;
-    noti_date?: string | null;
-    type_of_tax?: string | null;
-  } | null;
+  notification?: ArticleNotification | null;
+  /** Convenience mirrors of `notification` for simple field access. */
   noti_no?: string | null;
   noti_date?: string | null;
   type_of_tax?: string | null;
+  /** True when any notification field is present. */
+  has_notification?: boolean;
 
+}
+
+/** Article tax notification block from `GET /platform/articles/:slug`. */
+export interface ArticleNotification {
+  noti_no: string | null;
+  noti_date: string | null;
+  type_of_tax: string | null;
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
