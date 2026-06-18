@@ -186,7 +186,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                 </span>
               </div>
               <button
-                className={`px-5 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition mt-14 ${highlight
+                className={`px-5 py-2 rounded-[10px] text-[14px] font-medium whitespace-nowrap transition mt-14 ${highlight
                   ? "bg-white text-[#09339B] hover:bg-blue-50"
                   : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
                   }`}

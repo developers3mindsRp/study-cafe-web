@@ -4,10 +4,8 @@ import { useEffect, useRef } from "react";
 
 type Props = {
   videoId: string;
-  /** Called ~every 15s with current seconds */
   onTimeUpdate?: (seconds: number) => void;
   onEnded?: () => void;
-  /** Fired when the clip duration is known (Vimeo `getDuration()`, seconds) */
   onDuration?: (durationSeconds: number) => void;
   startSeconds?: number;
 };
@@ -20,77 +18,124 @@ export default function VimeoPlayer({
   startSeconds = 0,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastEmitRef = useRef(0);
+  const playerRef = useRef<any>(null);
+
+  const onTimeUpdateRef = useRef(onTimeUpdate);
+  const onEndedRef = useRef(onEnded);
   const onDurationRef = useRef(onDuration);
+
+  onTimeUpdateRef.current = onTimeUpdate;
+  onEndedRef.current = onEnded;
   onDurationRef.current = onDuration;
 
   useEffect(() => {
-    if (!videoId || !containerRef.current) return;
+    if (!containerRef.current || !videoId) return;
+
     let destroyed = false;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let player: any = null;
 
-    (async () => {
-      const mod = await import("@vimeo/player");
-      const Player = mod.default;
-      if (destroyed || !containerRef.current) return;
-      const numericId = parseInt(String(videoId).replace(/\D/g, "") || "0", 10);
-      player = new Player(containerRef.current, {
-        id: numericId || Number(videoId),
-        /** Fill the parent box instead of a fixed 640×360-style embed */
-        responsive: true,
-      });
-      const reportDuration = async () => {
-        try {
-          const d = await player.getDuration();
-          if (destroyed) return;
-          if (Number.isFinite(d) && d > 0) {
-            onDurationRef.current?.(d);
-          }
-        } catch {
-          /* ignore */
-        }
-      };
-
+    const initPlayer = async () => {
       try {
+        const { default: Player } = await import("@vimeo/player");
+
+        const cleanVideoId = String(videoId).match(/\d+/)?.[0];
+
+        if (!cleanVideoId) {
+          console.error("Invalid Vimeo ID:", videoId);
+          return;
+        }
+
+        // destroy previous player if exists
+        if (playerRef.current) {
+          try {
+            await playerRef.current.destroy();
+          } catch {
+            //
+          }
+          playerRef.current = null;
+        }
+
+        const player = new Player(containerRef.current!, {
+          id: Number(cleanVideoId),
+          responsive: true,
+          autoplay: false,
+        });
+
+        playerRef.current = player;
+
         await player.ready();
-        const iframe = await player.getIframe();
-        if (iframe && !destroyed) {
-          iframe.setAttribute("style", "position:absolute;inset:0;width:100%;height:100%;");
-        }
-        await reportDuration();
-        player.on("loaded", reportDuration);
-      } catch {
-        /* ignore */
-      }
-      if (startSeconds > 0) {
+
+        if (destroyed) return;
+
+        console.log("Vimeo ready");
+
+        // duration
         try {
-          await player.setCurrentTime(startSeconds);
-        } catch {
-          /* ignore */
+          const duration = await player.getDuration();
+
+          if (!destroyed && duration > 0) {
+            onDurationRef.current?.(duration);
+          }
+        } catch (err) {
+          console.error("Duration error:", err);
         }
+
+        // seek
+        if (startSeconds > 0) {
+          try {
+            await player.setCurrentTime(startSeconds);
+          } catch (err) {
+            console.error("Seek error:", err);
+          }
+        }
+
+        let lastSent = 0;
+
+        player.on("timeupdate", (event: any) => {
+          const now = Date.now();
+
+          if (now - lastSent < 15000) return;
+
+          lastSent = now;
+
+          onTimeUpdateRef.current?.(event.seconds);
+        });
+
+        player.on("ended", () => {
+          onEndedRef.current?.();
+        });
+
+        player.on("error", (error: any) => {
+          console.error("Vimeo Error:", error);
+        });
+      } catch (error) {
+        console.error("Player initialization failed:", error);
       }
-      player.on("timeupdate", (e: { seconds: number }) => {
-        const now = Date.now();
-        if (now - lastEmitRef.current < 15000) return;
-        lastEmitRef.current = now;
-        onTimeUpdate?.(e.seconds);
-      });
-      player.on("ended", () => onEnded?.());
-    })();
+    };
+
+    initPlayer();
 
     return () => {
       destroyed = true;
-      if (player && typeof player.destroy === "function") {
-        player.destroy().catch(() => {});
+
+      const player = playerRef.current;
+
+      if (player) {
+        player
+          .destroy()
+          .catch(() => {})
+          .finally(() => {
+            playerRef.current = null;
+          });
       }
     };
-  }, [videoId, onTimeUpdate, onEnded, startSeconds]);
+  }, [videoId]);
 
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
-      {/** Outer box sets size; inner div is the Vimeo mount point and fills it. */}
-      <div ref={containerRef} className="absolute inset-0 h-full w-full min-h-0" />
+      <div
+        ref={containerRef}
+        className="absolute inset-0 h-full w-full"
+      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default function ReviewSection({
   course: CoursePublicDetail | null;
 }) {
 
-  // console.log(course,"coursesdfsf")
+  console.log(course,"coursesdfsf")
   let reviews: { name: string; designation: string; review: string }[] = [];
   if (course?.feedback) {
     try {
@@ -22,6 +22,8 @@ export default function ReviewSection({
   if(reviews.length < 0) {
     return null;
   }
+
+  console.log(reviews,"reviews")
   return (
     <section className="container px-4 mx-auto py-6 md:py-12 ">
 

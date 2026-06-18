@@ -95,7 +95,7 @@ const HeroSection_blog = ({
       </div>
 
       {/* Tags */}
-      {tags && tags.length > 0 && (
+      {/* {tags && tags.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <span className="text-[13px] font-medium text-[#6a6969] shrink-0">Tags:</span>
           {tags.map((t) => (
@@ -108,7 +108,7 @@ const HeroSection_blog = ({
             </Link>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* Desktop Banner Image (only on md+) */}
 

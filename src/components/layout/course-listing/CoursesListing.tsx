@@ -116,7 +116,7 @@ const ALL_CAT: CourseCat = { id: 0, name: "All Categories", slug: "all" };
 
 export default function CoursesPage({ cats = [], initialCourses, initialQuery }: Props) {
 
-  console.log(cats,"cats")
+  // console.log(cats,"cats")
   const router = useRouter();
 
   // ── local state ──
@@ -181,6 +181,21 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
 
   console.log(courses,"courses")
 
+useEffect(() => {
+  const handleRouteComplete = () => {
+    window.scrollTo({
+      top: 600, // or your offset value
+      behavior: "smooth",
+    });
+  };
+
+  router.events.on("routeChangeComplete", handleRouteComplete);
+
+  return () => {
+    router.events.off("routeChangeComplete", handleRouteComplete);
+  };
+}, [router.events]);
+
   return (
     <div className="container px-4 mx-auto">
 
@@ -202,7 +217,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           </select>
           
             <svg
-              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-gray-500 absolute right-[5px] top-1/2 -translate-y-1/2 pointer-events-none"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -233,7 +248,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
             </select>
 
             <svg
-              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-gray-500 absolute right-[5px] top-1/2 -translate-y-1/2 pointer-events-none"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -271,7 +286,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
           </select>
                    
             <svg
-              className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-gray-500 absolute right-[5px] top-1/2 -translate-y-1/2 pointer-events-none"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

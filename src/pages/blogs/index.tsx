@@ -74,6 +74,8 @@ export default function Blogs({
     updateQuery({ page });
   };
 
+  
+
   return (
     <PublicLayout>
       {/* Breadcrumbs */}
