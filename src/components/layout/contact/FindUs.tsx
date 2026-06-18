@@ -9,7 +9,7 @@ export default function MapSection({ address, mapTitle, mapDescription }: Props)
     <section className="bg-white px-4 py-4 mb-6">
       <div className="container mx-auto px-4">
         <div className="mb-8 text-center">
-          <h2 className="text-[30px] font-semibold text-[#09339B] md:text-[62px]">{mapTitle}</h2>
+          <h2 className="text-[30px] font-semibold text-[#09339B] md:text-[40px]">{mapTitle}</h2>
           <p className="mt-2 text-[18px] text-[#252525] md:text-[26px]">{mapDescription}</p>
         </div>
         <div className="overflow-hidden rounded-xl border border-[#9FBBFF] shadow-sm">
