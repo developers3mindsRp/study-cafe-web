@@ -78,7 +78,7 @@ const CourseCard = ({ course, size }: { course: any; size: 'sm' | 'lg' }) => {
         )}
       </div>
       <div className="p-4">
-        <h3 className="font-medium md:text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4">{course.title}</h3>
+        <h3 className="font-medium md:text-[20px] xl:text-[26px] text-[#252525] leading-tight mb-4 line-clamp-2">{course.title}</h3>
         {course.enrolled_count != null && (
           <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
             <img src="/images/icons/user-light.svg" alt="" width="20" height="20" />

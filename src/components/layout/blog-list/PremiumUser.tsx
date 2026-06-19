@@ -39,11 +39,11 @@ function authorHeadline(a: BlogSpotlightAuthor) {
 /* ─── Social Buttons ────────────────────────────────────────────── */
 function SocialButtons({whatsapp_link,telegram_link,google_news_url}: {whatsapp_link:any,telegram_link:any,google_news_url:any}) {
   return (
-    <div className="flex flex-col sm:flex-row justify-center items-center pt-2 gap-4">
+    <div className="flex flex-col sm:flex-row justify-center  pt-2 gap-4">
       <a href={whatsapp_link}>
         <button
           type="button"
-          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#34C759] px-6 md:px-6 py-2 rounded-[10px] text-[#34C759] font-medium hover:bg-[#34C759] hover:text-white transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#34C759] px-6 xl:px-12 py-2 rounded-[10px] text-[#34C759] font-medium hover:bg-[#34C759] hover:text-white transition"
         >
           <img src="/images/whatsapp.png" alt="" className="w-4 h-4" />
           <span>Join WhatsApp Group </span>
@@ -52,7 +52,7 @@ function SocialButtons({whatsapp_link,telegram_link,google_news_url}: {whatsapp_
       <a href={telegram_link}>
           <button
             type="button"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#039BE5] px-6 md:px-6 py-2 rounded-[10px] text-[#039BE5] font-medium hover:bg-[#039BE5] hover:text-white transition"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#039BE5] px-6 xl:px-12 py-2  rounded-[10px] text-[#039BE5] font-medium hover:bg-[#039BE5] hover:text-white transition"
           >
             <img src="/images/telegram-round.png" alt="" className="w-4 h-4" />
             <span>Join Telegram Group</span>
@@ -61,7 +61,7 @@ function SocialButtons({whatsapp_link,telegram_link,google_news_url}: {whatsapp_
       <a href={google_news_url}>
           <button
           type="button"
-          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#252525] px-6 md:px-6 py-2 rounded-[10px] text-[#252525] font-medium hover:bg-[#252525] hover:text-white transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#252525] px-6 xl:px-12 py-2  rounded-[10px] text-[#252525] font-medium hover:bg-[#252525] hover:text-white transition"
         >
           <img src="/images/google.png" alt="" className="w-4 h-4" />
           <span>Follow On Google News</span>

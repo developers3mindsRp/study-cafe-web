@@ -11,7 +11,7 @@ const Message_about = () => {
     <>
       <section className="py-12 ">
         <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 ">
-          <div className="bg-white rounded-xl border p-8 text-center shadow-sm">
+          <div className="bg-white rounded-xl border p-8 text-center shadow-sm order-2 lg:order-1">
             <h2 className="text-[25px] font-bold  mb-6 mt-10">{message.getInTouchTitle}</h2>
 
             <div className="flex justify-center gap-12 mb-6 flex-wrap">
@@ -30,7 +30,7 @@ const Message_about = () => {
           </div>
 
           <div
-            className="bg-cover bg-no-repeat rounded-xl p-8 text-white relative"
+            className="bg-cover bg-no-repeat rounded-xl p-8 text-white relative order-1 lg:order-2"
             style={{ backgroundImage: cardBg }}
           >
             <div className="hidden md:flex items-center justify-center gap-4 mb-6">

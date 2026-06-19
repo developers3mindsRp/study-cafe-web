@@ -17,7 +17,7 @@ const Description_about = () => {
           </div>
 
           <div className='h-full'>
-            <img src={description.imageUrl} alt="" className="w-full h-full object-contain p-4" />
+            <img src={description.imageUrl} alt="" className="w-full h-full object-contain md:p-4" />
           </div>
         </div>
       </section>

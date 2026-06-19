@@ -387,7 +387,7 @@ export default function BannerSection({
                   {description}
                 </p>
 
-                <div className="mt-0 md:mt-4 flex flex-col sm:flex-row md:items-start items-center gap-3">
+                <div className="mt-0 md:mt-4 flex flex-col sm:flex-row items-startgap-3">
                   <p className="text-[30px] md:text-[26px] xl:text-[30px]">
                     {originalPrice && (
                       <span className="line-through text-[#929292] font-medium mr-2">
@@ -532,7 +532,7 @@ export default function BannerSection({
                                   `/payment?course=${encodeURIComponent(slug)}`,
                                 );
                             }}
-                            className="w-full md:w-1/2 xl:w-auto py-1 xl:py-2 px-2 md:px-6 xl:px-28 border-2 border-white rounded-[10px] text-base xl:text-lg font-medium text-white bg-[#09339B] transition"
+                            className="w-full md:w-1/2 xl:w-auto py-2 xl:py-2.5 px-2 md:px-6 xl:px-28 border-2 border-white rounded-[10px] text-base xl:text-lg font-medium text-white bg-[#09339B] transition"
                           >
                             Buy Now
                           </button>

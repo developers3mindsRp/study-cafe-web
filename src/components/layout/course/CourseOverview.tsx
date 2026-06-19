@@ -645,7 +645,7 @@ export default function CourseOverview({
                   <div key={index} className="shadow-md rounded-lg overflow-hidden">
                     <button
                       onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                      className={`w-full flex justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left ${
+                      className={`w-full flex justify-between items-center py-2 p-1 md:p-4 transition px-4 md:px-6 text-left gap-8 ${
                         openIndex === index
                           ? "bg-[#09339B] text-white"
                           : "bg-white text-[#09339B]"

@@ -332,8 +332,8 @@ export default function Footer({ footerData }: FooterProps) {
                 className="
                     whitespace-nowrap
                     w-1/2
-                    text-[18px] sm:text-[20px] mt-2
-                    px-4 py-2 sm:px-6 sm:py-3
+                    text-[18px] sm:text-[18px] mt-2
+                    px-4 py-2 sm:px-2 sm:py-3
                     bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]
                     rounded-[10px] transition
                     disabled:opacity-60 disabled:cursor-not-allowed

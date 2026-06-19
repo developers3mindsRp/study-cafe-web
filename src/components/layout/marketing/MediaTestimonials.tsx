@@ -66,7 +66,7 @@ export default function MediaTestimonials({
                 <img
                   src={item.mediaUrl}
                   alt={item.title || ""}
-                  className="object-cover w-full h-[210px] rounded-lg"
+                  className="object-contain w-full h-[210px] rounded-lg"
                 />
 
                 {/* PLAY BUTTON ONLY FOR VIDEO */}
