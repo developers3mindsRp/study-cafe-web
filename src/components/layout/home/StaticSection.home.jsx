@@ -49,13 +49,13 @@ export default function StatsSection({ stats: statsProp }) {
 
   return (
     <section
-      className="bg-white py-10 md:py-16 px-4 scroll-smooth"
+      className="bg-white py-10 md:py-16 md:pb-8 px-4 scroll-smooth"
       style={{
         scrollBehavior: "smooth",
       }}
     >
       <div className="container mx-auto px-4 bg-[#09339B] rounded-[10px] md:rounded-full p-6 ">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center px-2">
+        <div className="grid grid-cols-2 md:flex justify-between gap-8 text-center px-4">
           {stats.map((stat, i) => (
             <div
               key={i}

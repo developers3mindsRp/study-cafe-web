@@ -333,12 +333,12 @@ export default function Header() {
                     >
                       Dashboard
                     </Link>
-                    <Link
+                    {/* <Link
                       href="/dashboard/courses"
                       className="block py-2 text-[#3a3c3e] hover:text-blue-600 font-medium"
                     >
                       My Courses
-                    </Link>
+                    </Link> */}
                     <Link
                       href="/dashboard"
                       className="block py-2 text-[#3a3c3e] hover:text-blue-600 font-medium"

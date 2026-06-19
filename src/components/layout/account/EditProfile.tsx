@@ -207,7 +207,7 @@ export default function EditProfile({
 
   return (
     <div className={`w-full ${useDashboardRoutes ? "xl:py-4" : "xl:py-10"}`}>
-      <div className="container mx-auto grid md:grid-cols-3 gap-8 mb-10">
+      <div className="md:container mx-auto md:grid md:grid-cols-3 gap-8 mb-10">
         {/* LEFT SIDEBAR */}
         <div className="md:col-span-1">
           <Sidebar onAvatarClick={() => fileInputRef.current?.click()} />
@@ -255,7 +255,7 @@ export default function EditProfile({
             <>
               <div className="mt-8 p-4 border border-[#9FBBFF] rounded-lg bg-white shadow-sm">
                 <p className="text-[20px] md:text-[26px]">Edit Profile</p>
-                <p className="text-[#AFAFAF] mb-4 text-[16px]">Update your personal information</p>
+                <p className="text-[#525252] mb-4 text-[16px]">Update your personal information</p>
 
                 <div className="grid md:grid-cols-1 gap-4 mt-2">
                   {/* Full Name */}
@@ -439,12 +439,12 @@ export default function EditProfile({
                       {saveMsg.text}
                     </p>
                   )}
-                  <div className="ml-auto">
+                  <div className="w-full">
                     <button
                       type="button"
                       disabled={updateProfile.isPending}
                       onClick={handleSave}
-                      className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60"
+                      className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60 w-full"
                     >
                       {updateProfile.isPending ? "Saving…" : "Save Changes"}
                     </button>

@@ -36,7 +36,7 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
 
 
   return (
-    <section className="py-12 xl:py-20 bg-white">
+    <section className="py-12 xl:py-18 bg-white">
       <div className=" mx-auto px-4 text-center">
         {/* Heading */}
         <h2 className="text-[30px] xl:text-[40px] font-semibold text-gray-900">

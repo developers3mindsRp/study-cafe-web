@@ -6,7 +6,7 @@ const Stats_about = () => {
 
   return (
     <>
-      <section className="container mx-auto pt-4 md:pt-6 md:pb-12 w-[100%] px-4 text-left grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="container mx-auto pt-4 md:pt-6 md:pb-12 w-[100%] px-4 text-left grid grid-cols-2 md:grid-cols-4 gap-1">
         {stats.map((item, index) => (
           <div
             key={`${item.title}-${index}`}

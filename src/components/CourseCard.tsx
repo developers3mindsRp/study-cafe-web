@@ -71,13 +71,13 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
 
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-      <div className="relative h-[180px] w-full overflow-hidden md:h-[200px] xl:h-[220px]">
+      <div className="relative  w-full overflow-hidden ">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <Image
-          fill
+        <img
+          
           src={imageSrc}
           alt={course.title}
-          className="h-full w-full object-cover"
+          className=""
           loading="lazy"
           decoding="async"
         />

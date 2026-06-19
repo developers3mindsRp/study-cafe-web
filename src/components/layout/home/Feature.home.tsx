@@ -81,7 +81,7 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
               </span>
             </div>
           )}
-          <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2">{c.title}</h3>
+          <h3 className="text-[22px] md:text-[18px] xl:text-[26px] font-normal text-[#3a3c3e] mt-2 mb-2 line-clamp-2 leading-[30px] min-h-[65px]">{c.title}</h3>
           {enrolled && (
             <div className="flex items-center gap-1 text-[#6a6969] text-sm">
               <img src="/images/user-dark.svg" alt="" width="20" height="20" />{enrolled} students

@@ -92,7 +92,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
         {/* Mobile: Image left + content right */}
         <div className="flex w-full gap-4 items-center md:flex-col md:items-center md:text-center">
           {/* Profile Image Wrapper */}
-          <div className="relative w-32 h-32 xl:w-40 xl:h-40 flex-shrink-0">
+          <div className="relative w-[70px] h-[70px] md:w-32 md:h-32 xl:w-40 xl:h-40 flex-shrink-0">
             <div className="w-full h-full rounded-full overflow-hidden border border-[#9a9a9a]">
               <Image
                 src={avatarSrc}
@@ -148,7 +148,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
         <div className="w-full mt-4 flex gap-3 md:flex-col">
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-1/2 md:w-full hover:bg-[#f0f4ff] transition"
+            className="flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-full md:w-full hover:bg-[#f0f4ff] transition"
           >
             <img src="/images/logout.png" alt="Logout icon" className="w-5 h-5" />
             <span className="font-medium">Logout</span>
@@ -168,10 +168,10 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
             <p className="text-[16px] text-gray-600 mt-2 font-medium capitalize">
               {subscription.membershipType || "Premium Membership"}
             </p>
-            {
+            {/* {
               subscription.membershipType != 'Ultimate' &&
               <a href="/plans" className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60 block text-center mt-2">Upgrade Membership</a>
-            }
+            } */}
             
 
             {/* Lifetime — no dates or progress bar needed */}

@@ -409,7 +409,7 @@ export default function Premium_user({
             {!canReadFull ? (
               <>
                 {/* Article preview card — matches original BlogHighlightCard */}
-                <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4">
+                <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4 overflow-auto">
                   {article.blog_access_tier === "premium" && (
                     <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
                       Premium
@@ -538,7 +538,7 @@ export default function Premium_user({
             ) : (
               /* ──────────── UNLOCKED STATE (Full content) ──────────── */
               <>
-                <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4">
+                <div className="space-y-4 border border-[#AFAFAF] shadow-md rounded-[10px] px-4 py-4 overflow-auto">
                   {article.blog_access_tier === "premium" && (
                     <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
                       Premium
