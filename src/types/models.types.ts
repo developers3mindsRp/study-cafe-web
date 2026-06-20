@@ -624,6 +624,7 @@ export interface ArticleBySlug {
   whatsapp_link?:any;
   telegram_link?:any;
   google_news_url?:any;
+  categories?:any;
   /** Article's own tags — used for clickable tag links on the detail page. */
   tags?: { id: number; name: string }[];
   /** Tax notification metadata (number, date, type). */
@@ -634,7 +635,8 @@ export interface ArticleBySlug {
   type_of_tax?: string | null;
   /** True when any notification field is present. */
   has_notification?: boolean;
-
+  
+  
 }
 
 /** Article tax notification block from `GET /platform/articles/:slug`. */

@@ -231,13 +231,13 @@ export default function CourseTabs({
   const hasFeatures = features.length > 0;
   const hasDescription = Boolean(course?.description);
   const hasContent = contentItems.length > 0;
-
+// console.log(course?.certificate_enabled,"course")
   return (
     <>
       <div
         className={`${
           isSticky
-            ? "hidden md:block md:sticky top-20 z-50"
+            ? "hidden md:block md:sticky top-[90px] z-10"
             : ""
         } border-b bg-white mt-4`}
       >
@@ -281,8 +281,9 @@ export default function CourseTabs({
                 Course Content
               </button>
             )}
-
-            <button
+            {
+              course?.certificate_enabled === true  &&
+              <button
               onClick={() => handleScroll("certificate")}
               className={`relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] transition-all ${
                 activeTab === "certificate"
@@ -292,6 +293,9 @@ export default function CourseTabs({
             >
               Certificate
             </button>
+            }
+
+            
           </div>
         </div>
       </div>

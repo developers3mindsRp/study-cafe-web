@@ -490,7 +490,7 @@ export default function CourseOverview({
   // const displayContent =  contentItems;
   const displayContent = contentItems.length > 0 && contentItems1;
 
-  console.log(displayContent,"contentItems")
+  // console.log(course?.certificate_enabled,"contentItems")
 
   return (
     <section className="container px-4 mx-auto">
@@ -546,69 +546,73 @@ export default function CourseOverview({
               />
 
               {/* Bonuses */}
-              <div className="p-0 sm:p-8 mt-8 md:mt-6">
-                <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
-                  <img src="/images/gift.svg" alt="" className="w-5 h-5" />
-                  <span className="text-sm font-normal text-black">
-                    Exclusive Bonuses
-                  </span>
-                </button>
-                <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
-                  {(() => {
-                    const total = bonuses
-                      .map((bonus: any) => {
-                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
-                        const num = parseFloat(raw);
-                        return isNaN(num) ? 0 : num;
-                      })
-                      .reduce((a: number, b: number) => a + b, 0);
-                    return total > 0
-                      ? `Register Fast to unlock bonuses worth ₹${total.toLocaleString("en-IN")}`
-                      : "Register Fast to unlock exclusive bonuses";
-                  })()}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
-                  {bonuses.map((bonus: any, index: number) => (
-                    <div
-                      key={index}
-                      className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm"
-                    >
-                      <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
-                        Bonus {index + 1}
-                      </span>
-                      <div className="flex items-center gap-3 mt-4">
-                        {
-                          bonus.image &&
-                          <img
-                          src={resolveImageUrl(bonus.image)}
-                          alt=""
-                          className="w-[36px] h-[36px] sm:w-[43px] sm:h-[43px]"
-                        />
-                        }
-                        
-                        <h4
-                          className="text-sm sm:text-base font-semibold text-left"
-                          dangerouslySetInnerHTML={{ __html: bonus.title }}
-                        />
+              {
+                bonuses &&
+              
+                <div className="p-0 sm:p-8 mt-8 md:mt-6">
+                  <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
+                    <img src="/images/gift.svg" alt="" className="w-5 h-5" />
+                    <span className="text-sm font-normal text-black">
+                      Exclusive Bonuses
+                    </span>
+                  </button>
+                  <h3 className="text-center text-[18px] sm:text-[28px] lg:text-[32px] font-bold text-[#252525] mt-2">
+                    {(() => {
+                      const total = bonuses
+                        .map((bonus: any) => {
+                          const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                          const num = parseFloat(raw);
+                          return isNaN(num) ? 0 : num;
+                        })
+                        .reduce((a: number, b: number) => a + b, 0);
+                      return total > 0
+                        ? `Register Fast to unlock bonuses worth ₹${total.toLocaleString("en-IN")}`
+                        : "Register Fast to unlock exclusive bonuses";
+                    })()}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 sm:gap-10 px-4 sm:px-8 xl:px-32 mt-8 sm:mt-12">
+                    {bonuses.map((bonus: any, index: number) => (
+                      <div
+                        key={index}
+                        className="relative bg-[#FEF9F1] border border-[#F59F0A] rounded-lg p-4 sm:p-6 text-center shadow-sm"
+                      >
+                        <span className="absolute -top-4 left-4 text-[14px] sm:text-[16px] font-semibold bg-black text-[#FFCC33] px-3 py-1 rounded-[10px]">
+                          Bonus {index + 1}
+                        </span>
+                        <div className="flex items-center gap-3 mt-4">
+                          {
+                            bonus.image &&
+                            <img
+                            src={resolveImageUrl(bonus.image)}
+                            alt=""
+                            className="w-[36px] h-[36px] sm:w-[43px] sm:h-[43px]"
+                          />
+                          }
+                          
+                          <h4
+                            className="text-sm sm:text-base font-semibold text-left"
+                            dangerouslySetInnerHTML={{ __html: bonus.title }}
+                          />
+                        </div>
+                        {(() => {
+                          const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
+                          const num = parseFloat(raw);
+                          const displayWorth = !isNaN(num) && num > 0
+                            ? `Worth ₹${num.toLocaleString("en-IN")}`
+                            : bonus.worth && String(bonus.worth).trim() !== ""
+                              ? `Worth ${bonus.worth}`
+                              : null;
+                          return displayWorth ? (
+                            <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
+                              {displayWorth}
+                            </span>
+                          ) : null;
+                        })()}
                       </div>
-                      {(() => {
-                        const raw = String(bonus.worth ?? "").replace(/[₹,\s]/g, "");
-                        const num = parseFloat(raw);
-                        const displayWorth = !isNaN(num) && num > 0
-                          ? `Worth ₹${num.toLocaleString("en-IN")}`
-                          : bonus.worth && String(bonus.worth).trim() !== ""
-                            ? `Worth ${bonus.worth}`
-                            : null;
-                        return displayWorth ? (
-                          <span className="relative top-10 mt-6 text-[16px] sm:text-[18px] font-bold text-green-600 bg-green-100 px-3 py-2 rounded-[10px]">
-                            {displayWorth}
-                          </span>
-                        ) : null;
-                      })()}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              }
               </>
             }
 
@@ -694,16 +698,22 @@ export default function CourseOverview({
      
 
       {/* Certificate */}
-      <h2
-        className="container mt-8 scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
-        id="certificate"
-      >
-        Certificate
-      </h2>
-      <p className="text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">
-        Certificate to be provided to all the participants.
-      </p>
-      <img src="/images/democertificate.png" alt="" className="mx-auto mb-14" />
+       {
+              course?.certificate_enabled === true &&
+              <>
+                  <h2
+                  className="container mt-8 scroll-mt-28 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4 px-4 py-3 text-white bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto"
+                  id="certificate"
+                >
+                  Certificate
+                </h2>
+                <p className="text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">
+                  Certificate to be provided to all the participants.
+                </p>
+                <img src="/images/democertificate.png" alt="" className="mx-auto mb-14" />
+              </>
+        }
+      
     </section>
   );
 }

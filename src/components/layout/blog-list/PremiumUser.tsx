@@ -177,9 +177,11 @@ function DownloadButton({
   downloadUrl,
   canDownload,
   onGated,
+   category
 }: {
   downloadUrl: string;
   canDownload: boolean;
+   category:any
   onGated: () => void;
 }) {
   const resolvedUrl = resolveApiAssetUrl(downloadUrl);
@@ -191,7 +193,7 @@ function DownloadButton({
     }
     window.open(resolvedUrl, "_blank", "noopener,noreferrer");
   };
-
+console.log(category,"category")
   return (
     <div className="flex justify-center pt-2">
       <button
@@ -363,7 +365,8 @@ type Props = {
   whatsapp_link:string;
   telegram_link:string;
   google_news_url:string;
-  citation?:any
+  citation?:any;
+  categories?:any;
 };
 
 export default function Premium_user({
@@ -377,7 +380,8 @@ export default function Premium_user({
   whatsapp_link,
   telegram_link,
   google_news_url,
-  citation
+  citation,
+  categories
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
@@ -399,6 +403,8 @@ export default function Premium_user({
     if (!betweenArticleAds) return raw;
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
+
+  console.log(article?.categories,"article")
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">
@@ -440,6 +446,7 @@ export default function Premium_user({
                       downloadUrl={downloadUrl}
                       canDownload={canDownload}
                       onGated={() => setIsDownloadModalOpen(true)}
+                      category={article?.categories}
                     />
                   )}
 
@@ -557,6 +564,7 @@ export default function Premium_user({
                       downloadUrl={downloadUrl}
                       canDownload={canDownload}
                       onGated={() => setIsDownloadModalOpen(true)}
+                       category={article?.categories}
                     />
                   )}
                    {
