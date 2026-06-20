@@ -166,7 +166,7 @@ function DetailSections({
             {sec.content && (
               <div
                 dangerouslySetInnerHTML={{ __html: sec.content }}
-                className="text-[17px] text-[#3a3c3e] leading-[32px] mt-4 prose max-w-none [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1"
+                className="article-rich-text mt-4"
               />
             )}
           </div>
@@ -542,7 +542,7 @@ export default function CourseOverview({
               <>
               <div
                 dangerouslySetInnerHTML={{ __html: description }}
-                className="prose max-w-none"
+                className="article-rich-text"
               />
 
               {/* Bonuses */}
