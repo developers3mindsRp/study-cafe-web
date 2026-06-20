@@ -195,27 +195,20 @@ h6 {
   background: transparent;
 }
 
-/* --- CMS article body (.prose / .article-rich-text) ---
+/* --- CMS article body (.article-rich-text) ---
    Prevent rogue layout (flex/grid from pasted AI HTML) from breaking vertical flow.
    Tailwind Typography is not installed; explicit rules preserve <strong>, links, headings,
    and inline styles from TipTap / WordPress.
+   NOTE: Only disable flex/grid/absolute — do NOT override padding/margin/gap
+   so TipTap's inline style="text-align:..." and image sizing are respected.
 */
-.prose div,
-.prose section,
-.prose article,
 .article-rich-text div,
 .article-rich-text section,
 .article-rich-text article {
   display: block !important;
   flex: none !important;
   grid: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  gap: 0 !important;
+  max-width: 100%;
   position: static !important;
 }
 
@@ -310,6 +303,51 @@ h6 {
   margin: 1em 0;
   padding-left: 1em;
   color: #52525b;
+}
+
+.article-rich-text code {
+  background-color: #f4f4f5;
+  border-radius: 0.25em;
+  padding: 0.1em 0.35em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  color: #09339b;
+}
+
+.article-rich-text pre {
+  background-color: #f4f4f5;
+  border-radius: 0.375em;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.article-rich-text pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.article-rich-text s {
+  text-decoration: line-through;
+}
+
+.article-rich-text sub {
+  vertical-align: sub;
+  font-size: 0.75em;
+}
+
+.article-rich-text sup {
+  vertical-align: super;
+  font-size: 0.75em;
+}
+
+.article-rich-text img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375em;
+  margin: 0.5em 0;
 }
 /* 
 .article-rich-text img {
