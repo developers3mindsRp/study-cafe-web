@@ -295,36 +295,52 @@ export default function BannerSection({
         <span className="font-medium text-[20px]">Share</span>
       </div>
       <div className="flex gap-3">
-        <img
-          src="/images/facebook.svg"
-          alt="Facebook"
-          className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => handleShare("facebook")}
-        />
-        <img
-          src="/images/linkedin.svg"
-          alt="LinkedIn"
-          className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => handleShare("linkedin")}
-        />
-        <img
-          src="/images/twitter.svg"
-          alt="X"
-          className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => handleShare("twitter")}
-        />
-        <img
-          src="/images/pinterest.svg"
-          alt="Pinterest"
-          className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => handleShare("pinterest")}
-        />
-        <img
-          src="/images/print.svg"
-          alt="Print"
-          className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => handleShare("print")}
-        />
+        <a href="">
+            <img
+            src="/images/facebook.svg"
+            alt="Facebook"
+            className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => handleShare("facebook")}
+          />
+        </a>
+        <a href="">
+          <img
+            src="/images/linkedin.svg"
+            alt="LinkedIn"
+            className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => handleShare("linkedin")}
+          />
+        </a>
+        <a href="">
+           <img
+            src="/images/twitter.svg"
+            alt="X"
+            className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => handleShare("twitter")}
+          />
+        </a>
+        <a href="">
+            <img
+              src="/images/pinterest.svg"
+              alt="Pinterest"
+              className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleShare("pinterest")}
+            />
+        </a>
+        <a href="">
+           <img
+              src="/images/print.svg"
+              alt="Print"
+              className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleShare("print")}
+            />
+          
+        </a>
+        
+        
+       
+      
+       
       </div>
     </div>
   );

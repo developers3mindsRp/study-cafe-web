@@ -64,6 +64,7 @@ export type CourseDetailProfileProps = {
   isCourseComplete: boolean;
   onCertificateDownload: () => void | Promise<void>;
   backHref?: string;
+  curriculumFiles:any;
 };
 
 export default function CourseDetailProfile({
@@ -94,6 +95,7 @@ export default function CourseDetailProfile({
   canNext,
   isCourseComplete,
   onCertificateDownload,
+  curriculumFiles,
   backHref = "/dashboard",
 }: CourseDetailProfileProps) {
   const [openDay, setOpenDay] = useState<number | null>(null);
@@ -384,6 +386,42 @@ export default function CourseDetailProfile({
               <img src="/images/next.svg" alt="" className="w-4 md:w-auto" />
             </button>
           </div>
+          <div className="flex flex-wrap mt-6">
+              {
+                  curriculumFiles?.length > 0 &&
+
+                    curriculumFiles.map((file:any)=>{
+                    
+                      return(
+                        <>
+                        {
+                          file?.file?.id &&
+                      
+                        <div className="flex items-center  border border-[#cbcbcb] p-2 w-fit rounded mr-2 mb-2">
+                          {
+                            file?.file?.mime_type  == 'application/pdf' &&
+                            <img src="/images/PDF_file.png" className="w-[25px]"/>
+
+                          }
+                          {
+                            file?.file?.mime_type  == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' &&
+                            <img src="/images/wordicon.png" className="w-[25px]"/>
+
+                          }
+                           {
+                            file?.file?.mime_type  == 'application/zip' &&
+                            <img src="/images/zipicon.png" className="w-[25px]"/>
+
+                          }
+                          <a href={file?.file?.url} className="text-[#09339b] ml-2">Download file {sectionHeading}: {file?.file?.label}</a>
+                        </div>
+                        }
+                      </>
+                      )
+                    })
+                  }
+          </div>
+          
         </div>
 
         <div className="space-y-2 rounded-xl border border-[#9FBBFF] bg-white p-4">

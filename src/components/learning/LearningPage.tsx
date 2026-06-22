@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query";
 import { PublicLayout } from "@/components/layout";
@@ -19,7 +19,17 @@ type Props = {
   courseId: string;
   slug: string;
 };
+type CurriculumFile = {
+  id: number;
+  url: string;
+  label: string;
+  mime_type: string;
+};
 
+type CurriculumDay = {
+  title: string;
+  files: CurriculumFile[];
+};
 function instructorLine(course: CoursePublicDetail | null): string | null {
   if (!course) return null;
   const a = course.authors?.[0];
@@ -261,6 +271,30 @@ export default function LearningPage({ courseId, slug }: Props) {
   const completedLessons = progress?.completedSessions ?? 0;
   const totalLessons = progress?.totalSessions ?? sessions.length;
 
+
+const activeSession = sessions.find(
+  (s) => Number(s.sessionId) === activeId
+);
+
+const selectedDayFiles = useMemo(() => {
+  if (!activeSession || !Array.isArray(course?.curriculum)) return [];
+
+  const curriculum = course.curriculum as CurriculumDay[];
+
+  const day = curriculum.find(
+    (item) =>
+      item.title?.trim().toLowerCase() ===
+      activeSession.title?.trim().toLowerCase()
+  );
+
+  return (day?.files ?? []).map((file) => ({
+    day: day?.title,
+    title: day?.title,
+    file,
+  }));
+}, [course?.curriculum, activeSession]);
+
+
   const onCertificateDownload = useCallback(async () => {
     await downloadCertificate(courseId);
   }, [courseId]);
@@ -290,8 +324,9 @@ export default function LearningPage({ courseId, slug }: Props) {
       </PublicLayout>
     );
   }
-  console.log(course,"CourseDetailProfile")
 
+
+console.log(course,"courseTitle")
   return (
     <PublicLayout>
       
@@ -323,6 +358,7 @@ export default function LearningPage({ courseId, slug }: Props) {
         canNext={idx >= 0 && idx < sessions.length - 1}
         isCourseComplete={isComplete}
         onCertificateDownload={onCertificateDownload}
+         curriculumFiles={selectedDayFiles}
       />
     </PublicLayout>
   );

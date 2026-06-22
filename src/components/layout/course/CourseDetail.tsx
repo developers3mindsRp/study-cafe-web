@@ -46,7 +46,11 @@ export default function CourseSection({
   const termsConditions = course?.terms_conditions
   ? JSON.parse(course.terms_conditions)
   : [];
+  const requirements = course?.requirements
+  ? JSON.parse(course.requirements)
+  : [];
   const featuredinlogos = course?.featured_in_logos
+
 
 
   return (
@@ -275,6 +279,28 @@ export default function CourseSection({
 
             <ul className="list-disc pl-5 space-y-2">
               {termsConditions.map(
+                (item: { title: string }, index: number) => (
+                  <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
+
+         {requirements.length > 0 && (
+          <div className=" container mx-auto px-4 py-10 pt-2">
+            <h2   className="
+                text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
+                px-4 py-3 text-white
+              
+                bg-gradient-to-r from-[#253D8E] to-transparent
+                md:bg-none md:text-gray-900 md:px-0 md:py-0 mx-auto  md:mx-0 md:w-auto
+              ">
+              Requirements
+            </h2>
+
+            <ul className="list-disc pl-5 space-y-2">
+              {requirements.map(
                 (item: { title: string }, index: number) => (
                   <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
                 )
