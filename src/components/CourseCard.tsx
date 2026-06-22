@@ -68,7 +68,7 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
 
   const imageSrc =
     resolveApiAssetUrl(course.image) || "/images/home/f1.jpg";
-
+console.log(learningHref,"learningHref")
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
       <div className="relative  w-full overflow-hidden ">

@@ -221,18 +221,19 @@ export default function EditProfile({
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="md:col-span-2 bg-white rounded-xl md:p-6">
+        <div className="md:col-span-2 bg-white rounded-xl md:p-6 mt-4 md:mt-0">
           <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar justify-around gap-2">
             {TABS.map((tab) => {
               const isOn = currentTab === tab.key;
-              const tabClass = `md:flex-1 px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px] ${
+              const tabClass = `md:flex-1  px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px] ${
                 isOn
-                  ? "bg-white text-[#454545] rounded-[15px] m-2 px-4 py-2"
-                  : "text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 px-4"
+                  ? "md:bg-white text-[#454545] rounded-[15px] m-2 p-0 md:px-4 md:py-2"
+                  : "text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 p-0  md:px-4"
               }`;
               const inner = (
-                <div className="flex gap-2 justify-center items-center">
-                  <Image src={isOn ? tab.activeIcon : tab.icon} alt={tab.label} width={18} height={18} className="object-contain" />
+                <div className="block md:flex gap-2 justify-center items-center">
+                  <Image src={isOn ? tab.activeIcon : tab.icon} alt={tab.label} width={25} height={25} className="md:hidden block " />
+                  <Image src={isOn ? tab.activeIcon : tab.icon} alt={tab.label} width={18} height={18} className="md:block hidden object-contain" />
                   <span className="hidden xl:inline whitespace-nowrap">{tab.label}</span>
                 </div>
               );
@@ -419,7 +420,7 @@ export default function EditProfile({
                       name="gst"
                       value={form.gst}
                       onChange={handleChange}
-                      className={`w-full border px-3 py-2 rounded-md mt-1 uppercase tracking-widest ${errors.gst ? "border-red-500" : "border-[#1A1A1A]"}`}
+                      className={`w-full border px-3 py-2 tracking-[0px] rounded-md mt-1 uppercase tracking-widest ${errors.gst ? "border-red-500" : "border-[#1A1A1A]"}`}
                       placeholder="15-character GSTIN, e.g. 22AAAAA0000A1Z5"
                       maxLength={15}
                       spellCheck={false}

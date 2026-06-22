@@ -20,7 +20,7 @@ const Mission_about = () => {
             />
           </div>
 
-          <div className="grid sm:grid-cols-1 xl:grid-cols-2  gap-4 ">
+          <div className="grid sm:grid-cols-1 xl:grid-cols-2  gap-4 items-center ">
             <div className="border border-[#9FBBFF] rounded-xl p-6 xl:p-8 bg-[#FAFAFA] hover:shadow-md transition flex flex-col">
               <div className="w-12 h-12 md:w-16 md:h-16 mb-4">
                 <img src={card1.icon} alt="" className="w-full h-full object-contain" />

@@ -10,7 +10,7 @@ const Message_about = () => {
   return (
     <>
       <section className="py-12 ">
-        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 ">
           <div className="bg-white rounded-xl border p-8 text-center shadow-sm order-2 lg:order-1">
             <h2 className="text-[25px] font-bold  mb-6 mt-10">{message.getInTouchTitle}</h2>
 
@@ -30,7 +30,7 @@ const Message_about = () => {
           </div>
 
           <div
-            className="bg-cover bg-no-repeat rounded-xl p-8 text-white relative order-1 lg:order-2"
+            className="bg-cover bg-no-repeat rounded-xl p-8 text-white relative order-1 lg:order-2 col-span-2"
             style={{ backgroundImage: cardBg }}
           >
             <div className="hidden md:flex items-center justify-center gap-4 mb-6">
@@ -46,7 +46,7 @@ const Message_about = () => {
                 <img
                   src={message.founderImage}
                   alt="Founder"
-                  className="w-[250px] md:w-full md:h-auto rounded-lg object-cover md:mt-16 "
+                  className="w-[250px] md:w-full md:h-auto rounded-lg object-cover md:mt-0 "
                 />
               </div>
 

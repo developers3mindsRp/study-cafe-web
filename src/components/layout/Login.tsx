@@ -143,7 +143,7 @@ export default function LoginPage() {
 
             {/* Logo */}
             <img
-              src="/images/study-logo.svg"
+              src="/images/studycafe_logo_white.svg"
               alt="StudyCafe"
               className="w-[200px] mb-8"
             />

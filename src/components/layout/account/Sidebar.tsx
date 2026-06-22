@@ -219,6 +219,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
             </Link>
           </>
         )}
+        
       </div>
     </div>
   );

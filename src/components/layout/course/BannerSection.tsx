@@ -387,7 +387,7 @@ export default function BannerSection({
                   {description}
                 </p>
 
-                <div className="mt-0 md:mt-4 flex flex-col sm:flex-row items-startgap-3">
+                <div className="mt-0 md:mt-4 flex flex-col sm:flex-row items-startgap-3 items-center">
                   <p className="text-[30px] md:text-[26px] xl:text-[30px]">
                     {originalPrice && (
                       <span className="line-through text-[#929292] font-medium mr-2">
@@ -401,7 +401,7 @@ export default function BannerSection({
                     )}
                   </p>
                   {!isOwned && (
-                    <p className="hidden md:block text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-1 md:mt-3">
+                    <p className="hidden md:block text-[#252525] bg-[#FFF6E5] px-4 py-2 rounded-lg text-sm font-medium border border-dashed border-black mt-0 md:mt-0 ml-4">
                       Hurry up, few days left at this price!
                     </p>
                   )}

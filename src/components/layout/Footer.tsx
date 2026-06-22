@@ -330,8 +330,7 @@ export default function Footer({ footerData }: FooterProps) {
                 type="submit"
                 disabled={newsletterStatus === 'loading'}
                 className="
-                    whitespace-nowrap
-                    w-1/2
+                    whitespace-nowrap                  
                     text-[18px] sm:text-[18px] mt-2
                     px-4 py-2 sm:px-2 sm:py-3
                     bg-[#09339B] hover:bg-white text-white hover:text-[#09339B]

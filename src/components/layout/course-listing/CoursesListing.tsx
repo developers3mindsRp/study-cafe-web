@@ -26,7 +26,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
 
   return (
   <Link href={href}>
-    <div className="bg-white shadow-md rounded-md overflow-hidden">
+    <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
      <div className="relative ">
         <img src={thumbnail} alt={c.title} width="100%" />
         {rating && (

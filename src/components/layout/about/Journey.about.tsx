@@ -9,7 +9,7 @@ const CARD_WRAPPER_CLASSES = [
   'relative md:absolute  md:top-[490px] md:left-[0%] xl:left-[0%] 2xl:left-[6%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto',
   'relative md:absolute md:top-[450px] md:left-[30%] xl:left-[38%] 2xl:left-[40%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto',
   'relative md:absolute   md:top-[520px] md:right-[10%] xl:right-[10%] 2xl:right-[18%] w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto',
-  'relative md:absolute   md:bottom-[58px] md:left-[35%]  md:-translate-x-1/2 xl:bottom-[62px] w-[240px] bg-white rounded-lg shadow-lg p-4 mx-auto',
+  'relative md:absolute   md:bottom-[58px] md:left-[35%]  md:-translate-x-1/2 xl:bottom-[-55px] w-[240px] bg-white rounded-lg shadow-lg p-4 mx-auto',
 ];
 
 const Journey_about = () => {

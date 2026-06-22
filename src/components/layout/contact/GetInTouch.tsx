@@ -169,6 +169,7 @@ export default function GetInTouch({ data }: Props) {
                   id="contact-firstName"
                   type="text"
                   autoComplete="given-name"
+                  placeholder="First Name"
                   className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register("firstName")}
                 />
@@ -183,6 +184,7 @@ export default function GetInTouch({ data }: Props) {
                 <input
                   id="contact-lastName"
                   type="text"
+                  placeholder="Last Name"
                   autoComplete="family-name"
                   className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register("lastName")}
@@ -201,6 +203,7 @@ export default function GetInTouch({ data }: Props) {
                 id="contact-email"
                 type="email"
                 autoComplete="email"
+                 placeholder="Enter Email"
                 className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 {...register("email")}
               />

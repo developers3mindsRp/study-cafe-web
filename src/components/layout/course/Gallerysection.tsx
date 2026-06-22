@@ -63,7 +63,7 @@ export default function Gallery({
               <img
                 src={resolveImageUrl(src)}
                 alt=""
-                className="h-[350px] w-[350px] rounded-lg object-cover"
+                className="h-[350px] w-[350px]"
               />
             </div>
           ))}

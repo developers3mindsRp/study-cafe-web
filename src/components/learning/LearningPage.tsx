@@ -290,10 +290,11 @@ export default function LearningPage({ courseId, slug }: Props) {
       </PublicLayout>
     );
   }
-  console.log(course?.certificate_enabled,"CourseDetailProfile")
+  console.log(course,"CourseDetailProfile")
 
   return (
     <PublicLayout>
+      
       <CourseDetailProfile
         courseTitle={course.title}
         certificate_enabled={course?.certificate_enabled}
