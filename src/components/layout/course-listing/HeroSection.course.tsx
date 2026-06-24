@@ -12,13 +12,34 @@ const HeroSection_courses = () => {
     setSearch(typeof router.query.q === 'string' ? router.query.q : '')
   }, [router.isReady, router.query.q])
 
-  const pushSearch = (val: string) => {
-    // Preserve existing filters (category, sort, price) — only update q + reset page
-    const { page: _page, q: _q, ...rest } = router.query as Record<string, string>
-    const params: Record<string, string> = { ...rest }
-    if (val.trim()) params.q = val.trim()
-    router.push({ pathname: '/courses', query: params }, undefined, { shallow: false })
+const pushSearch = (val: string) => {
+  const slug = router.query.slug as string[] | undefined;
+
+  let pathname = "/course_cats";
+
+  if (slug?.[0]) {
+    pathname = `/course_cats/${slug[0]}`;
   }
+
+  const query: Record<string, string> = {};
+
+  if (router.query.sort) {
+    query.sort = String(router.query.sort);
+  }
+
+  if (router.query.price) {
+    query.price = String(router.query.price);
+  }
+
+  if (val.trim()) {
+    query.q = val.trim();
+  }
+
+  router.push({
+    pathname,
+    query,
+  });
+};
 
   const handleChange = (val: string) => {
     setSearch(val)

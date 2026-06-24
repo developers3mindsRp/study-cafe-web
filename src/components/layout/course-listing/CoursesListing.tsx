@@ -152,14 +152,60 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
     return base;
   };
 
-  const navigate = (overrides: Parameters<typeof buildQuery>[0]) => {
-    router.push(
-      { pathname: "/courses", query: buildQuery(overrides) },
-      undefined,
-      { shallow: false }
-    );
-  };
+  // const navigate = (overrides: Parameters<typeof buildQuery>[0]) => {
+  //   router.push(
+  //     { pathname: "/courses", query: buildQuery(overrides) },
+  //     undefined,
+  //     { shallow: false }
+  //   );
+  // };
 
+  const navigate = (
+  overrides: Partial<CourseQueryParams> = {}
+) => {
+  const query = router.query;
+
+  const category =
+    overrides.category ??
+    (query.slug?.[0] as string) ??
+    initialQuery.category ??
+    "all";
+
+  const page =
+    overrides.page ??
+    initialQuery.page ??
+    1;
+
+  const sort =
+    overrides.sort ??
+    (query.sort as string) ??
+    "latest";
+
+  const price =
+    overrides.price ??
+    (query.price as string) ??
+    "all";
+
+  const search =
+    overrides.search ??
+    (query.q as string) ??
+    "";
+
+  let pathname = `/course_cats/${category}`;
+
+  if (page > 1) {
+    pathname += `/page/${page}`;
+  }
+
+  router.push({
+    pathname,
+    query: {
+      ...(sort !== "latest" && { sort }),
+      ...(price !== "all" && { price }),
+      ...(search && { q: search }),
+    },
+  });
+};
   // ── derived values from SSR data ──
   const allCats = [ALL_CAT, ...cats];
   const activeCategory = initialQuery.category ?? "all";
@@ -184,7 +230,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
 useEffect(() => {
   const handleRouteComplete = () => {
     window.scrollTo({
-      top: 600, // or your offset value
+      top: 500, // or your offset value
       behavior: "smooth",
     });
   };
@@ -236,9 +282,17 @@ useEffect(() => {
 
             <select
               value={activeCatName}
+              // onChange={(e) => {
+              //   const cat = allCats.find((c) => c.name === e.target.value) ?? ALL_CAT;
+              //   navigate({ category: cat.slug, page: 1 });
+              // }}
               onChange={(e) => {
-                const cat = allCats.find((c) => c.name === e.target.value) ?? ALL_CAT;
-                navigate({ category: cat.slug, page: 1 });
+                const cat =
+                  allCats.find(
+                    (c) => c.name === e.target.value
+                  ) ?? ALL_CAT;
+
+                router.push(`/course_cats/${cat.slug}`);
               }}
               className="border p-2 pr-8 m-2 md:m-0 rounded-[10px] text-ellipsis appearance-none w-full sm:w-[180px] md:w-[200px] lg:w-[200px] truncate"
             >
@@ -309,7 +363,7 @@ useEffect(() => {
           {hasActiveFilters && (
             <button
               className="border p-2 m-2 md:m-0 rounded-[10px] text-[#09339B] flex items-center gap-2 whitespace-nowrap"
-              onClick={() => router.push({ pathname: "/courses", query: {} })}
+              onClick={() => router.push({ pathname: "/course_cats/all", query: {} })}
             >
               Clear All Filter
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="mt-[2px]">

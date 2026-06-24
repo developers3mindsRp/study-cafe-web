@@ -89,10 +89,10 @@ export default function Header() {
               onMouseLeave={() => setCoursesMenuOpen(false)}
             >
               <Link
-                href="/courses"
+                href="/course_cats/all"
                 aria-expanded={coursesMenuOpen}
                 className={`flex items-center gap-1 text-[18px] transition-colors ${
-                  router.pathname.startsWith("/course")
+                  router.pathname.startsWith("/course_cats/all")
                     ? "text-blue-600 font-semibold"
                     : "text-[#3a3c3e] hover:text-blue-600"
                 }`}
@@ -125,7 +125,7 @@ export default function Header() {
                     {courseCats.map((cat) => (
                       <Link
                         key={cat.id}
-                        href={`/courses?category=${cat.slug}`}
+                        href={`/course_cats/${cat.slug}`}
                         className="block px-4 py-2 text-sm text-[#3a3c3e] hover:bg-gray-50"
                         onClick={() => setCoursesMenuOpen(false)}
                       >
@@ -155,9 +155,9 @@ export default function Header() {
       : "text-[#3a3c3e] hover:text-blue-600"}`}> Downloads</Link> */}
 
             <Link
-              href="/blogs"
+              href="/category/all"
               className={`text-[18px] transition-colors ${
-                router.pathname === "/blogs"
+                router.pathname === "/category/all"
                   ? "text-blue-600 font-semibold"
                   : "text-[#3a3c3e] hover:text-blue-600"
               }`}
@@ -283,7 +283,7 @@ export default function Header() {
                     {courseCats.map((cat) => (
                       <Link
                         key={cat.id}
-                        href={`/courses?category=${cat.slug}`}
+                        href={`/course_cats/${cat.slug}`}
                         className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -302,7 +302,7 @@ export default function Header() {
                 Memberships
               </Link>
               <Link
-                href="/blogs"
+                href="/category/all"
                 className="text-[#3a3c3e] hover:text-blue-600 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
