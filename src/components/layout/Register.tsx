@@ -74,29 +74,48 @@ export default function SignUpPage() {
       return n;
     });
   };
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => {
+  const { name, value } = e.target;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setFieldErrors((err) => {
-      const k = name as FieldName;
-      if (!err[k]) return err;
-      const next = { ...err };
-      delete next[k];
-      return next;
-    });
-    setFormError(null);
-  };
+  let updatedValue = value;
 
+  // Full Name: allow only alphabets and spaces
+  if (name === "fullName") {
+    updatedValue = value.replace(/[^A-Za-z\s]/g, "");
+  }
+
+  setForm((prev) => ({
+    ...prev,
+    [name]: updatedValue,
+  }));
+
+  setFieldErrors((err) => {
+    const k = name as FieldName;
+    if (!err[k]) return err;
+
+    const next = { ...err };
+    delete next[k];
+    return next;
+  });
+
+  setFormError(null);
+};
   const validateClient = (): boolean => {
+    const NAME_RE = /^[A-Za-z\s]+$/;
     const err: Partial<Record<FieldName, string>> = {};
     const t = (s: string) => s.trim();
-
-    if (!t(form.fullName) || t(form.fullName).length < 2) {
-      err.fullName = "Please enter your full name (at least 2 characters).";
+    if (!t(form.fullName)) {
+      err.fullName = "Full name is required.";
+    } else if (t(form.fullName).length < 2) {
+      err.fullName = "Please enter at least 2 characters.";
+    } else if (!NAME_RE.test(t(form.fullName))) {
+      err.fullName = "Full name can contain only letters and spaces.";
     }
+    // if (!t(form.fullName) || t(form.fullName).length < 2) {
+    //   err.fullName = "Please enter your full name (at least 2 characters).";
+    // }
     if (!t(form.email) || !EMAIL_RE.test(t(form.email))) {
       err.email = "Please enter a valid email address.";
     }

@@ -442,6 +442,7 @@ export interface PublicCourse {
   ratings?: string | number | null;
   language?: string[] | null;
   is_published?: boolean;
+  duration?:any;
 }
 
 /** Recording inside a session */

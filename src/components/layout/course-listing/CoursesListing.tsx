@@ -23,7 +23,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
   const enrolled = c.enrolled_count ? c.enrolled_count.toLocaleString("en-IN") : null;
   const oldPrice = formatPrice(c.price);
   const newPrice = formatPrice(c.sale_price);
-
+  console.log(c,"cccccccccccc")
   return (
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
@@ -36,14 +36,25 @@ function CourseCard({ c }: { c: PublicCourse }) {
         )}
       </div>
       <div className="p-3">
-        {c.language && (
-          <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px]">
-            <span className="flex items-center gap-1">
-              <img src="/images/eng-dark.svg" alt="" width="20" height="20" />
-              {Array.isArray(c.language) ? c.language.join(", ") : c.language}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center">
+           {c.duration && (
+              <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px]">
+                <span className="flex items-center gap-1">
+                  <img src="/images/clock-02.svg" alt="" width="20" height="20" />
+                  {c.duration}
+                </span>
+              </div>
+            )}
+            {c.language && (
+              <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px] ml-4">
+                <span className="flex items-center gap-1">
+                  <img src="/images/eng-dark.svg" alt="" width="20" height="20" />
+                  {Array.isArray(c.language) ? c.language.join(", ") : c.language}
+                </span>
+              </div>
+            )}
+        </div>
+       
          <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
           {c.title}
         </h3>
