@@ -18,7 +18,7 @@ function formatPrice(val?: string | number | null) {
 
 function CourseCard({ c }: { c: PublicCourse }) {
   const href = c.slug ? `/course/${c.slug}` : `/course/${c.id}`;
-  const thumbnail = c.thumbnail_url || "/images/home/f1.jpg";
+  const thumbnail = c.thumbnail_url || "/images/placeholder.jpg";
   const rating = c.ratings ? Number(c.ratings).toFixed(1) : null;
   const enrolled = c.enrolled_count ? c.enrolled_count.toLocaleString("en-IN") : null;
   const oldPrice = formatPrice(c.price);

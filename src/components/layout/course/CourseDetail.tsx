@@ -46,9 +46,12 @@ export default function CourseSection({
   const termsConditions = course?.terms_conditions
   ? JSON.parse(course.terms_conditions)
   : [];
-  const requirements = course?.requirements
-  ? JSON.parse(course.requirements)
-  : [];
+  // const requirements = course?.requirements
+  // ? JSON.parse(course.requirements)
+  // : [];
+
+   const requirements = course?.requirements;
+
   const featuredinlogos = course?.featured_in_logos
 
 
@@ -98,7 +101,10 @@ export default function CourseSection({
    
 
       {/* Author Section */}
-      <div className="container mx-auto px-4 mt-10">
+
+      {
+        primaryAuthor?.name && 
+        <div className="container mx-auto px-4 mt-10">
         <h2
           className="
             text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
@@ -140,10 +146,10 @@ export default function CourseSection({
 
             <div className="text-left">
               <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
-                {primaryAuthor?.name || "Author Name"}
+                {primaryAuthor?.name}
               </h3>
               <h3 className="text-[#09339B] text-[16px] md:text-[20px]">
-                {primaryAuthor?.role || "Author Role"}
+                {primaryAuthor?.role}
               </h3>
             </div>
           </div>
@@ -155,6 +161,8 @@ export default function CourseSection({
           </p>
         </div>
       </div>
+      }
+      
 
       {faqItems.length > 0 && (
         <div className="w-full bg-white  container mx-auto px-4 py-1">
@@ -287,7 +295,7 @@ export default function CourseSection({
           </div>
         )}
 
-         {requirements.length > 0 && (
+         {requirements && (
           <div className=" container mx-auto px-4 py-10 pt-2">
             <h2   className="
                 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
@@ -300,11 +308,10 @@ export default function CourseSection({
             </h2>
 
             <ul className="list-disc pl-5 space-y-2">
-              {requirements.map(
-                (item: { title: string }, index: number) => (
-                  <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
-                )
-              )}
+              
+               
+                  <li>{requirements}</li>
+               
             </ul>
           </div>
         )}

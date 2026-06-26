@@ -228,7 +228,7 @@ export default function CourseOverview({
 
   const description = course?.description;
 
-  let bonuses = FALLBACK_BONUSES;
+  let bonuses = [];
   if (course?.includes_info) {
     try {
       const parsed = JSON.parse(course.includes_info);
@@ -396,7 +396,7 @@ export default function CourseOverview({
   
               items.push({
                 title: item.title ?? "",
-                duration: item.minutes ? `${item.minutes} min` : "",
+                duration: item.total_duration ? `${item.total_duration} min` : "",
                 bullets,
               });
             });
@@ -547,7 +547,7 @@ export default function CourseOverview({
 
               {/* Bonuses */}
               {
-                bonuses &&
+                bonuses.length > 0 &&
               
                 <div className="p-0 sm:p-8 mt-8 md:mt-6">
                   <button className="flex items-center justify-center gap-2 mb-3 bg-[rgb(255_198_80)] mx-auto px-4 py-2 rounded-[10px]">
@@ -661,7 +661,7 @@ export default function CourseOverview({
                       <div className="flex items-center gap-2 md:gap-32">
                         {item.duration && (
                           <span className="font-medium text-[14px] md:text-[20px] whitespace-nowrap">
-                            {item.duration} 
+                            {item.duration}
                           </span>
                         )}
                         <svg
@@ -708,9 +708,9 @@ export default function CourseOverview({
                   Certificate
                 </h2>
                 <p className="text-center text-[16px] md:text-[20px] mb-4 md:mb-10 font-medium text-black">
-                  Certificate to be provided to all the participants.
+                  {course?.certifications}
                 </p>
-                <img src="/images/democertificate.png" alt="" className="mx-auto mb-14" />
+                <img src="/images/democertificate.png" alt="" className="mx-auto " />
               </>
         }
       
