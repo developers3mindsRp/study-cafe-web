@@ -238,7 +238,7 @@ export default function LearningPage({ courseId, slug }: Props) {
       const r =
         activeRecordings.find((x) => x.id === selectedRecordingId) ||
         activeRecordings[0];
-        console.log(r,"r r r ")
+     
 
       if (!r?.source) return null;
 
@@ -268,7 +268,6 @@ export default function LearningPage({ courseId, slug }: Props) {
     }, [activeRecordings, selectedRecordingId, videoIdSource]);
     
   
-  console.log(videoYouTubeURL,"videoYouTubeURl")
 
   const onTimeUpdate = useCallback(
     (seconds: number) => {

@@ -187,7 +187,7 @@ export default function CourseDetailProfile({
       console.error(e);
     }
   }, [onCertificateDownload]);
- console.log(videoId,"videoId")
+
 
   return (
     <div className="container mx-auto px-6 py-6">
