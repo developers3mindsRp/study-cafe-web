@@ -302,7 +302,7 @@ export const getMyReferralLinks = async (
     `/affiliate/my-links?search=${encodeURIComponent(search)}`
   );
 
-  console.log(response.data.data, "response.data.data");
+
 
   return response.data.data;
 };

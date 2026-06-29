@@ -65,6 +65,8 @@ export type CourseDetailProfileProps = {
   onCertificateDownload: () => void | Promise<void>;
   backHref?: string;
   curriculumFiles:any;
+  videoIdSource?:string | null;
+  videoYouTubeURL?:string | null;
 };
 
 export default function CourseDetailProfile({
@@ -96,6 +98,8 @@ export default function CourseDetailProfile({
   isCourseComplete,
   onCertificateDownload,
   curriculumFiles,
+  videoIdSource,
+  videoYouTubeURL, 
   backHref = "/dashboard",
 }: CourseDetailProfileProps) {
   const [openDay, setOpenDay] = useState<number | null>(null);
@@ -183,8 +187,7 @@ export default function CourseDetailProfile({
       console.error(e);
     }
   }, [onCertificateDownload]);
-
-  console.log(curriculumFiles,"curriculumFiles")
+ console.log(videoId,"videoId")
 
   return (
     <div className="container mx-auto px-6 py-6">
@@ -285,7 +288,7 @@ export default function CourseDetailProfile({
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-xl border border-[#9FBBFF] bg-white p-4 lg:col-span-2">
           <div className="relative overflow-hidden rounded-lg">
-            {videoId ? (
+          {videoId && videoIdSource === "vimeo" ? (
               <VimeoPlayer
                 key={videoPlayerKey}
                 videoId={videoId}
@@ -294,9 +297,18 @@ export default function CourseDetailProfile({
                 onDuration={setVimeoDurationSeconds}
                 startSeconds={startSeconds}
               />
+            ) : videoYouTubeURL && videoIdSource === "youtube" ? (
+              <div>
+                 <iframe
+                    width="100%"
+                    height="475"
+                    src={videoYouTubeURL}
+                    allowFullScreen
+                  />
+                  
+              </div>
             ) : (
               <div className="relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={thumb}
                   alt={courseTitle}

@@ -424,7 +424,7 @@ export const getArticleCategories = async (): Promise<ArticleCategoryItem[]> => 
 export const getCourseCats = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats');
 
-  console.log(response.data.data,"response.data.data")
+
   return response.data.data;
 };
 

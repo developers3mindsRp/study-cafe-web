@@ -234,6 +234,42 @@ export default function LearningPage({ courseId, slug }: Props) {
     return parseVimeoIdFromUrl(r.url);
   }, [activeRecordings, selectedRecordingId]);
 
+  const videoIdSource = useMemo(() => {
+      const r =
+        activeRecordings.find((x) => x.id === selectedRecordingId) ||
+        activeRecordings[0];
+        console.log(r,"r r r ")
+
+      if (!r?.source) return null;
+
+      return r.source;
+    }, [activeRecordings, selectedRecordingId]);
+
+    const getYoutubeEmbedUrl = (url: string) => {
+      const match = url.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/,
+      );
+
+      if (!match) return null;
+
+      return `https://www.youtube.com/embed/${match[1]}`;
+    };
+
+    const videoYouTubeURL = useMemo(() => {
+      if (videoIdSource !== "youtube") return null;
+
+      const r =
+        activeRecordings.find((x) => x.id === selectedRecordingId) ||
+        activeRecordings[0];
+
+      if (!r?.url) return null;
+
+      return getYoutubeEmbedUrl(r.url);
+    }, [activeRecordings, selectedRecordingId, videoIdSource]);
+    
+  
+  console.log(videoYouTubeURL,"videoYouTubeURl")
+
   const onTimeUpdate = useCallback(
     (seconds: number) => {
       if (!activeId) return;
@@ -277,7 +313,7 @@ const activeSession = sessions.find(
 );
 
 
-console.log(activeSession,"activeSession")
+
 const selectedDayFiles = useMemo(() => {
   if (!activeSession || !Array.isArray(course?.curriculum)) return [];
 
@@ -328,7 +364,8 @@ const selectedDayFiles = useMemo(() => {
   }
 
 
-console.log(course,"courseTitle")
+
+
   return (
     <PublicLayout>
       
@@ -360,7 +397,9 @@ console.log(course,"courseTitle")
         canNext={idx >= 0 && idx < sessions.length - 1}
         isCourseComplete={isComplete}
         onCertificateDownload={onCertificateDownload}
-         curriculumFiles={selectedDayFiles}
+        curriculumFiles={selectedDayFiles}
+        videoIdSource={videoIdSource}
+        videoYouTubeURL={videoYouTubeURL}
       />
     </PublicLayout>
   );

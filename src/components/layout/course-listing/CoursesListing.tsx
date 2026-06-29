@@ -23,7 +23,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
   const enrolled = c.enrolled_count ? c.enrolled_count.toLocaleString("en-IN") : null;
   const oldPrice = formatPrice(c.price);
   const newPrice = formatPrice(c.sale_price);
-  console.log(c.language,"cccccccccccc")
+
   return (
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
@@ -236,7 +236,7 @@ export default function CoursesPage({ cats = [], initialCourses, initialQuery }:
   // ─── render ───────────────────────────────────────────────────────────────
 
 
-  console.log(courses,"courses")
+
 
 useEffect(() => {
   const handleRouteComplete = () => {
