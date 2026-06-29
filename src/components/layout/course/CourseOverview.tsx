@@ -366,34 +366,40 @@ export default function CourseOverview({
       const items: {
         title: string;
         duration: string;
-        bullets: string[];
+        bullets: { title: string; description: string }[];
       }[] = [];
-  
+
       // Curriculum JSON (API returns parsed array or legacy JSON string)
       if (course?.curriculum) {
         try {
           const parsed: any[] = Array.isArray(course.curriculum)
             ? course.curriculum
             : JSON.parse(course.curriculum);
-  
+
           if (Array.isArray(parsed)) {
             parsed.forEach((item: any) => {
               const sections = Array.isArray(item.sections) ? item.sections : [];
-  
-              let bullets: string[] = [];
+
+              let bullets: { title: string; description: string }[] = [];
               if (sections.length > 0) {
                 bullets = sections
-                  .map((section: any) => String(section?.title ?? "").trim())
-                  .filter(Boolean);
+                  .map((section: any) => ({
+                    title: String(section?.title ?? "").trim(),
+                    description: String(section?.description ?? "").trim(),
+                  }))
+                  .filter((b: { title: string; description: string }) => b.title || b.description);
               } else if (Array.isArray(item.points)) {
-                bullets = item.points.map(String).filter(Boolean);
+                bullets = item.points
+                  .map((p: any) => ({ title: String(p).trim(), description: "" }))
+                  .filter((b: { title: string }) => b.title);
               } else if (typeof item.description === "string") {
                 bullets = item.description
                   .split(/\r?\n+/)
                   .map((line: string) => line.replace(/<[^>]*>/g, "").trim())
-                  .filter(Boolean);
+                  .filter(Boolean)
+                  .map((line: string) => ({ title: line, description: "" }));
               }
-  
+
               items.push({
                 title: item.title ?? "",
                 duration: item.total_duration ? `${item.total_duration} min` : "",
@@ -405,26 +411,26 @@ export default function CourseOverview({
           console.error("Curriculum parse error:", error);
         }
       }
-  
+
       // Fallback from batches
       if (items.length === 0 && batches.length > 0) {
         const byDay = new Map<
           number,
           {
             title: string;
-            bullets: string[];
+            bullets: { title: string; description: string }[];
             time: string;
           }
         >();
-  
+
         batches.forEach((batch: any) => {
           batch?.sessions?.forEach((session: any) => {
             const day = session.day_number || 1;
-  
+
             const bucket:
               {
                 title: string;
-                bullets: string[];
+                bullets: { title: string; description: string }[];
                 time: string;
               } =
                 byDay.get(day) ?? {
@@ -432,24 +438,24 @@ export default function CourseOverview({
                   bullets: [],
                   time: formatSessionTime(session.scheduled_at) ?? "",
                 };
-  
+
             if (!byDay.has(day)) {
               byDay.set(day, bucket);
             }
-  
+
             const subtitle = (
               session.section_title || ""
             ).trim();
-  
+
             if (
               subtitle &&
-              !bucket.bullets.includes(subtitle)
+              !bucket.bullets.some((b) => b.title === subtitle)
             ) {
-              bucket.bullets.push(subtitle);
+              bucket.bullets.push({ title: subtitle, description: "" });
             }
           });
         });
-  
+
         Array.from(byDay.entries())
           .sort((a, b) => a[0] - b[0])
           .forEach(([, value]) => {
@@ -460,7 +466,7 @@ export default function CourseOverview({
             });
           });
       }
-  
+
       return items;
     }, [course?.curriculum, batches]);
 
@@ -680,10 +686,22 @@ export default function CourseOverview({
                       </div>
                     </button>
                     {openIndex === index && item.bullets.length > 0 && (
-                      <div className="px-4 pb-4 text-[16px] text-gray-600 leading-relaxed border-t bg-white">
-                        <ul className="list-disc pl-5 mt-2 space-y-1">
-                          {item.bullets.map((text, i) => (
-                            <li key={i}>{text}</li>
+                      <div className="px-4 md:px-6 pb-4 text-gray-700 leading-relaxed border-t bg-white">
+                        <ul className="mt-3 space-y-3">
+                          {item.bullets.map((bullet, i) => (
+                            <li
+                              key={i}
+                              className="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-[9px] before:w-2 before:h-2 before:rounded-full before:bg-[#09339B]"
+                            >
+                              <p className="font-semibold text-[15px] md:text-[17px] text-[#1f2937]">
+                                {bullet.title}
+                              </p>
+                              {bullet.description && (
+                                <p className="mt-1 text-[14px] md:text-[15px] text-gray-600 whitespace-pre-line">
+                                  {bullet.description}
+                                </p>
+                              )}
+                            </li>
                           ))}
                         </ul>
                       </div>
