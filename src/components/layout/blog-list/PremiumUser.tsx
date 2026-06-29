@@ -367,6 +367,7 @@ type Props = {
   google_news_url:string;
   citation?:any;
   categories?:any;
+  bio?:any;
 };
 
 export default function Premium_user({
@@ -404,7 +405,7 @@ export default function Premium_user({
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
 
-  console.log(article?.categories,"article")
+  console.log(authorSpotlight,"authorSpotlight")
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">
@@ -769,7 +770,7 @@ export default function Premium_user({
 
           <div className="flex items-start gap-4">
             <div className="rounded-[10px] p-2 md:p-3 bg-[#eff1fa] w-full">
-              <div className="flex flex-row items-center gap-6 md:gap-4 ml-6 pb-4">
+              <div className="flex flex-row  gap-6 md:gap-4 ml-6 pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={
@@ -795,6 +796,8 @@ export default function Premium_user({
                       {authorHeadline(authorSpotlight)}
                     </h3>
                   )}
+
+                <p>{authorSpotlight?.bio}</p>  
                 </div>
               </div>
               {authorSpotlight && (

@@ -581,6 +581,7 @@ export interface BlogSpotlightAuthor {
   country?: string | null;
   profile_pic_url?: string | null;
   published_article_count?: number;
+  bio?:any;
 }
 
 export interface BlogSpotlightTag {

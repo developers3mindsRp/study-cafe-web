@@ -26,6 +26,8 @@ interface BlogDetailProps {
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
+
+  console.log(spotlight,"article")
   return (
     <PublicLayout>
       {/* SEO: AppRouteSeo + middleware use /api/platform/seo-metadata/by-path for this pathname */}
