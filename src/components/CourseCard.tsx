@@ -67,7 +67,7 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
     course.lessons > 0 && course.completed >= course.lessons;
 
   const imageSrc =
-    resolveApiAssetUrl(course.image) || "/images/home/f1.jpg";
+    resolveApiAssetUrl(course.image) || "images/placeholder.jpg";
 console.log(learningHref,"learningHref")
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">

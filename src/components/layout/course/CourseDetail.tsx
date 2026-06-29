@@ -119,29 +119,31 @@ export default function CourseSection({
 
         <div className=" rounded p-2 md:p-3   bg-[#F9F9FB]">
           <div className="flex flex-row items-center gap-6 md:gap-4 ml-6">
-            {
-              primaryAuthor?.image_url ?
-              <img
-                src={primaryAuthor?.image_url || ""}
-                width={54}
-                height={54}
-                alt={primaryAuthor?.name || "Author"}
-                className="rounded-full object-cover"
-                referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = ""; }}
-              />
-              :
-              <img
-                src="/images/defultuser.png"
-                width={54}
-                height={54}
-                alt={primaryAuthor?.name || "Author"}
-                className="rounded-full object-cover"
-                referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = ""; }}
-              />
+            <div className="w-[100px] h-[100px] rounded-full relative overflow-hidden">
+              {
+                primaryAuthor?.image_url ?
+                <img
+                  src={primaryAuthor?.image_url || ""}
+                 
+                  alt={primaryAuthor?.name || "Author"}
+                  className="absolute w-full h-full left-0 top-0"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { e.currentTarget.src = ""; }}
+                />
+                :
+                <img
+                  src="/images/defultuser.png"
+                 
+                  alt={primaryAuthor?.name || "Author"}
+                  className="absolute w-full h-full left-0 top-0"
+                  
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { e.currentTarget.src = ""; }}
+                />
 
-            }
+              }
+            </div>
+            
             
 
             <div className="text-left">

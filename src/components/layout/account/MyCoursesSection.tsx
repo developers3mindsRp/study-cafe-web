@@ -14,7 +14,7 @@ function purchaseToCard(p: UserCourse): MyCourseCardModel {
   return {
     image:
       resolveApiAssetUrl(c.thumbnail || c.thumbnail_url) ||
-      "/images/home/f1.jpg",
+      "/images/placeholder.jpg",
     title: c.title ?? "Untitled Course",
     lessons: c.totalLessons ?? 0,
     completed: p.completedLessons?.length ?? 0,

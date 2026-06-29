@@ -440,7 +440,7 @@ export interface PublicCourse {
   thumbnail_url?: string | null;
   enrolled_count?: number;
   ratings?: string | number | null;
-  language?: string[] | null;
+  language?: any;
   is_published?: boolean;
   duration?:any;
 }

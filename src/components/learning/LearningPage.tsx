@@ -155,7 +155,7 @@ export default function LearningPage({ courseId, slug }: Props) {
   const heartbeat = useHeartbeat();
   const markComplete = useMarkSessionComplete();
 
-  console.log(courseId,"courseId")
+
 
   useEffect(() => {
     if (courseId && progress && overallInvalidatedFor.current !== courseId) {
@@ -276,6 +276,8 @@ const activeSession = sessions.find(
   (s) => Number(s.sessionId) === activeId
 );
 
+
+console.log(activeSession,"activeSession")
 const selectedDayFiles = useMemo(() => {
   if (!activeSession || !Array.isArray(course?.curriculum)) return [];
 
@@ -284,7 +286,7 @@ const selectedDayFiles = useMemo(() => {
   const day = curriculum.find(
     (item) =>
       item.title?.trim().toLowerCase() ===
-      activeSession.title?.trim().toLowerCase()
+      activeSession.dayTitle?.trim().toLowerCase()
   );
 
   return (day?.files ?? []).map((file) => ({

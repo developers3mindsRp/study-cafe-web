@@ -27,7 +27,7 @@ const CourseCard = ({ course, size }: { course: any; size: 'sm' | 'lg' }) => {
   const price = formatPrice(getEffectiveCoursePrice(course));
   const listPrice = getCourseListPrice(course);
   const originalPrice = listPrice != null ? formatPrice(listPrice) : null;
-  const thumbnail = course.thumbnail_url ?? '/images/home/f1.jpg';
+  const thumbnail = course.thumbnail_url ?? '/images/placeholder.jpg';
   const href = `/course/${course.slug ?? course.id}`;
 
   if (size === 'sm') {

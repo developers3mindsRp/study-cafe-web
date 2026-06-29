@@ -26,7 +26,7 @@ function membershipToCardModel(
   return {
     image:
       resolveApiAssetUrl(course.thumbnail_url ?? "") ||
-      "/images/home/f1.jpg",
+      "/images/placeholder.jpg",
     title: course.title,
     lessons: prog?.totalSessions ?? 0,
     completed: prog?.completedSessions ?? 0,
@@ -73,7 +73,7 @@ function MembershipStartCard({
 }) {
   const img =
     resolveApiAssetUrl(course.thumbnail_url ?? "") ||
-    "/images/home/f1.jpg";
+    "/images/placeholder.jpg";
 
   return (
     <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">

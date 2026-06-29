@@ -23,7 +23,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
   const enrolled = c.enrolled_count ? c.enrolled_count.toLocaleString("en-IN") : null;
   const oldPrice = formatPrice(c.price);
   const newPrice = formatPrice(c.sale_price);
-  console.log(c,"cccccccccccc")
+  console.log(c.language,"cccccccccccc")
   return (
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
@@ -45,7 +45,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
                 </span>
               </div>
             )}
-            {c.language && (
+            {c.language?.length > 0 && (
               <div className="flex items-center gap-4 text-[#6a6969] text-[14px] md:text-[16px] ml-4">
                 <span className="flex items-center gap-1">
                   <img src="/images/eng-dark.svg" alt="" width="20" height="20" />

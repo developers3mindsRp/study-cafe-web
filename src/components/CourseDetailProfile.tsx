@@ -104,7 +104,7 @@ export default function CourseDetailProfile({
   const [vimeoDurationSeconds, setVimeoDurationSeconds] = useState<number | null>(null);
   const [vimeoThumbnailsById, setVimeoThumbnailsById] = useState<Record<string, string>>({});
   const thumb =
-    resolveApiAssetUrl(courseThumbnailUrl ?? "") || "/images/home/f1.jpg";
+    resolveApiAssetUrl(courseThumbnailUrl ?? "") || "/images/placeholder.jpg";
 
   useEffect(() => {
     setVimeoDurationSeconds(null);
@@ -183,6 +183,8 @@ export default function CourseDetailProfile({
       console.error(e);
     }
   }, [onCertificateDownload]);
+
+  console.log(curriculumFiles,"curriculumFiles")
 
   return (
     <div className="container mx-auto px-6 py-6">

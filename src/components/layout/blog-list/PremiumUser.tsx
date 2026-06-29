@@ -780,10 +780,10 @@ export default function Premium_user({
                     onError={(e) => {
                       e.currentTarget.src = "/images/defultuser.png";
                     }}
-                  width={54}
-                  height={54}
+                  width={100}
+                  height={100}
                   alt=""
-                  className="rounded-full object-cover w-[54px] h-[54px]"
+                  className="rounded-full object-cover w-[100px] h-[100px]"
                   referrerPolicy="no-referrer"
                 />
                 <div className="text-left">
