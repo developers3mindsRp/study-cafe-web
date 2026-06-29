@@ -551,9 +551,9 @@ export default function Premium_user({
                       Premium
                     </span>
                   )}
-                  <h2 className="text-[20px] font-bold text-[#252525]">
+                  {/* <h2 className="text-[20px] font-bold text-[#252525]">
                     {article.title}
-                  </h2>
+                  </h2> */}
                   <div
                     className="article-rich-text max-w-none text-[16px] text-[#3a3c3e]"
                     suppressHydrationWarning
