@@ -15,11 +15,26 @@ function formatTitle(mt: string): string {
   return t.toLowerCase().includes("studycafe") ? t : `${t} | ${SITE_BRAND}`;
 }
 
-export function AppRouteSeo() {
+type AppRouteSeoProps = {
+  /** SSR SEO from middleware header (via page getServerSideProps). */
+  ssrSeo?: SeoMetadata | null;
+  ssrPathname?: string;
+};
+
+export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
   const router = useRouter();
   /** Actual URL (/blogs/foo), not the route pattern (/blogs/[slug]) — required for CMS SEO by-path. */
   const pathname = pathnameForSeoLookup(router.asPath || router.pathname || "/");
-  const [seo, setSeo] = useState<SeoMetadata | null>(null);
+  const ssrPath = ssrPathname ? pathnameForSeoLookup(ssrPathname) : "";
+  const initialSeo =
+    ssrSeo && ssrPath && ssrPath === pathname ? ssrSeo : null;
+  const [seo, setSeo] = useState<SeoMetadata | null>(initialSeo);
+
+  useEffect(() => {
+    if (ssrSeo && ssrPath && ssrPath === pathname) {
+      setSeo(ssrSeo);
+    }
+  }, [ssrSeo, ssrPath, pathname]);
 
   useEffect(() => {
     let cancelled = false;

@@ -35,3 +35,18 @@ export function pathnameForSeoLookup(pathname: string): string {
   if (path === "") return "/";
   return path.startsWith("/") ? path : `/${path}`;
 }
+
+/** Decode SEO JSON attached by middleware (`x-studycafe-seo-json`). */
+export function readMiddlewareSeoHeader(
+  header: string | string[] | undefined
+): SeoMetadata | null {
+  const raw = Array.isArray(header) ? header[0] : header;
+  if (!raw) return null;
+  try {
+    return normalizeSeoPayload(
+      JSON.parse(decodeURIComponent(raw)) as Record<string, unknown>
+    );
+  } catch {
+    return null;
+  }
+}
