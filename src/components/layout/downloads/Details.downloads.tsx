@@ -153,7 +153,7 @@ const Details_downloads = ({ fileSlug }: Props) => {
             </section>
         );
     }
-
+console.log(file,"file")
   return (
       <>
           {membershipModalOpen && (
@@ -212,8 +212,8 @@ const Details_downloads = ({ fileSlug }: Props) => {
 
                           <div>
                               <p className="text-[#929292] mb-1">File Name</p>
-                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-2 rounded-md inline-block ">
-                                  {file.slug ? `${file.slug}` : `file-${file.id}`}
+                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-2 rounded-md break-all">
+                                  {file.title ? `${file.title}` : `file-${file.id}`}
                               </p>
                           </div>
 

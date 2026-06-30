@@ -62,7 +62,7 @@ const handleDownload = async () => {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal Box */}
-      <div className="relative bg-white w-full max-w-[70%] rounded-xl shadow-lg p-6 z-10">
+      <div className="relative bg-white w-full max-w-[60%] rounded-xl shadow-lg p-6 z-10">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -72,17 +72,43 @@ const handleDownload = async () => {
         </button>
 
         {/* Certificate Card */}
-        <div className="bg-white shadow rounded space-y-3">
-          <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
-            <img
-              src="/images/award.png"
-              alt="Certificate Icon"
-              className="w-6 h-6"
-            />
-            Course Certificate
-          </h3>
+        <div className="bg-white   space-y-3">
+            <div className="flex justify-between px-6 mb-2">
+                <div>
+                    <h3 className="flex items-center gap-2 text-[#09339B] text-[20px] font-semibold">
+                    <img
+                      src="/images/award.png"
+                      alt="Certificate Icon"
+                      className="w-6 h-6"
+                    />
+                    Course Certificate
+                  </h3>
 
-                  <p className="text-[16px] text-[#929292] text-center">Download your certificate of completion of this course</p>
+                          <p className="text-[16px] text-[#929292] text-center">Download your certificate of completion of this course</p>
+              </div>
+            
+
+              <div className="flex justify-center gap-3 pt-3 ">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-[#09339B] text-white rounded"
+                  // onClick={() => {
+                  //   void onDownload?.();
+                  // }}
+                  onClick={handleDownload}
+                >
+                  Download
+                </button>
+
+                {/* <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 border rounded"
+                >
+                  Close
+                </button> */}
+              </div>
+            </div>
           
                   {/* <Image
                     src="/images/certificate.svg"
@@ -107,26 +133,7 @@ const handleDownload = async () => {
                   </div>
                 </div>
 
-            <div className="flex justify-center gap-3 pt-3 ">
-            <button
-              type="button"
-              className="px-4 py-2 bg-[#09339B] text-white rounded"
-              // onClick={() => {
-              //   void onDownload?.();
-              // }}
-               onClick={handleDownload}
-            >
-              Download
-            </button>
-
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border rounded"
-            >
-              Close
-            </button>
-          </div>
+            
 
         {/* <div className="flex justify-center gap-3 pt-3 ">
           <button

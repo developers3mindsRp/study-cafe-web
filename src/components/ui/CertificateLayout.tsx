@@ -66,7 +66,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
             </div>
 
             <div className="text-center w-[30%]">
-               <p className="font-semibold  text-[#000000] opacity-0">DEEPAK GUPTA</p>
+               <p className="font-semibold  text-[#000000] "><img src="/images/signature.png"/></p>
               <div className="border-t border-[#404041] mt-1 w-full mx-auto"></div>
                 <p className="font-semibold  text-[#000000]">DEEPAK GUPTA</p>
               <p className="text-xs mt-1  text-[#000000]">(FOUNDER)</p>
