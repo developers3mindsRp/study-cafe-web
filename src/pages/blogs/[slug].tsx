@@ -2,9 +2,10 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
-import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds } from '@/types/models.types';
+import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds, SeoMetadata } from '@/types/models.types';
 import { appConfig } from '@/config/app.config';
 import { buildArticlePublicPath } from '@/lib/articlePaths';
+import { readMiddlewareSeoHeader } from '@/lib/seo/normalize';
 import {
   bearerFromCookieHeader,
   fetchArticleBySlugSSR,
@@ -23,6 +24,8 @@ interface BlogDetailProps {
   spotlight: BlogSpotlightFeed;
   siteAds: SiteDisplayAds | null;
   isPreview?: boolean;
+  pageSeo: SeoMetadata | null;
+  seoPathname: string;
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
@@ -83,13 +86,19 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
   console.log(article,slug,"article.slug")
   if (!article) return { notFound: true };
 
+  const rawPublicPath = ctx.req.headers['x-studycafe-public-path'];
+  const publicPathHeader = Array.isArray(rawPublicPath) ? rawPublicPath[0] : rawPublicPath;
+  const seoPathname =
+    (typeof publicPathHeader === 'string' && publicPathHeader)
+    || buildArticlePublicPath(article.slug, article.id)
+    || `/blogs/${slug}`;
+  const pageSeo = readMiddlewareSeoHeader(ctx.req.headers['x-studycafe-seo-json']);
+
   // Skip canonical redirect when previewing a draft — it may not have a canonical URL yet
 
   console.log(article.slug,"article.slug")
   if (!previewToken) {
     const canonicalPath = buildArticlePublicPath(article.slug, article.id);
-    const rawPublicPath = ctx.req.headers['x-studycafe-public-path'];
-    const publicPathHeader = Array.isArray(rawPublicPath) ? rawPublicPath[0] : rawPublicPath;
     const requestPath = (
       typeof publicPathHeader === 'string' && publicPathHeader
         ? publicPathHeader
@@ -121,6 +130,8 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
       spotlight,
       siteAds,
       isPreview: !!previewToken,
+      pageSeo,
+      seoPathname,
     },
   };
 };

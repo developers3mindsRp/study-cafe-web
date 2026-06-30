@@ -24,7 +24,14 @@ export default function App({ Component, pageProps }: AppProps) {
       <HydrationBoundary state={pageProps.dehydratedState}>
         <AuthProvider>
           <MarketingTrackingInjector />
-          <AppRouteSeo />
+          <AppRouteSeo
+            ssrSeo={pageProps.pageSeo ?? null}
+            ssrPathname={
+              typeof pageProps.seoPathname === "string"
+                ? pageProps.seoPathname
+                : undefined
+            }
+          />
           <div className={outfit.className}>
             <Component {...pageProps} />
           </div>
