@@ -37,5 +37,5 @@ export function downloadFileHref(slug: string | null | undefined, id: number): s
     slug != null && String(slug).trim() !== ''
       ? encodeURIComponent(String(slug).trim())
       : String(id);
-  return `/downloads/file/${seg}`;
+  return `/file/${seg}`;
 }

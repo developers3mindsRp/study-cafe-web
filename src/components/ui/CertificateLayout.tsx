@@ -48,13 +48,13 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
 
           {/* Course */}
           <p className="text-[#000000] text-[16px]">For Successfully Attending</p>
-          <h3 className="text-[#000000] text-[18px] font-semibold mt-1">{course}</h3>
+          <h3 className="text-[#000000] text-[18px] font-semibold mt-1 w-[80%]">{course}</h3>
           <p className=" mt-1 text-[#000000] text-[16px]">
             Held Online, Conducted By Studycafe
           </p>
 
           {/* Footer */}
-          <div className=" w-[80%]  flex justify-between items-center  mt-8 px-10 text-sm text-gray-600 mb-8">
+          <div className=" w-[80%]  flex justify-between items-center  mt-6 px-10 text-sm text-gray-600 mb-6">
             <div className="text-center  w-[30%]">
               <p className="font-semibold  text-[#000000]">{date}</p>
               <div className="border-t border-[#404041]  mt-1 w-full mx-auto"></div>

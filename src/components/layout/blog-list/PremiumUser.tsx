@@ -797,7 +797,11 @@ export default function Premium_user({
                     </h3>
                   )}
 
-                <p>{authorSpotlight?.bio}</p>  
+              
+                <div   dangerouslySetInnerHTML={{
+                  __html: authorSpotlight?.bio ?? "",
+                }}>        
+              </div>
                 </div>
               </div>
               {authorSpotlight && (

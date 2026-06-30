@@ -176,7 +176,7 @@ export default function Footer({ footerData }: FooterProps) {
               className="ml-0 md:ml-24 space-y-4 overflow-hidden transition-[max-height] duration-300 ease-in-out md:max-h-full md:overflow-visible"
               style={{ maxHeight: '0px' /* collapsed by default */ }}
             >
-              <li><Link href="/about" className="text-[16px] text-white transition-colors">About US</Link></li>
+              <li><Link href="/about-us" className="text-[16px] text-white transition-colors">About US</Link></li>
               <li><Link href="/privacy-policy" className="text-[16px] text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/ethics-policy" className="text-[16px] text-white transition-colors">Ethics Policy</Link></li>
               <li><Link href="/terms-of-use" className="text-[16px] text-white transition-colors">Terms of Use</Link></li>
