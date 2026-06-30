@@ -72,7 +72,7 @@ const handleDownload = async () => {
         </button>
 
         {/* Certificate Card */}
-        <div className="bg-white shadow rounded p-5 space-y-3">
+        <div className="bg-white shadow rounded space-y-3">
           <h3 className="flex items-center justify-center gap-2 text-[#09339B] text-[20px] font-semibold">
             <img
               src="/images/award.png"

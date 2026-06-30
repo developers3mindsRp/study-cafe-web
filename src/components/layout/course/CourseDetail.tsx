@@ -46,11 +46,11 @@ export default function CourseSection({
   const termsConditions = course?.terms_conditions
   ? JSON.parse(course.terms_conditions)
   : [];
-  // const requirements = course?.requirements
-  // ? JSON.parse(course.requirements)
-  // : [];
+  const requirements = course?.requirements
+  ? JSON.parse(course.requirements)
+  : [];
 
-   const requirements = course?.requirements;
+  //  const requirements = course?.requirements;
 
   const featuredinlogos = course?.featured_in_logos
 
@@ -157,10 +157,10 @@ export default function CourseSection({
           </div>
 
           <hr className="m-4 border border-[#AFAFAF]" />
-          <p className="text-[#6C6C6C] text-[14px] md:text-[17px] mt-1 leading-[32px] m-6 font-light">
-            {primaryAuthor?.bio ||
-              "Author profile will be updated soon."}
-          </p>
+          <div className="text-[#6C6C6C] text-[14px] md:text-[17px] mt-1 leading-[32px] m-6 font-light"  dangerouslySetInnerHTML={{
+              __html: primaryAuthor?.bio ?? "",
+            }}>        
+          </div>
         </div>
       </div>
       }
@@ -311,8 +311,12 @@ export default function CourseSection({
 
             <ul className="list-disc pl-5 space-y-2">
               
-               
-                  <li>{requirements}</li>
+              {requirements.map(
+                (item: { title: string }, index: number) => (
+                  <li key={index}  dangerouslySetInnerHTML={{ __html: item.title }}></li>
+                )
+              )}
+             
                
             </ul>
           </div>

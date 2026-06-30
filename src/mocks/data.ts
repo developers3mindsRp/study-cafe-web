@@ -432,7 +432,7 @@ export const mockTestimonials: Testimonial[] = [
 ];
 
 export const mockPageContent: Record<string, PageContent> = {
-  'about': { slug: 'about', title: 'About Us', content: '<p>StudyCafe is your trusted platform for CA, CS, CWA exam preparation and professional courses.</p>', metaTitle: 'About | StudyCafe', metaDescription: 'Learn about StudyCafe.', updatedAt: new Date().toISOString() },
+  'about': { slug: 'about-us', title: 'About Us', content: '<p>StudyCafe is your trusted platform for CA, CS, CWA exam preparation and professional courses.</p>', metaTitle: 'About | StudyCafe', metaDescription: 'Learn about StudyCafe.', updatedAt: new Date().toISOString() },
   'contact': {
     slug: 'contact',
     title: 'Contact Us',
