@@ -1,4 +1,5 @@
 import { CourseBatch, CoursePublicDetail } from "@/types/models.types";
+import { parseTitledListField } from "@/lib/parseCourseContent";
 import { useState } from "react";
 
 export interface AlumniLogo {
@@ -43,14 +44,8 @@ export default function CourseSection({
       }
       : null);
 
-  const termsConditions = course?.terms_conditions
-  ? JSON.parse(course.terms_conditions)
-  : [];
-  const requirements = course?.requirements
-  ? JSON.parse(course.requirements)
-  : [];
-
-  //  const requirements = course?.requirements;
+  const termsConditions = parseTitledListField(course?.terms_conditions);
+  const requirements = parseTitledListField(course?.requirements);
 
   const featuredinlogos = course?.featured_in_logos
 
@@ -297,7 +292,7 @@ export default function CourseSection({
           </div>
         )}
 
-         {requirements && (
+         {requirements.length > 0 && (
           <div className=" container mx-auto px-4 py-10 pt-2">
             <h2   className="
                 text-[20px] md:text-[30px] font-semibold mb-6 md:mb-4
