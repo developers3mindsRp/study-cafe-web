@@ -28,7 +28,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
      <div className="relative ">
-        <img src={thumbnail} alt={c.title} width="100%" />
+        <img src={thumbnail} alt={c.title} width="100%" className="w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[280px]" />
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
             <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
@@ -55,7 +55,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
             )}
         </div>
        
-         <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2">
+         <h3 className="text-[16px] xl:text-[26px] font-normal text-[#252525] mt-2 mb-2 line-clamp-2 md:h-20">
           {c.title}
         </h3>
         {enrolled && (
