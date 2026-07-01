@@ -45,22 +45,27 @@ export const uploadAvatar = async (file: File): Promise<string> => {
   
   const formData = new FormData();
   formData.append('avatar', file);
-  
-  // Setting this to undefined forces axios to derive
-  // "multipart/form-data; boundary=..." from the FormData itself. The boundary
-  // is required for multer/busboy to parse the file on the backend. (The axios
-  // instance defaults Content-Type to application/json, which would otherwise
-  // stick and strip the boundary — causing req.file to be undefined.)
+
+  // The axios instance defaults Content-Type to application/json (see lib/axios.ts).
+  // For a multipart upload that default MUST NOT be sent: it overrides the
+  // "multipart/form-data; boundary=..." header axios derives from FormData, and
+  // without the boundary multer/busboy on the backend can't parse the file
+  // (req.file ends up undefined → "No file uploaded").
+  //
+  // On axios v1, passing { 'Content-Type': undefined } per-request does NOT reliably
+  // remove the instance-level `common` default, so we null it explicitly here and
+  // let axios set the correct multipart header (with boundary) itself.
   const response = await axiosInstance.post<ApiResponse<{ url: string }>>(
     '/user/avatar',
     formData,
     {
       headers: {
-        'Content-Type': undefined,
-      },
+        // null tells axios to drop the header entirely for this request
+        'Content-Type': null,
+      } as any,
     }
   );
-  
+
   return response.data.data.url;
 };
 
