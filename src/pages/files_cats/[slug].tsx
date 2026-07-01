@@ -1,10 +1,11 @@
-import type { GetStaticPaths, GetStaticProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
 import Sidebar_downloads from '@/components/layout/downloads/Sidebar.downloads';
 import Accounts_downloads from '@/components/layout/downloads/Account.downloads';
 import { queryKeys } from '@/lib/react-query';
+import { runWithServerApiBase } from '@/lib/serverApiContext';
 import {
     getCategoryFiles,
     getDownloadCategories,
@@ -46,45 +47,43 @@ export default function DownloadsCategoryPage({ categorySlug, categoryTitle }: P
     );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    return { paths: [], fallback: 'blocking' };
-};
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+    return runWithServerApiBase(ctx.req, async () => {
+        const slug = ctx.params?.slug;
+        if (!slug || typeof slug !== 'string') {
+            return { notFound: true };
+        }
 
-export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
-    const slug = ctx.params?.slug;
-    if (!slug || typeof slug !== 'string') {
-        return { notFound: true };
-    }
+        const queryClient = new QueryClient();
+        let categoryTitle = slug.replace(/-/g, ' ');
 
-    const queryClient = new QueryClient();
-    let categoryTitle: string;
-    try {
-        const categories = await queryClient.fetchQuery({
-            queryKey: queryKeys.downloads.categories(),
-            queryFn: getDownloadCategories,
-        });
-        const category = categories.find((c) => c.slug === slug);
-        categoryTitle = category?.name ?? slug.replace(/-/g, ' ');
+        try {
+            const categories = await queryClient.fetchQuery({
+                queryKey: queryKeys.downloads.categories(),
+                queryFn: getDownloadCategories,
+            });
+            const category = categories.find((c) => c.slug === slug);
+            categoryTitle = category?.name ?? categoryTitle;
 
-        await queryClient.prefetchQuery({
-            queryKey: queryKeys.downloads.categoryFiles(slug, {
-                page: 1,
-                limit: 12,
-                search: '',
-            }),
-            queryFn: () =>
-                getCategoryFiles(slug, { page: 1, limit: 12 }),
-        });
-    } catch {
-        return { notFound: true };
-    }
+            await queryClient.prefetchQuery({
+                queryKey: queryKeys.downloads.categoryFiles(slug, {
+                    page: 1,
+                    limit: 12,
+                    search: '',
+                }),
+                queryFn: () =>
+                    getCategoryFiles(slug, { page: 1, limit: 12 }),
+            });
+        } catch (error) {
+            console.error(`Error loading downloads category "${slug}":`, error);
+        }
 
-    return {
-        props: {
-            categorySlug: slug,
-            categoryTitle,
-            dehydratedState: dehydrate(queryClient),
-        },
-        revalidate: 300,
-    };
+        return {
+            props: {
+                categorySlug: slug,
+                categoryTitle,
+                dehydratedState: dehydrate(queryClient),
+            },
+        };
+    });
 };
