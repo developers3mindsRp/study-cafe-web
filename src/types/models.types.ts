@@ -637,6 +637,7 @@ export interface ArticleBySlug {
   type_of_tax?: string | null;
   /** True when any notification field is present. */
   has_notification?: boolean;
+  embed_scripts?:any;
   
   
 }

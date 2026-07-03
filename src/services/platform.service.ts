@@ -287,6 +287,8 @@ export const getArticleBySlug = async (
       `/platform/articles/${encodeURIComponent(slug)}`,
       Object.keys(params).length ? { params } : undefined
     );
+
+    console.log(response.data,"response")
     return response.data.data ?? null;
   } catch {
     return null;
@@ -409,6 +411,8 @@ export const getArticles = async (params: ArticleQueryParams = {}): Promise<Pagi
     '/platform/articles',
     { params: query }
   );
+
+  console.log(response.data.data)
   return response.data.data;
 };
 

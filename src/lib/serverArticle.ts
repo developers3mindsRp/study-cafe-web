@@ -28,6 +28,7 @@ export async function fetchArticleBySlugSSR(
   if (opts.token) headers.Authorization = `Bearer ${opts.token}`;
   try {
     const res = await axios.get<ApiResponse<ArticleBySlug>>(url, { headers, timeout: 12000 });
+    console.log(res.data?.data,"response")
     return res.data?.data ?? null;
   } catch {
     return null;
