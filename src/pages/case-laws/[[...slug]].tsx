@@ -121,11 +121,11 @@ const handlePageChange = async (page: number) => {
                   assessmentYear={item.assessment_year}
                   court={item.court}
                   onReadMore={() =>
-                    router.push(`/case-laws/${item.slug}`)
+                    router.push(`/${item.slug}.html`)
                   }
                   onDownload={() => {
-                    if (item.pdf_url) {
-                      window.open(item.pdf_url, "_blank");
+                    if (item.download_url) {
+                      window.open(item.download_url, "_blank");
                     }
                   }}
                 />

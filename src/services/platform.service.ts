@@ -409,7 +409,7 @@ export interface CaseLawItem {
   assessment_year: string;
   court: string;
   slug: string;
-  pdf_url?: string;
+  download_url?: string;
 }
 
 export interface CaseLawResponse {
