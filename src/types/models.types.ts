@@ -582,6 +582,7 @@ export interface BlogSpotlightAuthor {
   profile_pic_url?: string | null;
   published_article_count?: number;
   bio?:any;
+  linkedin?:string;
 }
 
 export interface BlogSpotlightTag {

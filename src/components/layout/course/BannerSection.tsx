@@ -508,7 +508,7 @@ export default function BannerSection({
                           >
                             Go to My courses
                           </Link>
-                          <Link href="/courses" className="w-full sm:w-auto">
+                          <Link href="/plans" className="w-full sm:w-auto">
                             <span className="flex w-full xl:w-auto items-center justify-center py-2 xl:py-3 px-2 md:px-6 xl:px-16 bg-white text-[#09339B] rounded-[10px] text-base xl:text-[20px] border border-[#09339B] transition font-semibold">
                               View Membership
                             </span>
@@ -552,7 +552,7 @@ export default function BannerSection({
                           >
                             Buy Now
                           </button>
-                          <Link href="/courses" className="w-full sm:w-auto">
+                          <Link href="/plans" className="w-full sm:w-auto">
                             <button
                               type="button"
                               className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16 bg-white text-[#09339B] rounded-[10px] flex items-center justify-center gap-2 text-base xl:text-[20px] border border-[#09339B] transition font-semibold"
