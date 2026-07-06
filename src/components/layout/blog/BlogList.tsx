@@ -7,6 +7,8 @@ import { articleHref } from "@/lib/articlePaths";
 import { useRouter } from "next/router";
 
 
+type PaginationMode = 'query' | 'path';
+
 interface BlogListProps {
   articles: ArticleListItem[];
   categories: ArticleCategoryItem[];
@@ -18,6 +20,8 @@ interface BlogListProps {
   isLoading?: boolean;
   /** Desktop right column + mobile block above listing */
   listingSidebarAd?: SiteAdsSlot | null;
+  /** How pagination/category URLs are built for crawlers */
+  paginationMode?: PaginationMode;
 }
 
 export default function Blog_list({
@@ -30,12 +34,37 @@ export default function Blog_list({
   onPageChange,
   isLoading = false,
   listingSidebarAd,
+  paginationMode = 'query',
 }: BlogListProps) {
 
   const router = useRouter();
 
   const allCategories = [{ id: 0, name: "All", slug: "all" }, ...categories];
   const hasListingAd = Boolean(listingSidebarAd?.image_url?.trim());
+
+  const buildCategoryHref = (slug: string) => {
+    if (paginationMode === 'path') {
+      return `/category/${slug === 'all' ? 'all' : slug}`;
+    }
+    if (slug === 'all') return '/blogs';
+    return `/blogs?category=${encodeURIComponent(slug)}`;
+  };
+
+  const buildPageHref = (page: number) => {
+    if (paginationMode === 'path') {
+      const cat = activeCategory || 'all';
+      if (page <= 1) return `/category/${cat}`;
+      return `/category/${cat}/page/${page}`;
+    }
+    if (page <= 1 && !activeCategory) return '/blogs';
+    const params = new URLSearchParams();
+    if (page > 1) params.set('page', String(page));
+    if (activeCategory && activeCategory !== 'all') {
+      params.set('category', activeCategory);
+    }
+    const qs = params.toString();
+    return qs ? `/blogs?${qs}` : '/blogs';
+  };
 
   const handlePageClick = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -150,18 +179,23 @@ export default function Blog_list({
       {/* Category Filter */}
       <div className="container mx-auto px-4">
         <div className="flex md:flex-wrap gap-3 overflow-x-auto md:overflow-visible no-scrollbar">
-          {allCategories.map((cat) => (
-            <button
-              key={cat.id}
-              className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${(activeCategory === cat.slug || (activeCategory === "" && cat.slug === "all"))
-                ? "bg-[#09339B] text-white"
-                : "bg-transparent text-[#767676]"
-                }`}
-              onClick={() => onCategoryChange(cat.slug)}
-            >
-              {cat.name}
-            </button>
-          ))}
+          {allCategories.map((cat) => {
+            const isActive =
+              activeCategory === cat.slug || (activeCategory === "" && cat.slug === "all");
+            return (
+              <Link
+                key={cat.id}
+                href={buildCategoryHref(cat.slug)}
+                className={`flex-shrink-0 px-5 py-2 rounded-md whitespace-nowrap transition border ${isActive
+                  ? "bg-[#09339B] text-white"
+                  : "bg-transparent text-[#767676]"
+                  }`}
+                onClick={() => onCategoryChange(cat.slug)}
+              >
+                {cat.name}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -182,16 +216,23 @@ export default function Blog_list({
       {totalPages > 1 && (
         <div className="flex justify-center items-center mt-10 gap-2 mb-6">
           {/* Left Arrow */}
-          <button
-            onClick={() => handlePageClick(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`w-9 h-9 rounded border  ${currentPage === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full"
-              : "bg-white hover:bg-gray-100 rounded-full"
-              }`}
-          >
-            <img src="/images/f-left.svg" alt="" className='ml-1' />
-          </button>
+          {currentPage > 1 ? (
+            <Link
+              href={buildPageHref(currentPage - 1)}
+              onClick={() => handlePageClick(currentPage - 1)}
+              className="w-9 h-9 rounded border bg-white hover:bg-gray-100 rounded-full flex items-center justify-center"
+              aria-label="Previous page"
+            >
+              <img src="/images/f-left.svg" alt="" className="ml-1" />
+            </Link>
+          ) : (
+            <span
+              className="w-9 h-9 rounded border bg-gray-100 text-gray-400 cursor-not-allowed rounded-full flex items-center justify-center"
+              aria-hidden
+            >
+              <img src="/images/f-left.svg" alt="" className="ml-1" />
+            </span>
+          )}
 
           {/* Page Numbers */}
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -204,30 +245,39 @@ export default function Blog_list({
             if (pageNum < 1 || pageNum > totalPages) return null;
 
             return (
-              <button
+              <Link
                 key={pageNum}
+                href={buildPageHref(pageNum)}
                 onClick={() => handlePageClick(pageNum)}
                 className={`w-9 h-9 flex items-center justify-center rounded border text-sm shadow-sm ${currentPage === pageNum
                     ? "bg-[#09339B] text-white rounded-full"
                     : "bg-white hover:bg-gray-100 rounded-full text-gray-700"
                   }`}
+                aria-current={currentPage === pageNum ? 'page' : undefined}
               >
                 {pageNum}
-              </button>
+              </Link>
             );
           })}
 
           {/* Right Arrow */}
-          <button
-            onClick={() => handlePageClick(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`w-9 h-9 rounded border ${currentPage === totalPages
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed rounded-full "
-              : "bg-white hover:bg-gray-100 rounded-full"
-              }`}
-          >
-            <img src="/images/f-right.svg" alt="" className='ml-1' />
-          </button>
+          {currentPage < totalPages ? (
+            <Link
+              href={buildPageHref(currentPage + 1)}
+              onClick={() => handlePageClick(currentPage + 1)}
+              className="w-9 h-9 rounded border bg-white hover:bg-gray-100 rounded-full flex items-center justify-center"
+              aria-label="Next page"
+            >
+              <img src="/images/f-right.svg" alt="" className="ml-1" />
+            </Link>
+          ) : (
+            <span
+              className="w-9 h-9 rounded border bg-gray-100 text-gray-400 cursor-not-allowed rounded-full flex items-center justify-center"
+              aria-hidden
+            >
+              <img src="/images/f-right.svg" alt="" className="ml-1" />
+            </span>
+          )}
         </div>
       )}
 

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getArticles } from "@/services/platform.service";
+import { getArticles, type ArticleListItem, type PaginatedArticles } from "@/services/platform.service";
 import { queryKeys } from "@/lib/react-query";
 import Image from "next/image";
 import { articleHref } from "@/lib/articlePaths";
@@ -114,12 +114,24 @@ function BlogCardSkeleton({ size = "desktop" }: { size?: "mobile" | "desktop" })
   );
 }
 
-export default function BlogSection() {
+export default function BlogSection({ initialArticles = [] }: { initialArticles?: ArticleListItem[] }) {
   const [step, setStep] = useState(1);
+
+  const initialPayload: PaginatedArticles | undefined =
+    initialArticles.length > 0
+      ? {
+          data: initialArticles,
+          total: initialArticles.length,
+          page: 1,
+          limit: 9,
+          totalPages: 1,
+        }
+      : undefined;
 
   const { data, isLoading } = useQuery({
     queryKey: queryKeys.articles.list({ limit: 9 }),
     queryFn: () => getArticles({ page: 1, limit: 9 }),
+    initialData: initialPayload,
     staleTime: 5 * 60 * 1000,
   });
 

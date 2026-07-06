@@ -9,16 +9,17 @@ import BlogSection from '@/components/layout/home/BlogSection.home';
 import FAQSection from '@/components/layout/home/FaqSection.home';
 import Learning from '@/components/layout/home/Learning.home';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
-import { getHomePageData, getMemberships } from '@/services/platform.service';
+import { getHomePageData, getMemberships, getArticles, ArticleListItem } from '@/services/platform.service';
 import type { HomePageData, Membership } from '@/types/models.types';
 import CertificateLayout from '@/components/ui/CertificateLayout';
 
 interface HomeProps {
   homePageData: HomePageData | null;
   memberships: Membership[] | null;
+  initialArticles: ArticleListItem[];
 }
 
-export default function Home({ homePageData, memberships }: HomeProps) {
+export default function Home({ homePageData, memberships, initialArticles }: HomeProps) {
   return (
     <PublicLayout>
       {/* <CertificateLayout /> */}
@@ -27,7 +28,7 @@ export default function Home({ homePageData, memberships }: HomeProps) {
       <FeaturedCourses />
       <MembershipPricing memberships={memberships ?? undefined} />
       <Testimonials testimonials={homePageData?.testimonials} />
-      <BlogSection/>
+      <BlogSection initialArticles={initialArticles} />
       <Learning/>
       <FAQSection faqs={homePageData?.faqs} />
     </PublicLayout>
@@ -40,19 +41,23 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
   return runWithServerApiBase(ctx.req, async () => {
     let homePageData: HomePageData | null = null;
     let memberships: Membership[] | null = null;
+    let initialArticles: ArticleListItem[] = [];
 
     try {
-      [homePageData, memberships] = await Promise.all([
+      const [home, plans, articlesData] = await Promise.all([
         getHomePageData(),
         getMemberships(),
+        getArticles({ page: 1, limit: 9 }),
       ]);
+      homePageData = home;
+      memberships = plans;
+      initialArticles = articlesData.data || [];
     } catch (error) {
       console.error('Error fetching home data:', error);
     }
-    console.log("homePageData", homePageData, memberships);
 
     return {
-      props: { homePageData, memberships },
+      props: { homePageData, memberships, initialArticles },
     };
   });
 };

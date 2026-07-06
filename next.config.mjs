@@ -28,6 +28,10 @@ const nextConfig = {
         source: '/:slug.html',
         destination: '/blogs/:slug',
       },
+      {
+        source: '/sitemap/articles/:page.xml',
+        destination: '/sitemap/articles/:page',
+      },
     ];
   },
   async redirects() {

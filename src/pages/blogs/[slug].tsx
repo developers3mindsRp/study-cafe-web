@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
-import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
+import BlogArticlePremiumLayout from '@/components/layout/blog/BlogArticlePremiumLayout';
 import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds, SeoMetadata } from '@/types/models.types';
 import { appConfig } from '@/config/app.config';
 import { buildArticlePublicPath } from '@/lib/articlePaths';
@@ -13,11 +13,6 @@ import {
   fetchBlogSpotlightSSR,
   fetchSiteDisplayAdsSSR,
 } from '@/lib/serverArticle';
-
-const BlogArticlePremiumLayout = dynamic(
-  () => import('@/components/layout/blog/BlogArticlePremiumLayout'),
-  { ssr: false },
-);
 
 interface BlogDetailProps {
   slug: string;
