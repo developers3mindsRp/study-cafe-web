@@ -332,7 +332,7 @@ export default function AffiliateReportPage() {
         </div>
 
         {!loading && orders.length > 0 && (
-          <p className="mt-4 text-[15px] text-[#252525]">
+          <p className="mt-4 text-[18px] text-[#252525]">
             <span className="font-semibold">{orders.length}</span> order
             {orders.length !== 1 ? "s" : ""} in this view · Active commission:{" "}
             <span className="font-semibold text-[#275934]">

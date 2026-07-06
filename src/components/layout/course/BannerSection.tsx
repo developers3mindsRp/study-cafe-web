@@ -14,7 +14,7 @@ import {
   hasCourseSalePrice,
   parseCoursePrice,
 } from "@/utils/coursePrice.utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion"; 
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
@@ -346,7 +346,24 @@ export default function BannerSection({
   );
 
   const[isOpen, setIsOpen]=useState(true);
-  console.log(course,"course")
+
+
+
+
+
+const handleCopy = (e: React.ClipboardEvent<HTMLHeadingElement>) => {
+  e.preventDefault();
+  console.log(window.location.href,"router")
+
+  const currentUrl = `${window.location.href}`;
+
+  e.clipboardData.setData(
+    "text/plain",
+    `${title}
+
+  Read more at: ${currentUrl}`
+  );
+};
   return (
     <>
       <div className="bg-[#F5FAFF]">
@@ -362,7 +379,7 @@ export default function BannerSection({
                   </p>
                 )}
 
-                <h1 className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
+                <h1 onCopy={handleCopy} className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
                   {title}
                 </h1>
 

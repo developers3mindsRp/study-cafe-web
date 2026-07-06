@@ -45,10 +45,23 @@ const HeroSection_blog = ({
     />
   );
 
+  const handleCopy = (e: React.ClipboardEvent<HTMLHeadingElement>) => {
+    e.preventDefault();
+    console.log(window.location.href,"router")
+  
+    const currentUrl = `${window.location.href}`;
+  
+    e.clipboardData.setData(
+      "text/plain",
+      `${title}
+  
+    Read more at: ${currentUrl}`
+    );
+  };
   return (
     <section className="space-y-6 container mx-auto px-4 bg-[#F5FAFF] md:bg-white pb-4">
       {/* Title */}
-      <h1 className="text-[20px] md:text-[24px] xl:text-[28px] font-medium text-gray-900 leading-snug pt-4">
+      <h1 onCopy={handleCopy} className="text-[20px] md:text-[24px] xl:text-[28px] font-medium text-gray-900 leading-snug pt-4">
         {subtitle ? (
           <>
             {title}: <br className="hidden xl:block" /> 

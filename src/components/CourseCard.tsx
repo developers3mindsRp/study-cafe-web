@@ -1,12 +1,12 @@
 "use client";
-
+import { useState } from "react";
 import Link from "next/link";
 import { useCallback } from "react";
 import type { EnrolledBatchInfo } from "@/types/models.types";
 import { downloadCertificate } from "@/services/progress.service";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
 import Image from "next/image";
-
+import Certificate from "./Certificate";
 export type MyCourseCardModel = {
   image: string;
   title: string;
@@ -49,6 +49,7 @@ function learnHref(course: MyCourseCardModel) {
 export default function CourseCard({ course }: { course: MyCourseCardModel }) {
   const detailHref = sellingPageHref(course);
   const learningHref = learnHref(course);
+    const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const onCertDownload = useCallback(async () => {
     if (!course.courseId) return;
     try {
@@ -68,7 +69,11 @@ export default function CourseCard({ course }: { course: MyCourseCardModel }) {
 
   const imageSrc =
     resolveApiAssetUrl(course.image) || "images/placeholder.jpg";
-console.log(learningHref,"learningHref")
+// console.log(learningHref,"learningHref");
+ 
+
+
+
   return (
     <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
       <div className="relative  w-full overflow-hidden ">
@@ -184,7 +189,7 @@ console.log(learningHref,"learningHref")
               </Link>
               <button
                 type="button"
-                onClick={onCertDownload}
+                 onClick={() => setIsCertificateOpen(true)}
                 className="flex flex-1 items-center justify-center gap-2 rounded-md border border-[#09339B] py-2 text-[16px] text-[#09339B] transition hover:bg-[#f0f4ff]"
               >
                 <img src="/images/download-1.png" alt="" className="h-4 w-4" />
@@ -207,6 +212,14 @@ console.log(learningHref,"learningHref")
               </Link>
             </>
           )}
+
+                    {isCertificateOpen && (
+                      <Certificate
+                        courseId={course?.courseId}
+                        onClose={() => setIsCertificateOpen(false)}
+                        // onDownload={onCertDownloadClick}
+                      />
+                    )}
         </div>
       </div>
     </div>

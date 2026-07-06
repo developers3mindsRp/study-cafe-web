@@ -208,7 +208,7 @@ export default function CourseDetailProfile({
           ) : null}
         </div>
 
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex gap-3 w-[40%] justify-end">
           <button
             type="button"
             className="rounded-md bg-[#09339B] px-4 py-2 text-white"

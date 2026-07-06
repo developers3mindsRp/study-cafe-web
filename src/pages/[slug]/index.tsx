@@ -26,7 +26,10 @@ export default function CMSPage({ cmsData, seo }: CMSPageProps) {
   const meta = {
     title: seo?.title || cmsData?.title || "CMS Page",
     description: seo?.description || "",
+    image: seo?.image || "",
   };
+
+
 
   return (
     <>
@@ -46,6 +49,7 @@ export default function CMSPage({ cmsData, seo }: CMSPageProps) {
         {seo?.ogDescription && (
           <meta property="og:description" content={seo.ogDescription} />
         )}
+         {seo?.ogImage && <meta property="og:image" content={seo?.ogImage} /> }
       </Head>
 
       <PublicLayout>
