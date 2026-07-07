@@ -16,6 +16,7 @@ type JudgementCardProps = {
   judgementDate: string;
   assessmentYear: string;
   court: string;
+  access:any;
   onReadMore?: () => void;
   onDownload?: () => void;
 };
@@ -28,6 +29,7 @@ export default function JudgementCard({
   court,
   onReadMore,
   onDownload,
+  access, 
 }: JudgementCardProps) {
 
 const router = useRouter();
@@ -74,11 +76,13 @@ const router = useRouter();
       router.events.off("routeChangeComplete", handleRouteComplete);
     };
   }, [router.events]);
-
+const canRead = access?.can_read_full;
+const canDownload = access?.can_download;
+const hasAccess = canRead || canDownload;
   return (
     <div className=" rounded-2xl bg-white p-4 shadow-md border border-gray-100">
       {/* Title */}
-      <h2 className="text-[22px] leading-8 font-semibold text-gray-900">
+      <h2 className="text-[22px] leading-8 font-semibold text-gray-900 min-h-[95px]">
         {title}
       </h2>
 
@@ -111,22 +115,39 @@ const router = useRouter();
       </div>
 
       {/* Buttons */}
-      <div className="mt-5 flex gap-3">
-        <button
-          onClick={onReadMore}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#0A43B8] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#08399f]"
-        >
-          Read More
-          <BookOpen size={18} />
-        </button>
+     <div className="mt-5">
+        {hasAccess ? (
+          <div className="flex gap-3">
+            {canRead && (
+              <button
+                onClick={onReadMore}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#0A43B8] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#08399f]"
+              >
+                Read More
+                <BookOpen size={18} />
+              </button>
+            )}
 
-        <button
-          onClick={onDownload}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#0A43B8] bg-white px-4 py-3 text-sm font-semibold text-[#0A43B8] transition hover:bg-blue-50"
-        >
-          Download Judgment
-          <Download size={18} />
-        </button>
+            {canDownload && (
+              <button
+                onClick={onDownload}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#0A43B8] bg-white px-4 py-3 text-sm font-semibold text-[#0A43B8] transition hover:bg-blue-50"
+              >
+                Download Judgment
+                <Download size={18} />
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-center">
+            <p className="text-sm font-medium text-amber-800">
+              🔒 You don't have access to view or download this judgment.
+            </p>
+            <p className="mt-1 text-xs text-amber-700">
+              Please upgrade your membership or purchase access to continue.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -153,6 +153,7 @@ export interface AffiliateDashboardData {
   expired_commission_total?: number;
   /** Sum of confirmed (non-expired) commission rows. */
   active_commission_total?: number;
+  monthly_commission_total?:number;
   /** Earliest expiry among active confirmed commissions, if any. */
   next_expiry_at?: string | null;
   totalOrders: number;

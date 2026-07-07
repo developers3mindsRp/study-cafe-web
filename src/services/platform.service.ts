@@ -410,6 +410,7 @@ export interface CaseLawItem {
   court: string;
   slug: string;
   download_url?: string;
+  access?:any;
 }
 
 export interface CaseLawResponse {

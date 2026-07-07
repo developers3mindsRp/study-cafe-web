@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/router";
 import { isAxiosError } from "axios";
+import { Download, FileSpreadsheet } from "lucide-react";
 import {
   getMyCommissionOrders,
   getMyAffiliateDashboard,
@@ -172,6 +173,69 @@ export default function AffiliateReportPage() {
     [],
   );
 
+
+  const handleExportCSV = useCallback(() => {
+  if (orders.length === 0) {
+    setError("No commission orders available to export.");
+    return;
+  }
+
+  const headers = [
+    "Order ID",
+    "Buyer Name",
+    "Buyer Email",
+    "Buyer Phone",
+    "Item",
+    "Entity Type",
+    "Order Amount",
+    "Commission Amount",
+    "Status",
+    "Earned Date",
+    "Expiry Date",
+  ];
+
+  const rows = orders.map((order) => [
+    order.order_id,
+    order.buyer_name,
+    order.buyer_email,
+    order.buyer_phone ?? "",
+    order.item_title,
+    order.entity_type,
+    order.order_amount,
+    order.commission_amount,
+    order.status,
+    formatDate(order.created_at),
+    order.expires_at ? formatDate(order.expires_at) : "",
+  ]);
+
+  const csv = [
+    headers.join(","),
+    ...rows.map((row) =>
+      row
+        .map((value) => `"${String(value ?? "").replace(/"/g, '""')}"`)
+        .join(",")
+    ),
+  ].join("\n");
+
+  const blob = new Blob([csv], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `commission-orders-${new Date()
+    .toISOString()
+    .slice(0, 10)}.csv`;
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}, [orders]);
+
   const handleWithdraw = useCallback(async () => {
     const amount = parseFloat(withdrawAmount);
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -212,6 +276,8 @@ export default function AffiliateReportPage() {
 
   const bal = dashboard?.balance;
 
+
+
   return (
     <section className="md:p-6 max-w-6xl mx-auto bg-white px-4 sm:px-6 pb-16">
       <button
@@ -234,7 +300,7 @@ export default function AffiliateReportPage() {
       </p>
 
       {/* Balance overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-8">
         <div className="border border-[#E5E7EB] rounded-xl p-4">
           <p className="text-sm text-[#717171]">Current balance</p>
           <p className="text-xl font-semibold text-[#252525]">
@@ -247,6 +313,14 @@ export default function AffiliateReportPage() {
             ₹{(dashboard?.pending_withdrawal_total ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
           </p>
         </div>
+        <div className="border border-[#E5E7EB] rounded-xl p-4">
+          <p className="text-sm text-[#717171]">Monthly commission total</p>
+          <p className="text-xl font-semibold text-[#252525]">
+            ₹{(dashboard?.monthly_commission_total ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+
+        
         <div className="border border-[#B4C6FF] rounded-xl p-4 bg-[#F8FAFF]">
           <p className="text-sm text-[#09339B]">Available to withdraw</p>
           <p className="text-xl font-semibold text-[#09339B]">
@@ -432,10 +506,29 @@ export default function AffiliateReportPage() {
       </div>
 
       {/* Commission orders list */}
-      <h2 className="text-lg font-semibold text-[#252525] mb-3">Commission orders</h2>
-      {!loading && orders.length === 0 && (
-        <p className="text-center text-gray-500 py-8">No commission orders for the selected period.</p>
-      )}
+     
+
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h2 className="text-lg font-semibold text-[#252525]">
+            Commission Orders
+          </h2>
+                {!loading && orders.length === 0 && (
+                <p className="text-center text-gray-500 ">No commission orders for the selected period.</p>
+              )}
+        </div>
+        
+
+        <button
+          type="button"
+          onClick={handleExportCSV}
+          disabled={orders.length === 0}
+          className="flex items-center gap-2 rounded-lg bg-[#09339B] px-4 py-2 text-white hover:bg-[#0F2E75] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Download size={18} />
+          Export CSV
+        </button>
+      </div>
 
       {orders.map((order) => (
         <div

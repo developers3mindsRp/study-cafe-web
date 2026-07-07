@@ -97,7 +97,7 @@ const handlePageChange = async (page: number) => {
     { length: endPage - startPage + 1 },
     (_, i) => startPage + i
   );
-
+console.log(caseLaws,"caseLaws")
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
@@ -105,8 +105,8 @@ const handlePageChange = async (page: number) => {
       </div>
 
       <BannerSectionCaseLaws  searchValue={searchInput}
-  onSearchChange={setSearchInput}
-  onSearchSubmit={handleSearchSubmit}/>
+      onSearchChange={setSearchInput}
+      onSearchSubmit={handleSearchSubmit}/>
 
       <section className="w-full py-6 md:py-16">
         <div className="container mx-auto px-4">
@@ -123,6 +123,7 @@ const handlePageChange = async (page: number) => {
                   onReadMore={() =>
                     router.push(`/${item.slug}.html`)
                   }
+                  access={item.access}
                   onDownload={() => {
                     if (item.download_url) {
                       window.open(item.download_url, "_blank");

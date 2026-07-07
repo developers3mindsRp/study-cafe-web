@@ -164,6 +164,16 @@ export default function Header() {
             >
               Blogs
             </Link>
+            <Link
+              href="/case-laws"
+              className={`text-[18px] transition-colors ${
+                router.pathname === "/case-laws"
+                  ? "text-blue-600 font-semibold"
+                  : "text-[#3a3c3e] hover:text-blue-600"
+              }`}
+            >
+              Case Laws
+            </Link>
 
             <Link
               href="/contact"
@@ -308,6 +318,14 @@ export default function Header() {
               >
                 Blogs
               </Link>
+                 <Link
+                href="/case-laws"
+                 className="text-[#3a3c3e] hover:text-blue-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Case Laws
+              </Link>
+
               <Link
                 href="/contact"
                 className="text-[#3a3c3e] hover:text-blue-600 font-medium"
