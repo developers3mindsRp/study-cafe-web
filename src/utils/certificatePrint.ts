@@ -4,6 +4,8 @@ export type CertificatePayload = {
   courseTitle: string;
   studentName: string;
   completionDate: string;
+  /** Per-course 4-digit serial (e.g. "0001"); null until assigned on first open. */
+  certificateNumber?: string | null;
 };
 
 function escapeHtml(text: string): string {
@@ -21,6 +23,9 @@ export function printCertificate(payload: CertificatePayload): void {
   const courseTitle = escapeHtml(payload.courseTitle);
   const studentName = escapeHtml(payload.studentName);
   const completionDate = escapeHtml(payload.completionDate);
+  const certificateNumber = payload.certificateNumber
+    ? escapeHtml(payload.certificateNumber)
+    : "";
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -36,6 +41,7 @@ export function printCertificate(payload: CertificatePayload): void {
     .name { font-size: 26px; font-weight: bold; color: #09339b; margin: 16px 0; }
     .course { font-size: 18px; margin: 8px 0 28px; }
     .meta { font-size: 13px; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+    .serial { font-size: 12px; color: #64748b; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -46,6 +52,7 @@ export function printCertificate(payload: CertificatePayload): void {
     <p class="muted">has completed</p>
     <p class="course">${courseTitle}</p>
     <p class="meta">Completed on ${completionDate}</p>
+    ${certificateNumber ? `<p class="serial">Certificate Serial No. <b>${certificateNumber}</b></p>` : ""}
   </div>
 </body>
 </html>`;

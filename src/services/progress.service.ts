@@ -32,6 +32,8 @@ export type CourseProgressPayload = {
   totalSessions: number;
   percent: number;
   status: string;
+  /** Per-course 4-digit serial (e.g. "0001") once assigned; null until the certificate is opened. */
+  certificateNumber?: string | null;
   lastSessionId: string | null;
   sessions: ProgressSessionRow[];
 };

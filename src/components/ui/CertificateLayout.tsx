@@ -4,11 +4,13 @@ type CertificateLayoutProps = {
   name?: string;
   course?: string;
   date?: string;
+  serial?: string | null;
 };
 const CertificateLayout: React.FC<CertificateLayoutProps> = ({
   name,
   course,
-  date
+  date,
+  serial
 }) => {
   return (
     <div className="w-full flex justify-center items-center p-0">
@@ -21,7 +23,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
         />
 
           <div className="absolute left-[41px] top-[35px]">
-              <p className="text-[12px]">Certificate Serial No. <b>4987</b></p>
+              <p className="text-[12px]">Certificate Serial No. <b>{serial ?? "—"}</b></p>
               <img src="/images/ISOCertified.png" className="w-[70px] m-[auto] mt-[8px]"/> 
           </div>
         {/* Content */}
