@@ -81,6 +81,12 @@ export default function EditProfile({
     state: "",
     country: "",
     gst: "",
+     // Bank Details
+    bank_account_holder_name: "",
+    bank_account_number: "",
+    bank_name: "",
+    bank_branch: "",
+    bank_ifsc: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -101,6 +107,11 @@ export default function EditProfile({
         state: (user as any).state ?? "",
         country: (user as any).country ?? "",
         gst: (user as any).gst ?? "",
+        bank_account_holder_name: (user as any).bank_account_holder_name ?? "",
+        bank_account_number: (user as any).bank_account_number ?? "",
+        bank_name: (user as any).bank_name ?? "",
+        bank_branch: (user as any).bank_branch ?? "",
+        bank_ifsc: (user as any).bank_ifsc ?? "",
       });
     }
   }, [user?.id]);
@@ -132,6 +143,72 @@ export default function EditProfile({
     if (gstVal !== "" && !GSTIN_REGEX.test(gstVal)) {
       errs.gst = "Enter a valid 15-character GSTIN (e.g. 22AAAAA0000A1Z5)";
     }
+        // Bank Account Holder Name
+      if (
+        form.bank_account_holder_name.trim() &&
+        form.bank_account_holder_name.trim().length < 3
+      ) {
+        errs.bank_account_holder_name =
+          "Account holder name must be at least 3 characters.";
+      }
+
+      // Account Number
+      if (
+        form.bank_account_number.trim() &&
+        !/^\d{9,18}$/.test(form.bank_account_number.trim())
+      ) {
+        errs.bank_account_number =
+          "Account number must be between 9 and 18 digits.";
+      }
+
+      // Bank Name
+      if (
+        form.bank_name.trim() &&
+        form.bank_name.trim().length < 2
+      ) {
+        errs.bank_name = "Enter a valid bank name.";
+      }
+
+      // Branch
+      if (
+        form.bank_branch.trim() &&
+        form.bank_branch.trim().length < 2
+      ) {
+        errs.bank_branch = "Enter a valid branch name.";
+      }
+
+      // IFSC
+      const ifsc = form.bank_ifsc.trim().toUpperCase();
+      const IFSC_REGEX = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+
+      if (ifsc && !IFSC_REGEX.test(ifsc)) {
+        errs.bank_ifsc = "Enter a valid IFSC code.";
+      }
+
+      // Optional: If any bank field is filled, require all bank fields
+      const hasBankData =
+        form.bank_account_holder_name.trim() ||
+        form.bank_account_number.trim() ||
+        form.bank_name.trim() ||
+        form.bank_branch.trim() ||
+        form.bank_ifsc.trim();
+
+      if (hasBankData) {
+        if (!form.bank_account_holder_name.trim())
+          errs.bank_account_holder_name = "Account holder name is required.";
+
+        if (!form.bank_account_number.trim())
+          errs.bank_account_number = "Account number is required.";
+
+        if (!form.bank_name.trim())
+          errs.bank_name = "Bank name is required.";
+
+        if (!form.bank_branch.trim())
+          errs.bank_branch = "Branch name is required.";
+
+        if (!form.bank_ifsc.trim())
+          errs.bank_ifsc = "IFSC code is required.";
+      }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -152,6 +229,15 @@ export default function EditProfile({
         state: form.state || undefined,
         country: form.country || undefined,
         gst: form.gst.trim() || undefined,
+        bank_account_holder_name: form.bank_account_holder_name.trim() || undefined,
+        bank_account_number:
+          form.bank_account_number.trim() || undefined,
+        bank_name:
+          form.bank_name.trim() || undefined,
+        bank_branch:
+          form.bank_branch.trim() || undefined,
+        bank_ifsc:
+          form.bank_ifsc.trim().toUpperCase() || undefined,
       },
       {
         onSuccess: () => {
@@ -432,14 +518,113 @@ export default function EditProfile({
                     }
                   </div>
                 </div>
+                {/* Bank Details */}
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Bank Details</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                      <label className="text-sm font-medium">Account Holder Name</label>
+                      <input
+                        type="text"
+                        name="bank_account_holder_name"
+                        value={form.bank_account_holder_name}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Account Holder Name"
+                      />
+                      {errors.bank_account_holder_name && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_account_holder_name}
+                          </p>
+                        )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Account Number</label>
+                      <input
+                        type="text"
+                        name="bank_account_number"
+                        value={form.bank_account_number}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Account Number"
+                      />
+
+                      {errors.bank_account_number && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.bank_account_number}
+                        </p>
+                      )}
+
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Bank Name</label>
+                      <input
+                        type="text"
+                        name="bank_name"
+                        value={form.bank_name}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Bank Name"
+                      />
+
+                        {errors.bank_name && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_name}
+                          </p>
+                        )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Branch</label>
+                      <input
+                        type="text"
+                        name="bank_branch"
+                        value={form.bank_branch}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Branch Name"
+                      />
+                      {errors.bank_branch && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_branch}
+                          </p>
+                        )}
+
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium">IFSC Code</label>
+                      <input
+                        type="text"
+                        name="bank_ifsc"
+                        value={form.bank_ifsc}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1 uppercase"
+                        placeholder="SBIN0001234"
+                        style={{ textTransform: "uppercase" }}
+                      />
+                      {errors.bank_ifsc && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_ifsc}
+                          </p>
+                        )}
+                    </div>
+
+                  </div>
+                </div>
 
                 {/* Save + Messages */}
-                <div className="flex justify-between items-center mt-6">
-                  {saveMsg && (
-                    <p className={`text-sm ${saveMsg.type === "success" ? "text-green-600" : "text-red-500"}`}>
+                 {saveMsg && (
+                    <p className={`text-sm  ${saveMsg.type === "success" ? "text-green-600" : "text-red-500"}`}>
                       {saveMsg.text}
                     </p>
                   )}
+                <div className="flex justify-between items-center mt-6">
+                 
                   <div className="w-full">
                     <button
                       type="button"

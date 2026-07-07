@@ -79,6 +79,12 @@ const router = useRouter();
 const canRead = access?.can_read_full;
 const canDownload = access?.can_download;
 const hasAccess = canRead || canDownload;
+
+
+
+
+
+
   return (
     <div className=" rounded-2xl bg-white p-4 shadow-md border border-gray-100">
       {/* Title */}

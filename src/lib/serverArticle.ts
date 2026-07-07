@@ -84,6 +84,8 @@ export async function fetchSiteDisplayAdsSSR(opts: {
     const url = `${base}${path}`;
     try {
       const res = await axios.get<ApiResponse<SiteDisplayAds>>(url, { timeout: 8000 });
+
+    
       const data = res.data?.data ?? null;
       if (data) return data;
     } catch {

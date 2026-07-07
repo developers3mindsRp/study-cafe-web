@@ -39,6 +39,11 @@ export interface User {
   emailVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  bank_account_holder_name?: string | null;
+  bank_account_number?: string | null;
+  bank_ifsc?: string | null;
+  bank_name?:string | null;
+  bank_branch?: string | null;
 }
 
 // Course Model
@@ -217,6 +222,11 @@ export interface UpdateProfileData {
   country?: string;
   /** 15-character GSTIN (optional). */
   gst?: string;
+  bank_account_holder_name?:string;
+  bank_account_number?:string;
+  bank_name?:string;
+  bank_ifsc?:string;
+  bank_branch?:string;
 }
 
 export interface UserSubscription {

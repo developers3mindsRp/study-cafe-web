@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/router";
 import { isAxiosError } from "axios";
-import { Download, FileSpreadsheet } from "lucide-react";
+import { Download, FileSpreadsheet, Info, Copy  } from "lucide-react";
 import {
   getMyCommissionOrders,
   getMyAffiliateDashboard,
@@ -13,6 +13,7 @@ import {
   type AffiliateDashboardData,
   type UserWithdrawalRequest,
 } from "@/services/order.service";
+import { useAuth } from "@/providers/AuthProvider";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-IN", {
@@ -43,6 +44,9 @@ function firstDayOfMonth(d: Date) {
 
 export default function AffiliateReportPage() {
   const router = useRouter();
+  const user= useAuth();
+
+  console.log(user.user,"user")
   const today = useMemo(() => new Date(), []);
   const [fromDate, setFromDate] = useState(() => isoDateLocal(firstDayOfMonth(today)));
   const [toDate, setToDate] = useState(() => isoDateLocal(today));
@@ -435,7 +439,75 @@ export default function AffiliateReportPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:items-end max-w-xl">
           <div className="flex-1">
-            <label className="text-sm text-[#555]">Amount (₹)</label>
+            {/* <label className="text-sm text-[#555]">Amount (₹)</label> */}
+            <div className="flex items-center gap-2 mb-1">
+              <label className="text-sm text-[#555]">
+                Amount (₹)
+              </label>
+              {
+                user.user?.bank_account_holder_name &&
+                <div className="relative group h-[18px]">
+                  <button
+                    type="button"
+                    className="text-[#09339B] hover:text-[#0F2E75]"
+                  >
+                    <Info size={16} />
+                  </button>
+
+                  <div className="absolute left-0 top-4 z-20 hidden w-80 rounded-lg border border-gray-200 bg-white p-4 shadow-xl group-hover:block">
+                    <h4 className="mb-3 text-sm font-semibold text-[#252525]">
+                      Bank Details
+                    </h4>
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Account Holder</span>
+                        <span className="font-medium text-right">
+                          {user.user?.bank_account_holder_name || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Account Number</span>
+                        <span className="font-medium text-right">
+                          {user.user?.bank_account_number || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Bank</span>
+                        <span className="font-medium text-right">
+                          {user.user?.bank_name || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Branch</span>
+                        <span className="font-medium text-right">
+                          {user.user?.bank_branch || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">IFSC</span>
+                        <span className="font-medium text-right">
+                          {user.user?.bank_ifsc || "Not Added"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {!user.user?.bank_account_number && (
+                      <p className="mt-3 rounded bg-yellow-50 p-2 text-xs text-yellow-700">
+                        Please update your bank details in your profile before requesting a
+                        withdrawal.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              }
+
+         
+            </div>
             <input
               type="number"
               min={minWithdrawal}

@@ -410,7 +410,7 @@ export interface CaseLawItem {
   court: string;
   slug: string;
   download_url?: string;
-  access?:any;
+  access?:any
 }
 
 export interface CaseLawResponse {
@@ -469,13 +469,18 @@ export const getAllCaseLaws = async ({
   page?: number;
   limit?: number;
   search?: string;
-}) => {
+}, token?:string | undefined) => {
   const response = await axiosInstance.get("/platform/case-laws", {
     params: {
       page,
       limit,
       search,
     },
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : undefined,
   });
 
   return response.data.data;

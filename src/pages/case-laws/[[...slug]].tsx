@@ -11,6 +11,7 @@ import { appConfig } from "@/config/app.config";
 import { fetchSiteDisplayAdsSSR } from "@/lib/serverArticle";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
 
+
 import {
   getAllCaseLaws,
   CaseLawItem,
@@ -98,6 +99,7 @@ const handlePageChange = async (page: number) => {
     (_, i) => startPage + i
   );
 console.log(caseLaws,"caseLaws")
+console.log(typeof document === 'undefined',"typeof document === 'undefined'")
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
@@ -230,17 +232,21 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
         ? ctx.query.search.trim()
         : "";
 
+    const token = ctx.req.cookies.auth_token;
+
     try {
       const [caseLawData, siteAds] = await Promise.all([
         getAllCaseLaws({
           page,
           limit: 6,
           search: search || undefined,
-        }),
+        },token),
         fetchSiteDisplayAdsSSR({
           baseUrl: appConfig.apiBaseUrl,
         }),
       ]);
+
+      console.log(caseLawData.data,"caseLawData.data")
 
       return {
         props: {

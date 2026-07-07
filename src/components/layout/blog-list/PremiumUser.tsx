@@ -405,7 +405,7 @@ export default function Premium_user({
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
 
-  console.log(authorSpotlight,"authorSpotlight")
+
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">

@@ -206,6 +206,11 @@ export const getCurrentUser = async (): Promise<User> => {
       state?: string | null;
       country?: string | null;
       gst?: string | null;
+      bank_account_holder_name: string | null;
+      bank_account_number: string | null;
+      bank_ifsc: string | null;
+      bank_name:string | null;
+      bank_branch: string | null;
     }>
   >('/auth/me', {
     headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
@@ -232,6 +237,11 @@ export const getCurrentUser = async (): Promise<User> => {
     permissions: d.permissions ?? [],
     hasActiveMembership: !!d.has_active_membership,
     referralCode: d.referral_code || null,
+    bank_account_holder_name: d.bank_account_holder_name || null,
+    bank_account_number: d.bank_account_number || null,
+    bank_ifsc: d.bank_ifsc || null,
+    bank_name:d.bank_name || null,
+    bank_branch: d.bank_branch || null,
     ...(ev !== undefined ? { emailVerified: ev } : {}),
   };
   setUserData(user);
