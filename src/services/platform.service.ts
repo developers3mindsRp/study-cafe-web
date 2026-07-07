@@ -287,6 +287,8 @@ export const getArticleBySlug = async (
       `/platform/articles/${encodeURIComponent(slug)}`,
       Object.keys(params).length ? { params } : undefined
     );
+
+    console.log(response.data,"response")
     return response.data.data ?? null;
   } catch {
     return null;
@@ -399,6 +401,24 @@ export interface ArticleCategoryItem {
   slug: string;
 }
 
+export interface CaseLawItem {
+  id: number;
+  title: string;
+  appeal_number: string;
+  judgement_date: string;
+  assessment_year: string;
+  court: string;
+  slug: string;
+  download_url?: string;
+}
+
+export interface CaseLawResponse {
+  data: CaseLawItem[];
+  page: number;
+  total: number;
+  totalPages: number;
+}
+
 /** Paginated article listing with optional search / category filter */
 export const getArticles = async (params: ArticleQueryParams = {}): Promise<PaginatedArticles> => {
   const { page = 1, limit = 6, search = '', category = '' } = params;
@@ -409,6 +429,8 @@ export const getArticles = async (params: ArticleQueryParams = {}): Promise<Pagi
     '/platform/articles',
     { params: query }
   );
+
+  console.log(response.data.data)
   return response.data.data;
 };
 
@@ -434,8 +456,29 @@ export const getAllCategories = async (): Promise<Categories[]> => {
   const response = await axiosInstance.get<ApiResponse<Categories[]>>('/course-cats/all');
   return response.data.data;
 };
+/*---------*/
 
 
+
+export const getAllCaseLaws = async ({
+  page = 1,
+  limit = 6,
+  search,
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) => {
+  const response = await axiosInstance.get("/platform/case-laws", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
+
+  return response.data.data;
+};
 /** Every course category for the public catalog filters on /courses only (GET /course-cats/all) */
 export const getCourseCatsForCatalog = async (): Promise<CourseCat[]> => {
   const response = await axiosInstance.get<ApiResponse<CourseCat[]>>('/course-cats/all');

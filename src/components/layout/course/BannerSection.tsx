@@ -14,7 +14,7 @@ import {
   hasCourseSalePrice,
   parseCoursePrice,
 } from "@/utils/coursePrice.utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion"; 
 
 interface BannerSectionProps {
   course?: CoursePublicDetail | null;
@@ -346,7 +346,24 @@ export default function BannerSection({
   );
 
   const[isOpen, setIsOpen]=useState(true);
-  console.log(course,"course")
+
+
+
+
+
+const handleCopy = (e: React.ClipboardEvent<HTMLHeadingElement>) => {
+  e.preventDefault();
+  console.log(window.location.href,"router")
+
+  const currentUrl = `${window.location.href}`;
+
+  e.clipboardData.setData(
+    "text/plain",
+    `${title}
+
+  Read more at: ${currentUrl}`
+  );
+};
   return (
     <>
       <div className="bg-[#F5FAFF]">
@@ -362,7 +379,7 @@ export default function BannerSection({
                   </p>
                 )}
 
-                <h1 className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
+                <h1 onCopy={handleCopy} className="text-[20px] md:text-[20px] xl:text-[43px] font-semibold text-gray-900 leading-snug mt-3 md:mt-6">
                   {title}
                 </h1>
 
@@ -508,7 +525,7 @@ export default function BannerSection({
                           >
                             Go to My courses
                           </Link>
-                          <Link href="/courses" className="w-full sm:w-auto">
+                          <Link href="/plans" className="w-full sm:w-auto">
                             <span className="flex w-full xl:w-auto items-center justify-center py-2 xl:py-3 px-2 md:px-6 xl:px-16 bg-white text-[#09339B] rounded-[10px] text-base xl:text-[20px] border border-[#09339B] transition font-semibold">
                               View Membership
                             </span>
@@ -552,7 +569,7 @@ export default function BannerSection({
                           >
                             Buy Now
                           </button>
-                          <Link href="/courses" className="w-full sm:w-auto">
+                          <Link href="/plans" className="w-full sm:w-auto">
                             <button
                               type="button"
                               className="w-full xl:w-auto py-2 xl:py-3 px-2 md:px-6 xl:px-16 bg-white text-[#09339B] rounded-[10px] flex items-center justify-center gap-2 text-base xl:text-[20px] border border-[#09339B] transition font-semibold"

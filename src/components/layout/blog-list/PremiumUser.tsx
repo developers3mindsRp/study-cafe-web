@@ -772,21 +772,23 @@ export default function Premium_user({
             <div className="rounded-[10px] p-2 md:p-3 bg-[#eff1fa] w-full">
               <div className="flex flex-row  gap-6 md:gap-4 ml-6 pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={
-                      resolveBlogImageSrc(
-                        authorSpotlight?.profile_pic_url?.trim(),
-                      ) || "/images/defultuser.png"
-                    }
-                    onError={(e) => {
-                      e.currentTarget.src = "/images/defultuser.png";
-                    }}
-                  width={100}
-                  height={100}
-                  alt=""
-                  className="rounded-full object-cover w-[100px] h-[100px]"
-                  referrerPolicy="no-referrer"
-                />
+                <a href={authorSpotlight?.linkedin} target="_blank" className="block w-[50%]">                  
+                  <img
+                    src={
+                        resolveBlogImageSrc(
+                          authorSpotlight?.profile_pic_url?.trim(),
+                        ) || "/images/defultuser.png"
+                      }
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/defultuser.png";
+                      }}
+                    width={100}
+                    height={100}
+                    alt=""
+                    className="rounded-full object-cover w-[100px] h-[100px]"
+                    referrerPolicy="no-referrer"
+                  />
+                </a>
                 <div className="text-left">
                   <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
                     {fallbackAuthorName}

@@ -12,6 +12,9 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
   date,
   serial
 }) => {
+    const formattedDate = date
+    ? new Date(date).toLocaleDateString("en-GB").replace(/\//g, "-")
+    : "";
   return (
     <div className="w-full flex justify-center items-center p-0">
       <div className="relative w-[822px] h-[583px] bg-white ">
@@ -58,7 +61,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
           {/* Footer */}
           <div className=" w-[80%]  flex justify-between items-center  mt-6 px-10 text-sm text-gray-600 mb-6">
             <div className="text-center  w-[30%]">
-              <p className="font-semibold  text-[#000000]">{date}</p>
+              <p className="font-semibold  text-[#000000]">{formattedDate}</p>
               <div className="border-t border-[#404041]  mt-1 w-full mx-auto"></div>
               <p className="text-xs mt-1  text-[#000000]">DATE</p>
             </div>

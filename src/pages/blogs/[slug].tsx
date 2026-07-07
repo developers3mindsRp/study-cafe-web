@@ -1,22 +1,18 @@
 import { GetServerSideProps } from 'next';
-import dynamic from 'next/dynamic';
 import { PublicLayout } from '@/components/layout';
 import Breadcrumbs from '@/components/Breadcrumb';
+import BlogArticlePremiumLayout from '@/components/layout/blog/BlogArticlePremiumLayout';
 import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds, SeoMetadata } from '@/types/models.types';
 import { appConfig } from '@/config/app.config';
 import { buildArticlePublicPath } from '@/lib/articlePaths';
 import { readMiddlewareSeoHeader } from '@/lib/seo/normalize';
+import Script from "next/script";
 import {
   bearerFromCookieHeader,
   fetchArticleBySlugSSR,
   fetchBlogSpotlightSSR,
   fetchSiteDisplayAdsSSR,
 } from '@/lib/serverArticle';
-
-const BlogArticlePremiumLayout = dynamic(
-  () => import('@/components/layout/blog/BlogArticlePremiumLayout'),
-  { ssr: false },
-);
 
 interface BlogDetailProps {
   slug: string;
@@ -29,10 +25,18 @@ interface BlogDetailProps {
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
+console.log(article?.embed_scripts[0],"article")
 
-  console.log(spotlight,"article")
   return (
     <PublicLayout>
+
+      {article?.embed_scripts?.map((script:any, index:any) => (
+        <Script
+          key={index}
+          src={script}
+          strategy="afterInteractive"
+        />
+      ))}
       {/* SEO: AppRouteSeo + middleware use /api/platform/seo-metadata/by-path for this pathname */}
 
       {isPreview && (
@@ -83,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
   ]);
   // Skip canonical redirect when previewing a draft — it may not have a canonical URL yet
 
-  console.log(article,slug,"article.slug")
+  // console.log(article,slug,"article.slug")
   if (!article) return { notFound: true };
 
   const rawPublicPath = ctx.req.headers['x-studycafe-public-path'];
@@ -96,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
 
   // Skip canonical redirect when previewing a draft — it may not have a canonical URL yet
 
-  console.log(article.slug,"article.slug")
+  // console.log(article.slug,"article.slug")
   if (!previewToken) {
     const canonicalPath = buildArticlePublicPath(article.slug, article.id);
     const requestPath = (

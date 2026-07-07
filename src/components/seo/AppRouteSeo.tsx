@@ -76,7 +76,7 @@ export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
 
   const ogImage = merged.ogImageUrl?.trim();
   const canonical = merged.canonicalUrl?.trim();
-
+console.log(ogImage,"ogImagefdgdgdfg")
   return (
     <Head key={pathname}>
       <title>{title}</title>
@@ -91,7 +91,7 @@ export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
 
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
-      {ogImage ? <meta property="og:image" content={ogImage} /> : null}
+      {ogImage && <meta key="og:image" property="og:image" content={ogImage} /> } 
       <meta property="og:type" content="website" />
       {canonical ? <meta property="og:url" content={canonical} /> : null}
 

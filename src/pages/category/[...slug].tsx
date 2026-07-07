@@ -111,6 +111,7 @@ const handlePageChange = (page: number) => {
         onPageChange={handlePageChange}
         isLoading={isLoading}
         listingSidebarAd={siteAds?.article_listing_sidebar ?? null}
+        paginationMode="path"
       />
     </PublicLayout>
   );
