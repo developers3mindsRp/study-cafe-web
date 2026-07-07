@@ -14,6 +14,7 @@ type CertificateData = {
   courseTitle: string;
   studentName: string;
   completionDate: string;
+  certificateNumber?: string | null;
 };
 
 export default function Certificate({ onClose, onDownload, courseId }: CertifyModalProps) {
@@ -126,6 +127,7 @@ const handleDownload = async () => {
                       name={certificateData.studentName}
                       course={certificateData.courseTitle}
                       date={certificateData.completionDate}
+                      serial={certificateData.certificateNumber}
                     />
                   ) : (
                     <p className="text-center text-red-500">Certificate not available</p>

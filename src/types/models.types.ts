@@ -70,7 +70,12 @@ export interface Course {
   updatedAt: string;
 }
 export interface CertificateDetail  {
-  certificate_url: string;
+  certificate_url?: string;
+  courseTitle?: string;
+  studentName?: string;
+  completionDate?: string;
+  /** Per-course 4-digit serial (e.g. "0001"); null until assigned on first open. */
+  certificateNumber?: string | null;
   // add more fields if API returns more
 };
 
