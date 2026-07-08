@@ -769,10 +769,10 @@ export default function Premium_user({
           </h2>
 
           <div className="flex items-start gap-4">
-            <div className="rounded-[10px] p-2 md:p-3 bg-[#eff1fa] w-full">
-              <div className="flex flex-row items-start  gap-6 md:gap-4 ml-6 pb-4">
+            <div className="rounded-[10px] p-4 md:p-4 bg-[#eff1fa] w-full">
+              <div className="flex flex-row items-center md:items-start  gap-6 md:gap-4  pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <a href={authorSpotlight?.linkedin} target="_blank" className="block w-[15%] relative">                  
+                <a href={authorSpotlight?.linkedin} target="_blank" className="block w-[100px] relative">                  
                   <img
                     src={
                         resolveBlogImageSrc(
@@ -790,7 +790,7 @@ export default function Premium_user({
                   />
                   <img src="/images/icons/linkedin.svg" alt="LinkedIn" className="absolute right-0 bottom-[0px]"/>
                 </a>
-                <div className="text-left w-[85%]">
+                <div className="text-left md:w-[80%]">
                   <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
                     {fallbackAuthorName}
                   </h3>
@@ -801,14 +801,19 @@ export default function Premium_user({
                   )}
 
               
-                <div   dangerouslySetInnerHTML={{
+                <div  className="hidden md:block "  dangerouslySetInnerHTML={{
                   __html: authorSpotlight?.bio ?? "",
                 }}>        
               </div>
-                </div>
+              
+            </div>
+             
               </div>
+              <div  className="block md:hidden "  dangerouslySetInnerHTML={{
+                  __html: authorSpotlight?.bio ?? "",
+                }}></div>
               {authorSpotlight && (
-                <div className="flex flex-wrap items-center gap-3 mt-4 ml-6 pb-4">
+                <div className="flex flex-wrap items-center gap-3 mt-4 md:ml-6 pb-4">
                   {authorSpotlight.company ? (
                     <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 bg-[#0C479C] text-white rounded-[10px]">
                       <img
