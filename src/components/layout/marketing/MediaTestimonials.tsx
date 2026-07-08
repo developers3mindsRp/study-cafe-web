@@ -9,16 +9,47 @@ interface Props {
   variant?: "marketing" | "course";
 }
 
+// function youtubeEmbed(url: string): string | null {
+//   if (!url?.trim()) return null;
+
+//   let id = "";
+
+//   if (url.includes("youtu.be/")) {
+//     id = url.split("youtu.be/")[1]?.split(/[?&#]/)[0] ?? "";
+//   } else if (url.includes("youtube.com")) {
+//     const m = url.match(/[?&]v=([^&]+)/);
+//     id = m?.[1] ?? url.split("/embed/")[1]?.split(/[?&#]/)[0] ?? "";
+//   }
+
+//   if (!id) return null;
+
+//   return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&playsinline=1&rel=0`;
+// }
+
 function youtubeEmbed(url: string): string | null {
   if (!url?.trim()) return null;
 
   let id = "";
 
+  // youtu.be
   if (url.includes("youtu.be/")) {
     id = url.split("youtu.be/")[1]?.split(/[?&#]/)[0] ?? "";
-  } else if (url.includes("youtube.com")) {
-    const m = url.match(/[?&]v=([^&]+)/);
-    id = m?.[1] ?? url.split("/embed/")[1]?.split(/[?&#]/)[0] ?? "";
+  }
+
+  // youtube shorts
+  else if (url.includes("/shorts/")) {
+    id = url.split("/shorts/")[1]?.split(/[?&#]/)[0] ?? "";
+  }
+
+  // youtube watch?v=
+  else if (url.includes("watch?v=")) {
+    const match = url.match(/[?&]v=([^&]+)/);
+    id = match?.[1] ?? "";
+  }
+
+  // youtube embed
+  else if (url.includes("/embed/")) {
+    id = url.split("/embed/")[1]?.split(/[?&#]/)[0] ?? "";
   }
 
   if (!id) return null;
@@ -160,29 +191,37 @@ export default function MediaTestimonials({
       )}
 
       {/* CUSTOM CSS */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
+     <style jsx>{`
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+    animation-play-state: running;
+  }
 
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
+  /* Pause on hover */
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
 
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`}</style>
     </section>
   );
 }

@@ -770,9 +770,9 @@ export default function Premium_user({
 
           <div className="flex items-start gap-4">
             <div className="rounded-[10px] p-2 md:p-3 bg-[#eff1fa] w-full">
-              <div className="flex flex-row  gap-6 md:gap-4 ml-6 pb-4">
+              <div className="flex flex-row items-start  gap-6 md:gap-4 ml-6 pb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <a href={authorSpotlight?.linkedin} target="_blank" className="block w-[50%]">                  
+                <a href={authorSpotlight?.linkedin} target="_blank" className="block w-[15%] relative">                  
                   <img
                     src={
                         resolveBlogImageSrc(
@@ -788,8 +788,9 @@ export default function Premium_user({
                     className="rounded-full object-cover w-[100px] h-[100px]"
                     referrerPolicy="no-referrer"
                   />
+                  <img src="/images/icons/linkedin.svg" alt="LinkedIn" className="absolute right-0 bottom-[0px]"/>
                 </a>
-                <div className="text-left">
+                <div className="text-left w-[85%]">
                   <h3 className="font-semibold text-[18px] md:text-[20px] text-[#252525]">
                     {fallbackAuthorName}
                   </h3>

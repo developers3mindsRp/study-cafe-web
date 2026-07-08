@@ -35,6 +35,7 @@ export default function CaseLaws({
 }: CaseLawsProps) {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState(search);
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const handleSearchSubmit = async () => {
     const value = searchInput.trim();
@@ -119,6 +120,7 @@ console.log(typeof document === 'undefined',"typeof document === 'undefined'")
                   key={item.id}
                   title={item.title}
                   appealNumber={item.appeal_number}
+                  image={item.cover_image_url}
                   judgementDate={item.judgement_date}
                   assessmentYear={item.assessment_year}
                   court={item.court}
@@ -126,11 +128,15 @@ console.log(typeof document === 'undefined',"typeof document === 'undefined'")
                     router.push(`/${item.slug}.html`)
                   }
                   access={item.access}
-                  onDownload={() => {
+               onDownload={() => {
+                  if (item?.access?.can_download) {
                     if (item.download_url) {
                       window.open(item.download_url, "_blank");
                     }
-                  }}
+                  } else {
+                    setShowPremiumPopup(true);
+                  }
+                }}
                 />
               ))
             ) : (
@@ -211,6 +217,51 @@ console.log(typeof document === 'undefined',"typeof document === 'undefined'")
             </div>
           )}
         </div>
+        {showPremiumPopup && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+              <div className="w-full max-w-xl rounded-2xl bg-white p-8 text-center shadow-2xl relative">
+                <button
+                  onClick={() => setShowPremiumPopup(false)}
+                  className="absolute right-4 top-4 text-2xl text-gray-500 hover:text-black"
+                >
+                  ×
+                </button>
+
+                <div className="mb-3 flex justify-center">
+                  <div className="rounded-full bg-gray-100 p-3">
+                    🔒
+                  </div>
+                </div>
+
+                <p className="text-gray-500 text-sm mb-2">
+                  Premium Content
+                </p>
+
+                <h2 className="text-4xl font-bold mb-4">
+                  Unlock The Full Article
+                </h2>
+
+                <p className="text-gray-600 mb-8">
+                  This article is available exclusively for{" "}
+                  <span className="font-semibold">Premium Members.</span>
+                </p>
+
+                <button
+                  onClick={() => router.push("/plans")}
+                  className="w-64 mx-2 rounded-lg bg-[#143EA8] py-3 text-white font-semibold hover:bg-[#10358d]"
+                >
+                  Upgrade to Premium
+                </button>
+
+                <button
+                  onClick={() => setShowPremiumPopup(false)}
+                  className="mt-4 mx-2 w-64 rounded-lg border border-[#143EA8] py-3 text-[#143EA8] font-semibold hover:bg-gray-50"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </div>
+          )}
       </section>
     </PublicLayout>
   );

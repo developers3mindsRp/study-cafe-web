@@ -404,6 +404,7 @@ export interface ArticleCategoryItem {
 export interface CaseLawItem {
   id: number;
   title: string;
+  cover_image_url:string
   appeal_number: string;
   judgement_date: string;
   assessment_year: string;
