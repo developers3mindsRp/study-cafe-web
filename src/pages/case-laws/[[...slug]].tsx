@@ -284,6 +284,7 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
         : "";
 
     const token = ctx.req.cookies.auth_token;
+    console.log(ctx.req.cookies.auth_token,"ctx.req.cookies.auth_token")
 
     try {
       const [caseLawData, siteAds] = await Promise.all([

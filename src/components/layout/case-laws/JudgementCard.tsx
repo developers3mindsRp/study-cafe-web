@@ -83,7 +83,7 @@ const canDownload = access?.can_download;
 const hasAccess = canRead || canDownload;
 
 
-
+console.log(access?.can_download,"item?.access?.can_download")
 
 
 
