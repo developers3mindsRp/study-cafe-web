@@ -177,11 +177,13 @@ function DownloadButton({
   downloadUrl,
   canDownload,
   onGated,
-   category
+   category,
+   article_types,
 }: {
   downloadUrl: string;
   canDownload: boolean;
-   category:any
+   category:any;
+   article_types:any
   onGated: () => void;
 }) {
   const resolvedUrl = resolveApiAssetUrl(downloadUrl);
@@ -193,7 +195,7 @@ function DownloadButton({
     }
     window.open(resolvedUrl, "_blank", "noopener,noreferrer");
   };
-console.log(category,"category")
+console.log(article_types[0]?.name,"article_types")
   return (
     <div className="flex justify-center pt-2">
       <button
@@ -217,7 +219,7 @@ console.log(category,"category")
           <line x1="12" y1="18" x2="12" y2="12" />
           <line x1="9" y1="15" x2="15" y2="15" />
         </svg>
-        To Read Full Judgment, Download PDF Given Below
+        To Read Full {article_types[0]?.name}, Download PDF Given Below
       </button>
     </div>
   );
@@ -405,7 +407,7 @@ export default function Premium_user({
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
 
-
+console.log(article?.article_types, "article")
 
   return (
     <section className="w-full bg-white py-2 container mx-auto px-4">
@@ -448,6 +450,8 @@ export default function Premium_user({
                       canDownload={canDownload}
                       onGated={() => setIsDownloadModalOpen(true)}
                       category={article?.categories}
+                      article_types={article?.article_types}
+                      
                     />
                   )}
 

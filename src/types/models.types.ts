@@ -654,6 +654,7 @@ export interface ArticleBySlug {
   /** True when any notification field is present. */
   has_notification?: boolean;
   embed_scripts?:any;
+  article_types?:any;
   
   
 }
