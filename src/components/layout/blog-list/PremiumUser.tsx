@@ -570,6 +570,7 @@ console.log(article?.article_types, "article")
                       canDownload={canDownload}
                       onGated={() => setIsDownloadModalOpen(true)}
                        category={article?.categories}
+                         article_types={article?.article_types}
                     />
                   )}
                    {
