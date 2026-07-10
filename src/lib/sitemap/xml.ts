@@ -34,6 +34,33 @@ export function buildUrlSet(entries: SitemapUrlEntry[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
+export type NewsSitemapUrlEntry = {
+  loc: string;
+  title: string;
+  /** Full ISO 8601 publication timestamp (with time), per Google News requirements. */
+  publicationDate: string;
+};
+
+export function buildNewsUrlSet(entries: NewsSitemapUrlEntry[], publicationName: string): string {
+  const body = entries
+    .map(
+      (entry) => `  <url>
+    <loc>${escapeXml(entry.loc)}</loc>
+    <news:news>
+      <news:publication>
+        <news:name>${escapeXml(publicationName)}</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>${escapeXml(entry.publicationDate)}</news:publication_date>
+      <news:title>${escapeXml(entry.title)}</news:title>
+    </news:news>
+  </url>`,
+    )
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n${body}\n</urlset>\n`;
+}
+
 export function buildSitemapIndex(sitemapUrls: string[]): string {
   const now = new Date().toISOString();
   const body = sitemapUrls
