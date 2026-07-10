@@ -1,13 +1,14 @@
 import { getServerApiBaseUrl, getSiteUrl } from '@/config/env';
 import { buildArticlePublicPath } from '@/lib/articlePaths';
-import { ARTICLES_PER_SITEMAP } from '@/lib/sitemap/constants';
-import type { SitemapUrlEntry } from '@/lib/sitemap/xml';
+import { ARTICLES_PER_SITEMAP, NEWS_SITEMAP_ARTICLE_COUNT } from '@/lib/sitemap/constants';
+import type { NewsSitemapUrlEntry, SitemapUrlEntry } from '@/lib/sitemap/xml';
 import { toIsoDate } from '@/lib/sitemap/xml';
 
 type ApiEnvelope<T> = { data?: T };
 
 type ArticleRow = {
   id: number;
+  title?: string;
   slug: string;
   published_at?: string | null;
   updated_at?: string | null;
@@ -113,6 +114,35 @@ export async function buildArticleSitemapEntries(part: number): Promise<SitemapU
   }
 
   return entries;
+}
+
+/**
+ * Google News sitemap: the most recently published articles only (Google News ignores
+ * anything older than ~2 days, so this intentionally stays small — no pagination).
+ * `/platform/articles` sorts by created_at, which can drift from published_at (e.g.
+ * backdated posts), so we over-fetch and re-sort by published_at here to be safe.
+ */
+export async function buildNewsSitemapEntries(): Promise<NewsSitemapUrlEntry[]> {
+  const overfetchLimit = Math.max(NEWS_SITEMAP_ARTICLE_COUNT * 2, 50);
+  const batch = await fetchPlatform<PaginatedArticles>('/platform/articles', {
+    page: 1,
+    limit: overfetchLimit,
+  });
+
+  return (batch.data || [])
+    .filter((row) => row.title && row.slug && row.published_at)
+    .sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime())
+    .slice(0, NEWS_SITEMAP_ARTICLE_COUNT)
+    .map((row) => {
+      const path = buildArticlePublicPath(row.slug, row.id);
+      if (!path) return null;
+      return {
+        loc: absoluteSiteUrl(path),
+        title: row.title!,
+        publicationDate: new Date(row.published_at!).toISOString(),
+      };
+    })
+    .filter((entry): entry is NewsSitemapUrlEntry => entry != null);
 }
 
 export async function buildCourseSitemapEntries(): Promise<SitemapUrlEntry[]> {

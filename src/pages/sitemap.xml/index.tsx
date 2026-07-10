@@ -29,6 +29,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     console.error('[sitemap] Failed to count articles for index:', error);
   }
 
+  // News sitemap goes last — it's a small, fast-changing slice of the article set above.
+  sitemapUrls.push(absoluteSiteUrl('/sitemap-news.xml'));
+
   const xml = buildSitemapIndex(sitemapUrls);
   return respondXml(res, xml);
 };
