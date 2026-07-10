@@ -359,9 +359,8 @@ const handleCopy = (e: React.ClipboardEvent<HTMLHeadingElement>) => {
 
   e.clipboardData.setData(
     "text/plain",
-    `${title}
-
-  Read more at: ${currentUrl}`
+    `${title} 
+Read more at: ${currentUrl}`
   );
 };
   return (

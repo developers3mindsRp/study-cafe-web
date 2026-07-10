@@ -54,8 +54,7 @@ const HeroSection_blog = ({
     e.clipboardData.setData(
       "text/plain",
       `${title}
-  
-    Read more at: ${currentUrl}`
+Read more at: ${currentUrl}`
     );
   };
   return (

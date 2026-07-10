@@ -82,7 +82,7 @@ const CertificateLayout: React.FC<CertificateLayoutProps> = ({
           <p className="pl-12 w-[80%] text-xs text-black text-left px-10 text-center">
             Contact Us: Studycafe Private Limited, 1003, Modi Tower, 98, Nehru
             Place, New Delhi-110019 | <br /> E: contact@studycafe.in | W:
-            www.studycafe.in | Mo: +91 11 43710666
+            www.studycafe.in | Mo: +91 96250 80264
           </p>
         </div>
       </div>
