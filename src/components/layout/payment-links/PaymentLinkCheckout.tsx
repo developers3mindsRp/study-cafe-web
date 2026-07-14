@@ -11,6 +11,14 @@ import type { PublicPaymentLink } from "@/services/paymentLink.service";
 import { createPaymentLinkOrder, verifyPaymentLinkOrder } from "@/services/paymentLink.service";
 import { getReferralCode } from "@/utils/auth.utils";
 import { formatPaymentLinkExpiry } from "@/utils/paymentLinkExpiry";
+import {
+  Clock3,
+  Users,
+  ShieldCheck,
+  BadgeCheck,
+  Headphones,
+  IndianRupee,
+} from "lucide-react";
 
 const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
@@ -103,6 +111,21 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
     return `${m} min ${s} sec`;
   }, [countdownMs]);
 
+    const countdown = useMemo(() => {
+      const total = Math.max(0, countdownMs);
+
+      const hours = Math.floor(total / 3600000);
+      const minutes = Math.floor((total % 3600000) / 60000);
+      const seconds = Math.floor((total % 60000) / 1000);
+      const ms = Math.floor((total % 1000) / 10);
+
+      return {
+        hours,
+        minutes,
+        seconds,
+        ms,
+      };
+    }, [countdownMs]);
   const soldOut =
     typeof link.total_seats === "number" &&
     link.total_seats > 0 &&
@@ -231,32 +254,84 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
       </div>
     );
   }
+  function TimeBox({
+      value,
+      label,
+    }: {
+      value: any;
+      label: string;
+    }) {
+      return (
+        <div className="bg-white shadow-sm rounded-md px-4 py-2 text-center min-w-[70px]">
+          <div className="text-3xl font-bold text-orange-500">{value}</div>
+          <div className="text-xs text-gray-500">{label}</div>
+        </div>
+      );
+    }
+function Feature({
+  icon,
+  title,
+  subtitle,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
 
+      <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+        {icon}
+      </div>
+
+      <div>
+        <div className="font-semibold text-sm">{title}</div>
+        <div className="text-xs text-gray-500">{subtitle}</div>
+      </div>
+
+    </div>
+  );
+}
   return (
     <div className="p-[50px_0]">
-        <div className="container mx-auto grid md:grid-cols-2 gap-8 mb-10">
-          <div className="mb-8 rounded-xl bg-sky-50 border border-sky-100 p-6 h-full">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">{link.title}</h1>
-            {link.description && (
+        <div className="container mx-auto grid md:grid-cols-2 gap-8 mb-10 items-center">
+          <div className=" rounded shadow-md  h-full">
+            {/* <h1 className="text-xl md:text-2xl font-bold text-gray-900">{link.title}</h1> */}
+            {/* {link.description && (
               <div
                 className="mt-3 prose prose-sm max-w-none text-gray-700 [&_a]:text-blue-600"
                 dangerouslySetInnerHTML={{ __html: link.description }}
               />
-            )}
-            <p className="mt-4 text-sm md:text-base">
-              {link.total_seats > 0 ? (
-                <>
-                  Hurry Up!,{" "}
-                  <span className="font-bold text-[#09339B]">{link.display_sold}</span> Sold out of{" "}
-                  <span className="font-semibold">{link.total_seats}</span>
-                </>
-              ) : (
-                <>
-                  <span className="font-bold text-[#09339B]">{link.display_sold}</span> seats claimed so far (unlimited
-                  capacity)
-                </>
-              )}
-            </p>
+            )} */}
+
+               <div className="bg-[url('/images/paymentlink.png')] bg-cover bg-center py-4 px-4 text-center relative">
+
+                  <img src="/images/paymentclock.svg" className="m-auto"/>
+                  {link.total_seats > 0 ? (
+                    <>
+                       <h2 className="text-4xl font-bold mt-4 text-gray-800">
+                          Hurry Up!
+                        </h2>
+
+                        <div className="flex justify-center items-center gap-2 mt-2 text-lg">
+                          <Users size={20} className="text-blue-700" />
+                          <span className="font-semibold text-blue-700">{link.display_sold}</span>
+                          <span className="text-gray-700">
+                            Sold out of {link.total_seats}
+                          </span>
+                        </div>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-bold text-[#09339B]">{link.display_sold}</span> seats claimed so far (unlimited
+                      capacity)
+                    </>
+                  )}
+                 
+                </div>
+                <div className="p-6">
+
+{/*        
             {!expired && Number.isFinite(expiryMs) && (
               <p className="mt-2 text-sm font-bold text-[#09339B]">
                 {mounted ? (
@@ -265,8 +340,74 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
                   <>This payment link expires soon — timer updates in a moment.</>
                 )}
               </p>
+            )} */}
+
+            {!expired && Number.isFinite(expiryMs) && (
+              <div className="md:flex items-center gap-4 rounded-md bg-[#FDF6E8] px-2 py-2 border border-[#F5E3BC]">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3D9]">
+                    <Clock3 size={18} className="text-orange-500" />
+                  </div>
+                  <span className="text-sm text-gray-700">
+                    This Payment Link will Expire in
+                  </span>
+                </div>
+
+                {mounted && (
+                  <div className="ml-auto flex items-center justify-center gap-2">
+                  <TimeBox value={String(countdown.hours).padStart(2, "0")} label="HRS" />
+                  <span className="text-xl font-bold text-gray-400">:</span>
+                  <TimeBox value={String(countdown.minutes).padStart(2, "0")} label="MIN" />
+                  <span className="text-xl font-bold text-gray-400">:</span>
+
+                  <TimeBox value={String(countdown.seconds).padStart(2, "0")} label="SEC" />
+                  {/* <span className="text-xl font-bold text-gray-400">:</span> */}
+
+                  {/* <TimeBox value={String(countdown.ms).padStart(2, "0")} label="MS" /> */}
+                  </div>
+                )}
+              </div>
             )}
-            {soldOut && <p className="mt-2 text-sm font-bold text-[#09339B]">All seats are booked.</p>}
+
+
+             {/* Amount Card */}
+        <div className="mt-2 border rounded-lg p-4">
+
+          <div className="flex items-center gap-4">
+
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+              <IndianRupee className="text-green-600" />
+            </div>
+
+            <h3 className="text-2xl font-bold">
+              {/* ₹ {amount.toFixed(2)} */}
+               {fmt(sale)}
+              {mrp > sale && (
+                fmt(mrp)
+              )}
+            </h3>
+          </div>
+
+          <div className="border-t border-dashed my-4"></div>
+
+          <div className="flex justify-between text-md text-gray-600">
+            <span>Plus GST {fmt(gst)}:</span>
+            <span>₹ {gst.toFixed(2)}</span>
+          </div>
+
+          <div className="mt-2 bg-green-100 rounded-lg p-2 flex justify-between items-center">
+
+            <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <ShieldCheck />
+              You pay:
+            </div>
+
+            <div className="text-2xl font-bold text-green-700">
+              {fmt(grandTotal)}
+            </div>
+          </div>
+        </div>
+            {/* {soldOut && <p className="mt-2 text-sm font-bold text-[#09339B]">All seats are booked.</p>}
             <div className="mt-6 flex flex-wrap items-baseline gap-3">
               <span className="text-2xl font-bold text-[#09339B]">{fmt(sale)}</span>
               {mrp > sale && (
@@ -275,36 +416,59 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
             </div>
             <p className="mt-2 text-xs text-gray-500">
               Plus GST (18%): {fmt(gst)} · You pay: <span className="font-semibold text-gray-800">{fmt(grandTotal)}</span>
-            </p>
+            </p> */}
+              {/* Footer */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+            
+                      <Feature
+                        icon={<ShieldCheck className="text-green-600" />}
+                        title="Secure Payment"
+                        subtitle="256-bit SSL Encrypted"
+                      />
+            
+                      <Feature
+                        icon={<BadgeCheck className="text-purple-600" />}
+                        title="Instant Access"
+                        subtitle="Get access immediately"
+                      />
+            
+                      <Feature
+                        icon={<Headphones className="text-blue-600" />}
+                        title="24/7 Support"
+                        subtitle="We're here to help"
+                      />
+            
+                    </div>
           </div>
+        </div>
           <div className="p-4">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Enter Your Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Enter Your Details</h2>
               <form onSubmit={onSubmit} className="space-y-4 ">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Full Name <span className="text-[#09339B]">*</span>
+                    Full Name <span className="text-[#FF383C]">*</span>
                   </label>
                   <input
                     {...register("fullName")}
                     placeholder="eg. Amit Kumar"
-                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
-                  {errors.fullName && <p className="mt-1 text-xs text-[#09339B]">{errors.fullName.message}</p>}
+                  {errors.fullName && <p className="mt-1 text-xs text-[#FF383C]">{errors.fullName.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Email <span className="text-[#09339B]">*</span>
+                    Email <span className="text-[#FF383C]">*</span>
                   </label>
                   <input
                     type="email"
                     {...register("email")}
-                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
-                  {errors.email && <p className="mt-1 text-xs text-[#09339B]">{errors.email.message}</p>}
+                  {errors.email && <p className="mt-1 text-xs text-[#FF383C]">{errors.email.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Mobile Number <span className="text-[#09339B]">*</span>
+                    Mobile Number <span className="text-[#FF383C]">*</span>
                   </label>
                   <Controller
                     name="mobile"
@@ -319,24 +483,24 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
                       />
                     )}
                   />
-                  {errors.mobile && <p className="mt-1 text-xs text-[#09339B]">{errors.mobile.message}</p>}
+                  {errors.mobile && <p className="mt-1 text-xs text-[#FF383C]">{errors.mobile.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">GST number</label>
                   <input
                     {...register("gstNumber")}
                     placeholder="15-character GSTIN (optional)"
-                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-4 text-sm uppercase focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
-                  {errors.gstNumber && <p className="mt-1 text-xs text-[#09339B]">{errors.gstNumber.message}</p>}
+                  {errors.gstNumber && <p className="mt-1 text-xs text-[#FF383C]">{errors.gstNumber.message}</p>}
                 </div>
 
-                {submitError && <p className="text-sm text-[#09339B]">{submitError}</p>}
+                {submitError && <p className="text-sm text-[#FF383C]">{submitError}</p>}
 
                 <button
                   type="submit"
                   disabled={isSubmitting || disabledCheckout}
-                  className="rounded-lg bg-[#09339B] border border-[#09339B] px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#09339B] disabled:opacity-50 w-full"
+                  className="rounded-lg bg-[#09339B] border border-[#09339B] px-6 py-3 text-lg font-semibold text-white hover:bg-white hover:text-[#09339B] disabled:opacity-50 w-full"
                 >
                   {isSubmitting ? "Processing…" : "Checkout"}
                 </button>
@@ -355,6 +519,7 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
               }
             `}</style>
           </div>
+          
 
         
         </div>

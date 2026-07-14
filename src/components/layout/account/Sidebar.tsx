@@ -213,7 +213,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
           <>
             <div className="border-b border-[#696969] w-full mt-6"></div>
             <Link href="/plans">
-              <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] px-4 py-2 rounded-md w-full hover:bg-[#f0f4ff] transition">
+              <button className="mt-6 flex items-center justify-center gap-2 border border-[#09339B] text-[#09339B] bg-[#fff] px-4 py-2 rounded-md w-full hover:bg-[#f0f4ff] transition">
                 <span className="font-medium">
                   {subscription?.hasActiveMembership ? "Upgrade Plan" : "Buy Membership"}
                 </span>
