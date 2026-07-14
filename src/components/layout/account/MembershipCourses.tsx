@@ -179,7 +179,7 @@ export default function MembershipCourses() {
 
   if (loading) {
     return (
-      <section className="mx-auto max-w-6xl rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
+      <section className="mx-auto  rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
         <div className="py-12 text-center text-gray-400">
           Loading membership courses...
         </div>
@@ -189,7 +189,7 @@ export default function MembershipCourses() {
 
   if (!hasMembership) {
     return (
-      <section className="mx-auto max-w-6xl rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
+      <section className="mx-auto  rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
         <h2 className="mb-1 text-[26px] font-normal text-gray-800">
           Membership Courses
         </h2>
@@ -235,7 +235,7 @@ export default function MembershipCourses() {
   }
 
   return (
-    <section className="mx-auto max-w-6xl rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
+    <section className="mx-auto  rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
       <h2 className="mb-1 text-[26px] font-normal text-gray-800">
         Membership Courses
       </h2>
@@ -300,7 +300,7 @@ export default function MembershipCourses() {
                 </div>
               )}
 
-              <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-2">
+              <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {group.courses.map((course) => {
                   const prog = progressById.get(String(course.id));
 

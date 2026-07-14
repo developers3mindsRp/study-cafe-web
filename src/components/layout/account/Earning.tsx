@@ -92,7 +92,7 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
+      <section className="md:p-6  mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
         <div className="text-center py-12 text-gray-400">Loading affiliate data…</div>
       </section>
     );
@@ -100,7 +100,7 @@ useEffect(() => {
 
   if (error) {
     return (
-      <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
+      <section className="md:p-6 mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
         <h2 className="text-[26px] font-normal text-gray-800 mb-1">Affiliate Dashboard</h2>
         <div className="text-center py-12">
           <p className="text-red-500 mb-4">{error}</p>
@@ -118,7 +118,7 @@ useEffect(() => {
   const visibleCourses = showAllCourses ? (links?.courses ?? []) : (links?.courses ?? []).slice(0, 4);
 
   return (
-    <section className="md:p-6 max-w-6xl mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
+    <section className="md:p-6  mx-auto border bg-white rounded-lg shadow-sm border-[#9FBBFF] p-4">
       <h2 className="text-[26px] font-normal text-gray-800 mb-1">
        Affiliate Dashboard
       </h2>
@@ -295,7 +295,7 @@ useEffect(() => {
             <img src="/images/category.svg" alt="" /> <span className="font-bold">Courses Categories</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
             {links!.categories.map((category) => (
               <div key={category.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
                 <ReferralImage src={category.imageUrl} alt={category.title} />
@@ -328,7 +328,7 @@ useEffect(() => {
             <img src="/images/all-course.svg" alt="" /> <span className="font-bold">All Courses</span>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
             {visibleCourses.map((item) => (
               <div key={item.id} className="border border-[#E5E7EB] px-4 p-4 space-y-4 rounded-lg">
                  <img src={item?.imageUrl}/>

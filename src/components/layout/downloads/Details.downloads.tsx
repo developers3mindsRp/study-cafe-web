@@ -238,7 +238,7 @@ console.log(file,"file")
 
                           <div>
                               <p className="text-[#929292] mb-1">Submitted Date</p>
-                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-2 rounded-md inline-block whitespace-nowrap">
+                              <p className="text-gray-600 font-medium bg-[#F3F3F3] p-2 rounded-md inline-block md:whitespace-nowrap">
                                   {formatDownloadDateLong(file.created_at)}
                               </p>
                           </div>

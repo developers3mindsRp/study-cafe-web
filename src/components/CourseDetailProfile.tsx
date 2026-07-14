@@ -208,7 +208,7 @@ export default function CourseDetailProfile({
           ) : null}
         </div>
 
-        <div className="mt-4 flex gap-3 w-[40%] justify-end">
+        <div className="mt-4 flex gap-3 md:w-[40%] md:justify-end">
           <button
             type="button"
             className="rounded-md bg-[#09339B] px-4 py-2 text-white"
@@ -285,7 +285,7 @@ export default function CourseDetailProfile({
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-1">
         <div className="rounded-xl border border-[#9FBBFF] bg-white p-4 lg:col-span-2">
           <div className="relative overflow-hidden rounded-lg">
           {videoId && videoIdSource === "vimeo" ? (
@@ -437,8 +437,85 @@ export default function CourseDetailProfile({
           </div>
           
         </div>
-
         <div className="space-y-2 rounded-xl border border-[#9FBBFF] bg-white p-4">
+          <h3 className="mb-4 text-[26px]">Course Content</h3>
+
+          {sortedDays.map((day) => {
+            const daySessions = sessionsByDay.get(day) ?? [];
+            const dayLabel = `Day ${day}`;
+            return (
+              <div key={day} className="border-b pb-3">
+                <button
+                  type="button"
+                  // onClick={() => setOpenDay(openDay === day ? null : day)}
+                  className="flex w-full items-center justify-between text-sm font-medium"
+                >
+                  <span className="text-[18px] font-semibold xl:text-[20px]">
+                    {dayLabel}
+                  </span>
+                  <svg
+                    className={`h-5 w-5 transition-transform ${
+                      openDay === day ? "rotate-180" : "rotate-0"
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+               
+                  <ul className="mt-3 space-y-3">
+                    {daySessions.map((s) => {
+                      const selected = s.sessionId === activeSessionId;
+                      const label = sessionListLabel(s, daySessions);
+                      const vimeoId = firstVimeoIdFromSession(s);
+                      const listThumb =
+                        (vimeoId && vimeoThumbnailsById[vimeoId]) || thumb;
+                      return (
+                        <li key={s.sessionId}>
+                          <button
+                            type="button"
+                            onClick={() => onSelectSession(s.sessionId)}
+                            className={`flex w-full cursor-pointer items-center gap-3 rounded-md p-2 text-left transition ${
+                              selected
+                                ? "bg-green-50 text-green-600"
+                                : "text-[#929292] hover:bg-gray-100"
+                            }`}
+                          >
+                            <div className="relative h-10 w-16 flex-shrink-0">
+                              
+                              <img
+                                src={listThumb}
+                                alt=""
+                                className="h-full w-full rounded-md object-cover"
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/40">
+                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#09339B] text-[8px] text-white">
+                                  <span className="ml-1">▶</span>
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-sm font-medium">{label}</span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                
+              </div>
+            );
+          })}
+        </div>
+
+        {/* <div className="space-y-2 rounded-xl border border-[#9FBBFF] bg-white p-4">
           <h3 className="mb-4 text-[26px]">Course Content</h3>
 
           {sortedDays.map((day) => {
@@ -492,7 +569,7 @@ export default function CourseDetailProfile({
                             }`}
                           >
                             <div className="relative h-10 w-16 flex-shrink-0">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              
                               <img
                                 src={listThumb}
                                 alt=""
@@ -514,7 +591,7 @@ export default function CourseDetailProfile({
               </div>
             );
           })}
-        </div>
+        </div> */}
       </div>
     </div>
   );

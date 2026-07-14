@@ -94,7 +94,7 @@ export default function MyCoursesSection() {
   );
 
   return (
-    <section className="mx-auto max-w-6xl rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
+    <section className="mx-auto  rounded-lg border border-[#9FBBFF] bg-white p-4 shadow-sm md:p-6">
       <h2 className="mb-1 text-[26px] font-normal text-gray-800">
         My Courses
       </h2>
@@ -167,7 +167,7 @@ export default function MyCoursesSection() {
           <h3 className="mb-4 text-[20px] font-medium text-gray-800">
             ({activeCourses.length}) Purchased Course(s)
           </h3>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {activeCourses.map((course, index) => (
               <CourseCard
                 key={`active-${course.id ?? course.courseId}-${index}`}

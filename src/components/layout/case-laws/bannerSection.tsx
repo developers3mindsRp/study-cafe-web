@@ -37,7 +37,7 @@ const BannerSectionCaseLaws = ({ searchValue = '', onSearchChange, onSearchSubmi
                 value={searchValue}
                 onChange={(e) => onSearchChange?.(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full bg-white border border-gray-300 rounded-[10px] py-4 pl-4 pr-10 text-gray-800 placeholder-[#49454F] focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full bg-white border border-gray-300 rounded-[10px] py-4 pl-4 pr-12 text-gray-800 placeholder-[#49454F] focus:outline-none focus:ring-2 focus:ring-blue-300"
               />
               <button
                 type="submit"
@@ -45,7 +45,7 @@ const BannerSectionCaseLaws = ({ searchValue = '', onSearchChange, onSearchSubmi
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
                 {/* magnifying glass icon (SVG) */}
-                <img src="/images/search-icon.svg" alt="" width="24" height="24" className='w-12 h-12 mr-2' />
+                <img src="/images/search-icon.svg" alt="" width="24" height="24" className='w-10 h-10 ' />
 
               </button>
             </div>

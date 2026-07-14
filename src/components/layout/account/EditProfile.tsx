@@ -293,7 +293,8 @@ export default function EditProfile({
 
   return (
     <div className={`w-full ${useDashboardRoutes ? "xl:py-4" : "xl:py-10"}`}>
-      <div className="md:container mx-auto md:grid md:grid-cols-3 gap-8 mb-10">
+      {/* <div className="md:container mx-auto md:grid md:grid-cols-3 gap-8 mb-10"> */}
+      <div className="md:container mx-auto ">
         {/* LEFT SIDEBAR */}
         <div className="md:col-span-1">
           <Sidebar onAvatarClick={() => fileInputRef.current?.click()} />
@@ -307,14 +308,14 @@ export default function EditProfile({
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="md:col-span-2 bg-white rounded-xl md:p-6 mt-4 md:mt-0">
-          <div className="border bg-[#F0F2F4] rounded-lg flex overflow-x-auto overflow-hidden text-sm font-medium md:p-2 scrollbar justify-around gap-2">
+        <div className="md:col-span-2 bg-white rounded-xl  mt-6 ">
+          <div className="border-b flex overflow-x-auto overflow-hidden text-sm font-medium md:p-0 scrollbar justify-around gap-2">
             {TABS.map((tab) => {
               const isOn = currentTab === tab.key;
               const tabClass = `md:flex-1  px-0 xl:py-3 last:border-none transition-all text-[10px] md:text-[16px] ${
                 isOn
-                  ? "md:bg-white text-[#454545] rounded-[15px] m-2 p-0 md:px-4 md:py-2"
-                  : "text-[#AFAFAF] hover:bg-gray-200 rounded-[15px] m-2 p-0  md:px-4"
+                  ? "md:bg-white text-[#454545] border-b-[2px] border-[#07329b] "
+                  : "text-[#AFAFAF] border-b-[2px] border-transparent   "
               }`;
               const inner = (
                 <div className="block md:flex gap-2 justify-center items-center">

@@ -129,9 +129,9 @@ export default function PaymentDetail() {
               <img
                 src="/images/id.svg"
                 alt="Order ID"
-                className="w-5 h-5"
+                className="w-5 h-5 brightness-[0.1]"
               />
-              <span className="text-[#AFAFAF] md:text-[20px]">Order ID</span>
+              <span className="text-[#000] md:text-[20px]">Order ID</span>
             </div>
             <span className="text-black md:text-[16px] font-bold ml-2 md:ml-7 md:mt-2">
               {invoice.orderId}
@@ -144,9 +144,9 @@ export default function PaymentDetail() {
                 <img
                   src="/images/file-1.svg"
                   alt="Transaction ID"
-                  className="w-5 h-5"
+                  className="w-5 h-5 brightness-[0.1]"
                 />
-                <span className="text-[#AFAFAF] md:text-[20px]">
+                <span className="text-[#000] md:text-[20px]">
                   Transaction ID
                 </span>
               </div>
@@ -161,9 +161,9 @@ export default function PaymentDetail() {
               <img
                 src="/images/cc.svg"
                 alt="Payment Method"
-                className="w-5 h-5"
+                className="w-5 h-5  brightness-[0.1]"
               />
-              <span className="text-[#AFAFAF] md:text-[20px]">
+              <span className="text-[#000] md:text-[20px]">
                 Payment Method
               </span>
             </div>
@@ -183,14 +183,14 @@ export default function PaymentDetail() {
 
         <div className="text-sm mt-4">
           <div className="flex justify-between m-4">
-            <span className="text-[#AFAFAF] text-[20px] mb-2">Item</span>
-            <span className="text-black text-[20px] mb-2 text-right max-w-[65%]">
+            <span className="text-[#000] text-[20px] mb-2">Item</span>
+            <span className="text-black text-[18px] md:text-[20px] mb-2 text-right max-w-[65%]">
               {itemName}
             </span>
           </div>
           <div className="flex justify-between m-4">
-            <span className="text-[#AFAFAF] text-[16px] mb-1">Category</span>
-            <span className="text-[#AFAFAF] text-[16px] mb-1">
+            <span className="text-[#000] text-[16px] mb-1">Category</span>
+            <span className="text-[#000] text-[16px] mb-1">
               {itemCategory}
             </span>
           </div>
@@ -198,8 +198,8 @@ export default function PaymentDetail() {
           <div className="border-b border-[#AFAFAF]"></div>
 
           <div className="flex justify-between m-4">
-            <span className="text-[#AFAFAF] text-[16px] mb-1">Subtotal</span>
-            <span className="text-[#AFAFAF] text-[16px] mb-1">
+            <span className="text-[#000] text-[16px] mb-1">Subtotal</span>
+            <span className="text-[#000] text-[16px] mb-1">
               ₹{formattedAmount}
             </span>
           </div>

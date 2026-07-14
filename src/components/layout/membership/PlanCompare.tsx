@@ -45,7 +45,7 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
         <table className="min-w-[700px] w-full border-collapse bg-white shadow-sm rounded-lg border-l border-gray-300">
           <thead>
             <tr className="bg-gray-100 text-[#252525] font-bold text-[20px]">
-              <th className="py-3 px-4 text-center sticky left-0 bg-gray-100 z-10">
+              <th className="py-3 px-4 text-center md:sticky left-0 bg-gray-100 z-10">
                 Features
               </th>
              {sortedPlans.map((p) => {
@@ -68,7 +68,7 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
           <tbody>
             {allFeatures.map((feature) => (
               <tr key={feature.id} className="border-b border-gray-300">
-                <td className="py-3 font-medium text-[#252525] text-[16px] text-center sticky left-0 bg-white z-10 border-r border-gray-300">
+                <td className="py-3 font-medium text-[#252525] text-[16px] text-center md:sticky left-0 bg-white z-10 border-r border-gray-300">
                   {feature.name}
                 </td>
 

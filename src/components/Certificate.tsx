@@ -63,7 +63,7 @@ const handleDownload = async () => {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal Box */}
-      <div className="relative bg-white w-full max-w-[60%] rounded-xl shadow-lg p-6 z-10">
+      <div className="relative bg-white w-full md:max-w-[80%] rounded-xl shadow-lg p-2 md:p-6 z-10">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -74,7 +74,7 @@ const handleDownload = async () => {
 
         {/* Certificate Card */}
         <div className="bg-white   space-y-3">
-            <div className="flex justify-between px-6 mb-2">
+            <div className="flex justify-between px-6 mb-2 items-start">
                 <div>
                     <h3 className="flex items-center gap-2 text-[#09339B] text-[20px] font-semibold">
                     <img
