@@ -4,6 +4,27 @@ type Props = {
   data: ContactPageData;
 };
 
+/** Splits a possibly comma-separated (with or without spaces) email string into a clean list. */
+function splitEmails(value: string | undefined | null): string[] {
+  return String(value || "")
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+}
+
+function EmailLinks({ value, className }: { value: string | undefined | null; className: string }) {
+  const emails = splitEmails(value);
+  return (
+    <>
+      {emails.map((email, i) => (
+        <p><a key={`${email}-${i}`} className={className} href={`mailto:${encodeURIComponent(email)}`}>
+          {email}
+        </a></p>
+      ))}
+    </>
+  );
+}
+
 const SOCIAL_ICONS: Array<{
   key: keyof ContactPageData;
   icon: string;
@@ -42,12 +63,7 @@ export default function ContactInfo({ data }: Props) {
           <h3 className="mb-2 text-[20px] font-medium text-[#252525] xl:text-[30px]">
             {data.emailCardTitle}
           </h3>
-          <a
-            className="text-[16px] text-gray-600 hover:text-[#09339B]"
-            href={`mailto:${encodeURIComponent(data.email)}`}
-          >
-            {data.email}
-          </a>
+          <EmailLinks value={data.email} className="text-[16px] text-gray-600 hover:text-[#09339B]" />
         </div>
 
         <div className="flex flex-col justify-center rounded-xl border border-[#9FBBFF] bg-white p-8 text-center transition hover:shadow-md">
@@ -93,16 +109,16 @@ export default function ContactInfo({ data }: Props) {
             <p className="text-left text-[16px] font-medium text-[#252525] md:text-[18px]">
               {data.marketingBlurb}
             </p>
-            <a
+            <EmailLinks
+              value={data.marketingEmail}
               className="block text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
-              href={`mailto:${encodeURIComponent(data.marketingEmail)}`}
-            >
-              {data.marketingEmail}
-            </a>
+            />
 
           </div>
           <a
-            href={`mailto:${encodeURIComponent(data.marketingEmail)}`}
+            href={`mailto:${splitEmails(data.marketingEmail)
+              .map((e) => encodeURIComponent(e))
+              .join(",")}`}
             className="w-full rounded-lg border border-[#09339B] bg-[#F9F9FB] py-2 text-center text-[#09339B] transition hover:bg-[#09339B] hover:text-white md:w-auto md:px-5 xl:px-6 xl:py-3"
           >
             {data.marketingCta}
@@ -114,15 +130,15 @@ export default function ContactInfo({ data }: Props) {
             <p className="text-left text-[16px] font-medium text-[#252525] md:text-[18px]">
               {data.accountsBlurb}
             </p>
-            <a
+            <EmailLinks
+              value={data.accountsEmail}
               className="block text-left text-[14px] text-gray-600 md:text-[16px] hover:underline"
-              href={`mailto:${encodeURIComponent(data.accountsEmail)}`}
-            >
-              {data.accountsEmail}
-            </a>
+            />
           </div>
           <a
-            href={`mailto:${encodeURIComponent(data.accountsEmail)}`}
+            href={`mailto:${splitEmails(data.accountsEmail)
+              .map((e) => encodeURIComponent(e))
+              .join(",")}`}
             className="w-full rounded-lg border border-[#09339B] bg-[#F9F9FB] py-2 text-center text-[#09339B] transition hover:bg-[#09339B] hover:text-white md:w-auto md:px-5 xl:py-3 xl:px-6"
           >
             {data.accountsCta}
