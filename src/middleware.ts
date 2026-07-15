@@ -18,6 +18,30 @@ export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
 
   if (shouldFetchGlobalSeoForPathname(pathname)) {
+    const redirectApiBase = resolveApiBaseForEdge(request);
+    const redirectPathParam = pathname === "" ? "/" : pathname;
+    const redirectUrl = `${redirectApiBase}/platform/redirects/by-path?path=${encodeURIComponent(redirectPathParam)}`;
+    try {
+      const redirectRes = await fetch(redirectUrl, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (redirectRes.ok) {
+        const body = (await redirectRes.json()) as {
+          data?: { new_path?: string; redirect_type?: string };
+        };
+        const newPath = body?.data?.new_path?.trim();
+        if (newPath) {
+          const status = body?.data?.redirect_type === "302" ? 302 : 301;
+          return NextResponse.redirect(new URL(newPath, request.url), status);
+        }
+      }
+    } catch {
+      /* non-blocking */
+    }
+  }
+
+  if (shouldFetchGlobalSeoForPathname(pathname)) {
     const apiBase = resolveApiBaseForEdge(request);
     const pathParam = pathname === "" ? "/" : pathname;
     const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
