@@ -10,6 +10,7 @@ import Gallery from "@/components/layout/course/Gallerysection";
 import TrendingCourses from "@/components/layout/course/TrendingCourses";
 import Breadcrumbs from "@/components/Breadcrumb";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
+import { readMiddlewareSeoHeader } from "@/lib/seo/normalize";
 import {
   getCourseBySlugOrId,
   getCoursePageSettingsPublic,
@@ -22,6 +23,7 @@ import type {
   CourseBatch,
   MediaTestimonial,
   PublicCourse,
+  SeoMetadata,
 } from "@/types/models.types";
 
 interface CoursePageProps {
@@ -32,6 +34,8 @@ interface CoursePageProps {
   alumniLogos: { name?: string; logo_url?: string; link?: string }[];
   testimonials: MediaTestimonial[];
   isPreview?: boolean;
+  pageSeo: SeoMetadata | null;
+  seoPathname: string;
 }
 
 export default function CoursePage({
@@ -120,6 +124,9 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
       .filter((c) => String(c.id) !== String(course?.id))
       .slice(0, 6);
 
+    const seoPathname = course.slug?.trim() ? `/course/${course.slug.trim()}` : `/course/${segment}`;
+    const pageSeo = readMiddlewareSeoHeader(ctx.req.headers["x-studycafe-seo-json"]);
+
     return {
       props: {
         course,
@@ -129,6 +136,8 @@ export const getServerSideProps: GetServerSideProps<CoursePageProps> = async (
         alumniLogos: pageSettings.alumni_logos ?? [],
         testimonials,
         isPreview: !!previewToken,
+        pageSeo,
+        seoPathname,
       },
     };
   });
