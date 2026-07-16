@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import PhoneInput from "react-phone-number-input";
@@ -11,6 +11,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import IndianStatesList  from "indian-states-cities-list";
 import countryList from "country-list";
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import { getMasterList } from "@/services/platform.service";
 
 const FIELD_ERR_CLASS = "border border-red-500";
 const INPUT_CLASS = "w-full border border-gray-300 px-3 py-1";
@@ -47,6 +48,26 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [professions, setProfessions] = useState<any[]>([]);
+  const [loadingProfessions, setLoadingProfessions] = useState(false);
+  useEffect(() => {
+    const loadProfessions = async () => {
+      try {
+        setLoadingProfessions(true);
+
+        const data:any = await getMasterList();
+        console.log(data?.data,"data")
+
+        setProfessions(data?.data || []);
+      } catch (error) {
+        console.error("Failed to load professions:", error);
+      } finally {
+        setLoadingProfessions(false);
+      }
+    };
+
+    loadProfessions();
+  }, []);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -222,31 +243,31 @@ const handleChange = (
     }
   }
 
-  const professions = [
-    "Accountant",
-    "B.Com",
-    "CA: Business",
-    "CA: Job",
-    "CA: Practice",
-    "CMA",
-    "CS",
-    "CFA",
-    "Finance Professional",
-    "LLB",
-    "M.Com",
-    "MBA",
-    "Student: B.Com",
-    "Student: CA- CPT / Foundation",
-    "Student: CA- Final / Final New",
-    "Student: CA- IPC / IPCC / Inter",
-    "Student: CFA",
-    "Student: CMA",
-    "Student: CS",
-    "Student: MBA",
-    "Student: Others",
-    "Taxpayer",
-    "Others"
-  ];
+  // const professions = [
+  //   "Accountant",
+  //   "B.Com",
+  //   "CA: Business",
+  //   "CA: Job",
+  //   "CA: Practice",
+  //   "CMA",
+  //   "CS",
+  //   "CFA",
+  //   "Finance Professional",
+  //   "LLB",
+  //   "M.Com",
+  //   "MBA",
+  //   "Student: B.Com",
+  //   "Student: CA- CPT / Foundation",
+  //   "Student: CA- Final / Final New",
+  //   "Student: CA- IPC / IPCC / Inter",
+  //   "Student: CFA",
+  //   "Student: CMA",
+  //   "Student: CS",
+  //   "Student: MBA",
+  //   "Student: Others",
+  //   "Taxpayer",
+  //   "Others"
+  // ];
 
   const states = IndianStatesList.STATES_OBJECT.map(s => s.value);
   const countries = countryList.getNames();
@@ -388,9 +409,9 @@ const handleChange = (
                 className={labelCls(!!fe.profession) + " bg-white py-2"}
             >
               <option value="" className="">Select</option>
-              {professions.map((item, index) => (
-                <option key={index} value={item.toLowerCase()} >
-                  {item}
+              {professions?.map((item, index) => (
+                <option key={index} value={item.title.toLowerCase()} >
+                  {item.title}
                 </option>
               ))}
               </select>

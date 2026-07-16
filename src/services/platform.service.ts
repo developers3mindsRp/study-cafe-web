@@ -55,6 +55,19 @@ export const getMemberships = async (): Promise<Membership[]> => {
   return response.data.data;
 };
 
+
+
+export const getMasterList = async (): Promise<any[]> => {
+ 
+  const response = await axiosInstance.get<ApiResponse<any[]>>(
+    '/platform/professions'
+  );
+
+
+  return response.data.data;
+};
+
+
 /** Single membership plan by slug (for plan detail / checkout page) */
 export const getMembershipBySlug = async (slug: string): Promise<Membership | null> => {
   try {
