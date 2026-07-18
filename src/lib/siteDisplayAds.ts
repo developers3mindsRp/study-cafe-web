@@ -72,7 +72,7 @@ function insertAfterNthClosingPTag(html: string, n: number, insertion: string): 
 // }
 export function injectBetweenArticleAdsIntoHtml(
   html: string,
-  adHtml: string
+  adHtml: any
 ): string {
   if (!html) return html;
 if (typeof window === "undefined") {
