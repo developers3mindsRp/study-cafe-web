@@ -344,24 +344,6 @@ export default function CourseOverview({
       });
   }
 
-  // Total course duration from all curriculum days
-  const totalCourseMinutes: number = (() => {
-    if (!course?.curriculum) return 0;
-    try {
-      const parsed: any[] = Array.isArray(course.curriculum)
-        ? course.curriculum
-        : JSON.parse(course.curriculum as string);
-      if (!Array.isArray(parsed)) return 0;
-      return parsed.reduce((sum: number, day: any) => {
-        const n = parseInt(String(day?.total_duration ?? ""), 10);
-        return sum + (Number.isFinite(n) && n > 0 ? n : 0);
-      }, 0);
-    } catch {
-      return 0;
-    }
-  })();
-
-
   const contentItems1 = useMemo(() => {
       const items: {
         title: string;
@@ -636,20 +618,6 @@ export default function CourseOverview({
             >
               Course Content
             </h2>
-             {totalCourseMinutes > 0 && (
-                <p className="text-[14px] md:text-[16px] text-[#3a3c3e] mb-4">
-                  Total Duration:{" "}
-                  <span className="font-semibold">
-                    {(() => {
-                      const h = Math.floor(totalCourseMinutes / 60);
-                      const m = totalCourseMinutes % 60;
-                      if (h > 0 && m > 0) return `${h} hr ${m} min`;
-                      if (h > 0) return `${h} hr`;
-                      return `${m} min`;
-                    })()}
-                  </span>
-                </p>
-              )}
              <div className="w-full md:mt-10 space-y-3 text-left container px-4">
                 {displayContent.map((item, index) => (
                   <div key={index} className="shadow-md rounded-lg overflow-hidden">

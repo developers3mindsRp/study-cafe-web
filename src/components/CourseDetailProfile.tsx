@@ -6,7 +6,7 @@ import Certificate from "./Certificate";
 import ReviewPage from "./Review";
 import VimeoPlayer from "@/components/learning/VimeoPlayer";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
-import { sessionListLabel } from "@/utils/sessionLabel";
+import { dayHeadingLabel, sessionListLabel } from "@/utils/sessionLabel";
 import type { ProgressSessionRow } from "@/services/progress.service";
 import {
   firstVimeoIdFromSession,
@@ -427,7 +427,7 @@ export default function CourseDetailProfile({
                             <img src="/images/zipicon.png" className="w-[25px]"/>
 
                           }
-                          <a href={file?.file?.url} className="text-[#09339b] ml-2">Download file {sectionHeading}: {file?.file?.label}</a>
+                          <a href={file?.file?.url} className="text-[#09339b] ml-2">{file?.file?.label}</a>
                         </div>
                         }
                       </>
@@ -442,7 +442,7 @@ export default function CourseDetailProfile({
 
           {sortedDays.map((day) => {
             const daySessions = sessionsByDay.get(day) ?? [];
-            const dayLabel = `Day ${day}`;
+            const dayLabel = dayHeadingLabel(day, daySessions);
             return (
               <div key={day} className="border-b pb-3">
                 <button
@@ -520,7 +520,7 @@ export default function CourseDetailProfile({
 
           {sortedDays.map((day) => {
             const daySessions = sessionsByDay.get(day) ?? [];
-            const dayLabel = `Day ${day}`;
+            const dayLabel = dayHeadingLabel(day, daySessions);
             return (
               <div key={day} className="border-b pb-3">
                 <button
