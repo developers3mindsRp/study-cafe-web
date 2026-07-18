@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "@/providers/AuthProvider";
@@ -14,7 +14,7 @@ import type {
 } from "@/types/models.types";
 import { resolveBlogImageSrc } from "./blogImage";
 import { resolveApiAssetUrl } from "@/utils/mediaUrl";
-import { injectBetweenArticleAdsIntoHtml } from "@/lib/siteDisplayAds";
+import { injectBetweenArticleAdsIntoHtml, activateAdScripts } from "@/lib/siteDisplayAds";
 import { articleHref } from "@/lib/articlePaths";
 
 function formatDate(dateStr: string | null | undefined) {
@@ -407,10 +407,17 @@ export default function Premium_user({
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
 
+  // In-article ad code arrives through dangerouslySetInnerHTML, so its <script>
+  // tags are inert until re-created client-side.
+  const bodyRootRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    activateAdScripts(bodyRootRef.current);
+  }, [articleBodyHtml, canReadFull]);
+
 console.log(article?.article_types, "article")
 
   return (
-    <section className="w-full bg-white py-2 container mx-auto px-4">
+    <section ref={bodyRootRef} className="w-full bg-white py-2 container mx-auto px-4">
       <div className="space-y-6">
         {article ? (
           <>

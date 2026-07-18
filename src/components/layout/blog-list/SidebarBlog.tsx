@@ -6,6 +6,7 @@ import type {
   SiteAdsSlot,
 } from "@/types/models.types";
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
+import { slotHasContent } from "@/lib/siteDisplayAds";
 import { cardThumb } from "./blogImage";
 
 import { articleHref } from "@/lib/articlePaths";
@@ -30,7 +31,7 @@ export default function SidebarBlog({
   popularTags = [],
   detailSidebarAds,
 }: Props) {
-  const sidebarTop = detailSidebarAds?.slice(0, 2).filter((s) => s?.image_url?.trim()) ?? [];
+  const sidebarTop = detailSidebarAds?.slice(0, 2).filter(slotHasContent) ?? [];
 
   return (
     <div className="space-y-5 sticky top-24">
