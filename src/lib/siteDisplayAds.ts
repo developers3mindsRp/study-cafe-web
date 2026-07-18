@@ -75,7 +75,9 @@ export function injectBetweenArticleAdsIntoHtml(
   adHtml: string
 ): string {
   if (!html) return html;
-
+if (typeof window === "undefined") {
+  return html;
+}
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 
