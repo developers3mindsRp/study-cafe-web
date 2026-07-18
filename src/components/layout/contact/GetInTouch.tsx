@@ -123,7 +123,7 @@ export default function GetInTouch({ data }: Props) {
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40px] bg-black/20 blur-3xl rounded-full"></div>
           <div className="relative z-10">
             <img
-              src="/images/study-logo.svg"
+              src="/images/studycafe_logo_white.svg"
               alt=""
               width={221}
               height={250}
