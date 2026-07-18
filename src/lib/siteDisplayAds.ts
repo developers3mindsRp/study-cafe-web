@@ -51,22 +51,48 @@ function insertAfterNthClosingPTag(html: string, n: number, insertion: string): 
  * Inject in-article banners after the Nth paragraph (tracked by literal `</p>` tags).
  * Inserts larger paragraph index first so earlier indices stay stable.
  */
+// export function injectBetweenArticleAdsIntoHtml(
+//   html: string,
+//   between: SiteDisplayAds['between_article'] | undefined,
+// ): string {
+//   if (!between || !html) return html;
+
+//   type Row = { n: number; html: string | null };
+//   const rows: Row[] = [
+//     { n: 6, html: bannerSnippetFromSlot(between.after_paragraph_6) },
+//     { n: 3, html: bannerSnippetFromSlot(between.after_paragraph_3) },
+//   ];
+
+//   let out = html;
+//   for (const { n, html: snippet } of rows) {
+//     if (!snippet) continue;
+//     out = insertAfterNthClosingPTag(out, n, snippet);
+//   }
+//   return out;
+// }
 export function injectBetweenArticleAdsIntoHtml(
   html: string,
-  between: SiteDisplayAds['between_article'] | undefined,
+  adHtml: string
 ): string {
-  if (!between || !html) return html;
+  if (!html) return html;
 
-  type Row = { n: number; html: string | null };
-  const rows: Row[] = [
-    { n: 6, html: bannerSnippetFromSlot(between.after_paragraph_6) },
-    { n: 3, html: bannerSnippetFromSlot(between.after_paragraph_3) },
-  ];
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
 
-  let out = html;
-  for (const { n, html: snippet } of rows) {
-    if (!snippet) continue;
-    out = insertAfterNthClosingPTag(out, n, snippet);
+  // Only paragraphs outside tables
+  const paragraphs = Array.from(doc.querySelectorAll("p")).filter(
+    (p) => !p.closest("table")
+  );
+
+  if (paragraphs.length < 4) {
+    return html;
   }
-  return out;
+
+  const adContainer = doc.createElement("div");
+  adContainer.innerHTML = adHtml;
+
+  // Insert after the 3rd paragraph (outside tables)
+  paragraphs[2].after(adContainer);
+
+  return doc.body.innerHTML;
 }
