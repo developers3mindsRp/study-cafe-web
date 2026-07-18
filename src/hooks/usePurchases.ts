@@ -21,7 +21,10 @@ export const useUserPurchases = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: queryKeys.purchases.list(),
     queryFn: purchasesService.getUserPurchases,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 0,
+    // Global default is refetchOnMount:false; a course bought this session
+    // would otherwise not show until the cache is dropped.
+    refetchOnMount: 'always',
     enabled: options?.enabled ?? true,
   });
 };
@@ -31,7 +34,8 @@ export const useUserCourses = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [...queryKeys.user.all, 'courses'],
     queryFn: userService.getUserCourses,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 0,
+    refetchOnMount: 'always',
     enabled: options?.enabled ?? true,
   });
 };
