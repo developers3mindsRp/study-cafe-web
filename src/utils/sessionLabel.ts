@@ -18,3 +18,19 @@ export function sessionListLabel(
 
   return `Day ${s.dayNumber} · Section ${s.sectionIndex + 1}`;
 }
+
+/**
+ * Heading for a day group: "Day N", unless the day holds a single session
+ * with a custom section title, in which case that title stands in.
+ */
+export function dayHeadingLabel(
+  day: number,
+  daySessions: ProgressSessionRow[]
+): string {
+  if (daySessions.length === 1) {
+    const custom = daySessions[0].sectionTitle?.trim();
+    if (custom) return custom;
+  }
+
+  return `Day ${day}`;
+}
