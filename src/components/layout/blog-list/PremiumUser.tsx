@@ -188,13 +188,20 @@ function DownloadButton({
 }) {
   const resolvedUrl = resolveApiAssetUrl(downloadUrl);
 
-  const handleClick = () => {
-    if (!canDownload) {
-      onGated();
-      return;
-    }
-    window.open(resolvedUrl, "_blank", "noopener,noreferrer");
-  };
+ const handleClick = async () => {
+  if (!canDownload) {
+    onGated();
+    return;
+  }
+
+  const newTab = window.open("", "_blank");
+
+  // Do async work here if needed
+
+  if (newTab) {
+    newTab.location.href = resolvedUrl;
+  }
+};
 console.log(article_types[0]?.name,"article_types")
   return (
     <div className="flex justify-center pt-2">
@@ -219,7 +226,7 @@ console.log(article_types[0]?.name,"article_types")
           <line x1="12" y1="18" x2="12" y2="12" />
           <line x1="9" y1="15" x2="15" y2="15" />
         </svg>
-        To Read Full {article_types[0]?.name}, Download PDF Given Below
+       Click Here {article_types[0]?.name}, Download PDF Given Below
       </button>
     </div>
   );
