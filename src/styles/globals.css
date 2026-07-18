@@ -508,3 +508,30 @@ h6 {
     max-width: 40%;
     margin: 0 auto;
 }
+
+table.article-table  td {
+    border: 1px solid #ddd;
+    padding: 9px 14px;
+}
+table.article-table {
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+table.article-table th {
+    border: 1px solid #ddd;
+    padding: 9px 14px;
+}
+
+table.article-table td .site-ad-slot img {
+    width: auto !important;
+    max-width: 100px !important;
+    margin: unset !important;
+  
+}
+table.article-table td .site-ad-slot {
+    margin: 0;
+}
+table.article-table th .site-ad-slot img {
+  display: none;
+}
