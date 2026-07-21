@@ -220,6 +220,20 @@ const PaymentSuccess = () => {
 
   const isFailed = invoice && invoice.status !== "paid";
 
+  useEffect(() => {
+      if (!invoice || invoice.status !== "paid") return;
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "purchase",
+        ecommerce: {
+          transaction_id: invoice.orderId || invoice.paymentId, // Transaction/Order ID
+          value: Number(invoice.amount) || 0,                   // Payment amount
+          currency: invoice.currency || "INR",                  // Currency
+        },
+      });
+    }, [invoice]);
+
   return (
     <div className="container max-w-3xl mx-auto px-4 py-10 md:py-16">
       <div className="border shadow-[0px_1px_2px_0px_rgba(228,229,231,0.24)] py-8 md:py-12 rounded-[10px]">
