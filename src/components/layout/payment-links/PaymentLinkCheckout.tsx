@@ -381,10 +381,11 @@ function Feature({
 
             <h3 className="text-2xl font-bold">
               {/* ₹ {amount.toFixed(2)} */}
-               {fmt(sale)}
               {mrp > sale && (
-                fmt(mrp)
+                <del className="text-[#707070] mr-2">{fmt(mrp)}</del>
               )}
+               {fmt(sale)}
+              
             </h3>
           </div>
 
