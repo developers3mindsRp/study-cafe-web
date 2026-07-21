@@ -16,8 +16,41 @@ function escapeHtmlAttr(val: string): string {
     .replace(/</g, '&lt;');
 }
 
+/** True when the slot is actually configured for its selected mode. */
+export function slotHasContent(slot: SiteAdsSlot | null | undefined): boolean {
+  if (!slot) return false;
+  if (slot.mode === 'script') return Boolean(slot.script?.trim());
+  return Boolean(slot.image_url?.trim());
+}
+
+/**
+ * Re-create every `<script>` inside `root` so the browser executes it.
+ * Scripts arriving through innerHTML / dangerouslySetInnerHTML are inert,
+ * which is how CMS ad code reaches the page. Idempotent via a done-marker.
+ */
+export function activateAdScripts(root: HTMLElement | null | undefined): void {
+  if (!root) return;
+  const scripts = Array.from(root.querySelectorAll('script'));
+  for (const old of scripts) {
+    if (old.dataset.adActivated === '1') continue;
+    const fresh = document.createElement('script');
+    for (const attr of Array.from(old.attributes)) {
+      fresh.setAttribute(attr.name, attr.value);
+    }
+    fresh.dataset.adActivated = '1';
+    fresh.text = old.text;
+    old.replaceWith(fresh);
+  }
+}
+
 /** Server-safe HTML snippet for one banner (injected next to raw article HTML). */
 export function bannerSnippetFromSlot(slot: SiteAdsSlot | undefined): string | null {
+  if (slot?.mode === 'script') {
+    const code = slot.script?.trim();
+    if (!code) return null;
+    return `<div class="site-ad-slot site-ad-script my-6 text-center">${code}</div>`;
+  }
+
   const srcRaw = slot?.image_url?.trim();
   if (!srcRaw) return null;
   const resolved = resolveApiAssetUrl(srcRaw);

@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, {useEffect} from "react";
 import type { SiteAdsSlot } from "@/types/models.types";
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
+import { slotHasContent } from "@/lib/siteDisplayAds";
 import { ArticleListItem, ArticleCategoryItem } from "@/services/platform.service";
 import { articleHref } from "@/lib/articlePaths";
 import { useRouter } from "next/router";
@@ -40,7 +41,7 @@ export default function Blog_list({
   const router = useRouter();
 
   const allCategories = [{ id: 0, name: "All", slug: "all" }, ...categories];
-  const hasListingAd = Boolean(listingSidebarAd?.image_url?.trim());
+  const hasListingAd = slotHasContent(listingSidebarAd);
 
   const buildCategoryHref = (slug: string) => {
     if (paginationMode === 'path') {
