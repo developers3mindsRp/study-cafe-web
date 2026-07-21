@@ -610,7 +610,7 @@ function validate() {
                 <div className="relative group ">
                  
 
-                  <div className=" w-[575px] rounded-lg border border-gray-200 bg-white p-4 mt-2 group-hover:block">
+                  <div className="w-full md:w-[575px] rounded-lg border border-gray-200 bg-white p-4 mt-2 group-hover:block">
                     <h4 className="mb-3 text-sm font-semibold text-[#252525]">
                       Bank Details
                     </h4>
@@ -851,7 +851,7 @@ function validate() {
       {/* Commission orders list */}
      
 
-      <div className="flex items-center justify-between mb-3">
+      <div className="md:flex items-center justify-between mb-3">
         <div>
           <h2 className="text-lg font-semibold text-[#252525]">
             Commission Orders
