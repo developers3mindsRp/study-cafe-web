@@ -1,9 +1,10 @@
 "use client";
-
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/router";
 import { isAxiosError } from "axios";
 import { Download, FileSpreadsheet, Info, Copy  } from "lucide-react";
+import { X } from "lucide-react";
+
 import {
   getMyCommissionOrders,
   getMyAffiliateDashboard,
@@ -14,6 +15,8 @@ import {
   type UserWithdrawalRequest,
 } from "@/services/order.service";
 import { useAuth } from "@/providers/AuthProvider";
+import EditProfile from "./EditProfile";
+import { useUpdateProfile, useUploadAvatar } from "@/hooks/usePurchases";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-IN", {
@@ -44,13 +47,27 @@ function firstDayOfMonth(d: Date) {
 
 export default function AffiliateReportPage() {
   const router = useRouter();
-  const user= useAuth();
+  const { user, refetchUser } = useAuth();
 
-  console.log(user.user,"user")
+  console.log(user,"user")
+    const updateProfile = useUpdateProfile();
+
+
   const today = useMemo(() => new Date(), []);
   const [fromDate, setFromDate] = useState(() => isoDateLocal(firstDayOfMonth(today)));
   const [toDate, setToDate] = useState(() => isoDateLocal(today));
   const [allTime, setAllTime] = useState(false);
+   const [form, setForm] = useState({   
+     // Bank Details
+    bank_account_holder_name: "",
+    bank_account_number: "",
+    bank_name: "",
+    bank_branch: "",
+    bank_ifsc: "",
+  });
+ const [errors, setErrors] = useState<Record<string, string>>({});
+ 
+   const [saveMsg, setSaveMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [orders, setOrders] = useState<AffiliateHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,6 +80,7 @@ export default function AffiliateReportPage() {
   const [withdrawSubmitting, setWithdrawSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showBankModal, setShowBankModal] = useState(false);
 
   const loadSummary = useCallback(async () => {
     const [dash, wd] = await Promise.all([
@@ -126,6 +144,24 @@ export default function AffiliateReportPage() {
     };
   }, []);
 
+
+
+
+    useEffect(() => {
+      if (showBankModal && user?.bank_account_holder_name) {
+        // Normalize phone: store internally as "+91XXXXXXXXXX" regardless of what comes from API
+        const rawPhone: string = user.phone ?? "";
+        const normalizedPhone = rawPhone.startsWith("+") ? rawPhone : rawPhone ? `+91${rawPhone}` : "";
+        setForm({
+        
+          bank_account_holder_name: user.bank_account_holder_name ?? "",
+          bank_account_number: user.bank_account_number ?? "",
+          bank_name: user.bank_name ?? "",
+          bank_branch: user.bank_branch ?? "",
+          bank_ifsc: user.bank_ifsc ?? "",
+        });
+      }
+    }, [user?.bank_account_holder_name]);
   const periodCommission = useMemo(
     () =>
       orders
@@ -242,6 +278,11 @@ export default function AffiliateReportPage() {
 
   const handleWithdraw = useCallback(async () => {
     const amount = parseFloat(withdrawAmount);
+     if(!user?.bank_account_holder_name){
+      setShowBankModal(true);
+      return;
+    }
+
     if (!Number.isFinite(amount) || amount <= 0) {
       setError("Enter a valid withdrawal amount.");
       return;
@@ -279,6 +320,99 @@ export default function AffiliateReportPage() {
   }
 
   const bal = dashboard?.balance;
+
+
+/*-------save banks details----------*/
+
+ 
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = e.target;
+    // Auto-uppercase GST number as the user types
+    const finalValue = name === "gst" ? value.toUpperCase() : value;
+    setForm((prev) => ({ ...prev, [name]: finalValue }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+  }
+function validate() {
+  const errs: Record<string, string> = {};
+
+  if (!form.bank_account_holder_name.trim()) {
+    errs.bank_account_holder_name = "Account holder name is required.";
+  } else if (form.bank_account_holder_name.trim().length < 3) {
+    errs.bank_account_holder_name =
+      "Account holder name must be at least 3 characters.";
+  }
+
+  if (!form.bank_account_number.trim()) {
+    errs.bank_account_number = "Account number is required.";
+  } else if (!/^\d{9,18}$/.test(form.bank_account_number.trim())) {
+    errs.bank_account_number =
+      "Account number must be between 9 and 18 digits.";
+  }
+
+  if (!form.bank_name.trim()) {
+    errs.bank_name = "Bank name is required.";
+  } else if (form.bank_name.trim().length < 2) {
+    errs.bank_name = "Enter a valid bank name.";
+  }
+
+  if (!form.bank_branch.trim()) {
+    errs.bank_branch = "Branch name is required.";
+  } else if (form.bank_branch.trim().length < 2) {
+    errs.bank_branch = "Enter a valid branch name.";
+  }
+
+  const ifsc = form.bank_ifsc.trim().toUpperCase();
+
+  if (!ifsc) {
+    errs.bank_ifsc = "IFSC code is required.";
+  } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
+    errs.bank_ifsc = "Enter a valid IFSC code.";
+  }
+
+  setErrors(errs);
+
+  return Object.keys(errs).length === 0;
+}
+
+  function handleSave() {
+    if (!validate()) return;
+    setSaveMsg(null);
+    updateProfile.mutate(
+      {
+       
+        bank_account_holder_name: form.bank_account_holder_name.trim() || undefined,
+        bank_account_number:
+          form.bank_account_number.trim() || undefined,
+        bank_name:
+          form.bank_name.trim() || undefined,
+        bank_branch:
+          form.bank_branch.trim() || undefined,
+        bank_ifsc:
+          form.bank_ifsc.trim().toUpperCase() || undefined,
+      },
+      {
+        onSuccess: () => {
+          setSaveMsg({ type: "success", text: "Profile updated successfully!" });
+          refetchUser();
+          setShowBankModal(false);
+          setTimeout(() => setSaveMsg(null), 4000);
+        },
+        onError: (err: any) => {
+          setSaveMsg({
+            type: "error",
+            text: err?.response?.data?.message || err?.message || "Failed to update profile",
+          });
+        },
+      }
+    );
+  }
+
+
+
+
+
 
 
 
@@ -437,6 +571,7 @@ export default function AffiliateReportPage() {
           approved in the system (which updates your balance). Rejected requests do not change your
           balance. Minimum withdrawal: ₹{minWithdrawal.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}.
         </p>
+        
         <div className="flex flex-col sm:flex-row gap-3 sm:items-end max-w-xl">
           <div className="flex-1">
             {/* <label className="text-sm text-[#555]">Amount (₹)</label> */}
@@ -444,67 +579,8 @@ export default function AffiliateReportPage() {
               <label className="text-sm text-[#555]">
                 Amount (₹)
               </label>
-              {
-                user.user?.bank_account_holder_name &&
-                <div className="relative group h-[18px]">
-                  <button
-                    type="button"
-                    className="text-[#09339B] hover:text-[#0F2E75]"
-                  >
-                    <Info size={16} />
-                  </button>
-
-                  <div className="absolute left-0 top-4 z-20 hidden w-80 rounded-lg border border-gray-200 bg-white p-4 shadow-xl group-hover:block">
-                    <h4 className="mb-3 text-sm font-semibold text-[#252525]">
-                      Bank Details
-                    </h4>
-
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between gap-3">
-                        <span className="text-gray-500">Account Holder</span>
-                        <span className="font-medium text-right">
-                          {user.user?.bank_account_holder_name || "Not Added"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3">
-                        <span className="text-gray-500">Account Number</span>
-                        <span className="font-medium text-right">
-                          {user.user?.bank_account_number || "Not Added"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3">
-                        <span className="text-gray-500">Bank</span>
-                        <span className="font-medium text-right">
-                          {user.user?.bank_name || "Not Added"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3">
-                        <span className="text-gray-500">Branch</span>
-                        <span className="font-medium text-right">
-                          {user.user?.bank_branch || "Not Added"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3">
-                        <span className="text-gray-500">IFSC</span>
-                        <span className="font-medium text-right">
-                          {user.user?.bank_ifsc || "Not Added"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {!user.user?.bank_account_number && (
-                      <p className="mt-3 rounded bg-yellow-50 p-2 text-xs text-yellow-700">
-                        Please update your bank details in your profile before requesting a
-                        withdrawal.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              }
+             
+             
 
          
             </div>
@@ -527,7 +603,202 @@ export default function AffiliateReportPage() {
           >
             {withdrawSubmitting ? "Submitting…" : "Submit request"}
           </button>
+          
         </div>
+         {
+                user?.bank_account_holder_name &&
+                <div className="relative group ">
+                 
+
+                  <div className=" w-[575px] rounded-lg border border-gray-200 bg-white p-4 mt-2 group-hover:block">
+                    <h4 className="mb-3 text-sm font-semibold text-[#252525]">
+                      Bank Details
+                    </h4>
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Account Holder</span>
+                        <span className="font-medium text-right">
+                          {user?.bank_account_holder_name || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Account Number</span>
+                        <span className="font-medium text-right">
+                          {user?.bank_account_number || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Bank</span>
+                        <span className="font-medium text-right">
+                          {user?.bank_name || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">Branch</span>
+                        <span className="font-medium text-right">
+                          {user?.bank_branch || "Not Added"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between gap-3">
+                        <span className="text-gray-500">IFSC</span>
+                        <span className="font-medium text-right">
+                          {user?.bank_ifsc || "Not Added"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {!user?.bank_account_number && (
+                      <p className="mt-3 rounded bg-yellow-50 p-2 text-xs text-yellow-700">
+                        Please update your bank details in your profile before requesting a
+                        withdrawal.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              }
+      {showBankModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-3xl bg-white rounded-xl shadow-xl">
+              {/* Header */}
+            <div className="flex items-center justify-between border-b px-6 py-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Bank Details
+              </h2>
+
+              <button
+                type="button"
+                onClick={() => setShowBankModal(false)}
+                className="rounded-full p-2 hover:bg-gray-100 transition"
+              >
+                <X size={22} className="text-gray-600" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="max-h-[80vh] overflow-y-auto px-6 py-2">
+             
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                      <label className="text-sm font-medium">Account Holder Name</label>
+                      <input
+                        type="text"
+                        name="bank_account_holder_name"
+                        value={form.bank_account_holder_name}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Account Holder Name"
+                      />
+                      {errors.bank_account_holder_name && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_account_holder_name}
+                          </p>
+                        )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Account Number</label>
+                      <input
+                        type="text"
+                        name="bank_account_number"
+                        value={form.bank_account_number}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Account Number"
+                      />
+
+                      {errors.bank_account_number && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.bank_account_number}
+                        </p>
+                      )}
+
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Bank Name</label>
+                      <input
+                        type="text"
+                        name="bank_name"
+                        value={form.bank_name}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Bank Name"
+                      />
+
+                        {errors.bank_name && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_name}
+                          </p>
+                        )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Branch</label>
+                      <input
+                        type="text"
+                        name="bank_branch"
+                        value={form.bank_branch}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1"
+                        placeholder="Branch Name"
+                      />
+                      {errors.bank_branch && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_branch}
+                          </p>
+                        )}
+
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium">IFSC Code</label>
+                      <input
+                        type="text"
+                        name="bank_ifsc"
+                        value={form.bank_ifsc}
+                        onChange={handleChange}
+                        className="w-full border border-[#1A1A1A] px-3 py-2 rounded-md mt-1 uppercase"
+                        placeholder="SBIN0001234"
+                        style={{ textTransform: "uppercase" }}
+                      />
+                      {errors.bank_ifsc && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.bank_ifsc}
+                          </p>
+                        )}
+                    </div>
+
+                  </div>
+                    {/* Save + Messages */}
+                 {saveMsg && (
+                    <p className={`text-sm  ${saveMsg.type === "success" ? "text-green-600" : "text-red-500"}`}>
+                      {saveMsg.text}
+                    </p>
+                  )}
+                <div className="flex justify-between items-center mt-6">
+                 
+                  <div className="w-full">
+                    <button
+                      type="button"
+                      disabled={updateProfile.isPending}
+                      onClick={handleSave}
+                      className="bg-[#09339B] px-5 py-2 text-white rounded-md disabled:opacity-60 w-full"
+                    >
+                      {updateProfile.isPending ? "Saving…" : "Save Changes"}
+                    </button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      )}
+       
       </div>
 
       {/* Your withdrawal history */}
