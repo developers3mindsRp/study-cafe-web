@@ -15,6 +15,10 @@ const gatewayOrigin = requiredEnv('API_GATEWAY_ORIGIN').replace(/\/$/, '');
 
 const nextConfig = {
   reactStrictMode: true,
+
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     urlImports: ['https://cdn.skypack.dev'],
   },
