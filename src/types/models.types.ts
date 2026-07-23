@@ -14,14 +14,14 @@ export interface CurriculumDay {
 
 // User Model (auth-service / public site)
 export interface User {
-  id: string;
-  email: string;
-  name: string;
+  id?: string;
+  email?: string;
+  name?: string;
   /** Short about text from users.bio */
   bio?: string | null;
   avatar?: string;
   /** e.g. user, admin, super_admin — from auth-service Role */
-  role: string;
+  role?: string;
   permissions?: string[];
   /** Active membership window in user_memberships (from /auth/me & login). */
   hasActiveMembership?: boolean;
@@ -667,14 +667,9 @@ export interface ArticleNotification {
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
-export type SiteAdsSlotMode = 'image' | 'script';
-
 export interface SiteAdsSlot {
-  /** "image" → image_url + link_url; "script" → raw ad-network markup. */
-  mode?: SiteAdsSlotMode;
   image_url: string;
   link_url: string;
-  script?: string;
 }
 
 export interface SiteDisplayAds {

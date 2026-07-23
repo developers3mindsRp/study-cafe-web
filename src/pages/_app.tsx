@@ -29,8 +29,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://connect.facebook.net" />
       </Head>
-
+      
       {/* ==================== Google Tag Manager ==================== */}
+   
+
       <Script id="gtm" strategy="afterInteractive">
         {`
           (function(w,d,s,l,i){
@@ -39,14 +41,11 @@ export default function App({ Component, pageProps }: AppProps) {
               'gtm.start': new Date().getTime(),
               event:'gtm.js'
             });
-
             var f=d.getElementsByTagName(s)[0],
                 j=d.createElement(s),
                 dl=l!='dataLayer'?'&l='+l:'';
-
             j.async=true;
             j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-
             f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-TRZDN6BG');
         `}
@@ -148,17 +147,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Script>
 
       {/* ==================== GTM NoScript ==================== */}
-      <noscript>
-        <iframe
-          src="https://www.googletagmanager.com/ns.html?id=GTM-TRZDN6BG"
-          height="0"
-          width="0"
-          style={{
-            display: "none",
-            visibility: "hidden",
-          }}
-        />
-      </noscript>
+    
 
       {/* ==================== Facebook Pixel NoScript ==================== */}
       <noscript>
@@ -170,6 +159,7 @@ export default function App({ Component, pageProps }: AppProps) {
           alt=""
         />
       </noscript>
+   
 
       <QueryClientProvider client={queryClient}>
         <HydrationBoundary state={pageProps.dehydratedState}>

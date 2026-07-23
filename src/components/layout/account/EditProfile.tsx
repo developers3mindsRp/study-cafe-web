@@ -520,7 +520,7 @@ export default function EditProfile({
                   </div>
                 </div>
                 {/* Bank Details */}
-                <div className="mt-6">
+                {/* <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-4">Bank Details</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -616,7 +616,7 @@ export default function EditProfile({
                     </div>
 
                   </div>
-                </div>
+                </div> */}
 
                 {/* Save + Messages */}
                  {saveMsg && (
