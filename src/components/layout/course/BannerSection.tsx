@@ -152,11 +152,14 @@ export default function BannerSection({
   const myPurchase = useMemo(() => {
     if (!course?.id || !purchases?.length) return undefined;
     const cid = String(course.id);
-    return purchases
+    // A course can have several purchase rows (e.g. an old expired buy + a fresh one).
+    // Only a purchase whose access is still valid counts as "owned" — otherwise the
+    // learner must buy again. Prefer an active row; if every row is expired, treat the
+    // course as not owned so "Buy Now" is shown instead of "Go to My courses".
+    const mine = purchases
       .filter(isUserCourseOrderPurchase)
-      .find(
-        (p) => p.status === "completed" && String(p.courseId) === cid,
-      );
+      .filter((p) => p.status === "completed" && String(p.courseId) === cid);
+    return mine.find((p) => p.accessStatus !== "expired");
   }, [course?.id, purchases]);
 
   const isOwned = !!myPurchase;
