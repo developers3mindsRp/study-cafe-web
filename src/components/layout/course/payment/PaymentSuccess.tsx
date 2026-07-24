@@ -64,7 +64,7 @@ const PaymentSuccess = () => {
     if (fromPaymentLink) return;
     if (loading || !invoice) return;
     if (countdown <= 0) {
-      router.push(`/payment-detail?orderId=${invoice.orderId}`);
+      router.push(`/payment-detail?order_id${invoice.orderId}`);
       return;
     }
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
@@ -323,7 +323,7 @@ useEffect(() => {
               </p>
 
               <Link
-                href={`/payment-detail?orderId=${invoice.orderId}`}
+                href={`/payment-detail?order_id${invoice.orderId}`}
                 className="inline-block w-full sm:w-auto mt-6 bg-[#09339B] hover:bg-white px-8 md:px-16 py-3 text-white hover:text-[#09339B] border border-[#09339B] rounded-[10px] transition"
               >
                 View Payment Details

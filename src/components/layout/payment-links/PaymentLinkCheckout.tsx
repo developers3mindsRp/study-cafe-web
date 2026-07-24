@@ -170,7 +170,7 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
 
       if (orderData.free && orderData.paid) {
         router.push(
-          `/payment-success?orderId=${encodeURIComponent(orderData.orderId)}&payment_link=1`,
+          `/payment-success?order_id${encodeURIComponent(orderData.orderId)}&payment_link=1`,
         );
         return;
       }
@@ -205,7 +205,7 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
               razorpay_signature: response.razorpay_signature,
             });
             router.push(
-              `/payment-success?orderId=${encodeURIComponent(orderData.orderId)}&payment_link=1`,
+              `/payment-success?order_id${encodeURIComponent(orderData.orderId)}&payment_link=1`,
             );
           } catch (verifyErr: unknown) {
             const msg =

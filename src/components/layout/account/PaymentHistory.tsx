@@ -133,7 +133,7 @@ export default function PaymentHistory() {
   const emptySearch = !isLoading && !isError && data.length > 0 && filtered.length === 0;
 
   const handleView = (orderID: string) => {
-    router.push(`/payment-detail?orderId=${orderID}`);
+    router.push(`/payment-detail?order_id${orderID}`);
   };
 
   const handleDownload = async (orderID: string) => {

@@ -569,7 +569,7 @@ console.log(appliedCoupon,"appliedCoupon")
               });
 
               if (orderData.free && orderData.paid) {
-                router.push(`/payment-success?orderId=${orderData.orderId}`);
+                router.push(`/payment-success?order_id${orderData.orderId}`);
                 return;
               }
 
@@ -596,7 +596,7 @@ console.log(appliedCoupon,"appliedCoupon")
                       razorpay_payment_id: response.razorpay_payment_id,
                       razorpay_signature: response.razorpay_signature,
                     });
-                    router.push(`/payment-success?orderId=${orderData.orderId}`);
+                    router.push(`/payment-success?order_id${orderData.orderId}`);
                   } catch {
                     alert("Payment verification failed. Please contact support.");
                   }
@@ -613,7 +613,7 @@ console.log(appliedCoupon,"appliedCoupon")
               const rzp = new window.Razorpay(options);
               rzp.on("payment.failed", () => {
                 setPaymentLoading(false);
-                router.push(`/payment-success?orderId=${orderData.orderId}`);
+                router.push(`/payment-success?order_id${orderData.orderId}`);
               });
               rzp.open();
             } catch (err: any) {
