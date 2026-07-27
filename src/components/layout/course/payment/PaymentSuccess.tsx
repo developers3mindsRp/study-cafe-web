@@ -219,27 +219,22 @@ const PaymentSuccess = () => {
   const itemName = invoice.itemName || itemLabel;
 
   const isFailed = invoice && invoice.status !== "paid";
-
 useEffect(() => {
   if (!invoice || invoice.status !== "paid") return;
 
-  const timer = setTimeout(() => {
-    window.dataLayer = window.dataLayer;
+  window.dataLayer = window.dataLayer || [];
 
-    window.dataLayer.push({
-      event: "purchase",
-      ecommerce: {
-        transaction_id: invoice.paymentId,
-        value: Number(invoice.amount),
-        currency: invoice.currency || "INR",
-        order_id: invoice.orderId,
-      },
-    });
+  window.dataLayer.push({
+    event: "purchase",
+    ecommerce: {
+      transaction_id: invoice.paymentId,
+      value: Number(invoice.amount),
+      currency: invoice.currency || "INR",
+      order_id: invoice.orderId,
+    },
+  });
 
-    console.log("Purchase Event Fired");
-  }, 500);
-
-  return () => clearTimeout(timer);
+  console.log("Purchase Event Fired");
 }, [invoice]);
   return (
     <div className="container max-w-3xl mx-auto px-4 py-10 md:py-16">
