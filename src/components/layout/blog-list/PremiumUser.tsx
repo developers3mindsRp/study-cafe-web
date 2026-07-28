@@ -202,7 +202,10 @@ function DownloadButton({
     newTab.location.href = resolvedUrl;
   }
 };
-console.log(article_types[0]?.name,"article_types")
+  const downloadLabel = article_types?.[0]?.name
+    ? `Click Here to Download ${article_types[0].name}`
+    : "Click Here to Download PDF";
+
   return (
     <div className="flex justify-center pt-2">
       <button
@@ -226,7 +229,7 @@ console.log(article_types[0]?.name,"article_types")
           <line x1="12" y1="18" x2="12" y2="12" />
           <line x1="9" y1="15" x2="15" y2="15" />
         </svg>
-       Click Here {article_types[0]?.name}, Download PDF Given Below
+        {downloadLabel}
       </button>
     </div>
   );
