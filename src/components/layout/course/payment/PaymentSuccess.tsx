@@ -13,7 +13,7 @@ function normalizeOrderId(raw: string | string[] | undefined): string | undefine
 
 const PaymentSuccess = () => {
   const router = useRouter();
-  const orderId = normalizeOrderId(router.query.orderId);
+  const orderId = normalizeOrderId(router.query.order_id);
   const fromPaymentLink =
     router.query.payment_link === "1" || router.query.payment_link === "true";
 

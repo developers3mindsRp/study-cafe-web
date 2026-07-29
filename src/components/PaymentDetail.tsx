@@ -7,7 +7,7 @@ import { getOrderInvoice, type OrderInvoice } from "@/services/order.service";
 
 export default function PaymentDetail() {
   const router = useRouter();
-  const orderId = router.query.orderId as string | undefined;
+  const orderId = router.query.order_id as string | undefined;
 
   const [invoice, setInvoice] = useState<OrderInvoice | null>(null);
   const [loading, setLoading] = useState(true);
