@@ -99,8 +99,8 @@ const handlePageChange = async (page: number) => {
     { length: endPage - startPage + 1 },
     (_, i) => startPage + i
   );
-console.log(caseLaws,"caseLaws")
-console.log(typeof document === 'undefined',"typeof document === 'undefined'")
+// console.log(caseLaws,"caseLaws")
+// console.log(typeof document === 'undefined',"typeof document === 'undefined'")
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4">
@@ -284,7 +284,7 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
         : "";
 
     const token = ctx.req.cookies.auth_token;
-    console.log(ctx.req.cookies.auth_token,"ctx.req.cookies.auth_token")
+    // console.log(ctx.req.cookies.auth_token,"ctx.req.cookies.auth_token")
 
     try {
       const [caseLawData, siteAds] = await Promise.all([
@@ -298,7 +298,7 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
         }),
       ]);
 
-      console.log(caseLawData.data,"caseLawData.data")
+      // console.log(caseLawData.data,"caseLawData.data")
 
       return {
         props: {

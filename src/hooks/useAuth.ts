@@ -153,7 +153,7 @@ export const useChangePassword = () => {
   return useMutation({
     mutationFn: (data: ChangePasswordData) => authService.changePassword(data),
     onSuccess: () => {
-      console.log('Password changed successfully');
+      // console.log('Password changed successfully');
     },
     onError: (error: any) => {
       console.error('Password change failed:', error);
@@ -166,7 +166,7 @@ export const useRequestPasswordReset = () => {
   return useMutation({
     mutationFn: (email: string) => authService.requestPasswordReset(email),
     onSuccess: () => {
-      console.log('Password reset email sent');
+      // console.log('Password reset email sent');
     },
   });
 };
@@ -179,7 +179,7 @@ export const useResetPassword = () => {
     mutationFn: ({ token, password }: { token: string; password: string }) =>
       authService.resetPassword(token, password),
     onSuccess: () => {
-      console.log('Password reset successful');
+      // console.log('Password reset successful');
       router.push('/login');
     },
   });

@@ -153,7 +153,7 @@ const Details_downloads = ({ fileSlug }: Props) => {
             </section>
         );
     }
-console.log(file,"file")
+// console.log(file,"file")
   return (
       <>
           {membershipModalOpen && (

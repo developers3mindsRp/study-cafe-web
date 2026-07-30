@@ -60,7 +60,7 @@ interface Props {
 
 export default function MemberPrice({ plan }: Props) {
 
-  console.log(plan,"plan details")
+  // console.log(plan,"plan details")
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
   const [summaryData, setSummaryData] = useState(plan);
@@ -193,7 +193,7 @@ const handleApplyCoupon = useCallback(
   };
 
   if (!plan) return null;
-console.log(appliedCoupon,"appliedCoupon")
+// console.log(appliedCoupon,"appliedCoupon")
   if (openCoupon) {
     return (
       <div className="w-full max-w-sm mx-auto">

@@ -234,7 +234,7 @@ useEffect(() => {
     },
   });
 
-  console.log("Purchase Event Fired");
+  // console.log("Purchase Event Fired");
 }, [invoice]);
   return (
     <div className="container max-w-3xl mx-auto px-4 py-10 md:py-16">

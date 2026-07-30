@@ -77,7 +77,7 @@ export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
   const ogImage = merged.ogImageUrl?.trim();
   const canonical = merged.canonicalUrl?.trim();
 
-  console.log(ogImage,"ogImage")
+  // console.log(ogImage,"ogImage")
 
   return (
     <Head key={pathname}>

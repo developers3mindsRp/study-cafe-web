@@ -18,7 +18,7 @@ type CertificateData = {
 };
 
 export default function Certificate({ onClose, onDownload, courseId }: CertifyModalProps) {
-  console.log(courseId,"courseId")
+  // console.log(courseId,"courseId")
 const certificateRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
  const [certificateData, setCertificateData] = useState<CertificateData | null>(null);

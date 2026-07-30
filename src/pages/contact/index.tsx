@@ -18,7 +18,7 @@ type ContactUsProps = {
 
 export default function ContactUsIndex({ contactData, seo }: ContactUsProps) {
   const meta = contactSeoOrFallback(seo, contactData);
-console.log("ContactUsIndex meta:", contactData);
+// console.log("ContactUsIndex meta:", contactData);
   return (
     <>
       <Head>
