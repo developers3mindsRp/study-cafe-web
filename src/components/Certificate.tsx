@@ -72,7 +72,7 @@ const handleDownload = async () => {
       (window as any).ReactNativeWebView.postMessage(
         JSON.stringify({
           type:"DOWNLOAD_CERTIFICATE",
-          image:"data:image/png;base64,XXXX"
+          image: dataUrl,   // <-- send actual base64
         })
       );
       return;
