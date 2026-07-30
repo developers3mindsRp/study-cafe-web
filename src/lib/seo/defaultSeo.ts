@@ -28,9 +28,34 @@ export function defaultMetaTitleForPath(pathname: string): string {
   return `${label} | ${SITE_BRAND}`;
 }
 
+/** Site origin, or `undefined` when `NEXT_PUBLIC_SITE_URL` is unset. */
+function siteOrigin(): string | undefined {
+  try {
+    return getSiteUrl() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Absolute URL for og/canonical tags. Course + article SEO rows store relative
+ * paths (`/course/foo`); Facebook, LinkedIn and WhatsApp reject a relative
+ * `og:url`/`og:image` and fall back to their cached scrape of the page.
+ */
+export function toAbsoluteUrl(value: string | null | undefined): string | null {
+  const raw = value?.trim();
+  if (!raw) return null;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (raw.startsWith("//")) return `https:${raw}`;
+
+  const base = siteOrigin();
+  if (!base) return null;
+  return `${base}${raw.startsWith("/") ? raw : `/${raw}`}`;
+}
+
 /** Absolute canonical when `NEXT_PUBLIC_SITE_URL` is set and API omitted one. */
 export function defaultCanonicalUrlForPath(pathname: string): string | undefined {
-  const base = getSiteUrl();
+  const base = siteOrigin();
   if (!base) return undefined;
   let path = pathname.split("?")[0] ?? "/";
   if (!path.startsWith("/")) path = `/${path}`;
@@ -61,9 +86,11 @@ export function mergeGlobalSeoDefaults(
     metaKeywords: api?.metaKeywords?.trim() || DEFAULT_META_KEYWORDS,
     robots: api?.robots?.trim() || DEFAULT_ROBOTS,
     canonicalUrl:
-      api?.canonicalUrl?.trim() || defaultCanonicalUrlForPath(pathname) || null,
+      toAbsoluteUrl(api?.canonicalUrl) ||
+      defaultCanonicalUrlForPath(pathname) ||
+      null,
     ogTitle: api?.ogTitle?.trim() || null,
     ogDescription: api?.ogDescription?.trim() || null,
-    ogImageUrl: api?.ogImageUrl?.trim() || null,
+    ogImageUrl: toAbsoluteUrl(api?.ogImageUrl),
   };
 }

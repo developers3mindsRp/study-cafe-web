@@ -66,4 +66,5 @@ export interface PublicTrackingSettings {
   tracking_meta_pixel: string | null;
   tracking_google_analytics: string | null;
   tracking_linkedin_pixel: string | null;
+  tracking_google_analytics_body: string | null;
 }

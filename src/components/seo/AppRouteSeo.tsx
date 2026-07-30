@@ -74,10 +74,9 @@ export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
   const ogDescription =
     merged.ogDescription?.trim() || description;
 
-  const ogImage = merged.ogImageUrl?.trim();
-  const canonical = merged.canonicalUrl?.trim();
-
-  // console.log(ogImage,"ogImage")
+  /** Crawlers reject relative og:image / og:url, so both are absolute by here. */
+  const ogImage = merged.ogImageUrl?.trim() || "";
+  const canonical = merged.canonicalUrl?.trim() || "";
 
   return (
     <Head key={pathname}>
@@ -91,16 +90,41 @@ export function AppRouteSeo({ ssrSeo, ssrPathname }: AppRouteSeoProps = {}) {
       ) : null}
       {canonical ? <link rel="canonical" href={canonical} /> : null}
 
-      <meta property="og:title" content={ogTitle} />
-      <meta property="og:description" content={ogDescription} />
-      <meta property="og:image" content={ogImage} key="og:image" />
-      <meta property="og:type" content="website" />
-      {canonical ? <meta property="og:url" content={canonical} /> : null}
-
-      <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
-      <meta name="twitter:title" content={ogTitle} />
-      <meta name="twitter:description" content={ogDescription} />
+      <meta property="og:site_name" content={SITE_BRAND} key="og:site_name" />
+      <meta property="og:title" content={ogTitle} key="og:title" />
+      <meta property="og:description" content={ogDescription} key="og:description" />
+      <meta property="og:type" content="website" key="og:type" />
+      {canonical ? (
+        <meta property="og:url" content={canonical} key="og:url" />
+      ) : null}
+      {ogImage ? (
         <meta property="og:image" content={ogImage} key="og:image" />
+      ) : null}
+      {ogImage ? (
+        <meta
+          property="og:image:secure_url"
+          content={ogImage}
+          key="og:image:secure_url"
+        />
+      ) : null}
+      {ogImage ? (
+        <meta property="og:image:alt" content={ogTitle} key="og:image:alt" />
+      ) : null}
+
+      <meta
+        name="twitter:card"
+        content={ogImage ? "summary_large_image" : "summary"}
+        key="twitter:card"
+      />
+      <meta name="twitter:title" content={ogTitle} key="twitter:title" />
+      <meta
+        name="twitter:description"
+        content={ogDescription}
+        key="twitter:description"
+      />
+      {ogImage ? (
+        <meta name="twitter:image" content={ogImage} key="twitter:image" />
+      ) : null}
     </Head>
   );
 }

@@ -49,7 +49,7 @@ export default function CMSPage({ cmsData, seo }: CMSPageProps) {
         {seo?.ogDescription && (
           <meta property="og:description" content={seo.ogDescription} />
         )}
-         {seo?.ogImage && <meta property="og:image" content={seo?.ogImage} /> }
+         {seo?.ogImage && <meta property="age" content={seo?.ogImage} /> }
       </Head>
 
       <PublicLayout>
