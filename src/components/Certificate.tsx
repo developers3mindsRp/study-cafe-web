@@ -5,6 +5,7 @@ import CertificateLayout from "./ui/CertificateLayout";
 import { getCertificateByCourseId } from "@/services/courses.service";
 import * as htmlToImage from "html-to-image";
 
+
 type CertifyModalProps = {
   onClose?: () => void;
   onDownload?: () => void | Promise<void>;
@@ -40,21 +41,48 @@ useEffect(() => {
 
   fetchCertificate();
 }, [courseId]);
+// const handleDownload = async () => {
+//   if (!certificateRef.current) return;
+
+//   try {
+//     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
+//       cacheBust: true,
+//       pixelRatio: 3, // better quality
+//     });
+
+//     const link = document.createElement("a");
+//     link.download = "certificate.png";
+//     link.href = dataUrl;
+//     link.click();
+//   } catch (error) {
+//     console.error("Download failed:", error);
+//   }
+// };
+
 const handleDownload = async () => {
   if (!certificateRef.current) return;
 
   try {
     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
       cacheBust: true,
-      pixelRatio: 3, // better quality
+      pixelRatio: 3,
     });
 
-    const link = document.createElement("a");
-    link.download = "certificate.png";
-    link.href = dataUrl;
-    link.click();
-  } catch (error) {
-    console.error("Download failed:", error);
+    if ((window as any).ReactNativeWebView) {
+      (window as any).ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "DOWNLOAD_CERTIFICATE",
+          image: dataUrl,
+        })
+      );
+    } else {
+      const link = document.createElement("a");
+      link.download = "certificate.png";
+      link.href = dataUrl;
+      link.click();
+    }
+  } catch (err) {
+    console.error(err);
   }
 };
   return (
