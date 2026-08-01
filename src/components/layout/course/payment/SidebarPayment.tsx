@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { X } from "lucide-react";
+import { useResumeAfterSignup } from "@/hooks/useResumeAfterSignup";
 import type { CoursePublicDetail } from "@/types/models.types";
 import { useAuth } from "@/providers/AuthProvider";
 import {
@@ -56,6 +57,8 @@ export default function PriceCard({ course }: Props) {
   const [availableCoupons, setAvailableCoupons] = useState<CouponInfo[]>([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+
+  const { ref: cardRef, resumed: resumedAfterSignup } = useResumeAfterSignup();
 
   const discount = appliedCoupon?.discount ?? 0;
   const afterDiscount = price - discount;
@@ -195,8 +198,19 @@ export default function PriceCard({ course }: Props) {
   }
 
   return (
-    <div className="w-full max-w-sm mx-auto">
-      <div className="bg-[#F9F9FB] rounded-xl p-6">
+    <div className="w-full max-w-sm mx-auto" ref={cardRef}>
+      <div
+        className={
+          "bg-[#F9F9FB] rounded-xl p-6" +
+          (resumedAfterSignup ? " ring-2 ring-[#09339B] ring-offset-2" : "")
+        }
+      >
+        {resumedAfterSignup && (
+          <p className="mb-4 rounded-lg bg-[#E7F0E9] px-3 py-2 text-center text-sm text-[#1B5E20]">
+            Your account is ready — continue your purchase below.
+          </p>
+        )}
+
         {/* Price */}
         <div className="text-center">
           <p className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">

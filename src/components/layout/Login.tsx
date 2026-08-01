@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { EyeIcon, EyeSlashIcon , EnvelopeIcon } from "@heroicons/react/24/solid";
 import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
 import type { ApiError } from "@/types/api.types";
@@ -9,6 +10,7 @@ import type { ApiError } from "@/types/api.types";
 type SignInMode = "password" | "otp";
 
 export default function LoginPage() {
+  const router = useRouter();
   const login = useLogin();
   const loginWithOtp = useLoginWithOtp();
   const requestOtp = useRequestLoginOtp();
@@ -28,6 +30,19 @@ export default function LoginPage() {
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotError, setForgotError] = useState<string | null>(null);
   const [forgotInfo, setForgotInfo] = useState<string | null>(null);
+
+  /**
+   * Arriving with `next` means the visitor was part-way through buying something,
+   * so send new users to the short checkout signup and carry the destination
+   * across. Organic visitors still get the full /register form.
+   */
+  const nextParam =
+    typeof router.query.next === "string" && router.query.next.startsWith("/")
+      ? router.query.next
+      : typeof router.query.redirect === "string" && router.query.redirect.startsWith("/")
+        ? router.query.redirect
+        : null;
+  const signUpHref = nextParam ? `/signup?next=${encodeURIComponent(nextParam)}` : "/register";
 
   function pickMode(next: SignInMode) {
     setMode(next);
@@ -415,7 +430,7 @@ export default function LoginPage() {
         <div>
            <p className="mt-4 text-[16px] text-[#3a3c3e] text-center">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-[#09339B]">
+              <Link href={signUpHref} className="text-[#09339B]">
                 Sign up
               </Link>
             </p>

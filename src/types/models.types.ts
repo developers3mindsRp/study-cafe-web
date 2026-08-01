@@ -201,6 +201,18 @@ export interface RegisterData {
   gst?: string;
 }
 
+/**
+ * Checkout signup (/signup). Profession, city and state are asked for after
+ * payment instead of before it — see RegisterData for the full /register form.
+ */
+export interface QuickRegisterData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export interface AuthResponse {
   user: User;
   token: string;

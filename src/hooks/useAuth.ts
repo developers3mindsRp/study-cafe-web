@@ -6,6 +6,7 @@ import {
   LoginCredentials,
   LoginOtpCredentials,
   RegisterData,
+  QuickRegisterData,
   ChangePasswordData,
   User,
 } from '@/types/models.types';
@@ -80,6 +81,53 @@ export const useRegister = () => {
     },
     onError: (error: any) => {
       console.error('Registration failed:', error);
+    },
+  });
+};
+
+/**
+ * Checkout signup. Unlike useRegister it does not navigate: the OTP step runs
+ * inline on the same screen, so the buyer never leaves the signup card.
+ */
+export const useRegisterQuick = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userData: QuickRegisterData) => authService.registerQuick(userData),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+    },
+    onError: (error: unknown) => {
+      console.error('Quick registration failed:', error);
+    },
+  });
+};
+
+/** Flag the destination so the course page can re-surface its checkout panel. */
+function resumeTarget(target: string): string {
+  if (target === '/dashboard') return target;
+  return target.includes('?') ? `${target}&resume=1` : `${target}?resume=1`;
+}
+
+/**
+ * Inline OTP step of the checkout signup — returns the buyer to the course they
+ * came from rather than to /dashboard like the standalone /verify-email page.
+ */
+export const useVerifyQuickSignupOtp = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (otp: string) => authService.verifyEmailWithOtp(otp),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKeys.auth.currentUser, data.user);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.articles.all });
+      void router.push(resumeTarget(postAuthRelativeTarget(router)));
+    },
+    onError: (error: unknown) => {
+      console.error('Signup verification failed:', error);
     },
   });
 };

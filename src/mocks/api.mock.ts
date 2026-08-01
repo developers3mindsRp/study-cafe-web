@@ -23,6 +23,7 @@ import {
   LoginCredentials,
   LoginOtpCredentials,
   RegisterData,
+  QuickRegisterData,
   AuthResponse,
   UpdateProfileData,
   LessonProgress,
@@ -101,6 +102,27 @@ export const mockAuthApi = {
         city: data.city || null,
         state: data.state || null,
         country: data.country || null,
+        emailVerified: false,
+      },
+      token: 'mock_jwt_token_' + Date.now(),
+      refreshToken: 'mock_refresh_token_' + Date.now(),
+    };
+  },
+
+  registerQuick: async (data: QuickRegisterData): Promise<AuthResponse> => {
+    await delay(1000);
+
+    return {
+      user: {
+        ...mockUser,
+        email: data.email,
+        name: data.name,
+        phone: data.phone || null,
+        profession: null,
+        company: null,
+        designation: null,
+        city: null,
+        state: null,
         emailVerified: false,
       },
       token: 'mock_jwt_token_' + Date.now(),

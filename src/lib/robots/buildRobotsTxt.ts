@@ -18,6 +18,7 @@ export function buildRobotsTxt(siteUrl: string): string {
     'Disallow: /dashboard',
     'Disallow: /login',
     'Disallow: /register',
+    'Disallow: /signup',
     'Disallow: /forget-password',
     'Disallow: /reset-password',
     'Disallow: /verify-email',

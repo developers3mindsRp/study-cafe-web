@@ -2,7 +2,9 @@
 
 import { useState, useCallback, useEffect  } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { X } from "lucide-react";
+import { useResumeAfterSignup } from "@/hooks/useResumeAfterSignup";
 import type { Membership } from "@/types/models.types";
 import { useAuth } from "@/providers/AuthProvider";
 import {
@@ -93,6 +95,8 @@ export default function MemberPrice({ plan }: Props) {
   const [availableCoupons, setAvailableCoupons] = useState<CouponInfo[]>([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+
+  const { ref: cardRef, resumed: resumedAfterSignup } = useResumeAfterSignup();
 
   const discount = appliedCoupon?.discount ?? 0;
   const afterDiscount = price - discount;
@@ -414,8 +418,19 @@ console.log(appliedCoupon,"appliedCoupon")
           </div>
        
       :
-    <div className="w-full max-w-sm mx-auto">
-      <div className="bg-[#F9F9FB] rounded-xl p-6">
+    <div className="w-full max-w-sm mx-auto" ref={cardRef}>
+      <div
+        className={
+          "bg-[#F9F9FB] rounded-xl p-6" +
+          (resumedAfterSignup ? " ring-2 ring-[#09339B] ring-offset-2" : "")
+        }
+      >
+        {resumedAfterSignup && (
+          <p className="mb-4 rounded-lg bg-[#E7F0E9] px-3 py-2 text-center text-sm text-[#1B5E20]">
+            Your account is ready — continue your purchase below.
+          </p>
+        )}
+
         {/* Price */}
         <div className="text-center">
           <p className="text-[30px] md:text-[40px] font-semibold text-[#1A1A1A]">
@@ -627,6 +642,18 @@ console.log(appliedCoupon,"appliedCoupon")
         >
           {paymentLoading ? "Processing…" : "Buy Membership"}
         </button>
+
+        {!isAuthenticated && (
+          <p className="mt-3 text-center text-[14px] text-[#3a3c3e]">
+            New to StudyCafe?{" "}
+            <Link
+              href={`/signup?next=${encodeURIComponent(router.asPath.split("#")[0])}`}
+              className="text-[#09339B] underline"
+            >
+              Create your account
+            </Link>
+          </p>
+        )}
       </div>
        </div>
       }

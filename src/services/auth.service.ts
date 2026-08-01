@@ -4,6 +4,7 @@ import {
   LoginCredentials,
   LoginOtpCredentials,
   RegisterData,
+  QuickRegisterData,
   AuthResponse,
   User,
   ChangePasswordData,
@@ -174,6 +175,28 @@ export const register = async (userData: RegisterData): Promise<AuthResponse> =>
     city: city.trim(),
     state,
     country,
+    referralCode,
+  });
+  return await persistAuth(response.data.data);
+};
+
+/** Checkout signup — see QuickRegisterData. Still returns an unverified session: the OTP step follows. */
+export const registerQuick = async (userData: QuickRegisterData): Promise<AuthResponse> => {
+  if (shouldUseMock()) {
+    const authResponse = await mockAuthApi.registerQuick(userData);
+    setToken(authResponse.token);
+    if (authResponse.refreshToken) setRefreshToken(authResponse.refreshToken);
+    setUserData(authResponse.user);
+    return authResponse;
+  }
+
+  const referralCode = getReferralCode() || undefined;
+  const response = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/register/quick', {
+    name: userData.name.trim(),
+    email: userData.email.trim(),
+    phone: userData.phone,
+    password: userData.password,
+    confirmPassword: userData.confirmPassword,
     referralCode,
   });
   return await persistAuth(response.data.data);

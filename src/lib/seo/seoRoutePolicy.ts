@@ -12,6 +12,7 @@ export function shouldFetchGlobalSeoForPathname(pathname: string): boolean {
     p.startsWith("/account") ||
     p === "/login" ||
     p === "/register" ||
+    p === "/signup" ||
     p === "/forget-password" ||
     p === "/verify-email"
   ) {
