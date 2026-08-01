@@ -301,7 +301,7 @@ export const getArticleBySlug = async (
       Object.keys(params).length ? { params } : undefined
     );
 
-    console.log(response.data,"response")
+    // console.log(response.data,"response")
     return response.data.data ?? null;
   } catch {
     return null;
@@ -445,7 +445,7 @@ export const getArticles = async (params: ArticleQueryParams = {}): Promise<Pagi
     { params: query }
   );
 
-  console.log(response.data.data)
+  // console.log(response.data.data)
   return response.data.data;
 };
 
@@ -661,7 +661,7 @@ export const getMembershipSummaryById = async (
   body: MembershipSummaryType
 ): Promise<any> => { 
 
-  console.log(body,"body")
+  // console.log(body,"body")
   const response = await axiosInstance.post<ApiResponse<any>>(
     "/platform/membership/upgrade-summary",
     {

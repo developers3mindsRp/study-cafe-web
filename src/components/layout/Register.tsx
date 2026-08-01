@@ -56,7 +56,7 @@ export default function SignUpPage() {
         setLoadingProfessions(true);
 
         const data:any = await getMasterList();
-        console.log(data?.data,"data")
+        // console.log(data?.data,"data")
 
         setProfessions(data?.data || []);
       } catch (error) {

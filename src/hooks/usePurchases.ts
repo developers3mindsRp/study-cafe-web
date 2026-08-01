@@ -54,7 +54,7 @@ export const usePurchaseMutation = () => {
       // Also invalidate user stats as it might have changed
       queryClient.invalidateQueries({ queryKey: queryKeys.user.stats() });
       
-      console.log('Purchase successful:', newPurchase);
+      // console.log('Purchase successful:', newPurchase);
     },
     onError: (error: any) => {
       console.error('Purchase failed:', error);

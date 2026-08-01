@@ -342,6 +342,7 @@ export interface Membership {
   name: string;
   slug: string;
   description?: string;
+  mrp?: string | number;
   price: string | number;
   currency: string;
   duration_days: number;

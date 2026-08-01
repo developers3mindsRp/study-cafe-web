@@ -68,7 +68,7 @@ export default function MembershipDetailPage() {
         targetPlanId: Number(plan.id),
       });
 
-      console.log("Membership Summary API:", response);
+      // console.log("Membership Summary API:", response);
 
       // Adjust according to API structure
       setSummary(response?.data || response);

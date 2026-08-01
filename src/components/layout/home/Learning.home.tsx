@@ -5,7 +5,7 @@ import { useAuth } from "@/providers/AuthProvider";
 const Learning = () => {
   const { user, isLoading: authLoading } = useAuth();
 
-  console.log(user,"user")
+  // console.log(user,"user")
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center

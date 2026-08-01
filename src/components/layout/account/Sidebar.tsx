@@ -79,7 +79,7 @@ export default function Sidebar({ onAvatarClick }: SidebarProps) {
     : 0;
 
 
-    console.log(user,"user")
+    // console.log(user,"user")
   return (
     <div className="sticky top-20 space-y-6">
       {/* PROFILE BOX */}

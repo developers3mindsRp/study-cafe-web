@@ -13,7 +13,7 @@ function normalizeOrderId(raw: string | string[] | undefined): string | undefine
 
 const PaymentSuccess = () => {
   const router = useRouter();
-  const orderId = normalizeOrderId(router.query.orderId);
+  const orderId = normalizeOrderId(router.query.order_id);
   const fromPaymentLink =
     router.query.payment_link === "1" || router.query.payment_link === "true";
 
@@ -70,6 +70,24 @@ const PaymentSuccess = () => {
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown, loading, invoice, router, fromPaymentLink]);
+
+  useEffect(() => {
+    if (!invoice || invoice.status !== "paid") return;
+
+    window.dataLayer = window.dataLayer || [];
+
+    window.dataLayer.push({
+      event: "purchase",
+      ecommerce: {
+        transaction_id: invoice.paymentId,
+        value: Number(invoice.amount),
+        currency: invoice.currency || "INR",
+        order_id: invoice.orderId,
+      },
+    });
+
+    console.log("Purchase Event Fired");
+  }, [invoice]);
 
   if (!router.isReady) {
     return (
@@ -219,23 +237,6 @@ const PaymentSuccess = () => {
   const itemName = invoice.itemName || itemLabel;
 
   const isFailed = invoice && invoice.status !== "paid";
-useEffect(() => {
-  if (!invoice || invoice.status !== "paid") return;
-
-  window.dataLayer = window.dataLayer || [];
-
-  window.dataLayer.push({
-    event: "purchase",
-    ecommerce: {
-      transaction_id: invoice.paymentId,
-      value: Number(invoice.amount),
-      currency: invoice.currency || "INR",
-      order_id: invoice.orderId,
-    },
-  });
-
-  console.log("Purchase Event Fired");
-}, [invoice]);
   return (
     <div className="container max-w-3xl mx-auto px-4 py-10 md:py-16">
       <div className="border shadow-[0px_1px_2px_0px_rgba(228,229,231,0.24)] py-8 md:py-12 rounded-[10px]">

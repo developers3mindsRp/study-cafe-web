@@ -139,6 +139,7 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
   ({ plan, mobile }, ref) => {
     const highlight = !!plan.is_popular;
     const priceStr = formatPrice(plan.price, plan.currency);
+    const mrpPriceStr = plan.mrp;
     const durationStr = formatDuration(plan.duration_days, plan.is_lifetime);
     const features = normalizeFeatures(plan.features);
     const [showAll, setShowAll] = useState(false);
@@ -176,6 +177,8 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                   className={`text-[21px] font-bold leading-tight mt-1 ${highlight ? "text-white" : "text-black"
                     }`}
                 >
+                    <del className=" mr-2">{mrpPriceStr}</del>
+                  
                   {priceStr}
                 </p>
                 <span
@@ -305,6 +308,8 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
                 className={`xl:text-[32px] font-bold leading-tight mt-1 ${highlight ? "text-white" : "text-black"
                   }`}
               >
+               <del className={`${highlight ? "text-[#ffffffab]" : "text-[#8c8c8c]"
+                  } mr-2`}>{mrpPriceStr}</del>
                 {priceStr}
               </p>
               <span

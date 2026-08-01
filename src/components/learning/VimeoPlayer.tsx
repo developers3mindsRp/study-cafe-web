@@ -66,7 +66,7 @@ export default function VimeoPlayer({
 
         if (destroyed) return;
 
-        console.log("Vimeo ready");
+        // console.log("Vimeo ready");
 
         // duration
         try {

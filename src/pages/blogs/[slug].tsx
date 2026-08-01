@@ -25,7 +25,7 @@ interface BlogDetailProps {
 }
 
 export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
-console.log(article?.embed_scripts[0],"article")
+// console.log(article?.embed_scripts[0],"article")
 
   return (
     <PublicLayout>
@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
   const token = bearerFromCookieHeader(ctx.req.headers.cookie);
   const previewToken = typeof ctx.query.preview_token === 'string' ? ctx.query.preview_token : null;
 
-  console.log(baseUrl,"baseUrl")
+  // console.log(baseUrl,"baseUrl")
   const [article, spotlight, siteAds] = await Promise.all([
     fetchArticleBySlugSSR(slug, { baseUrl, token, previewToken }),
     fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),

@@ -356,7 +356,7 @@ export default function BannerSection({
 
 const handleCopy = (e: React.ClipboardEvent<HTMLHeadingElement>) => {
   e.preventDefault();
-  console.log(window.location.href,"router")
+  // console.log(window.location.href,"router")
 
   const currentUrl = `${window.location.href}`;
 

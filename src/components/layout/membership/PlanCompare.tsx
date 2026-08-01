@@ -32,7 +32,7 @@ export default function PlansComparisonTable({ memberships }: PlansComparisonTab
   // Fall back gracefully when no comparison features exist yet
   if (allFeatures.length === 0) return null;
 
-  console.log(memberships,"plan.comparison_features")
+  // console.log(memberships,"plan.comparison_features")
 
   return (
     <div className="w-full container px-4 mx-auto py-6 md:py-10">

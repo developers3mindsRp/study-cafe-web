@@ -424,7 +424,7 @@ export default function Premium_user({
     activateAdScripts(bodyRootRef.current);
   }, [articleBodyHtml, canReadFull]);
 
-console.log(article?.article_types, "article")
+// console.log(article?.article_types, "article")
 
   return (
     <section ref={bodyRootRef} className="w-full bg-white py-2 container mx-auto px-4">

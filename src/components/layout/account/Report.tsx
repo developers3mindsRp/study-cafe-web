@@ -49,7 +49,7 @@ export default function AffiliateReportPage() {
   const router = useRouter();
   const { user, refetchUser } = useAuth();
 
-  console.log(user,"user")
+  // console.log(user,"user")
     const updateProfile = useUpdateProfile();
 
 

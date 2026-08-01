@@ -453,7 +453,7 @@ export default function CourseDetailProfile({
                   <span className="text-[18px] font-semibold xl:text-[20px]">
                     {dayLabel}
                   </span>
-                  <svg
+                  {/* <svg
                     className={`h-5 w-5 transition-transform ${
                       openDay === day ? "rotate-180" : "rotate-0"
                     }`}
@@ -468,7 +468,7 @@ export default function CourseDetailProfile({
                       strokeLinejoin="round"
                       d="M19 9l-7 7-7-7"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
 
                

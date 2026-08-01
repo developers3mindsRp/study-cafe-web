@@ -18,7 +18,7 @@ type CertificateData = {
 };
 
 export default function Certificate({ onClose, onDownload, courseId }: CertifyModalProps) {
-  console.log(courseId,"courseId")
+
 const certificateRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
  const [certificateData, setCertificateData] = useState<CertificateData | null>(null);
@@ -40,21 +40,51 @@ useEffect(() => {
 
   fetchCertificate();
 }, [courseId]);
+// const handleDownload = async () => {
+//   if (!certificateRef.current) return;
+
+//   try {
+//     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
+//       cacheBust: true,
+//       pixelRatio: 3, // better quality
+//     });
+
+//     const link = document.createElement("a");
+//     link.download = "certificate.png";
+//     link.href = dataUrl;
+//     link.click();
+//   } catch (error) {
+//     console.error("Download failed:", error);
+//   }
+// };
+
 const handleDownload = async () => {
   if (!certificateRef.current) return;
 
   try {
     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
       cacheBust: true,
-      pixelRatio: 3, // better quality
+      pixelRatio: 3,
     });
 
+    // Running inside React Native WebView
+    if ((window as any).ReactNativeWebView) {
+      (window as any).ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type:"DOWNLOAD_CERTIFICATE",
+          image: dataUrl,   // <-- send actual base64
+        })
+      );
+      return;
+    }
+
+    // Normal browser download
     const link = document.createElement("a");
     link.download = "certificate.png";
     link.href = dataUrl;
     link.click();
   } catch (error) {
-    console.error("Download failed:", error);
+    console.error(error);
   }
 };
   return (
