@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import type {
   BlogSpotlightArticleCard,
@@ -82,10 +81,6 @@ export default function SidebarBlog({
         </div>
       </div>
 
-      <div className="bg-white space-y-3">
-        <Image src="/images/bitsat.png" alt="" width={500} height={300} className="rounded" />
-      </div>
-
       <div className="bg-[#F9F9FB] md:px-5 space-y-3">
         <p className="font-bold text-[26px] bg-gradient-to-r from-[#253D8E] to-transparent md:bg-none text-white p-3 md:text-gray-900 md:px-0 md:py-0 mx-auto md:mx-0 md:w-auto mb-6 md:mb-0">
           All Posts
@@ -132,10 +127,6 @@ export default function SidebarBlog({
         >
           View All
         </Link>
-      </div>
-
-      <div className="bg-white shadow rounded p-3 md:p-5 space-y-3">
-        <Image src="/images/bank-au.png" alt="" width={500} height={300} className="rounded" />
       </div>
 
       <div className="bg-white px-5 space-y-6 md:space-y-3">
