@@ -13,6 +13,7 @@ export default function Document() {
       })(window,document,'script','dataLayer','GTM-TRZDN6BG');`,
                 }}
               />
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7535560429122052" crossorigin="anonymous" />
       </Head>
       <body>
         <noscript>
