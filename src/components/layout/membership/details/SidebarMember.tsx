@@ -567,9 +567,11 @@ const handleApplyCoupon = useCallback(
         <button
           onClick={async () => {
             if (!isAuthenticated) {
+              // Anonymous buyers land on the short checkout signup, not the login
+              // form — returning members reach sign-in from there in one click.
               const returnPath =
                 window.location.pathname + window.location.search;
-              router.push(`/login?next=${encodeURIComponent(returnPath)}`);
+              router.push(`/signup?next=${encodeURIComponent(returnPath)}`);
               return;
             }
             if (!targetPlan?.id || paymentLoading) return;
@@ -645,12 +647,12 @@ const handleApplyCoupon = useCallback(
 
         {!isAuthenticated && (
           <p className="mt-3 text-center text-[14px] text-[#3a3c3e]">
-            New to StudyCafe?{" "}
+            Already have an account?{" "}
             <Link
-              href={`/signup?next=${encodeURIComponent(router.asPath.split("#")[0])}`}
+              href={`/login?next=${encodeURIComponent(router.asPath.split("#")[0])}`}
               className="text-[#09339B] underline"
             >
-              Create your account
+              Sign in
             </Link>
           </p>
         )}

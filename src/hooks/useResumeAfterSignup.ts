@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 /**
@@ -7,17 +7,22 @@ import { useRouter } from 'next/router';
  * This brings the checkout panel back into view and flags it — deliberately
  * without reopening Razorpay for them: an automatic order would skip the coupon
  * box and record an order the buyer never confirmed.
+ *
+ * The panel usually mounts a beat after the page does, while its price data
+ * loads, so the returned `ref` is a callback ref: the scroll runs when the node
+ * actually attaches rather than at the moment the flag is read.
  */
 export function useResumeAfterSignup<T extends HTMLElement = HTMLDivElement>() {
   const router = useRouter();
-  const ref = useRef<T>(null);
+  const [node, setNode] = useState<T | null>(null);
   const [resumed, setResumed] = useState(false);
+
+  const ref = useCallback((element: T | null) => setNode(element), []);
 
   useEffect(() => {
     if (!router.isReady || router.query.resume !== '1') return;
 
     setResumed(true);
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     // Drop the flag so a refresh — or a shared URL — does not repeat the prompt.
     const { resume, ...restQuery } = router.query;
@@ -25,6 +30,11 @@ export function useResumeAfterSignup<T extends HTMLElement = HTMLDivElement>() {
       shallow: true,
     });
   }, [router]);
+
+  useEffect(() => {
+    if (!resumed || !node) return;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [resumed, node]);
 
   return { ref, resumed };
 }

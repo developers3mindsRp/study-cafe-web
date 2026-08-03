@@ -6,11 +6,13 @@ import { PublicLayout } from "@/components/layout";
 import Breadcrumbs from "@/components/Breadcrumb";
 import MemberDetail from "@/components/layout/membership/details/MemberDetail";
 import MemberPrice from "@/components/layout/membership/details/SidebarMember";
+import { useAuth } from "@/providers/AuthProvider";
 import { getMembershipBySlug, getMembershipSummaryById } from "@/services/platform.service";
 import type { Membership } from "@/types/models.types";
 
 export default function MembershipDetailPage() {
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const slug = (router.query.slug as string) ?? "";
 
   const [plan, setPlan] = useState<Membership | null>(null);
@@ -57,8 +59,20 @@ export default function MembershipDetailPage() {
 
 
   
+  /**
+   * The pricing summary below is an authenticated endpoint, so an anonymous
+   * visitor cannot be served this page at all — the 401 used to trip the axios
+   * interceptor and dump them on the login form. Send them to the short
+   * checkout signup instead, and bring them straight back here afterwards.
+   */
+  useEffect(() => {
+    if (!router.isReady || authLoading || isAuthenticated) return;
+    const returnPath = router.asPath.split("#")[0];
+    void router.replace(`/signup?next=${encodeURIComponent(returnPath)}`);
+  }, [router, authLoading, isAuthenticated]);
+
  useEffect(() => {
-  if (!plan?.id) return;
+  if (!plan?.id || !isAuthenticated) return;
 
   const fetchMembershipSummary = async () => {
     try {
@@ -81,7 +95,18 @@ export default function MembershipDetailPage() {
   };
 
   fetchMembershipSummary();
-}, [plan?.id]);
+}, [plan?.id, isAuthenticated]);
+
+  if (authLoading || !isAuthenticated) {
+    return (
+      <PublicLayout>
+        <div className="container mx-auto px-4 py-24 text-center text-gray-600">
+          Taking you to sign up…
+        </div>
+      </PublicLayout>
+    );
+  }
+
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
