@@ -13,7 +13,8 @@ export default function Document() {
       })(window,document,'script','dataLayer','GTM-TRZDN6BG');`,
                 }}
               />
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7535560429122052" crossOrigin="anonymous" />
+      {/* AdSense is NOT loaded here — a tag in _document runs on every page.
+          It is loaded per-route by <AdSenseLoader /> instead; see @/lib/adPolicy. */}
       </Head>
       <body>
         <noscript>

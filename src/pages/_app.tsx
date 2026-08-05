@@ -14,6 +14,7 @@ import { queryClient as defaultQueryClient } from "@/lib/react-query";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { AppRouteSeo } from "@/components/seo/AppRouteSeo";
 import MarketingTrackingInjector from "@/components/marketing/MarketingTrackingInjector";
+import AdSenseLoader from "@/components/ads/AdSenseLoader";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -179,6 +180,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <HydrationBoundary state={pageProps.dehydratedState}>
           <AuthProvider>
             <MarketingTrackingInjector />
+            <AdSenseLoader />
 
             <AppRouteSeo
               ssrSeo={pageProps.pageSeo ?? null}

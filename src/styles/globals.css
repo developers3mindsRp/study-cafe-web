@@ -535,3 +535,17 @@ table.article-table td .site-ad-slot {
 table.article-table th .site-ad-slot img {
   display: none;
 }
+
+/* Ad policy — see @/lib/adPolicy and <AdSenseLoader />.
+   AdSense cannot be unloaded on client-side navigation, so a unit placed on a
+   blog page can survive into an ad-free page. This hides anything already
+   injected once <body data-ads="off"> is set. */
+body[data-ads="off"] ins.adsbygoogle,
+body[data-ads="off"] .adsbygoogle,
+body[data-ads="off"] .google-auto-placed,
+body[data-ads="off"] iframe[id^="aswift_"],
+body[data-ads="off"] iframe[name^="aswift_"],
+body[data-ads="off"] [id^="google_ads_iframe"],
+body[data-ads="off"] .google-revocation-link-placeholder {
+  display: none !important;
+}
