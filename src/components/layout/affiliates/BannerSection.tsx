@@ -56,7 +56,7 @@ const BannerSectionAffiliates = () => {
               <p className="text-[20px] font-semibold text-[#09339B] md:text-[26px]">
                 {item.value}
               </p>
-              <p className="mt-1 text-[13px] text-[#6C6C6C] md:text-[15px]">{item.label}</p>
+              <p className="mt-1 text-[13px] text-[#000] md:text-[15px]">{item.label}</p>
             </div>
           ))}
         </div>

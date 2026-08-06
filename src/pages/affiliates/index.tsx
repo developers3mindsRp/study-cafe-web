@@ -97,14 +97,14 @@ const TOP_EARNERS = [
   {
     name: "Shabir Virk",
     role: "Finance Professional",
-    image: "https://studycafe.in/wp-content/uploads/2023/11/Shabir-Virk.jpg",
+    image: "/images/userplaceholder.png",
     quote:
       "I was skeptical at first about affiliate marketing, but after signing up for Studycafe affiliate program, I was pleasantly surprised at how easy it was to get started and start earning money. My first month, I made over Rs. 40,000, and I've been making consistently over 50,000 per month ever since. I highly recommend Studycafe affiliate program to anyone looking to make a serious income online.",
   },
   {
     name: "Prabhat",
     role: "CA Final",
-    image: "https://studycafe.in/wp-content/uploads/2023/11/Prabhat-Goyal.jpg",
+    image: "/images/userplaceholder.png",
     quote:
       "I am CA Final Student, but I've never made as much money as I have since joining Studycafe affiliate program. The team is incredibly supportive and helpful, and the affiliate program is very generous. I've made over Rs. 50,000 each month for the past few months, and I'm on track to make even more this month. If you're looking for an affiliate program that can help you achieve your financial goals, look no further than Studycafe affiliate program.",
   },
@@ -194,7 +194,7 @@ function SectionHeading({
       </h2>
       {subtitle ? (
         <p
-          className={`mt-3 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[17px] xl:text-[18px] ${
+          className={`mt-3 text-[16px] leading-relaxed text-[#000] md:text-[17px] xl:text-[18px] ${
             align === "center" ? "mx-auto max-w-3xl" : ""
           }`}
         >
@@ -244,7 +244,7 @@ export default function Affiliates() {
                 <h3 className="mt-5 text-[18px] font-semibold text-[#252525] md:text-[20px]">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[16px]">
+                <p className="mt-3 text-[16px] leading-relaxed text-[#000] md:text-[16px]">
                   {item.description}
                 </p>
               </div>
@@ -282,7 +282,7 @@ export default function Affiliates() {
               <h3 className="mt-5 text-[18px] font-semibold text-[#252525] md:text-[20px]">
                 {item.title}
               </h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[16px]">
+              <p className="mt-3 text-[16px] leading-relaxed text-[#000] md:text-[16px]">
                 {item.description}
               </p>
             </div>
@@ -375,7 +375,7 @@ export default function Affiliates() {
             <h3 className="text-[20px] font-semibold text-[#252525] md:text-[22px]">
               Online Courses
             </h3>
-            <p className="mt-3 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[16px]">
+            <p className="mt-3 text-[16px] leading-relaxed text-[#000] md:text-[16px]">
               Certification courses on GST, Income Tax, AI, Excel and more — trusted by thousands
               of finance professionals.
             </p>
@@ -392,7 +392,7 @@ export default function Affiliates() {
             <h3 className="text-[20px] font-semibold text-[#252525] md:text-[22px]">
               StudyCafe Membership
             </h3>
-            <p className="mt-3 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[16px]">
+            <p className="mt-3 text-[16px] leading-relaxed text-[#000] md:text-[16px]">
               Full-access memberships that unlock the entire library — our highest converting and
               highest paying product.
             </p>
@@ -481,7 +481,7 @@ export default function Affiliates() {
               >
                 <path d="M7.17 6A5.17 5.17 0 0 0 2 11.17V18h6.83v-6.83H5.17A2 2 0 0 1 7.17 9V6Zm11 0A5.17 5.17 0 0 0 13 11.17V18h6.83v-6.83h-3.66a2 2 0 0 1 2-2.17V6Z" />
               </svg>
-              <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-[#6C6C6C] md:text-[16px]">
+              <blockquote className="mt-4 flex-1 text-[16px] leading-relaxed text-[#000] md:text-[16px]">
                 {earner.quote}
               </blockquote>
               <figcaption className="mt-6 flex items-center gap-4 border-t border-[#E4E7EF] pt-5">
@@ -622,43 +622,53 @@ export default function Affiliates() {
       </section>
 
       {/* Founders */}
-      <section className="bg-[#F9F9FB] py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <SectionHeading title="Founders" />
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {FOUNDERS.map((founder) => (
-              <div key={founder.name} className="rounded-[14px] border border-[#E4E7EF] bg-white p-6">
-                <div className="flex items-center gap-5">
-                  <div className="relative h-[90px] w-[90px] flex-shrink-0 overflow-hidden rounded-full">
+     <section className="md:py-4">
+        <div className="container mx-auto md:pt-4 md:pb-12 w-full px-4 text-left grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="text-center items-center mt-8 md:mt-24">
+                <h1 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-4">Leadership &amp; Team</h1>
+                <p className="text-[24px] text-[#454545]">The people behind Studycafe's success</p>
+            </div>
+            <div className="rounded-lg bg-white grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mx-auto">
+                <div className="flex flex-col rounded-full mb-4">
                     <img
-                      src={founder.image}
-                      alt={founder.name}
-                      className="absolute left-0 top-0 h-full w-full object-cover"
+                        src="https://assets.studycafe.in/uploads/2026/07/1783925408148-ioe3g8c1.jpeg"
+                        alt=""
+                        className="md:w-[350px]"
                     />
-                  </div>
-                  <div>
-                    <h3 className="text-[18px] font-semibold text-[#252525] md:text-[20px]">
-                      {founder.name}
-                    </h3>
-                    <p className="text-[15px] text-[#09339B] md:text-[17px]">{founder.role}</p>
-                  </div>
+                    <div className="flex justify-between pr-4 mt-2">
+                        <h1 className="text-[18px] xl:text-[25px] font-medium text-[#454545]">CA Deepak Gupta</h1>
+                        <a
+                            href="https://www.linkedin.com/in/ca-deepak-gupta-/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="CA Deepak Gupta on LinkedIn"
+                            ><img src="/images/linkedin.svg" alt="" className="w-4 h-4 xl:w-6 xl:h-6 mt-2 xl:mt-3"
+                        /></a>
+                    </div>
+                    <span className="xl:text-[20px] text-[#454545]">Founder</span>
                 </div>
-                <hr className="my-5 border-[#E4E7EF]" />
-                <a
-                  className="flex items-center text-[15px] text-[#6C6C6C] transition hover:text-[#09339B] md:text-[16px]"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={`${founder.name} Linkedin`}
-                  href={founder.linkedin}
-                >
-                  <img src="/images/icons/linkedin.svg" alt="LinkedIn" className="mr-2" />
-                  {founder.handle}
-                </a>
-              </div>
-            ))}
-          </div>
+                <div className="flex flex-col rounded-full mb-4">
+                    <img
+                        src="https://assets.studycafe.in/uploads/2026/07/1783925419742-knji9km9.jpeg"
+                        alt=""
+                        className="md:w-[350px]"
+                    />
+                    <div className="flex justify-between pr-4 mt-2">
+                        <h1 className="text-[18px] xl:text-[25px] font-medium text-[#454545]">CA Pratibha Goyal</h1>
+                        <a
+                            href="https://www.linkedin.com/in/pratibha-goyal-269b27186/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="CA Pratibha Goyal on LinkedIn"
+                            ><img src="/images/linkedin.svg" alt="" className="w-4 h-4 xl:w-6 xl:h-6 mt-2 xl:mt-3"
+                        /></a>
+                    </div>
+                    <span className="xl:text-[20px] text-[#454545]">Co Founder</span>
+                </div>
+            </div>
         </div>
-      </section>
+    </section>
+
 
       {/* Connect with us */}
       <section className="container mx-auto px-4 py-12 md:py-16">
