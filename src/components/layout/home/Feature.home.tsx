@@ -102,20 +102,43 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
   );
 }
 
-export default function FeaturedCourses() {
-  const [cats, setCats] = useState<CourseCat[]>([ALL_TAB]);
+export interface FeaturedCoursesProps {
+  /** Categories fetched during SSR. Falls back to a client fetch when absent. */
+  initialCats?: CourseCat[] | null;
+  /** "all" tab courses fetched during SSR. Falls back to a client fetch when absent. */
+  initialCourses?: PublicCourse[] | null;
+}
+
+export default function FeaturedCourses({
+  initialCats,
+  initialCourses,
+}: FeaturedCoursesProps = {}) {
+  // Treat an empty/missing payload as "SSR did not supply this" so a failed server-side
+  // fetch degrades to the original client-side behaviour rather than an empty section.
+  const hasInitialCats = Array.isArray(initialCats) && initialCats.length > 0;
+  const hasInitialCourses = Array.isArray(initialCourses) && initialCourses.length > 0;
+
+  const [cats, setCats] = useState<CourseCat[]>(
+    hasInitialCats ? [ALL_TAB, ...(initialCats as CourseCat[])] : [ALL_TAB]
+  );
   const [activeSlug, setActiveSlug] = useState<string>("all");
-  const [courses, setCourses] = useState<PublicCourse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState<PublicCourse[]>(
+    hasInitialCourses ? (initialCourses as PublicCourse[]) : []
+  );
+  const [loading, setLoading] = useState(!hasInitialCourses);
   const [step, setStep] = useState(1);
 
   const catRef = useRef<HTMLDivElement | null>(null);
+  // Slug whose courses are already in state. Seeded with "all" when SSR provided them so
+  // the mount effect does not refetch what the server already rendered.
+  const loadedSlugRef = useRef<string | null>(hasInitialCourses ? "all" : null);
 
   useEffect(() => {
+    if (hasInitialCats) return;
     getCourseCats()
       .then((rows) => setCats([ALL_TAB, ...rows]))
       .catch(() => { });
-  }, []);
+  }, [hasInitialCats]);
 
   const fetchCourses = useCallback((slug: string) => {
     setLoading(true);
@@ -131,6 +154,8 @@ export default function FeaturedCourses() {
   }, []);
 
   useEffect(() => {
+    if (loadedSlugRef.current === activeSlug) return;
+    loadedSlugRef.current = activeSlug;
     fetchCourses(activeSlug);
   }, [activeSlug, fetchCourses]);
 
