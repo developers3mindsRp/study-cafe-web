@@ -81,53 +81,46 @@ function insertAfterNthClosingPTag(html: string, n: number, insertion: string): 
 }
 
 /**
- * Inject in-article banners after the Nth paragraph (tracked by literal `</p>` tags).
- * Inserts larger paragraph index first so earlier indices stay stable.
+ * Inject in-article banners after the configured paragraphs.
+ *
+ * Takes the `between_article` slots straight from the CMS and turns each into
+ * markup via `bannerSnippetFromSlot` — passing the slots object to `innerHTML`
+ * is what rendered a literal "[object Object]" mid-article.
+ *
+ * Paragraphs inside tables are skipped so a banner never lands in a data cell,
+ * which is why this walks the DOM rather than counting `</p>` tags. DOMParser
+ * is browser-only, hence the SSR bail-out.
  */
-// export function injectBetweenArticleAdsIntoHtml(
-//   html: string,
-//   between: SiteDisplayAds['between_article'] | undefined,
-// ): string {
-//   if (!between || !html) return html;
-
-//   type Row = { n: number; html: string | null };
-//   const rows: Row[] = [
-//     { n: 6, html: bannerSnippetFromSlot(between.after_paragraph_6) },
-//     { n: 3, html: bannerSnippetFromSlot(between.after_paragraph_3) },
-//   ];
-
-//   let out = html;
-//   for (const { n, html: snippet } of rows) {
-//     if (!snippet) continue;
-//     out = insertAfterNthClosingPTag(out, n, snippet);
-//   }
-//   return out;
-// }
 export function injectBetweenArticleAdsIntoHtml(
   html: string,
-  adHtml: any
+  between: SiteDisplayAds['between_article'] | null | undefined,
 ): string {
-  if (!html) return html;
-if (typeof window === "undefined") {
-  return html;
-}
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
+  if (!html || !between) return html;
+  if (typeof window === 'undefined') return html;
 
-  // Only paragraphs outside tables
-  const paragraphs = Array.from(doc.querySelectorAll("p")).filter(
-    (p) => !p.closest("table")
+  // Later paragraph first: both targets are resolved from the pre-insertion
+  // list, so order only matters for readability, not correctness.
+  const rows = [
+    { after: 6, snippet: bannerSnippetFromSlot(between.after_paragraph_6) },
+    { after: 3, snippet: bannerSnippetFromSlot(between.after_paragraph_3) },
+  ].filter((row): row is { after: number; snippet: string } => Boolean(row.snippet));
+
+  if (rows.length === 0) return html;
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const paragraphs = Array.from(doc.querySelectorAll('p')).filter(
+    (p) => !p.closest('table'),
   );
 
-  if (paragraphs.length < 4) {
-    return html;
+  let injected = false;
+  for (const { after, snippet } of rows) {
+    const target = paragraphs[after - 1];
+    if (!target) continue;
+    const container = doc.createElement('div');
+    container.innerHTML = snippet;
+    target.after(container);
+    injected = true;
   }
 
-  const adContainer = doc.createElement("div");
-  adContainer.innerHTML = adHtml;
-
-  // Insert after the 3rd paragraph (outside tables)
-  paragraphs[2].after(adContainer);
-
-  return doc.body.innerHTML;
+  return injected ? doc.body.innerHTML : html;
 }

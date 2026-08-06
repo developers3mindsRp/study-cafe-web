@@ -680,9 +680,15 @@ export interface ArticleNotification {
 }
 
 /** CMS-managed promotional placements (stored in platform footer_data.site_display_ads) */
+export type SiteAdsSlotMode = 'image' | 'script';
+
 export interface SiteAdsSlot {
+  /** Admin → Display Ads picks one; rows saved before script mode existed have none. */
+  mode?: SiteAdsSlotMode;
   image_url: string;
   link_url: string;
+  /** Raw ad-network markup, used when `mode === 'script'`. */
+  script?: string;
 }
 
 export interface SiteDisplayAds {
