@@ -35,3 +35,30 @@ export function shouldShowAds(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
   return ALLOWED.has(pathname);
 }
+
+/**
+ * Membership tiers, mirroring `premium_plans.tier_rank`. The three slugs below
+ * are the only values `user_memberships.membership_type` holds.
+ */
+export const PLAN_TIER: Record<string, number> = {
+  basic: 1,
+  premium: 2,
+  ultimate: 3,
+};
+
+/** Basic still sees ads; premium and above do not. */
+export const AD_FREE_MIN_TIER = 2;
+
+/**
+ * Whether a paying member's plan buys them an ad-free experience.
+ *
+ * Only meaningful for users who actually hold an active membership — callers
+ * decide that first. An unrecognised or missing plan resolves to ad-free: a
+ * new plan added later should default to the paid experience rather than
+ * showing ads to someone who paid, which is the complaint this fixes.
+ */
+export function planHidesAds(membershipType: string | null | undefined): boolean {
+  const slug = membershipType?.trim().toLowerCase();
+  if (!slug) return true;
+  return (PLAN_TIER[slug] ?? AD_FREE_MIN_TIER) >= AD_FREE_MIN_TIER;
+}
