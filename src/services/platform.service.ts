@@ -395,10 +395,14 @@ export interface ArticleListItem {
 
 export interface PaginatedArticles {
   data: ArticleListItem[];
-  total: number;
+  /** null when the caller opted out of the count via `withTotal: false`. */
+  total: number | null;
   page: number;
   limit: number;
-  totalPages: number;
+  /** null when the caller opted out of the count via `withTotal: false`. */
+  totalPages: number | null;
+  /** Always present; safe to use for next/prev paging without a total. */
+  hasMore?: boolean;
 }
 
 export interface ArticleQueryParams {
@@ -406,6 +410,11 @@ export interface ArticleQueryParams {
   limit?: number;
   search?: string;
   category?: string;
+  /**
+   * Defaults to true. Pass false for fixed-size strips (e.g. the homepage blog row) to skip
+   * a COUNT(*) over ~29k articles on the API side — it dominates that endpoint's latency.
+   */
+  withTotal?: boolean;
 }
 
 export interface ArticleCategoryItem {
@@ -436,10 +445,11 @@ export interface CaseLawResponse {
 
 /** Paginated article listing with optional search / category filter */
 export const getArticles = async (params: ArticleQueryParams = {}): Promise<PaginatedArticles> => {
-  const { page = 1, limit = 6, search = '', category = '' } = params;
+  const { page = 1, limit = 6, search = '', category = '', withTotal = true } = params;
   const query: Record<string, string | number> = { page, limit };
   if (search.trim()) query.search = search.trim();
   if (category.trim()) query.category = category.trim();
+  if (!withTotal) query.with_total = 'false';
   const response = await axiosInstance.get<ApiResponse<PaginatedArticles>>(
     '/platform/articles',
     { params: query }
