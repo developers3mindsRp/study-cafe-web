@@ -46,6 +46,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/category',
+        destination: '/blogs',
+        permanent: false,
+      },
+      {
+        source: '/course_cats',
+        destination: '/courses',
+        permanent: false,
+      },
+      {
         source: '/blogs/:slug.html',
         destination: '/:slug.html',
         permanent: true,
