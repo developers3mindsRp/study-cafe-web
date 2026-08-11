@@ -129,7 +129,7 @@ export default function Blog_list({
             
               <div className="relative w-full xl:h-[243px]">
                 <img
-                  src={b.cover_image_url || b.thumbnail_url || "/images/b1.jpg"}
+                  src={b.cover_image_url || b.thumbnail_url || "/images/placeholder.jpg"}
                   alt={b.title}
                   className="h-full w-full object-cover"
                   referrerPolicy="no-referrer"
