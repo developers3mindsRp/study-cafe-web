@@ -89,10 +89,25 @@ const handlePageChange = (page: number) => {
   router.push(url).finally(() => setIsLoading(false));
 };
 
+  const categoryLabel =
+    categories.find((c) => c.slug === category)?.name ||
+    (category
+      ? category.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
+      : "All");
+
+  const breadcrumbItems =
+    currentPage > 1
+      ? [
+          { label: "Blogs", href: "/blogs" },
+          { label: categoryLabel, href: `/category/${category}` },
+          { label: `Page ${currentPage}` },
+        ]
+      : [{ label: "Blogs", href: "/blogs" }, { label: categoryLabel }];
+
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
-        <Breadcrumbs />
+        <Breadcrumbs content={breadcrumbItems} />
       </div>
 
       <BannerSection_blog

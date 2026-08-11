@@ -26,10 +26,28 @@ export default function CategoryPage({
   initialCourses,
   initialQuery,
 }: Props) {
+  const category = initialQuery.category;
+  const page = initialQuery.page || 1;
+
+  const categoryLabel =
+    (category && cats.find((c) => c.slug === category)?.name) ||
+    (category
+      ? category.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
+      : "All");
+
+  const breadcrumbItems =
+    page > 1
+      ? [
+          { label: "Courses", href: "/courses" },
+          { label: categoryLabel, href: `/course_cats/${category}` },
+          { label: `Page ${page}` },
+        ]
+      : [{ label: "Courses", href: "/courses" }, { label: categoryLabel }];
+
   return (
     <PublicLayout>
       <div className="text-sm text-[#696969] bg-[#DDDDDD] p-4 mx-auto">
-        <Breadcrumbs />
+        <Breadcrumbs content={breadcrumbItems} />
       </div>
 
       <HeroSection_courses />
