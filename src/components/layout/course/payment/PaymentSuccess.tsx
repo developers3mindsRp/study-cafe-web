@@ -16,6 +16,12 @@ const PaymentSuccess = () => {
   const orderId = normalizeOrderId(router.query.order_id);
   const fromPaymentLink =
     router.query.payment_link === "1" || router.query.payment_link === "true";
+  /**
+   * The link granted a course or plan, so the buyer already has access — send them
+   * to it instead of dropping them on the homepage to work out what happens next.
+   */
+  const enrolledByLink =
+    fromPaymentLink && (router.query.enrolled === "1" || router.query.enrolled === "true");
 
   const [invoice, setInvoice] = useState<OrderInvoice | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,12 +59,12 @@ const PaymentSuccess = () => {
   useEffect(() => {
     if (!router.isReady || !fromPaymentLink || !orderId) return;
     if (countdown <= 0) {
-      router.push("/");
+      router.push(enrolledByLink ? "/dashboard" : "/");
       return;
     }
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
-  }, [router.isReady, fromPaymentLink, orderId, countdown, router]);
+  }, [router.isReady, fromPaymentLink, orderId, countdown, router, enrolledByLink]);
 
   useEffect(() => {
     if (fromPaymentLink) return;
@@ -131,9 +137,13 @@ const PaymentSuccess = () => {
         <div className="border shadow-[0px_1px_2px_0px_rgba(228,229,231,0.24)] py-8 md:py-12 rounded-[10px]">
           <div className="text-center px-4">
             <img src="/images/success.png" alt="" className="mx-auto w-20 md:w-auto" />
-            <h1 className="text-2xl md:text-[40px] font-semibold mt-4">Payment successful!</h1>
+            <h1 className="text-2xl md:text-[40px] font-semibold mt-4">
+              {enrolledByLink ? "You're in!" : "Payment successful!"}
+            </h1>
             <p className="text-sm md:text-[16px] text-[#929292] mt-2">
-              Thank you. Save your order ID for your records.
+              {enrolledByLink
+                ? "Payment received and your access is already active — start whenever you're ready."
+                : "Thank you. Save your order ID for your records."}
             </p>
           </div>
 
@@ -152,28 +162,47 @@ const PaymentSuccess = () => {
 
           <div className="mt-8 md:mt-10 text-center px-4 space-y-4">
             <p className="text-[#929292] text-sm md:text-[18px] leading-relaxed">
-              Redirecting to home in{" "}
+              Redirecting to {enrolledByLink ? "your dashboard" : "home"} in{" "}
               <span className="text-[#09339B] font-semibold">{countdown}</span> seconds.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
-              <Link
-                href="/"
-                className="inline-block bg-[#09339B] hover:bg-white px-8 md:px-12 py-3 text-white hover:text-[#09339B] border border-[#09339B] rounded-[10px] transition"
-              >
-                Go to home
-              </Link>
-              <Link
-                href="/courses"
-                className="inline-block border border-[#09339B] text-[#09339B] px-8 md:px-12 py-3 rounded-[10px] hover:bg-[#09339B]/5 transition"
-              >
-                Browse courses
-              </Link>
-              <Link
-                href={`/login?next=${encodeURIComponent("/dashboard")}`}
-                className="inline-block border border-gray-300 text-gray-800 px-8 md:px-12 py-3 rounded-[10px] hover:bg-gray-50 transition"
-              >
-                Log in
-              </Link>
+              {enrolledByLink ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="inline-block bg-[#09339B] hover:bg-white px-8 md:px-12 py-3 text-white hover:text-[#09339B] border border-[#09339B] rounded-[10px] transition"
+                  >
+                    Start learning
+                  </Link>
+                  <Link
+                    href="/"
+                    className="inline-block border border-[#09339B] text-[#09339B] px-8 md:px-12 py-3 rounded-[10px] hover:bg-[#09339B]/5 transition"
+                  >
+                    Go to home
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/"
+                    className="inline-block bg-[#09339B] hover:bg-white px-8 md:px-12 py-3 text-white hover:text-[#09339B] border border-[#09339B] rounded-[10px] transition"
+                  >
+                    Go to home
+                  </Link>
+                  <Link
+                    href="/courses"
+                    className="inline-block border border-[#09339B] text-[#09339B] px-8 md:px-12 py-3 rounded-[10px] hover:bg-[#09339B]/5 transition"
+                  >
+                    Browse courses
+                  </Link>
+                  <Link
+                    href={`/login?next=${encodeURIComponent("/dashboard")}`}
+                    className="inline-block border border-gray-300 text-gray-800 px-8 md:px-12 py-3 rounded-[10px] hover:bg-gray-50 transition"
+                  >
+                    Log in
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
