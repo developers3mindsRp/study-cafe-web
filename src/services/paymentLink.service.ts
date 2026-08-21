@@ -2,6 +2,20 @@ import axiosInstance from '@/lib/axios';
 import { ApiResponse } from '@/types/api.types';
 import type { CreateOrderResponse, VerifyOrderPayload } from '@/services/order.service';
 
+/** What the link grants on payment. "custom" links collect money and grant nothing. */
+export type PaymentLinkProductType = 'custom' | 'course' | 'membership';
+
+export interface PaymentLinkProduct {
+  type: 'course' | 'membership';
+  id: string;
+  name: string | null;
+  slug: string | null;
+  /** Courses only. */
+  thumbnail_url: string | null;
+  /** False when an admin fulfils this link by hand despite it naming a product. */
+  auto_enroll: boolean;
+}
+
 export interface PublicPaymentLink {
   id: number;
   title: string;
@@ -18,6 +32,10 @@ export interface PublicPaymentLink {
   display_sold: number;
   seats_remaining?: number;
   expires_at: string | null;
+  product_type?: PaymentLinkProductType;
+  product_id?: string | null;
+  /** Resolved course/plan this link enrols the buyer into; null for money-only links. */
+  product?: PaymentLinkProduct | null;
 }
 
 export async function getPaymentLinkBySlug(slug: string): Promise<PublicPaymentLink | null> {
@@ -31,6 +49,14 @@ export async function getPaymentLinkBySlug(slug: string): Promise<PublicPaymentL
   }
 }
 
+export interface PaymentLinkUtm {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  content?: string;
+  term?: string;
+}
+
 export interface PaymentLinkCheckoutPayload {
   paymentLinkId: number | string;
   fullName: string;
@@ -38,6 +64,7 @@ export interface PaymentLinkCheckoutPayload {
   mobile: string;
   gstNumber?: string;
   referralCode?: string;
+  utm?: PaymentLinkUtm;
 }
 
 export async function createPaymentLinkOrder(
@@ -50,6 +77,7 @@ export async function createPaymentLinkOrder(
     mobile: payload.mobile,
     gstNumber: payload.gstNumber || undefined,
     referralCode: payload.referralCode || undefined,
+    utm: payload.utm && Object.keys(payload.utm).length > 0 ? payload.utm : undefined,
   });
   return response.data.data;
 }

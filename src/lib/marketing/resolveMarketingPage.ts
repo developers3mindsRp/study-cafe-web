@@ -63,11 +63,36 @@ function youtubeEmbed(url?: string | null, autoplay = true): string | null {
   return `https://www.youtube.com/embed/${id}${params}`;
 }
 
-function formatPrice(course: CoursePublicDetail): string {
-  const sale = course.sale_price;
-  const price = course.price;
-  const n = sale != null && sale !== '' ? Number(sale) : Number(price);
-  if (!Number.isFinite(n)) return 'Rs 99';
+function toPrice(val: string | number | null | undefined): number | null {
+  if (val == null || val === '') return null;
+  const n = Number(val);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+/**
+ * What the inline checkout charges (pre-GST) and the MRP to strike through.
+ * Campaign price off the page meta wins; the course's own pricing is the fallback —
+ * mirrors order-service's resolveMarketingCampaignPrice so the summary and the
+ * charge can't disagree.
+ */
+function resolvePricing(meta: MarketingPageMeta, course: CoursePublicDetail): {
+  salePrice: number;
+  listPrice: number | null;
+} {
+  const campaignSale = toPrice(meta.sale_price);
+  const courseSale = toPrice(course.sale_price);
+  const courseList = toPrice(course.price);
+
+  const salePrice = campaignSale ?? courseSale ?? courseList ?? 0;
+  const listPrice = campaignSale != null ? toPrice(meta.amount) : courseSale != null ? courseList : null;
+  return {
+    salePrice,
+    listPrice: listPrice != null && listPrice > salePrice ? listPrice : null,
+  };
+}
+
+function formatPriceValue(n: number | null): string {
+  if (n == null || !Number.isFinite(n)) return 'Rs 99';
   return `Rs ${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
@@ -172,10 +197,19 @@ export function resolveMarketingPage(
     return sum + (Number.isFinite(n) ? n : 0);
   }, 0);
 
+  // Price labels default from the same number the checkout charges, so the page's
+  // "Rs 99" copy and the actual charge can't drift apart.
+  const { salePrice, listPrice } = resolvePricing(meta, course);
+  const salePriceText = formatPriceValue(salePrice);
+
   return {
     slug: page.slug,
     courseId: course.id,
-    announcementText: meta.announcement_text || `Join now for just ${formatPrice(course)} Only`,
+    courseTitle: course.title || '',
+    hasCustomCheckoutUrl: !!meta.checkout_url?.trim(),
+    salePrice,
+    listPrice,
+    announcementText: meta.announcement_text || `Join now for just ${salePriceText} Only`,
     headline: meta.headline || course.title || '',
     subheadline: meta.subheadline || course.brief_description || '',
     bonusBannerText:
@@ -187,7 +221,7 @@ export function resolveMarketingPage(
     masterclassTime: meta.masterclass_time || '',
     ctaTitle: meta.cta_title || 'Become a Certified AI Expert',
     ctaSubtitle: meta.cta_subtitle || 'To grow your practice Now!',
-    ctaPriceText: meta.cta_price_text || `Only at ${formatPrice(course)}`,
+    ctaPriceText: meta.cta_price_text || `Only at ${salePriceText}`,
     increasedPriceText: meta.increased_price_text || 'Rs 2,000',
     countdownMinutes: meta.countdown_minutes ?? 15,
     checkoutUrl: meta.checkout_url || `/course/${encodeURIComponent(courseSlug)}`,

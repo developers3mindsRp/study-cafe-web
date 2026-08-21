@@ -211,6 +211,8 @@ export interface QuickRegisterData {
   phone: string;
   password: string;
   confirmPassword: string;
+  /** Checkout signups: payment auto-verifies the buyer, so skip the immediate OTP email. */
+  skipVerificationEmail?: boolean;
 }
 
 export interface AuthResponse {

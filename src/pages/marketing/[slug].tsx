@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useCallback, useState } from 'react';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { resolveMarketingPage } from '@/lib/marketing/resolveMarketingPage';
 import type { MarketingPageProps } from '@/lib/marketing/types';
@@ -26,6 +27,7 @@ import Google_review from '@/components/layout/marketing/Google_review';
 import Faqs_marketing from '@/components/layout/marketing/Faqs';
 import Trainer_marketing from '@/components/layout/marketing/Trainer';
 import StickyCTA from '@/components/layout/marketing/Stickybar';
+import MarketingCheckoutModal from '@/components/layout/marketing/MarketingCheckoutModal';
 
 function metaVideoFallback(
   videoTestimonials: { url?: string; thumbnail?: string }[],
@@ -46,6 +48,13 @@ export default function MarketingPage({
   globalGoogleReviews,
   mediaTestimonials,
 }: MarketingPageProps) {
+  // Inline checkout: Buy Now opens the quick-register + payment overlay right here
+  // instead of routing ad traffic to the course page's login wall. Pages whose admin
+  // set a custom checkout URL keep navigating (data.hasCustomCheckoutUrl).
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const openCheckout = useCallback(() => setCheckoutOpen(true), []);
+  const onBuy = data.hasCustomCheckoutUrl ? undefined : openCheckout;
+
   return (
     <>
       <Head>
@@ -53,26 +62,31 @@ export default function MarketingPage({
         <meta name="description" content={data.subheadline} />
       </Head>
       <div className="bg-[#000A1F] text-white">
-        <BannerSection_digital data={data} />
-        <Expert_marketing data={data} />
+        <BannerSection_digital data={data} onBuy={onBuy} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Features_marketing data={data} />
         <Stats_marketing data={data} />
-        <Expert_marketing data={data} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Learning_marketing data={data} />
         <Timer_marketing data={data} />
-        <Expert_marketing data={data} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Bonus_marketing data={data} />
         <Attend_marketing data={data} />
         <Reviews_marketing data={data} />
         <Testimonials_marketing items={mediaTestimonials} />
-        <Expert_marketing data={data} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Alumini_marketing data={data} />
         <Trainer_marketing data={data} />
         <Gallery_marketing data={data} />
-        <Expert_marketing data={data} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Google_review data={data} globalReviews={globalGoogleReviews} />
         <Faqs_marketing data={data} faqs={globalFaqs} />
-        <StickyCTA data={data} />
+        <StickyCTA data={data} onBuy={onBuy} />
+        <MarketingCheckoutModal
+          data={data}
+          open={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+        />
       </div>
     </>
   );

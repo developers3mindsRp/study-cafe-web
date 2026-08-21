@@ -11,6 +11,10 @@ export interface MarketingPageMeta {
   cta_subtitle?: string;
   cta_price_text?: string;
   increased_price_text?: string;
+  /** Campaign MRP (struck through in the checkout summary). */
+  amount?: string | number;
+  /** Campaign selling price — what the inline checkout charges (+GST). */
+  sale_price?: string | number;
   countdown_minutes?: number;
   use_global_faq?: boolean;
   use_course_faq?: boolean;
@@ -53,6 +57,13 @@ export interface MarketingPagePublicPayload {
 export interface ResolvedMarketingPage {
   slug: string;
   courseId: number;
+  courseTitle: string;
+  /** True when the admin pointed CTAs at an external/custom URL instead of the inline checkout. */
+  hasCustomCheckoutUrl: boolean;
+  /** Pre-GST price the inline checkout charges (campaign price, else course price). */
+  salePrice: number;
+  /** MRP shown struck-through when higher than salePrice; null hides the comparison. */
+  listPrice: number | null;
   announcementText: string;
   headline: string;
   subheadline: string;

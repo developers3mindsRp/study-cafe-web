@@ -6,13 +6,15 @@ import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
 interface Props {
   data: ResolvedMarketingPage;
+  /** Opens the inline checkout; when absent the CTA navigates to data.checkoutUrl. */
+  onBuy?: () => void;
 }
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-export default function StickyCTA({ data }: Props) {
+export default function StickyCTA({ data, onBuy }: Props) {
   const [visible, setVisible] = useState(true);
   const totalSec = (data.countdownMinutes ?? 15) * 60;
   const [remaining, setRemaining] = useState(totalSec);
@@ -73,12 +75,22 @@ export default function StickyCTA({ data }: Props) {
             </div>
             <div className="flex flex-col items-center gap-2">
               <span className="text-white text-[14px] font-medium">{data.ctaPriceText}</span>
-              <Link
-                href={data.checkoutUrl}
-                className="bg-white text-gray-700 text-[14px] font-semibold px-6 py-2 rounded-md"
-              >
-                Buy Now
-              </Link>
+              {onBuy ? (
+                <button
+                  type="button"
+                  onClick={onBuy}
+                  className="bg-white text-gray-700 text-[14px] font-semibold px-6 py-2 rounded-md"
+                >
+                  Buy Now
+                </button>
+              ) : (
+                <Link
+                  href={data.checkoutUrl}
+                  className="bg-white text-gray-700 text-[14px] font-semibold px-6 py-2 rounded-md"
+                >
+                  Buy Now
+                </Link>
+              )}
             </div>
           </div>
         </div>

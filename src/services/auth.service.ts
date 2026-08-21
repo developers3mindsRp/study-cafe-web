@@ -142,6 +142,26 @@ export const requestLoginOtp = async (email: string): Promise<void> => {
   await axiosInstance.post('/auth/login/otp/request', { email: email.trim() });
 };
 
+/**
+ * Whether this email already has an account.
+ *
+ * Lets checkout ask for a password instead of guessing: an existing buyer is sent to
+ * sign-in, a new one straight to "pick a password", neither is shown a 409 after
+ * filling in a form. Falls back to "no account" so a lookup failure degrades into the
+ * signup path, which surfaces a proper duplicate-email error of its own.
+ */
+export const accountExists = async (email: string): Promise<boolean> => {
+  try {
+    const response = await axiosInstance.post<ApiResponse<{ exists: boolean }>>(
+      '/auth/account-exists',
+      { email: email.trim() },
+    );
+    return !!response.data.data?.exists;
+  } catch {
+    return false;
+  }
+};
+
 export const register = async (userData: RegisterData): Promise<AuthResponse> => {
   if (shouldUseMock()) {
     const authResponse = await mockAuthApi.register(userData);
@@ -198,6 +218,7 @@ export const registerQuick = async (userData: QuickRegisterData): Promise<AuthRe
     password: userData.password,
     confirmPassword: userData.confirmPassword,
     referralCode,
+    ...(userData.skipVerificationEmail ? { skipVerificationEmail: true } : {}),
   });
   return await persistAuth(response.data.data);
 };

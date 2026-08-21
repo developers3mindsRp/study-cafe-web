@@ -1,0 +1,707 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import type { ResolvedMarketingPage } from "@/lib/marketing/types";
+import { createOrder, verifyOrder } from "@/services/order.service";
+import * as authService from "@/services/auth.service";
+import { useAuth } from "@/providers/AuthProvider";
+import { queryKeys } from "@/lib/react-query";
+import { getReferralCode } from "@/utils/auth.utils";
+import type { ApiError } from "@/types/api.types";
+import { ShieldCheck, X } from "lucide-react";
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") return resolve(false);
+    if ((window as unknown as { Razorpay?: unknown }).Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
+function fmt(n: number) {
+  return `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function queryString(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+/** Campaign params off the ad URL, so the order records which campaign converted. */
+function readUtm(query: Record<string, unknown>) {
+  const utm: Record<string, string> = {};
+  for (const key of ["source", "medium", "campaign", "content", "term"] as const) {
+    const v = queryString(query[`utm_${key}`]);
+    if (v) utm[key] = v;
+  }
+  return Object.keys(utm).length > 0 ? utm : undefined;
+}
+
+function errorMessage(err: unknown, fallback: string): string {
+  const api = err as ApiError | undefined;
+  if (api?.message) return String(api.message);
+  if (err && typeof err === "object" && "message" in err) {
+    return String((err as { message?: string }).message) || fallback;
+  }
+  return fallback;
+}
+
+const GST_RATE = 0.18;
+
+const schema = yup.object({
+  fullName: yup.string().trim().required("Full name is required").max(250),
+  email: yup.string().trim().required("Email is required").email("Enter a valid email").max(255),
+  mobile: yup
+    .string()
+    .trim()
+    .required("Mobile number is required")
+    .test("phone", "Enter a valid mobile number", (v) => !!v && isValidPhoneNumber(v)),
+});
+
+type FormValues = {
+  fullName: string;
+  email: string;
+  mobile: string;
+};
+
+/**
+ * Same fork as PaymentLinkCheckout: "details" collects the buyer, then splits on
+ * whether the email already has an account. registerQuick returns a live session
+ * with NO OTP gate, so a brand-new ad visitor goes details → password → Razorpay
+ * without ever leaving the landing page.
+ */
+type Stage = "details" | "signin" | "signup";
+
+type Props = {
+  data: ResolvedMarketingPage;
+  open: boolean;
+  onClose: () => void;
+};
+
+export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { user, isAuthenticated } = useAuth();
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  /** Razorpay is open or a redirect is in flight — closing now would strand the buyer. */
+  const [payBusy, setPayBusy] = useState(false);
+
+  const sale = data.salePrice;
+  const mrp = data.listPrice;
+  const gst = Number((sale * GST_RATE).toFixed(2));
+  const grandTotal = Number((sale + gst).toFixed(2));
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues: { fullName: "", email: "", mobile: "" },
+  });
+
+  // ─── Prefill ────────────────────────────────────────────────────────────────
+  // Signed-in profile beats URL params; either fills once so a buyer who cleared
+  // a field to correct it is not fought by the effect.
+  const prefilledRef = useRef<"none" | "query" | "user">("none");
+  useEffect(() => {
+    if (!open || !router.isReady) return;
+    const source = user ? "user" : "query";
+    if (prefilledRef.current === "user" || prefilledRef.current === source) return;
+
+    const q = router.query as Record<string, unknown>;
+    const name = user?.name || queryString(q.name);
+    const email = user?.email || queryString(q.email);
+    const phone = user?.phone || queryString(q.phone);
+    if (!name && !email && !phone) return;
+
+    prefilledRef.current = source;
+    if (name) setValue("fullName", name);
+    if (email) setValue("email", email);
+    if (phone) {
+      setValue("mobile", phone.startsWith("+") ? phone : `+91${phone.replace(/\D/g, "").slice(-10)}`);
+    }
+  }, [open, router.isReady, router.query, user, setValue]);
+
+  // Landing page behind the overlay must not scroll while the buyer is checking out.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  // ─── Inline auth ────────────────────────────────────────────────────────────
+  const [stage, setStage] = useState<Stage>("details");
+  const [authBusy, setAuthBusy] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [signinMode, setSigninMode] = useState<"password" | "otp">("password");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpInfo, setOtpInfo] = useState<string | null>(null);
+
+  const resetAuthState = () => {
+    setAuthError(null);
+    setPassword("");
+    setConfirmPassword("");
+    setOtp("");
+    setOtpSent(false);
+    setOtpInfo(null);
+    setSigninMode("password");
+  };
+
+  const backToDetails = () => {
+    resetAuthState();
+    setStage("details");
+  };
+
+  const handleClose = () => {
+    if (payBusy) return;
+    setSubmitError(null);
+    backToDetails();
+    onClose();
+  };
+
+  /** Push the fresh session into the cache so the header updates without a reload. */
+  const adoptSession = (nextUser: unknown) => {
+    queryClient.setQueryData(queryKeys.auth.currentUser, nextUser);
+    void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
+  };
+
+  // ─── Checkout ───────────────────────────────────────────────────────────────
+  const goToSuccess = async (orderId: string) => {
+    // The server marks the buyer's email verified when the order completes. The
+    // fresh flag must be IN the cache before navigating, or the RequireVerifiedEmail
+    // gate on the success page bounces the buyer to the OTP screen. Invalidation is
+    // not enough: for an account created mid-checkout the auth query is disabled
+    // (AuthProvider only reads the token on mount), so a disabled query would never
+    // refetch — fetch /auth/me directly and seed the cache instead.
+    try {
+      const freshUser = await authService.getCurrentUser();
+      queryClient.setQueryData(queryKeys.auth.currentUser, freshUser);
+    } catch {
+      /* non-blocking — worst case the gate re-checks on the next full page load */
+    }
+    void router.push(`/payment-success?order_id=${encodeURIComponent(orderId)}`);
+  };
+
+  const startCheckout = async () => {
+    setSubmitError(null);
+    setPayBusy(true);
+    try {
+      const orderData = await createOrder({
+        type: "course",
+        entityId: data.courseId,
+        marketingSlug: data.slug,
+        referralCode: getReferralCode() || undefined,
+        utm: readUtm(router.query as Record<string, unknown>),
+      });
+
+      if (orderData.free && orderData.paid) {
+        await goToSuccess(orderData.orderId);
+        return;
+      }
+
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        setSubmitError("Failed to load payment gateway. Please try again.");
+        setPayBusy(false);
+        return;
+      }
+      if (!orderData.key || !orderData.razorpayOrderId) {
+        setSubmitError("Could not start payment. Please try again.");
+        setPayBusy(false);
+        return;
+      }
+
+      const values = getValues();
+      const options = {
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "Studycafe",
+        description: data.courseTitle || data.headline || "Course Purchase",
+        order_id: orderData.razorpayOrderId,
+        handler: async (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            await verifyOrder({
+              orderId: orderData.orderId,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            await goToSuccess(orderData.orderId);
+          } catch (verifyErr: unknown) {
+            setPayBusy(false);
+            alert(
+              `${errorMessage(verifyErr, "Payment verification failed.")} If payment was deducted, save this message and contact support with your email and payment time.`,
+            );
+          }
+        },
+        prefill: {
+          name: orderData.prefill?.name || values.fullName,
+          email: orderData.prefill?.email || values.email.trim(),
+          contact: orderData.prefill?.contact || values.mobile.replace(/\D/g, "").slice(-10),
+        },
+        theme: { color: "#dc2626" },
+        modal: { ondismiss: () => setPayBusy(false) },
+      };
+
+      const Rp = (typeof window !== "undefined"
+        ? (window as unknown as { Razorpay?: new (opts: Record<string, unknown>) => { open: () => void } }).Razorpay
+        : undefined);
+      if (!Rp) {
+        setSubmitError("Payment gateway unavailable.");
+        setPayBusy(false);
+        return;
+      }
+      new Rp(options).open();
+    } catch (e: unknown) {
+      setPayBusy(false);
+      throw e;
+    }
+  };
+
+  const onSubmitDetails = handleSubmit(async (values) => {
+    setSubmitError(null);
+
+    // Already signed in — nothing to ask, go straight to payment.
+    if (isAuthenticated) {
+      try {
+        await startCheckout();
+      } catch (e: unknown) {
+        setSubmitError(errorMessage(e, "Checkout failed. Please try again."));
+      }
+      return;
+    }
+
+    try {
+      const exists = await authService.accountExists(values.email.trim());
+      resetAuthState();
+      setStage(exists ? "signin" : "signup");
+    } catch {
+      setStage("signup");
+    }
+  });
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    const values = getValues();
+
+    if (signinMode === "password" && password.length < 1) {
+      setAuthError("Enter your password.");
+      return;
+    }
+    if (signinMode === "otp" && otp.replace(/\D/g, "").length !== 6) {
+      setAuthError("Enter the 6-digit code we emailed you.");
+      return;
+    }
+
+    setAuthBusy(true);
+    try {
+      const session =
+        signinMode === "password"
+          ? await authService.login({ email: values.email.trim(), password })
+          : await authService.loginWithEmailOtp({
+              email: values.email.trim(),
+              otp: otp.replace(/\D/g, ""),
+            });
+      adoptSession(session.user);
+      await startCheckout();
+    } catch (err: unknown) {
+      setAuthError(
+        errorMessage(
+          err,
+          signinMode === "password"
+            ? "That password did not work. Try again or use a sign-in code."
+            : "That code did not work. Request a new one.",
+        ),
+      );
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const handleSendOtp = async () => {
+    setAuthError(null);
+    setOtpInfo(null);
+    setAuthBusy(true);
+    try {
+      await authService.requestLoginOtp(getValues("email").trim());
+      setOtpSent(true);
+      setSigninMode("otp");
+      setOtpInfo("We emailed you a 6-digit sign-in code.");
+    } catch (err: unknown) {
+      setAuthError(errorMessage(err, "Could not send the code. Try again shortly."));
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    const values = getValues();
+
+    if (password.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setAuthError("Passwords do not match.");
+      return;
+    }
+    if (!acceptedTerms) {
+      setAuthError("Please accept the Terms & Conditions and Privacy Policy.");
+      return;
+    }
+
+    setAuthBusy(true);
+    try {
+      // registerQuick returns a live session immediately — no OTP screen between the
+      // buyer and the payment. The server marks the email verified once they pay, so
+      // the immediate verification-code email is skipped to avoid confusing the buyer.
+      const session = await authService.registerQuick({
+        name: values.fullName.trim(),
+        email: values.email.trim(),
+        phone: values.mobile.trim(),
+        password,
+        confirmPassword,
+        skipVerificationEmail: true,
+      });
+      adoptSession(session.user);
+      await startCheckout();
+    } catch (err: unknown) {
+      const api = err as ApiError;
+      if (api?.statusCode === 409) {
+        // They do have an account after all (e.g. registered on another device
+        // between the lookup and now) — move them to sign-in rather than dead-end.
+        resetAuthState();
+        setStage("signin");
+        setAuthError("You already have an account with this email. Sign in to finish.");
+        return;
+      }
+      setAuthError(errorMessage(err, "Could not create your account. Try again."));
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  if (!open) return null;
+
+  const inputClass =
+    "mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500";
+  const primaryButtonClass =
+    "rounded-lg bg-[#FF383C] px-6 py-3 text-lg font-semibold text-white hover:bg-red-700 disabled:opacity-50 w-full";
+
+  const payLabel = `Pay ${fmt(grandTotal)}`;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/70 p-0 sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={handleClose}
+    >
+      <div
+        className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white p-5 sm:p-8 text-gray-900"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={handleClose}
+          disabled={payBusy}
+          aria-label="Close checkout"
+          className="absolute right-4 top-4 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40"
+        >
+          <X size={22} />
+        </button>
+
+        {/* Order summary — same numbers the server charges */}
+        <div className="mb-5 rounded-xl border border-gray-200 p-4 pr-10">
+          <div className="text-sm font-semibold text-gray-900">
+            {data.courseTitle || data.headline}
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            {mrp != null && mrp > sale && (
+              <del className="text-base text-[#707070]">{fmt(mrp)}</del>
+            )}
+            <span className="text-2xl font-bold">{fmt(sale)}</span>
+          </div>
+          <div className="mt-2 flex justify-between border-t border-dashed pt-2 text-sm text-gray-600">
+            <span>Plus GST (18%)</span>
+            <span>{fmt(gst)}</span>
+          </div>
+          <div className="mt-2 flex items-center justify-between rounded-lg bg-green-100 p-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-green-700">
+              <ShieldCheck size={18} />
+              You pay
+            </div>
+            <div className="text-xl font-bold text-green-700">{fmt(grandTotal)}</div>
+          </div>
+        </div>
+
+        {stage === "details" && (
+          <>
+            <h2 className="mb-4 text-xl font-bold text-gray-900">Enter Your Details</h2>
+            <form onSubmit={onSubmitDetails} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Full Name <span className="text-[#FF383C]">*</span>
+                </label>
+                <input {...register("fullName")} placeholder="eg. Amit Kumar" className={inputClass} />
+                {errors.fullName && <p className="mt-1 text-xs text-[#FF383C]">{errors.fullName.message}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Email <span className="text-[#FF383C]">*</span>
+                </label>
+                <input type="email" {...register("email")} className={inputClass} />
+                {errors.email && <p className="mt-1 text-xs text-[#FF383C]">{errors.email.message}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Mobile Number <span className="text-[#FF383C]">*</span>
+                </label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <PhoneInput
+                      international
+                      defaultCountry="IN"
+                      value={value || undefined}
+                      onChange={(v) => onChange(v || "")}
+                      className="mt-1 marketing-checkout-phone"
+                    />
+                  )}
+                />
+                {errors.mobile && <p className="mt-1 text-xs text-[#FF383C]">{errors.mobile.message}</p>}
+              </div>
+
+              {submitError && <p className="text-sm text-[#FF383C]">{submitError}</p>}
+
+              <button type="submit" disabled={isSubmitting || payBusy} className={primaryButtonClass}>
+                {isSubmitting || payBusy ? "Processing…" : isAuthenticated ? payLabel : "Continue"}
+              </button>
+
+              {!isAuthenticated && (
+                <p className="text-center text-xs text-gray-500">
+                  Next: set a password so your access is saved to your account. No OTP needed.
+                </p>
+              )}
+            </form>
+          </>
+        )}
+
+        {stage === "signin" && (
+          <>
+            <h2 className="text-xl font-bold text-gray-900">Welcome back</h2>
+            <p className="mb-4 mt-1 text-sm text-gray-600">
+              You already have an account for{" "}
+              <span className="font-semibold">{getValues("email")}</span>. Sign in and your payment
+              opens right away.
+            </p>
+
+            <form onSubmit={handleSignIn} className="space-y-4">
+              {signinMode === "password" ? (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Password <span className="text-[#FF383C]">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={inputClass}
+                    placeholder="Your password"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Sign-in code <span className="text-[#FF383C]">*</span>
+                  </label>
+                  <input
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                    placeholder="______"
+                    className={`${inputClass} text-center text-xl tracking-[0.35em]`}
+                  />
+                </div>
+              )}
+
+              {otpInfo && <p className="text-sm text-green-700">{otpInfo}</p>}
+              {authError && <p className="text-sm text-[#FF383C]">{authError}</p>}
+
+              <button type="submit" disabled={authBusy || payBusy} className={primaryButtonClass}>
+                {authBusy || payBusy ? "Please wait…" : `Sign in & ${payLabel.toLowerCase()}`}
+              </button>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (signinMode === "password" || !otpSent) {
+                      void handleSendOtp();
+                    } else {
+                      setSigninMode("password");
+                      setAuthError(null);
+                    }
+                  }}
+                  disabled={authBusy}
+                  className="text-[#09339B] hover:underline disabled:opacity-50"
+                >
+                  {signinMode === "password"
+                    ? "Email me a sign-in code instead"
+                    : otpSent
+                      ? "Use my password instead"
+                      : "Send the code"}
+                </button>
+                {signinMode === "otp" && otpSent && (
+                  <button
+                    type="button"
+                    onClick={() => void handleSendOtp()}
+                    disabled={authBusy}
+                    className="text-gray-500 hover:underline disabled:opacity-50"
+                  >
+                    Resend code
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={backToDetails}
+                className="w-full text-sm text-gray-500 hover:underline"
+              >
+                Use a different email
+              </button>
+            </form>
+          </>
+        )}
+
+        {stage === "signup" && (
+          <>
+            <h2 className="text-xl font-bold text-gray-900">Create your account</h2>
+            <p className="mb-4 mt-1 text-sm text-gray-600">
+              One quick step so your course is saved to your account — then payment opens
+              straight away. No OTP needed.
+            </p>
+
+            <form onSubmit={handleSignUp} className="space-y-4">
+              <div className="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                <div className="font-semibold text-gray-900">{getValues("fullName")}</div>
+                <div>{getValues("email")}</div>
+                <div>{getValues("mobile")}</div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Create password <span className="text-[#FF383C]">*</span>
+                </label>
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="At least 6 characters"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm password <span className="text-[#FF383C]">*</span>
+                </label>
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="Repeat your password"
+                />
+              </div>
+
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  className="mt-1 shrink-0"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                />
+                <span>
+                  I agree to the{" "}
+                  <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
+                    Terms &amp; Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
+                    Privacy Policy
+                  </a>
+                  <span className="text-[#FF383C]"> *</span>
+                </span>
+              </label>
+
+              {authError && <p className="text-sm text-[#FF383C]">{authError}</p>}
+
+              <button type="submit" disabled={authBusy || payBusy} className={primaryButtonClass}>
+                {authBusy || payBusy ? "Please wait…" : `Create account & ${payLabel.toLowerCase()}`}
+              </button>
+
+              <button
+                type="button"
+                onClick={backToDetails}
+                className="w-full text-sm text-gray-500 hover:underline"
+              >
+                Back to my details
+              </button>
+            </form>
+          </>
+        )}
+
+        <style jsx global>{`
+          .marketing-checkout-phone {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 10px 10px;
+          }
+          .marketing-checkout-phone input.PhoneInputInput {
+            width: 100%;
+            padding: 0;
+            font-size: 0.875rem;
+            color: #111827;
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+}

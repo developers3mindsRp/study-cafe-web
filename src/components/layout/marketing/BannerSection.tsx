@@ -6,9 +6,11 @@ import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
 interface Props {
   data: ResolvedMarketingPage;
+  /** Opens the inline checkout; when absent the bonus banner stays decorative. */
+  onBuy?: () => void;
 }
 
-export default function BannerSection_digital({ data }: Props) {
+export default function BannerSection_digital({ data, onBuy }: Props) {
   const ticker = `${data.announcementText} | `.repeat(5);
 
   return (
@@ -67,7 +69,11 @@ export default function BannerSection_digital({ data }: Props) {
 
         <div className="mt-6">
           <p className="font-medium text-[18px]">Register Before Tonight to</p>
-          <button type="button" className="mt-2 bg-[#FF383C] px-4 py-2 rounded-md text-sm font-semibold">
+          <button
+            type="button"
+            onClick={onBuy}
+            className={`mt-2 bg-[#FF383C] px-4 py-2 rounded-md text-sm font-semibold${onBuy ? " cursor-pointer hover:bg-red-700 transition" : ""}`}
+          >
             {data.bonusBannerText}
           </button>
           {data.masterclassDate ? (
