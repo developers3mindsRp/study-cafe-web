@@ -275,8 +275,24 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
     const successUrl = (orderId: string) =>
       `/payment-success?order_id=${encodeURIComponent(orderId)}&payment_link=1${grantsAccess ? "&enrolled=1" : ""}`;
 
+    // The server marks the buyer's email verified when the order completes. The
+    // fresh flag must be IN the cache before navigating, or the RequireVerifiedEmail
+    // gate on the success page bounces the buyer to the OTP screen. Invalidation is
+    // not enough: for an account created mid-checkout the auth query is disabled
+    // (AuthProvider only reads the token on mount), so a disabled query would never
+    // refetch — fetch /auth/me directly and seed the cache instead.
+    const goToSuccess = async (orderId: string) => {
+      try {
+        const freshUser = await authService.getCurrentUser();
+        queryClient.setQueryData(queryKeys.auth.currentUser, freshUser);
+      } catch {
+        /* non-blocking — worst case the gate re-checks on the next full page load */
+      }
+      void router.push(successUrl(orderId));
+    };
+
     if (orderData.free && orderData.paid) {
-      router.push(successUrl(orderData.orderId));
+      await goToSuccess(orderData.orderId);
       return;
     }
 
@@ -309,7 +325,7 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
           });
-          router.push(successUrl(orderData.orderId));
+          await goToSuccess(orderData.orderId);
         } catch (verifyErr: unknown) {
           alert(
             `${errorMessage(verifyErr, "Payment verification failed.")} If payment was deducted, save this message and contact support with your email and payment time.`,
@@ -430,15 +446,16 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
 
     setAuthBusy(true);
     try {
-      // registerQuick returns a live session immediately. Email verification follows
-      // by email and deliberately does not gate payment — a buyer who is ready to pay
-      // should never be parked on an OTP screen.
+      // registerQuick returns a live session immediately — a buyer who is ready to pay
+      // should never be parked on an OTP screen. The server marks the email verified
+      // once payment completes, so the immediate verification-code email is skipped.
       const session = await authService.registerQuick({
         name: values.fullName.trim(),
         email: values.email.trim(),
         phone: values.mobile.trim(),
         password,
         confirmPassword,
+        skipVerificationEmail: true,
       });
       adoptSession(session.user);
       await startCheckout(values);

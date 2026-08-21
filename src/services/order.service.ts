@@ -59,6 +59,15 @@ export interface CreateOrderPayload {
   currency?: string;
   couponCode?: string;
   referralCode?: string;
+  /** Marketing landing page the buyer came from — server resolves its campaign price. */
+  marketingSlug?: string;
+  utm?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    content?: string;
+    term?: string;
+  };
 }
 
 export interface CreateOrderResponse {
@@ -76,6 +85,8 @@ export interface CreateOrderResponse {
   /** True when the order is fulfilled without payment (free course or 100% off) */
   free?: boolean;
   paid?: boolean;
+  /** Free checkout only: the user already held this course — no new order was made. */
+  alreadyEnrolled?: boolean;
   prefill?: {
     name?: string;
     email?: string;

@@ -218,6 +218,7 @@ export const registerQuick = async (userData: QuickRegisterData): Promise<AuthRe
     password: userData.password,
     confirmPassword: userData.confirmPassword,
     referralCode,
+    ...(userData.skipVerificationEmail ? { skipVerificationEmail: true } : {}),
   });
   return await persistAuth(response.data.data);
 };
