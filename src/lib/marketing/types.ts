@@ -7,6 +7,12 @@ export interface MarketingPageMeta {
   bonus_banner_text?: string;
   masterclass_date?: string;
   masterclass_time?: string;
+  /** "Register Before Tonight to" line above the bonus banner. */
+  register_before_text?: string;
+  /** "Masterclass is Starting on" label above the date/time chips. */
+  masterclass_label?: string;
+  /** Play-icon overlay on the banner thumbnail; defaults to shown. */
+  show_play_icon?: boolean;
   cta_title?: string;
   cta_subtitle?: string;
   cta_price_text?: string;
@@ -70,6 +76,9 @@ export interface ResolvedMarketingPage {
   bonusBannerText: string;
   masterclassDate: string;
   masterclassTime: string;
+  registerBeforeText: string;
+  masterclassLabel: string;
+  showPlayIcon: boolean;
   ctaTitle: string;
   ctaSubtitle: string;
   ctaPriceText: string;

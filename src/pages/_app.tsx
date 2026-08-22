@@ -95,13 +95,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
             }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
-            // First Pixel
-            fbq('init', '280305326909957');
-
-            // Second Pixel
+            // Meta Pixel (old pixel 280305326909957 retired — keep only this one)
             fbq('init', '1022628013882852');
-
-            // Track PageView for both pixels
             fbq('track', 'PageView');
           `}
         </Script>
@@ -159,13 +154,6 @@ export default function App({ Component, pageProps }: AppProps) {
      {/* ==================== Facebook Pixel NoScript ==================== */}
       <noscript>
         <>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=280305326909957&ev=PageView&noscript=1"
-            alt=""
-          />
           <img
             height="1"
             width="1"

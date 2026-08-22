@@ -49,11 +49,13 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
                   height={400}
                   className="w-full h-auto object-cover rounded-lg"
                 />
-                <div className="absolute inset-0 flex items-center justify-center rounded-lg pointer-events-none">
-                  <span className="bg-black/60 w-16 h-16 flex items-center justify-center rounded-full">
-                    <span className="text-white text-[30px]">▶</span>
-                  </span>
-                </div>
+                {data.showPlayIcon ? (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-lg pointer-events-none">
+                    <span className="bg-black/60 w-16 h-16 flex items-center justify-center rounded-full">
+                      <span className="text-white text-[30px]">▶</span>
+                    </span>
+                  </div>
+                ) : null}
               </>
             )}
           </div>
@@ -68,7 +70,7 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
         </div>
 
         <div className="mt-6">
-          <p className="font-medium text-[18px]">Register Before Tonight to</p>
+          <p className="font-medium text-[18px]">{data.registerBeforeText}</p>
           <button
             type="button"
             onClick={onBuy}
@@ -78,7 +80,7 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
           </button>
           {data.masterclassDate ? (
             <>
-              <p className="mt-4 text-[16px] text-white">Masterclass is Starting on</p>
+              <p className="mt-4 text-[16px] text-white">{data.masterclassLabel}</p>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-3 px-4 md:px-12">
                 <div className="bg-[#292738] text-[#FFCC00] px-3 py-2 rounded-md text-[13px] border flex gap-2 items-center justify-center w-fit">
                   <img src="/images/y-calendar.svg" alt="" className="w-4 h-4" />
