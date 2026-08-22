@@ -219,6 +219,10 @@ export function resolveMarketingPage(
         : 'Unblock Bonuses Worth Rs. 12,000'),
     masterclassDate: meta.masterclass_date || formatDateFromCourse(course.start_date),
     masterclassTime: meta.masterclass_time || '',
+    registerBeforeText: meta.register_before_text?.trim() || 'Register Before Tonight to',
+    masterclassLabel: meta.masterclass_label?.trim() || 'Masterclass is Starting on',
+    // Defaults to shown so existing pages render unchanged until an admin turns it off.
+    showPlayIcon: meta.show_play_icon !== false,
     ctaTitle: meta.cta_title || 'Become a Certified AI Expert',
     ctaSubtitle: meta.cta_subtitle || 'To grow your practice Now!',
     ctaPriceText: meta.cta_price_text || `Only at ${salePriceText}`,
