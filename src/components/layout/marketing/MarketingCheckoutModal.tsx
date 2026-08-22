@@ -10,12 +10,13 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 import { createOrder, verifyOrder } from "@/services/order.service";
+import { checkPurchaseStatus } from "@/services/purchases.service";
 import * as authService from "@/services/auth.service";
 import { useAuth } from "@/providers/AuthProvider";
 import { queryKeys } from "@/lib/react-query";
 import { getReferralCode } from "@/utils/auth.utils";
 import type { ApiError } from "@/types/api.types";
-import { ShieldCheck, X } from "lucide-react";
+import { BadgeCheck, ShieldCheck, X } from "lucide-react";
 
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
@@ -79,8 +80,30 @@ type FormValues = {
  * whether the email already has an account. registerQuick returns a live session
  * with NO OTP gate, so a brand-new ad visitor goes details → password → Razorpay
  * without ever leaving the landing page.
+ *
+ * "owned": the signed-in buyer already has this course. Shown instead of a Pay
+ * button so a returning learner (or a double click after paying) is sent to their
+ * dashboard rather than at order-service's double-payment guard.
  */
-type Stage = "details" | "signin" | "signup";
+type Stage = "details" | "signin" | "signup" | "owned";
+
+/** order-service refuses a repeat paid order inside its double-payment window with this 409. */
+function isAlreadyPurchasedError(err: unknown): boolean {
+  const api = err as ApiError | undefined;
+  return api?.statusCode === 409 && /already gone through|already (have|available)/i.test(String(api.message || ""));
+}
+
+/** order-service's per-user idempotency lock: a second create arrived while the first was still running. */
+function isDuplicateInProgressError(err: unknown): boolean {
+  const api = err as ApiError | undefined;
+  return api?.statusCode === 429 && /duplicate order/i.test(String(api.message || ""));
+}
+
+/** registerQuick 409s for a duplicate email OR a duplicate phone — only the former means "sign in". */
+function isDuplicatePhoneError(err: unknown): boolean {
+  const api = err as ApiError | undefined;
+  return api?.statusCode === 409 && /phone|mobile|number/i.test(String(api.message || ""));
+}
 
 type Props = {
   data: ResolvedMarketingPage;
@@ -94,7 +117,18 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const { user, isAuthenticated } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
   /** Razorpay is open or a redirect is in flight — closing now would strand the buyer. */
-  const [payBusy, setPayBusy] = useState(false);
+  const [payBusy, setPayBusyState] = useState(false);
+  /**
+   * Synchronous twin of payBusy. State updates land on the next render, so a fast
+   * double-tap on "Pay" could fire createOrder twice before the button disables —
+   * the second one then trips order-service's idempotency lock (429 "Duplicate
+   * order in progress"). The ref is checked and set in the same tick.
+   */
+  const payBusyRef = useRef(false);
+  const setPayBusy = (v: boolean) => {
+    payBusyRef.current = v;
+    setPayBusyState(v);
+  };
 
   const sale = data.salePrice;
   const mrp = data.listPrice;
@@ -186,6 +220,35 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
   };
 
+  // ─── Already-owned check ────────────────────────────────────────────────────
+  /**
+   * Does the signed-in session already have access to this course? Uses
+   * /access/check (covers direct purchase and membership). A failed lookup
+   * returns false so a flaky call never blocks a sale — order-service's own guard
+   * still backstops it and is mapped to the "owned" stage below.
+   */
+  const alreadyOwnsCourse = async (): Promise<boolean> => {
+    try {
+      return await checkPurchaseStatus(String(data.courseId));
+    } catch {
+      return false;
+    }
+  };
+
+  // A signed-in learner who already has the course should see "go to dashboard"
+  // the moment the modal opens, not a Pay button that 409s.
+  useEffect(() => {
+    if (!open || !isAuthenticated) return;
+    let cancelled = false;
+    void alreadyOwnsCourse().then((owned) => {
+      if (!cancelled && owned) setStage("owned");
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isAuthenticated, data.courseId]);
+
   // ─── Checkout ───────────────────────────────────────────────────────────────
   const goToSuccess = async (orderId: string) => {
     // The server marks the buyer's email verified when the order completes. The
@@ -204,6 +267,7 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   };
 
   const startCheckout = async () => {
+    if (payBusyRef.current) return; // a checkout is already in flight — ignore the repeat tap
     setSubmitError(null);
     setPayBusy(true);
     try {
@@ -284,13 +348,38 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     }
   };
 
+  /**
+   * Checkout for a session that is now signed in. Learners who already hold the
+   * course go to the "owned" stage — checked up front, and again via the 409 that
+   * order-service raises inside its double-payment window (e.g. Buy clicked twice,
+   * or again after the success page failed to load).
+   */
+  const checkoutAsSignedIn = async () => {
+    if (await alreadyOwnsCourse()) {
+      setStage("owned");
+      return;
+    }
+    try {
+      await startCheckout();
+    } catch (e: unknown) {
+      if (isAlreadyPurchasedError(e)) {
+        setStage("owned");
+        return;
+      }
+      if (isDuplicateInProgressError(e)) {
+        throw new Error("Your previous attempt is still being processed. Please wait a few seconds and try again.");
+      }
+      throw e;
+    }
+  };
+
   const onSubmitDetails = handleSubmit(async (values) => {
     setSubmitError(null);
 
     // Already signed in — nothing to ask, go straight to payment.
     if (isAuthenticated) {
       try {
-        await startCheckout();
+        await checkoutAsSignedIn();
       } catch (e: unknown) {
         setSubmitError(errorMessage(e, "Checkout failed. Please try again."));
       }
@@ -330,7 +419,9 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
               otp: otp.replace(/\D/g, ""),
             });
       adoptSession(session.user);
-      await startCheckout();
+      // A returning learner may already own the course — checkoutAsSignedIn
+      // routes them to the dashboard instead of a second payment.
+      await checkoutAsSignedIn();
     } catch (err: unknown) {
       setAuthError(
         errorMessage(
@@ -395,6 +486,15 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       adoptSession(session.user);
       await startCheckout();
     } catch (err: unknown) {
+      if (isDuplicatePhoneError(err)) {
+        // The EMAIL is new but the PHONE belongs to another account. Sending them to
+        // sign-in would dead-end (there is no account for this email) — send them
+        // back to the form with the real reason so they can change the number.
+        resetAuthState();
+        setStage("details");
+        setSubmitError(errorMessage(err, "This phone number is already registered. Use a different number."));
+        return;
+      }
       const api = err as ApiError;
       if (api?.statusCode === 409) {
         // They do have an account after all (e.g. registered on another device
@@ -402,6 +502,10 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
         resetAuthState();
         setStage("signin");
         setAuthError("You already have an account with this email. Sign in to finish.");
+        return;
+      }
+      if (isDuplicateInProgressError(err)) {
+        setAuthError("Your previous attempt is still being processed. Please wait a few seconds and try again.");
         return;
       }
       setAuthError(errorMessage(err, "Could not create your account. Try again."));
@@ -463,6 +567,39 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
             <div className="text-xl font-bold text-green-700">{fmt(grandTotal)}</div>
           </div>
         </div>
+
+        {stage === "owned" && (
+          <div className="text-center">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <BadgeCheck className="text-green-600" size={30} />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">You already have this course</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              {user?.email ? (
+                <>
+                  <span className="font-semibold">{user.email}</span> already has access — no need to
+                  pay again. Find it under My Courses.
+                </>
+              ) : (
+                "This account already has access — no need to pay again. Find it under My Courses."
+              )}
+            </p>
+            <button
+              type="button"
+              onClick={() => void router.push("/dashboard")}
+              className={`${primaryButtonClass} mt-5`}
+            >
+              Go to My Courses
+            </button>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="mt-3 w-full text-sm text-gray-500 hover:underline"
+            >
+              Close
+            </button>
+          </div>
+        )}
 
         {stage === "details" && (
           <>

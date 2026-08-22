@@ -30,6 +30,10 @@ export default function StickyCTA({ data, onBuy }: Props) {
   const min = Math.floor(remaining / 60);
   const sec = remaining % 60;
 
+  // "Only at Rs 199" → "Buy Now · Rs 199" so the price stays visible without its own line.
+  const priceOnly = data.ctaPriceText.replace(/^\s*only\s+at\s*/i, "").trim();
+  const buyLabel = priceOnly ? `Buy Now · ${priceOnly}` : "Buy Now";
+
   return (
     <>
       <div
@@ -37,61 +41,61 @@ export default function StickyCTA({ data, onBuy }: Props) {
           visible ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="bg-[#000A1F] px-4 py-3 shadow-lg">
+        {/* Kept deliberately short: this bar sits over the page on every phone, so
+            every extra line here is content the visitor can't read. The price now
+            lives inside the Buy button; the standalone "Only at …" line was dropped. */}
+        <div className="bg-[#000A1F] px-3 pt-1.5 pb-2 shadow-lg">
           <div
             role="button"
             tabIndex={0}
             onClick={() => setVisible(!visible)}
             onKeyDown={(e) => e.key === "Enter" && setVisible(!visible)}
-            className="flex justify-center mb-2 cursor-pointer"
+            className="flex justify-center mb-1.5 cursor-pointer"
           >
-            <div className="w-12 h-1.5 bg-gray-400 rounded-full" />
+            <div className="w-10 h-1 bg-gray-400 rounded-full" />
           </div>
 
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex gap-2">
-              <div className="bg-yellow-400 text-black font-bold px-3 py-2 rounded-md text-center">
-                <div className="text-lg leading-none">{pad(min)}</div>
-                <div className="text-[10px]">Min</div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex gap-1.5 shrink-0">
+              <div className="bg-yellow-400 text-black font-bold px-2 py-1 rounded-md text-center min-w-[38px]">
+                <div className="text-[15px] leading-none">{pad(min)}</div>
+                <div className="text-[9px] leading-tight">Min</div>
               </div>
-              <div className="bg-yellow-400 text-black font-bold px-3 py-2 rounded-md text-center">
-                <div className="text-lg leading-none">{pad(sec)}</div>
-                <div className="text-[10px]">Sec</div>
+              <div className="bg-yellow-400 text-black font-bold px-2 py-1 rounded-md text-center min-w-[38px]">
+                <div className="text-[15px] leading-none">{pad(sec)}</div>
+                <div className="text-[9px] leading-tight">Sec</div>
               </div>
             </div>
-            <p className="text-white text-xs ml-3">
+            <p className="text-white text-[11px] leading-snug">
               Fee will <span className="text-yellow-400">increase</span> to{" "}
               <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once
               the timer hits 0
             </p>
           </div>
 
-          <div className="bg-[url('/images/red-bg.png')] bg-cover bg-no-repeat rounded-xl px-5 py-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-white text-[18px] font-semibold leading-tight">
+          <div className="bg-[url('/images/red-bg.png')] bg-cover bg-center bg-no-repeat rounded-lg px-3 py-2.5 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="text-white text-[14px] font-semibold leading-tight line-clamp-2">
                 {data.ctaTitle}
               </h3>
-              <p className="text-white text-[12px] mt-1 opacity-90">{data.ctaSubtitle}</p>
+              <p className="text-white text-[11px] mt-0.5 opacity-90 line-clamp-1">{data.ctaSubtitle}</p>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-white text-[14px] font-medium">{data.ctaPriceText}</span>
-              {onBuy ? (
-                <button
-                  type="button"
-                  onClick={onBuy}
-                  className="bg-white text-gray-700 text-[14px] font-semibold px-6 py-2 rounded-md"
-                >
-                  Buy Now
-                </button>
-              ) : (
-                <Link
-                  href={data.checkoutUrl}
-                  className="bg-white text-gray-700 text-[14px] font-semibold px-6 py-2 rounded-md"
-                >
-                  Buy Now
-                </Link>
-              )}
-            </div>
+            {onBuy ? (
+              <button
+                type="button"
+                onClick={onBuy}
+                className="shrink-0 bg-white text-gray-800 text-[13px] font-semibold px-4 py-2 rounded-md whitespace-nowrap"
+              >
+                {buyLabel}
+              </button>
+            ) : (
+              <Link
+                href={data.checkoutUrl}
+                className="shrink-0 bg-white text-gray-800 text-[13px] font-semibold px-4 py-2 rounded-md whitespace-nowrap"
+              >
+                {buyLabel}
+              </Link>
+            )}
           </div>
         </div>
       </div>

@@ -461,6 +461,15 @@ export default function PaymentLinkCheckout({ link, initialExpired, expiryDispla
       await startCheckout(values);
     } catch (err: unknown) {
       const api = err as ApiError;
+      if (api?.statusCode === 409 && /phone|mobile|number/i.test(String(api.message || ""))) {
+        // The EMAIL is new but the PHONE belongs to another account. Sending them to
+        // sign-in would dead-end (there is no account for this email) — send them
+        // back to the form with the real reason so they can change the number.
+        resetAuthState();
+        setStage("details");
+        setSubmitError(errorMessage(err, "This phone number is already registered. Use a different number."));
+        return;
+      }
       if (api?.statusCode === 409) {
         // They do have an account after all (e.g. registered on another device
         // between the lookup and now) — move them to sign-in rather than dead-end.

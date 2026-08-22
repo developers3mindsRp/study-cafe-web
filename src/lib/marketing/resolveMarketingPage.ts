@@ -267,10 +267,17 @@ export function resolveMarketingPage(
         meta.trainer?.bio_points?.filter(Boolean) ??
         (author?.bio ? [author.bio] : []),
     },
-    alumniLogos: (ps.alumni_logos ?? []).map((l, i) => ({
-      image: (l as { image?: string }).image || `/images/brand_${(i % 6) + 1}.svg`,
-      name: (l as { name?: string }).name,
-    })),
+    // Admin stores each logo as `logo_url` (see CourseDetail); older rows may use
+    // `image`/`image_url`. Reading the wrong key here used to drop every real logo
+    // into a 6-image placeholder cycle, so pages with 7+ alumni showed repeats.
+    alumniLogos: (ps.alumni_logos ?? []).map((l, i) => {
+      const raw = l as { logo_url?: string; image?: string; image_url?: string; url?: string; name?: string };
+      const image = (raw.logo_url || raw.image || raw.image_url || raw.url || '').trim();
+      return {
+        image: image || `/images/brand_${(i % 6) + 1}.svg`,
+        name: raw.name,
+      };
+    }),
     faqs,
     googleReviews: feedbackReviews,
   };

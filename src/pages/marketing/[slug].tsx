@@ -66,7 +66,7 @@ export default function MarketingPage({
         <Expert_marketing data={data} onBuy={onBuy} />
         <Features_marketing data={data} />
         <Stats_marketing data={data} />
-        <Expert_marketing data={data} onBuy={onBuy} />
+        <Expert_marketing data={data} onBuy={onBuy} hideOnMobile />
         <Learning_marketing data={data} />
         <Timer_marketing data={data} />
         <Expert_marketing data={data} onBuy={onBuy} />
@@ -74,7 +74,7 @@ export default function MarketingPage({
         <Attend_marketing data={data} />
         <Reviews_marketing data={data} />
         <Testimonials_marketing items={mediaTestimonials} />
-        <Expert_marketing data={data} onBuy={onBuy} />
+        <Expert_marketing data={data} onBuy={onBuy} hideOnMobile />
         <Alumini_marketing data={data} />
         <Trainer_marketing data={data} />
         <Gallery_marketing data={data} />
