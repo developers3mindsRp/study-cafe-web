@@ -1,5 +1,10 @@
 import axios from "axios";
-import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds } from "@/types/models.types";
+import type {
+  ArticleBySlug,
+  BlogSpotlightFeed,
+  SiteDisplayAds,
+  UserSubscription,
+} from "@/types/models.types";
 import type { ApiResponse } from "@/types/api.types";
 
 /** Read `auth_token` cookie from SSR `Cookie` header (matches js-cookie client name). */
@@ -93,4 +98,28 @@ export async function fetchSiteDisplayAdsSSR(opts: {
     }
   }
   return null;
+}
+
+/**
+ * Viewer's membership, read with the request's own `auth_token`.
+ *
+ * Lets the article page decide about in-article ads before the first paint, so
+ * a premium member is never served banner markup that the client then has to
+ * strip. No token means a logged-out reader, and no request.
+ */
+export async function fetchViewerSubscriptionSSR(opts: {
+  baseUrl: string;
+  token?: string;
+}): Promise<UserSubscription | null> {
+  if (!opts.token) return null;
+  const base = opts.baseUrl.replace(/\/?$/, "");
+  try {
+    const res = await axios.get<ApiResponse<UserSubscription>>(`${base}/user/subscription`, {
+      headers: { Authorization: `Bearer ${opts.token}` },
+      timeout: 8000,
+    });
+    return res.data?.data ?? null;
+  } catch {
+    return null;
+  }
 }

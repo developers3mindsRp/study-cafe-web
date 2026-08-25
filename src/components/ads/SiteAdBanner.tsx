@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { resolveApiAssetUrl } from '@/utils/mediaUrl';
-import { activateAdScripts } from '@/lib/siteDisplayAds';
+import { activateAdScripts, neutralizeAdScripts } from '@/lib/siteDisplayAds';
 import type { SiteAdsSlot } from '@/types/models.types';
 
 function safeHref(url: string): string | undefined {
@@ -16,15 +16,21 @@ type Props = {
   className?: string;
 };
 
-/** Raw ad-network markup; scripts are re-created on mount so they execute. */
+/**
+ * Raw ad-network markup. The script tags are rendered inert and then activated
+ * on mount, so the slot runs exactly once whether the markup arrived in the SSR
+ * stream (where a live tag would execute during parsing) or from a client-side
+ * navigation (where it would never execute at all).
+ */
 function AdScriptSlot({ code, className }: { code: string; className: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const inert = useMemo(() => neutralizeAdScripts(code), [code]);
 
   useEffect(() => {
     activateAdScripts(ref.current);
-  }, [code]);
+  }, [inert]);
 
-  return <div ref={ref} className={className} dangerouslySetInnerHTML={{ __html: code }} />;
+  return <div ref={ref} className={className} dangerouslySetInnerHTML={{ __html: inert }} />;
 }
 
 /** Clickable CMS banner — image-only when no URL. */

@@ -417,8 +417,8 @@ export default function Premium_user({
     return injectBetweenArticleAdsIntoHtml(raw, betweenArticleAds);
   }, [article?.body, betweenArticleAds]);
 
-  // In-article ad code arrives through dangerouslySetInnerHTML, so its <script>
-  // tags are inert until re-created client-side.
+  // Ad <script> tags ship neutralised (see `neutralizeAdScripts`) so the SSR
+  // stream doesn't run them; this is the single point where they go live.
   const bodyRootRef = useRef<HTMLElement>(null);
   useEffect(() => {
     activateAdScripts(bodyRootRef.current);

@@ -12,6 +12,7 @@ import Premium_user from "@/components/layout/blog-list/PremiumUser";
 import ArticleUpNextSection from "@/components/layout/blog-list/ArticleUpNextSection";
 import { cardThumb } from "@/components/layout/blog-list/blogImage";
 import { articleTeaserPlain } from "@/components/layout/blog-list/articleTeaserPlain";
+import { useViewerAdsAllowed } from "@/hooks/useViewerAdsAllowed";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -25,6 +26,12 @@ type Props = {
   initialSpotlight: BlogSpotlightFeed;
   /** From SSR — article detail sidebar slots */
   siteAds?: SiteDisplayAds | null;
+  /**
+   * SSR's read of the viewer's plan: basic / free see in-article ads, premium
+   * and ultimate do not. Re-checked on the client below, so a client-side
+   * navigation lands on the same answer.
+   */
+  adsAllowed?: boolean;
 };
 
 /**
@@ -36,8 +43,13 @@ export default function BlogArticlePremiumLayout({
   initialArticle,
   initialSpotlight,
   siteAds,
+  adsAllowed = true,
 }: Props) {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+
+  // Seeded with the server's answer so the first client render matches the
+  // markup React hydrated; it only changes if the plan lookup disagrees.
+  const showInArticleAds = useViewerAdsAllowed({ whileLoading: adsAllowed });
 
   const { data: article = initialArticle, refetch } = useQuery({
     queryKey: queryKeys.articles.detail(slug),
@@ -114,7 +126,7 @@ export default function BlogArticlePremiumLayout({
             article &&
             <Premium_user
               article={article}
-              betweenArticleAds={siteAds?.between_article ?? null}
+              betweenArticleAds={showInArticleAds ? siteAds?.between_article ?? null : null}
               authorSpotlight={spotlight?.author ?? null}
               authorRecent={spotlight?.author_recent_articles ?? []}
               recentPosts={spotlight?.recent_posts ?? []}

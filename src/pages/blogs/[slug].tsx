@@ -6,12 +6,14 @@ import type { ArticleBySlug, BlogSpotlightFeed, SiteDisplayAds, SeoMetadata } fr
 import { appConfig } from '@/config/app.config';
 import { buildArticlePublicPath } from '@/lib/articlePaths';
 import { readMiddlewareSeoHeader } from '@/lib/seo/normalize';
+import { viewerSeesAds } from '@/lib/adPolicy';
 import Script from "next/script";
 import {
   bearerFromCookieHeader,
   fetchArticleBySlugSSR,
   fetchBlogSpotlightSSR,
   fetchSiteDisplayAdsSSR,
+  fetchViewerSubscriptionSSR,
 } from '@/lib/serverArticle';
 
 interface BlogDetailProps {
@@ -19,12 +21,14 @@ interface BlogDetailProps {
   article: ArticleBySlug;
   spotlight: BlogSpotlightFeed;
   siteAds: SiteDisplayAds | null;
+  /** Decided from the request cookie, so a premium member never gets a first paint with banners. */
+  adsAllowed: boolean;
   isPreview?: boolean;
   pageSeo: SeoMetadata | null;
   seoPathname: string;
 }
 
-export default function BlogDetail({ slug, article, spotlight, siteAds, isPreview }: BlogDetailProps) {
+export default function BlogDetail({ slug, article, spotlight, siteAds, adsAllowed, isPreview }: BlogDetailProps) {
 // console.log(article?.embed_scripts[0],"article")
 
   return (
@@ -60,6 +64,7 @@ export default function BlogDetail({ slug, article, spotlight, siteAds, isPrevie
         initialArticle={article}
         initialSpotlight={spotlight}
         siteAds={siteAds}
+        adsAllowed={adsAllowed}
       />
     </PublicLayout>
   );
@@ -80,10 +85,11 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
   const previewToken = typeof ctx.query.preview_token === 'string' ? ctx.query.preview_token : null;
 
   // console.log(baseUrl,"baseUrl")
-  const [article, spotlight, siteAds] = await Promise.all([
+  const [article, spotlight, siteAds, subscription] = await Promise.all([
     fetchArticleBySlugSSR(slug, { baseUrl, token, previewToken }),
     fetchBlogSpotlightSSR({ baseUrl, token, currentSlug: slug }),
     fetchSiteDisplayAdsSSR({ baseUrl }),
+    fetchViewerSubscriptionSSR({ baseUrl, token }),
   ]);
   // Skip canonical redirect when previewing a draft — it may not have a canonical URL yet
 
@@ -133,6 +139,12 @@ export const getServerSideProps: GetServerSideProps<BlogDetailProps> = async (ct
       article,
       spotlight,
       siteAds,
+      // No cookie means a logged-out reader, who gets ads. A cookie whose plan
+      // lookup came back empty is a *failed* lookup, not a free reader: withhold
+      // the banners and let the client's own check add them a moment later. The
+      // cost is a short delay for free members; the alternative is a first paint
+      // full of ads for someone who paid to be rid of them.
+      adsAllowed: token ? Boolean(subscription) && viewerSeesAds(subscription) : true,
       isPreview: !!previewToken,
       pageSeo,
       seoPathname,
