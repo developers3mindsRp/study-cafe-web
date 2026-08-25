@@ -245,7 +245,10 @@ export interface UpdateProfileData {
 
 export interface UserSubscription {
   hasActiveMembership: boolean;
+  /** Display name of the plan while the membership is active ("Ultimate"). */
   membershipType?: string | null;
+  /** Raw plan slug — `basic` | `premium` | `ultimate`, or a legacy value. */
+  membershipSlug?: string | null;
   startsAt?: string | null;
   expiresAt?: string | null;
 }

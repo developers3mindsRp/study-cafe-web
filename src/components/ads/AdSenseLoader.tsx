@@ -1,9 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { useAuth } from "@/providers/AuthProvider";
-import { useSubscriptionStatus } from "@/hooks/usePurchases";
-import { planHidesAds, shouldShowAds } from "@/lib/adPolicy";
+import { shouldShowAds } from "@/lib/adPolicy";
+import { useViewerAdsAllowed } from "@/hooks/useViewerAdsAllowed";
 
 const ADSENSE_CLIENT = "ca-pub-7535560429122052";
 
@@ -13,7 +12,8 @@ const ADSENSE_CLIENT = "ca-pub-7535560429122052";
  *
  * Route: home, membership, courses, account and checkout are ad-free for
  * everyone. Member: on the content routes that do carry ads, basic members
- * (and free / logged-out visitors) see them; premium and ultimate do not.
+ * (and free / logged-out visitors) see them; premium and ultimate do not —
+ * the same call `useViewerAdsAllowed` makes for the in-article CMS banners.
  *
  * The script is withheld until membership is known, so a paying member never
  * gets a flash of ads while `/auth/me` is still in flight. That costs basic
@@ -28,32 +28,10 @@ const ADSENSE_CLIENT = "ca-pub-7535560429122052";
  */
 export default function AdSenseLoader() {
   const { pathname } = useRouter();
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
-
-  const routeAllowsAds = shouldShowAds(pathname);
-
-  // Only a paying member needs the plan lookup — for everyone else
-  // `hasActiveMembership` already settles it, and the call is skipped.
-  const needsPlan = routeAllowsAds && isAuthenticated && !!user?.hasActiveMembership;
-  const { data: subscription, isLoading: planLoading } = useSubscriptionStatus({
-    enabled: needsPlan,
+  const adsAllowed = useViewerAdsAllowed({
+    enabled: shouldShowAds(pathname),
+    whileLoading: false,
   });
-
-  const adsAllowed = useMemo(() => {
-    if (!routeAllowsAds) return false;
-    if (authLoading) return false;
-    if (!isAuthenticated) return true;
-    if (!user?.hasActiveMembership) return true;
-    if (planLoading) return false;
-    return !planHidesAds(subscription?.membershipType);
-  }, [
-    routeAllowsAds,
-    authLoading,
-    isAuthenticated,
-    user?.hasActiveMembership,
-    planLoading,
-    subscription?.membershipType,
-  ]);
 
   useEffect(() => {
     // Drives the CSS guard, which hides anchor/vignette units — those attach to
