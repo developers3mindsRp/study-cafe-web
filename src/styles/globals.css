@@ -561,9 +561,18 @@ ins.adsbygoogle[data-ad-status="unfilled"] {
 }
 
 /* The wrapper carries my-6 spacing of its own, which would otherwise leave a
-   double margin where a collapsed unit used to be. :has() is unsupported on
-   older Safari, where the fallback is simply the original spacing — no ad, no
-   gap beyond the margin. */
-.site-ad-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+   double margin where a collapsed unit used to be. Skipped when the slot has a
+   house banner to fall back to — that one still needs its box. :has() is
+   unsupported on older Safari, where the fallback is simply the original
+   spacing — no ad, no gap beyond the margin. */
+.site-ad-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]):not(:has(.site-ad-fallback)) {
+  display: none !important;
+}
+
+/* House banner behind an ad-network slot.
+   Visible by default so the space always carries something — an unfilled slot,
+   a blocked ad script, or a network that never answers all leave it standing.
+   It steps aside only once AdSense confirms it actually filled the unit. */
+.site-ad-slot:has(ins.adsbygoogle[data-ad-status="filled"]) .site-ad-fallback {
   display: none !important;
 }

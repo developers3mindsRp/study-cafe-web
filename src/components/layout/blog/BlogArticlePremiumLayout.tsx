@@ -13,6 +13,8 @@ import ArticleUpNextSection from "@/components/layout/blog-list/ArticleUpNextSec
 import { cardThumb } from "@/components/layout/blog-list/blogImage";
 import { articleTeaserPlain } from "@/components/layout/blog-list/articleTeaserPlain";
 import { useViewerAdsAllowed } from "@/hooks/useViewerAdsAllowed";
+import SiteAdBanner from "@/components/ads/SiteAdBanner";
+import { slotHasContent } from "@/lib/siteDisplayAds";
 
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return "";
@@ -122,7 +124,17 @@ export default function BlogArticlePremiumLayout({
               tags={article.tags}
             />
           }
-         
+
+          {/* Banner directly beneath the featured image — the CMS `below_featured_post`
+              slot, held to the same membership rule as the in-article ones. */}
+          {showInArticleAds && slotHasContent(siteAds?.between_article?.below_featured_post) && (
+            <SiteAdBanner
+              slot={siteAds?.between_article?.below_featured_post}
+              className="site-ad-slot my-6 text-center"
+              active={adsResolved}
+            />
+          )}
+
 
           {
             article &&

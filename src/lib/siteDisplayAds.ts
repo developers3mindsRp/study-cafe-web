@@ -41,6 +41,34 @@ export function neutralizeAdScripts(code: string): string {
   });
 }
 
+/**
+ * Drop the AdSense library tag from a CMS snippet.
+ *
+ * Every snippet pasted out of the AdSense console carries its own loader, so a
+ * page with two configured slots asked for the library three times counting
+ * `<AdSenseLoader />`. Google's tag is meant to load once per page; the extra
+ * copies re-run auto-ads setup and are a documented cause of units that
+ * initialise but never fill.
+ *
+ * Safe to remove because the slot and the loader appear together: both are
+ * gated on the same "this viewer sees ads" decision, so whenever a snippet
+ * renders, `<AdSenseLoader />` has loaded (or is loading) the library. A
+ * `push()` that runs first simply queues until it arrives.
+ *
+ * Loaders for other ad networks are left alone.
+ */
+export function stripAdSenseLoader(code: string): string {
+  return code.replace(
+    /<script\b[^>]*\bsrc\s*=\s*["'][^"']*pagead\/js\/adsbygoogle\.js[^"']*["'][^>]*>\s*<\/script\s*>/gi,
+    '',
+  );
+}
+
+/** CMS ad markup made safe to put in the HTML stream: deduped, then inert. */
+export function prepareCmsAdMarkup(code: string): string {
+  return neutralizeAdScripts(stripAdSenseLoader(code));
+}
+
 /** True when the slot is actually configured for its selected mode. */
 export function slotHasContent(slot: SiteAdsSlot | null | undefined): boolean {
   if (!slot) return false;
@@ -73,14 +101,8 @@ export function activateAdScripts(root: HTMLElement | null | undefined): void {
   }
 }
 
-/** Server-safe HTML snippet for one banner (injected next to raw article HTML). */
-export function bannerSnippetFromSlot(slot: SiteAdsSlot | undefined): string | null {
-  if (slot?.mode === 'script') {
-    const code = slot.script?.trim();
-    if (!code) return null;
-    return `<div class="site-ad-slot site-ad-script my-6 text-center">${neutralizeAdScripts(code)}</div>`;
-  }
-
+/** The slot's own image, wrapped in its link when it has one. Null if unset. */
+function imageMarkupFromSlot(slot: SiteAdsSlot | undefined): string | null {
   const srcRaw = slot?.image_url?.trim();
   if (!srcRaw) return null;
   const resolved = resolveApiAssetUrl(srcRaw);
@@ -88,8 +110,31 @@ export function bannerSnippetFromSlot(slot: SiteAdsSlot | undefined): string | n
   const link = slot?.link_url?.trim();
   const href = link ? safeHref(link) : '';
   if (href && href !== '#') {
-    return `<div class="site-ad-slot my-6 text-center"><a href="${escapeHtmlAttr(href)}" target="_blank" rel="noopener noreferrer">${img}</a></div>`;
+    return `<a href="${escapeHtmlAttr(href)}" target="_blank" rel="noopener noreferrer">${img}</a>`;
   }
+  return img;
+}
+
+/**
+ * Server-safe HTML snippet for one banner (injected next to raw article HTML).
+ *
+ * A `script` slot that also carries an image gets that image as a house
+ * fallback: the ad network decides whether it has anything to serve, and an
+ * unfilled slot would otherwise leave the space earning nothing. CSS does the
+ * swap — see `.site-ad-fallback` in globals.css — because the decision arrives
+ * as a `data-ad-status` attribute long after render.
+ */
+export function bannerSnippetFromSlot(slot: SiteAdsSlot | undefined): string | null {
+  if (slot?.mode === 'script') {
+    const code = slot.script?.trim();
+    if (!code) return null;
+    const fallback = imageMarkupFromSlot(slot);
+    const fallbackMarkup = fallback ? `<div class="site-ad-fallback">${fallback}</div>` : '';
+    return `<div class="site-ad-slot site-ad-script my-6 text-center">${prepareCmsAdMarkup(code)}${fallbackMarkup}</div>`;
+  }
+
+  const img = imageMarkupFromSlot(slot);
+  if (!img) return null;
   return `<div class="site-ad-slot my-6 text-center">${img}</div>`;
 }
 
