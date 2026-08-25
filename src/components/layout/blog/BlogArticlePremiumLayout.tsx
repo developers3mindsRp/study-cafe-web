@@ -49,7 +49,9 @@ export default function BlogArticlePremiumLayout({
 
   // Seeded with the server's answer so the first client render matches the
   // markup React hydrated; it only changes if the plan lookup disagrees.
-  const showInArticleAds = useViewerAdsAllowed({ whileLoading: adsAllowed });
+  const { adsAllowed: showInArticleAds, isResolved: adsResolved } = useViewerAdsAllowed({
+    whileLoading: adsAllowed,
+  });
 
   const { data: article = initialArticle, refetch } = useQuery({
     queryKey: queryKeys.articles.detail(slug),
@@ -127,6 +129,7 @@ export default function BlogArticlePremiumLayout({
             <Premium_user
               article={article}
               betweenArticleAds={showInArticleAds ? siteAds?.between_article ?? null : null}
+              adsActive={showInArticleAds && adsResolved}
               authorSpotlight={spotlight?.author ?? null}
               authorRecent={spotlight?.author_recent_articles ?? []}
               recentPosts={spotlight?.recent_posts ?? []}

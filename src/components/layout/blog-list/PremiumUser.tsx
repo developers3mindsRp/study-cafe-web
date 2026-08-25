@@ -369,6 +369,12 @@ type Props = {
   article: ArticleBySlug | null;
   /** Inline banners injected after selected paragraphs — applied on the client after refetches. */
   betweenArticleAds?: SiteDisplayAds["between_article"] | null;
+  /**
+   * Whether the viewer's ad eligibility is settled *and* positive. Ad scripts
+   * stay dormant until it is: an AdSense unit that runs while the CSS guard has
+   * it hidden measures zero width and fails for good.
+   */
+  adsActive?: boolean;
   authorSpotlight: BlogSpotlightAuthor | null;
   authorRecent: BlogSpotlightArticleCard[];
   recentPosts?: BlogSpotlightArticleCard[];
@@ -385,6 +391,7 @@ type Props = {
 export default function Premium_user({
   article,
   betweenArticleAds,
+  adsActive = true,
   authorSpotlight,
   authorRecent,
   recentPosts = [],
@@ -418,11 +425,14 @@ export default function Premium_user({
   }, [article?.body, betweenArticleAds]);
 
   // Ad <script> tags ship neutralised (see `neutralizeAdScripts`) so the SSR
-  // stream doesn't run them; this is the single point where they go live.
+  // stream doesn't run them; this is the single point where they go live, and
+  // only once the viewer is known to be an ad-seeing one — running an AdSense
+  // unit while the CSS guard still has it hidden burns the slot permanently.
   const bodyRootRef = useRef<HTMLElement>(null);
   useEffect(() => {
+    if (!adsActive) return;
     activateAdScripts(bodyRootRef.current);
-  }, [articleBodyHtml, canReadFull]);
+  }, [articleBodyHtml, canReadFull, adsActive]);
 
 // console.log(article?.article_types, "article")
 
