@@ -549,3 +549,21 @@ body[data-ads="off"] [id^="google_ads_iframe"],
 body[data-ads="off"] .google-revocation-link-placeholder {
   display: none !important;
 }
+
+/* Collapse ad units AdSense could not fill.
+   A responsive unit is sized from its container width the moment it is
+   initialised, before Google knows whether it has inventory for it. With no ad
+   to serve it stamps data-ad-status="unfilled" and leaves the reserved box
+   standing — the tall empty gap mid-article. Nothing here reserves space back,
+   so an unfilled slot takes up none. */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}
+
+/* The wrapper carries my-6 spacing of its own, which would otherwise leave a
+   double margin where a collapsed unit used to be. :has() is unsupported on
+   older Safari, where the fallback is simply the original spacing — no ad, no
+   gap beyond the margin. */
+.site-ad-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none !important;
+}
