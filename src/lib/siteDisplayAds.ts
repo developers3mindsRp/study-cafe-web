@@ -50,8 +50,12 @@ export function slotHasContent(slot: SiteAdsSlot | null | undefined): boolean {
 
 /**
  * Turn the neutralised ad `<script>` tags inside `root` into live ones.
+ *
  * Only tags carrying our marker type are touched, so unrelated scripts the CMS
- * embedded in an article body are never re-run. Idempotent via a done-marker.
+ * embedded in an article body are never re-run — and since activation strips
+ * that type, an already-live script can't be selected twice. No bookkeeping
+ * attribute is added: AdSense reads every `data-ad-*` attribute on its own
+ * loader tag and warns about ones it doesn't recognise.
  */
 export function activateAdScripts(root: HTMLElement | null | undefined): void {
   if (!root) return;
@@ -59,13 +63,11 @@ export function activateAdScripts(root: HTMLElement | null | undefined): void {
     root.querySelectorAll<HTMLScriptElement>(`script[type="${AD_SCRIPT_TYPE}"]`),
   );
   for (const old of scripts) {
-    if (old.dataset.adActivated === '1') continue;
     const fresh = document.createElement('script');
     for (const attr of Array.from(old.attributes)) {
       fresh.setAttribute(attr.name, attr.value);
     }
     fresh.removeAttribute('type');
-    fresh.dataset.adActivated = '1';
     fresh.text = old.text;
     old.replaceWith(fresh);
   }

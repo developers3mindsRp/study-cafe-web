@@ -28,7 +28,7 @@ const ADSENSE_CLIENT = "ca-pub-7535560429122052";
  */
 export default function AdSenseLoader() {
   const { pathname } = useRouter();
-  const adsAllowed = useViewerAdsAllowed({
+  const { adsAllowed, isResolved } = useViewerAdsAllowed({
     enabled: shouldShowAds(pathname),
     whileLoading: false,
   });
@@ -36,8 +36,15 @@ export default function AdSenseLoader() {
   useEffect(() => {
     // Drives the CSS guard, which hides anchor/vignette units — those attach to
     // <body> and so outlive a client-side navigation into an ad-free page.
+    //
+    // Left untouched until membership is known. Writing "off" during that window
+    // hid the in-article <ins> elements too, and an AdSense slot measured at zero
+    // width fails permanently — the blank gap mid-article. On a client-side
+    // navigation the answer is already settled, so the guard is still in place
+    // before the next page mounts.
+    if (!isResolved) return;
     document.body.dataset.ads = adsAllowed ? "on" : "off";
-  }, [adsAllowed]);
+  }, [adsAllowed, isResolved]);
 
   if (!adsAllowed) return null;
 
