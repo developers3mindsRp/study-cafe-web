@@ -576,3 +576,14 @@ ins.adsbygoogle[data-ad-status="unfilled"] {
 .site-ad-slot:has(ins.adsbygoogle[data-ad-status="filled"]) .site-ad-fallback {
   display: none !important;
 }
+
+/* OneSignal's push-notification bell, suppressed per route.
+   The SDK loads lazily and injects #onesignal-bell-launcher into <body> itself,
+   so the flag is a body attribute rather than a prop — the bell can arrive after
+   the page has mounted, and it outlives a client-side navigation the same way
+   the anchor ad units do. Marketing landing pages set this: the bell sits in the
+   bottom-right corner, over the sticky Buy CTA on mobile. */
+body[data-onesignal-bell="off"] #onesignal-bell-launcher,
+body[data-onesignal-bell="off"] #onesignal-slidedown-container {
+  display: none !important;
+}

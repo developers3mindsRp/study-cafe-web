@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { runWithServerApiBase } from '@/lib/serverApiContext';
 import { resolveMarketingPage } from '@/lib/marketing/resolveMarketingPage';
 import type { MarketingPageProps } from '@/lib/marketing/types';
@@ -54,6 +54,18 @@ export default function MarketingPage({
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const openCheckout = useCallback(() => setCheckoutOpen(true), []);
   const onBuy = data.hasCustomCheckoutUrl ? undefined : openCheckout;
+
+  // Hide OneSignal's notification bell here — it parks itself in the bottom-right
+  // corner, on top of the sticky Buy CTA, and a permission prompt is the wrong ask
+  // of paid ad traffic. The SDK injects the bell into <body>, so a CSS guard keyed
+  // off this attribute catches it whenever it loads. Cleared on unmount so the
+  // bell returns when a visitor navigates on to the rest of the site.
+  useEffect(() => {
+    document.body.dataset.onesignalBell = 'off';
+    return () => {
+      delete document.body.dataset.onesignalBell;
+    };
+  }, []);
 
   return (
     <>
