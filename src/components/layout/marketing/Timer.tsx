@@ -42,11 +42,13 @@ const Timer_marketing = ({ data }: Props) => {
           <div className="text-xs">Sec</div>
         </div>
       </div>
-      <p className="text-[16px] md:text-[24px] mt-4 px-2 md:px-4 mb-8 md:mb-10">
-        Fee will increase to{" "}
-        <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once the
-        timer hits <span className="text-yellow-400">ZERO</span>.
-      </p>
+      {data.increasedPriceText ? (
+        <p className="text-[16px] md:text-[24px] mt-4 px-2 md:px-4 mb-8 md:mb-10">
+          Fee will increase to{" "}
+          <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once the
+          timer hits <span className="text-yellow-400">ZERO</span>.
+        </p>
+      ) : null}
       {/* <Expert_marketing data={data} /> */}
     </section>
   );

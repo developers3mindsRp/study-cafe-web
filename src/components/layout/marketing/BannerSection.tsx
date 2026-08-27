@@ -6,19 +6,11 @@ import type { ResolvedMarketingPage } from "@/lib/marketing/types";
 
 interface Props {
   data: ResolvedMarketingPage;
-  /** Opens the inline checkout; when absent the bonus banner stays decorative. */
-  onBuy?: () => void;
 }
 
-export default function BannerSection_digital({ data, onBuy }: Props) {
-  const ticker = `${data.announcementText} | `.repeat(5);
-
+export default function BannerSection_digital({ data }: Props) {
   return (
     <div>
-      <div className="bg-red-600 text-center text-sm py-2 whitespace-nowrap overflow-hidden">
-        <p className="animate-marquee">{ticker}</p>
-      </div>
-
       <div className="max-w-4xl mx-auto px-4 py-6 md:py-10 text-center">
         <h1 className="text-[22px] md:text-[40px] font-medium leading-snug">
           {data.headline}
@@ -70,17 +62,16 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
         </div>
 
         <div className="mt-6">
-          <p className="font-medium text-[16px] md:text-[18px]">{data.registerBeforeText}</p>
-          <button
-            type="button"
-            onClick={onBuy}
-            className={`mt-2 bg-[#FF383C] px-4 py-2 rounded-md text-sm font-semibold${onBuy ? " cursor-pointer hover:bg-red-700 transition" : ""}`}
-          >
-            {data.bonusBannerText}
-          </button>
+          {/* Single line: the bonus text used to sit in a red button underneath,
+              which split one sentence across two blocks. */}
+          {data.registerBeforeText ? (
+            <p className="font-medium text-[16px] md:text-[18px]">{data.registerBeforeText}</p>
+          ) : null}
           {data.masterclassDate ? (
             <>
-              <p className="mt-4 text-[16px] text-white">{data.masterclassLabel}</p>
+              {data.masterclassLabel ? (
+                <p className="mt-4 text-[16px] text-white">{data.masterclassLabel}</p>
+              ) : null}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 mt-3 px-0 md:px-12">
                 <div className="bg-[#292738] text-[#FFCC00] px-3 py-2 rounded-md text-[13px] border flex gap-2 items-center justify-center w-fit">
                   <img src="/images/y-calendar.svg" alt="" className="w-4 h-4" />
