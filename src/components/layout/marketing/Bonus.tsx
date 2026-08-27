@@ -19,7 +19,11 @@ const Bonus_marketing = ({ data }: Props) => {
       <h2 className="text-center text-[22px] sm:text-[28px] lg:text-[40px] font-bold px-2 sm:px-8 mt-4 sm:mt-8 uppercase">
         <span className="text-yellow-400">Register</span> before Today&apos;s Midnight
       </h2>
-      <p className="text-center text-[16px] sm:text-[28px] lg:text-[24px] font-regular mt-4 sm:mt-8 px-2 sm:px-12">{data.bonusBannerText}</p>
+      {data.bonusBannerText ? (
+        <p className="text-center text-[16px] sm:text-[28px] lg:text-[24px] font-regular mt-4 sm:mt-8 px-2 sm:px-12">
+          {data.bonusBannerText}
+        </p>
+      ) : null}
 
       {/* <div className="flex items-center justify-center gap-2 mb-8">
         <img src="/images/gift.svg" alt="" className="w-5 h-5" />

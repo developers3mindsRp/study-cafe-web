@@ -63,6 +63,15 @@ function youtubeEmbed(url?: string | null, autoplay = true): string | null {
   return `https://www.youtube.com/embed/${id}${params}`;
 }
 
+/**
+ * Admin copy fields: clearing one in the panel means "show nothing", so an
+ * empty string is an authored value, not a missing one. Only a field the admin
+ * has never touched (undefined/null) falls back to the built-in default.
+ */
+function authored(value: string | null | undefined, fallback: string): string {
+  return value == null ? fallback : value.trim();
+}
+
 function toPrice(val: string | number | null | undefined): number | null {
   if (val == null || val === '') return null;
   const n = Number(val);
@@ -209,24 +218,25 @@ export function resolveMarketingPage(
     hasCustomCheckoutUrl: !!meta.checkout_url?.trim(),
     salePrice,
     listPrice,
-    announcementText: meta.announcement_text || `Join now for just ${salePriceText} Only`,
+    announcementText: authored(meta.announcement_text, `Join now for just ${salePriceText} Only`),
     headline: meta.headline || course.title || '',
-    subheadline: meta.subheadline || course.brief_description || '',
-    bonusBannerText:
-      meta.bonus_banner_text ||
-      (bonusesTotalWorth > 0
+    subheadline: authored(meta.subheadline, course.brief_description || ''),
+    bonusBannerText: authored(
+      meta.bonus_banner_text,
+      bonusesTotalWorth > 0
         ? `Unblock Bonuses Worth Rs. ${bonusesTotalWorth.toLocaleString('en-IN')}`
-        : 'Unblock Bonuses Worth Rs. 12,000'),
+        : 'Unblock Bonuses Worth Rs. 12,000',
+    ),
     masterclassDate: meta.masterclass_date || formatDateFromCourse(course.start_date),
     masterclassTime: meta.masterclass_time || '',
-    registerBeforeText: meta.register_before_text?.trim() || 'Register Before Tonight to',
-    masterclassLabel: meta.masterclass_label?.trim() || 'Masterclass is Starting on',
+    registerBeforeText: authored(meta.register_before_text, 'Register Before Tonight to'),
+    masterclassLabel: authored(meta.masterclass_label, 'Masterclass is Starting on'),
     // Defaults to shown so existing pages render unchanged until an admin turns it off.
     showPlayIcon: meta.show_play_icon !== false,
-    ctaTitle: meta.cta_title || 'Become a Certified AI Expert',
-    ctaSubtitle: meta.cta_subtitle || 'To grow your practice Now!',
-    ctaPriceText: meta.cta_price_text || `Only at ${salePriceText}`,
-    increasedPriceText: meta.increased_price_text || 'Rs 2,000',
+    ctaTitle: authored(meta.cta_title, 'Become a Certified AI Expert'),
+    ctaSubtitle: authored(meta.cta_subtitle, 'To grow your practice Now!'),
+    ctaPriceText: authored(meta.cta_price_text, `Only at ${salePriceText}`),
+    increasedPriceText: authored(meta.increased_price_text, 'Rs 2,000'),
     countdownMinutes: meta.countdown_minutes ?? 15,
     checkoutUrl: meta.checkout_url || `/course/${encodeURIComponent(courseSlug)}`,
     videoUrl,
