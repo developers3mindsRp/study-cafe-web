@@ -28,8 +28,8 @@ const Timer_marketing = ({ data }: Props) => {
   const sec = remaining % 60;
 
   return (
-    <section className="container mx-auto px-4 text-center">
-      <p className="text-white text-[20px] xl:text-[40px] font-semibold mb-2 px-12 uppercase ">
+    <section className="container mx-auto px-4 py-4 text-center">
+      <p className="text-white text-[20px] xl:text-[40px] font-semibold mb-4 px-2 md:px-12 uppercase">
         Time is running out. Reserve your seat <span className="text-yellow-400">now!</span>
       </p>
       <div className="flex justify-center gap-4 mb-4">
@@ -42,7 +42,7 @@ const Timer_marketing = ({ data }: Props) => {
           <div className="text-xs">Sec</div>
         </div>
       </div>
-      <p className="text-[24px] mt-4 px-4 mb-10">
+      <p className="text-[16px] md:text-[24px] mt-4 px-2 md:px-4 mb-8 md:mb-10">
         Fee will increase to{" "}
         <span className="text-yellow-400 font-semibold">{data.increasedPriceText}</span> once the
         timer hits <span className="text-yellow-400">ZERO</span>.

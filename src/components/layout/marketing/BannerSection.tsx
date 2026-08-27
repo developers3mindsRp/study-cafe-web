@@ -19,16 +19,16 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
         <p className="animate-marquee">{ticker}</p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-        <h1 className="text-[20px] md:text-[40px] font-medium leading-snug">
+      <div className="max-w-4xl mx-auto px-4 py-6 md:py-10 text-center">
+        <h1 className="text-[22px] md:text-[40px] font-medium leading-snug">
           {data.headline}
         </h1>
       
         {data.subheadline ? (
-          <p className="text-[16px] text-white mt-4">{data.subheadline}</p>
+          <p className="text-[15px] md:text-[16px] text-white mt-3 md:mt-4">{data.subheadline}</p>
         ) : null}
 
-        <div className="mt-8 rounded-xl md:px-24">
+        <div className="mt-6 md:mt-8 rounded-xl md:px-24">
           <div className="relative rounded-lg overflow-hidden">
             {data.youtubeEmbedUrl ? (
               <iframe
@@ -70,7 +70,7 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
         </div>
 
         <div className="mt-6">
-          <p className="font-medium text-[18px]">{data.registerBeforeText}</p>
+          <p className="font-medium text-[16px] md:text-[18px]">{data.registerBeforeText}</p>
           <button
             type="button"
             onClick={onBuy}
@@ -81,13 +81,13 @@ export default function BannerSection_digital({ data, onBuy }: Props) {
           {data.masterclassDate ? (
             <>
               <p className="mt-4 text-[16px] text-white">{data.masterclassLabel}</p>
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-3 px-4 md:px-12">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 mt-3 px-0 md:px-12">
                 <div className="bg-[#292738] text-[#FFCC00] px-3 py-2 rounded-md text-[13px] border flex gap-2 items-center justify-center w-fit">
                   <img src="/images/y-calendar.svg" alt="" className="w-4 h-4" />
                   {data.masterclassDate}
                 </div>
                 {data.masterclassTime ? (
-                  <div className="bg-[#292738] text-[#FFCC00] px-8 py-2 rounded-md text-[13px] border flex gap-2 items-center justify-center w-fit">
+                  <div className="bg-[#292738] text-[#FFCC00] px-3 md:px-8 py-2 rounded-md text-[13px] border flex gap-2 items-center justify-center w-fit">
                     <img src="/images/y-clock.svg" alt="" className="w-4 h-4" />
                     {data.masterclassTime}
                   </div>

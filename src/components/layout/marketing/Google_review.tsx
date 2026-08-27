@@ -13,16 +13,16 @@ const Google_review = ({ data, globalReviews = [] }: Props) => {
 
   return (
     <section className="container mx-auto px-4 py-8">
-      <h2 className="text-center text-[30px] md:text-[40px] uppercase font-semibold mb-8">Google Reviews</h2>
-      <div className="grid md:grid-cols-3 gap-6">
+      <h2 className="text-center text-[24px] md:text-[40px] uppercase font-semibold mb-6 md:mb-8">Google Reviews</h2>
+      <div className="grid md:grid-cols-3 gap-4 md:gap-6">
         {reviews.map((item, index) => (
-          <div key={`${item.name}-${index}`} className="bg-white rounded-lg p-5 text-black">
+          <div key={`${item.name}-${index}`} className="bg-white rounded-lg p-4 md:p-5 text-black">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
                 {item.name.charAt(0)}
               </div>
-              <div>
-                <p className="font-semibold">{item.name}</p>
+              <div className="min-w-0">
+                <p className="font-semibold break-words">{item.name}</p>
                 {item.role ? <p className="text-xs text-gray-500">{item.role}</p> : null}
               </div>
             </div>
