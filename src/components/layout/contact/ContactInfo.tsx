@@ -39,6 +39,7 @@ const SOCIAL_ICONS: Array<{
 ];
 
 export default function ContactInfo({ data }: Props) {
+  
   const socials = SOCIAL_ICONS.map((s) => ({
     href: String(data[s.key] || "").trim(),
     icon: s.icon,
@@ -66,7 +67,40 @@ export default function ContactInfo({ data }: Props) {
           <EmailLinks value={data.email} className="text-[16px] text-gray-600 hover:text-[#09339B]" />
         </div>
 
+       
+
         <div className="flex flex-col justify-center rounded-xl border border-[#9FBBFF] bg-white p-8 text-center transition hover:shadow-md">
+          <div className="mb-4 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+            <img src="/images/phone1.svg" alt="" className="h-16 w-16" />
+          </div>
+
+          <h3 className="mb-2 text-[20px] font-medium text-[#252525] xl:text-[30px]">
+            {data.phoneCardTitle}
+          </h3>
+
+          <div className="flex flex-col items-center gap-1">
+            {String(data.phone || "")
+              .split(",")
+              .map((phone, index) => {
+                const cleanPhone = phone.trim();
+
+                return (
+                  <a
+                    key={`${cleanPhone}-${index}`}
+                    className="text-[16px] text-gray-600 hover:text-[#09339B]"
+                    href={`tel:${cleanPhone.replace(/\s/g, "")}`}
+                  >
+                    {cleanPhone}
+                  </a>
+                );
+              })}
+          </div>
+        </div>
+
+
+
+
+        {/* <div className="flex flex-col justify-center rounded-xl border border-[#9FBBFF] bg-white p-8 text-center transition hover:shadow-md">
           <div className="mb-4 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
             <img src="/images/phone1.svg" alt="" className="h-16 w-16" />
           </div>
@@ -79,7 +113,10 @@ export default function ContactInfo({ data }: Props) {
           >
             {data.phone}
           </a>
-        </div>
+        </div> */}
+
+
+
 
         <div className="flex flex-col justify-center rounded-xl border border-[#9FBBFF] bg-white p-8 text-center transition hover:shadow-md">
           <div className="mb-4 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
