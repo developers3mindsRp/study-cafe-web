@@ -12,14 +12,14 @@ const Reviews_marketing = ({ data }: Props) => {
 
   return (
     <section className="container mx-auto px-4 py-8 overflow-hidden">
-      <h2 className="text-center text-[30px] md:text-[40px] mb-8 uppercase">
+      <h2 className="text-center text-[24px] md:text-[40px] mb-6 md:mb-8 uppercase">
         What our Course Attendees Say
       </h2>
       <div className="flex gap-4 overflow-x-auto pb-4 snap-x">
         {testimonials.map((item, index) => (
           <div
             key={index}
-            className="min-w-[280px] md:min-w-[320px] snap-start bg-[#1A1C26] rounded-lg p-6 flex-shrink-0"
+            className="min-w-[260px] md:min-w-[320px] snap-start bg-[#1A1C26] rounded-lg p-5 md:p-6 flex-shrink-0"
           >
             <p className="text-white text-sm mb-4">{item.quote}</p>
             <p className="font-semibold">{item.name}</p>

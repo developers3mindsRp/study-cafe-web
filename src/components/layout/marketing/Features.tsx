@@ -10,7 +10,7 @@ const Features_marketing = ({ data }: Props) => {
 
   return (
     <div
-      className="grid md:grid-cols-2 gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto"
+      className="grid md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-12 mt-8 scroll-mt-28 container px-4 mx-auto"
       id="features"
     >
       {features.map((feature, index) => (
@@ -20,7 +20,7 @@ const Features_marketing = ({ data }: Props) => {
         >
           <img src="/images/tick1.png" alt="" width={45} height={45} className="flex-shrink-0" />
           <p
-            className="text-[14px] text-black font-semibold"
+            className="min-w-0 flex-1 text-[14px] text-black font-semibold"
             dangerouslySetInnerHTML={{ __html: feature }}
           />
         </div>

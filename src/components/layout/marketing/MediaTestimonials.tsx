@@ -72,13 +72,11 @@ export default function MediaTestimonials({
     : "text-[30px] md:text-[40px] font-semibold mb-6 md:mb-8 text-white text-center uppercase";
 
   return (
-    <section
-      className="pb-14 pt-16"
-    >
+    <section className="pb-10 pt-10 md:pb-14 md:pt-16">
       <h2 className={headingClass}>Testimonials</h2>
 
       {/* Mobile Slider */}
-      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:hidden px-2 scrollbar-hide mb-12">
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory md:hidden px-4 scrollbar-hide mb-8">
         {items.map((item) => {
           const isVideo =
             item.mediaType === "video" && !!item.videoUrl?.trim();
@@ -92,7 +90,7 @@ export default function MediaTestimonials({
               key={item.id}
               className="w-[250px] snap-center flex-shrink-0 text-left"
             >
-              <div className="mt-6 relative flex items-center justify-between">
+              <div className="relative flex items-center justify-between">
                 {/* IMAGE */}
                 <img
                   src={item.mediaUrl}

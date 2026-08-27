@@ -61,7 +61,8 @@ export default function MarketingPage({
         <title>{data.headline} | StudyCafe</title>
         <meta name="description" content={data.subheadline} />
       </Head>
-      <div className="bg-[#000A1F] text-white">
+      {/* pb-44 keeps the last section clear of the fixed mobile StickyCTA (~140px tall). */}
+      <div className="bg-[#000A1F] text-white pb-44 md:pb-0">
         <BannerSection_digital data={data} onBuy={onBuy} />
         <Expert_marketing data={data} onBuy={onBuy} />
         <Features_marketing data={data} />

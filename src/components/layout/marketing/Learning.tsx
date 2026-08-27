@@ -12,17 +12,17 @@ const Learning_marketing = ({ data }: Props) => {
   if (!cards.length) return null;
 
   return (
-    <section className="py-10 container md:px-32 mx-auto ">
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 container px-4 mx-auto ">
+    <section className="container mx-auto py-8 md:py-10 px-4 md:px-32">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         {cards.map((card, index) => (
           <div
             key={index}
-            className="bg-[#F3F4F6] border border-green-400 rounded-xl  flex flex-col items-center justify-center text-center  p-2 md:p-8 aspect-[1.2/1] h-[150px] md:h-[200px] xl:h-auto hover:shadow-xl transition duration-300"
+            className="bg-[#F3F4F6] border border-green-400 rounded-xl flex flex-col items-center justify-center text-center p-3 md:p-8 min-h-[140px] md:h-[200px] xl:h-auto hover:shadow-xl transition duration-300"
           >
             {card.icon ? (
-              <img src={card.icon} alt="" className="w-14 h-14 md:w-16 md:h-16 mb-6" />
+              <img src={card.icon} alt="" className="w-10 h-10 md:w-16 md:h-16 mb-2 md:mb-6" />
             ) : null}
-            <p className="font-semibold text-[12px] md:text-[18px] text-black leading-snug">{card.text}</p>
+            <p className="font-semibold text-[13px] md:text-[18px] text-black leading-snug">{card.text}</p>
           </div>
         ))}
       </div>

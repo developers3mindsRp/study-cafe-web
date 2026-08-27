@@ -29,7 +29,7 @@ const Expert_marketing = ({ data, onBuy, hideOnMobile = false }: Props) => {
     <section
       className={`${hideOnMobile ? "hidden md:flex" : "flex"} relative max-w-[935px] min-h-[150px] md:min-h-[209px] items-center justify-center
 bg-[url('/images/red-bg.png')] bg-cover bg-center bg-no-repeat
-container mx-auto px-4 py-5 md:py-8 md:mt-8 md:rounded-[10px]`}
+container mx-auto px-4 py-6 my-8 md:py-8 md:my-0 md:mt-8 md:rounded-[10px]`}
     >
       <div className="relative z-10 text-center w-full">
         <h2 className="text-white text-[18px] md:text-[28px] xl:text-[40px] font-semibold leading-snug mb-1 md:mb-2 px-2 md:px-8">
