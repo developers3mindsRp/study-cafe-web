@@ -75,7 +75,7 @@ export default function MarketingPage({
       </Head>
       {/* pb-44 keeps the last section clear of the fixed mobile StickyCTA (~140px tall). */}
       <div className="bg-[#000A1F] text-white pb-44 md:pb-0">
-        <BannerSection_digital data={data} onBuy={onBuy} />
+        <BannerSection_digital data={data} />
         <Expert_marketing data={data} onBuy={onBuy} />
         <Features_marketing data={data} />
         <Stats_marketing data={data} />
@@ -84,6 +84,7 @@ export default function MarketingPage({
         <Timer_marketing data={data} />
         <Expert_marketing data={data} onBuy={onBuy} />
         <Bonus_marketing data={data} />
+        <Expert_marketing data={data} onBuy={onBuy} />
         <Attend_marketing data={data} />
         <Reviews_marketing data={data} />
         <Testimonials_marketing items={mediaTestimonials} />
