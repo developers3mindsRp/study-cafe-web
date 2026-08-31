@@ -279,57 +279,77 @@ const PlanCard = forwardRef<HTMLDivElement, PlanCardProps>(
 
     // Desktop card
     return (
-      <div
-        ref={ref}
-        className={`flex flex-col h-full relative rounded-2xl bg-white p-2 ${highlight ? "" : ""
-          }`}
-      >
-        {highlight && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[#09339B] text-[18px] xl:text-[24px] font-bold px-4 py-1">
-            Most Popular
-          </div>
-        )}
+    <div
+      ref={ref}
+      className="relative flex h-full flex-col rounded-2xl bg-white p-2"
+    >
+      {highlight && (
+        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 whitespace-nowrap px-4 py-1 text-[18px] font-bold text-[#09339B] xl:text-[24px]">
+          Most Popular
+        </div>
+      )}
 
-        <div
-          className={`${highlight
-            ? "bg-gradient-to-b from-[#01BAFF] to-[#09339B] text-white mt-10 rounded-[10px] p-4"
-            : "bg-white p-6"
-            } flex-shrink-0`}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3
-                className={`text-[26px] font-semibold ${highlight ? "text-white" : "text-[#1F2937]"
-                  }`}
+      <div
+        className={`flex-shrink-0 rounded-[12px] transition-all duration-300 ${
+          highlight
+            ? "mt-10 bg-gradient-to-b from-[#01BAFF] to-[#09339B] p-5 text-white shadow-[0_10px_25px_rgba(9,51,155,0.25)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(9,51,155,0.3)]"
+            : "border border-[#E8EDF5] bg-white p-6 shadow-[0_6px_20px_rgba(15,23,42,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-5">
+          <div className="min-w-0">
+            {/* Plan Name */}
+            <h3
+              className={`text-[26px] font-semibold tracking-[-0.3px] ${
+                highlight ? "text-white" : "text-[#1F2937]"
+              }`}
+            >
+              {plan.name}
+            </h3>
+
+            {/* Price */}
+            <div className="mt-2 flex flex-wrap items-baseline gap-2">
+              <del
+                className={`text-[24px] font-semibold leading-none ${
+                  highlight ? "text-white/60" : "text-[#8C8C8C]"
+                }`}
               >
-                {plan.name}
-              </h3>
-              <p
-                className={`xl:text-[32px] font-bold leading-tight mt-1 ${highlight ? "text-white" : "text-black"
-                  }`}
-              >
-               <del className={`${highlight ? "text-[#ffffffab]" : "text-[#8c8c8c]"
-                  } mr-2`}>{mrpPriceStr}</del>
-                {priceStr}
-              </p>
+                {mrpPriceStr}
+              </del>
+
               <span
-                className={`text-sm ${highlight ? "text-blue-100" : "text-gray-500"
-                  }`}
+                className={`text-[30px] font-bold leading-none tracking-[-0.5px] xl:text-[32px] ${
+                  highlight ? "text-white" : "text-black"
+                }`}
               >
-                {durationStr}
+                {priceStr}
               </span>
             </div>
-            <button
-              className={`mt-14 px-5 py-2 rounded-[10px] xl:text-[20px] font-medium whitespace-nowrap transition ${highlight
-                ? "bg-white text-[#09339B] hover:bg-blue-50"
-                : "border border-[#09339B] text-[#09339B] hover:bg-blue-50"
-                }`}
-              onClick={() => (window.location.href = `/plans/${plan.slug}`)}
+
+            {/* Duration */}
+            <span
+              className={`mt-2 block text-sm font-medium ${
+                highlight ? "text-blue-100" : "text-gray-500"
+              }`}
             >
-              Buy Membership
-            </button>
+              {durationStr}
+            </span>
           </div>
+
+          {/* Buy Button */}
+          <button
+            className={`mt-10 shrink-0 rounded-[10px] px-4 py-2 text-[17px] font-medium whitespace-nowrap transition-all duration-200 xl:text-[20px] ${
+              highlight
+                ? "bg-white text-[#09339B] shadow-sm hover:bg-[#F3F7FF] hover:shadow-md"
+                : "border border-[#09339B] bg-white text-[#09339B] hover:bg-[#09339B] hover:text-white"
+            }`}
+            onClick={() => (window.location.href = `/plans/${plan.slug}`)}
+          >
+            Buy Membership
+          </button>
         </div>
+      </div>
+
 
         {!highlight && <div className=" h-[1px] bg-black" />}
         {features.length > 0 && (
