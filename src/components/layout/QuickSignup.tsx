@@ -17,7 +17,7 @@ const FIELD_ERR_CLASS = "border border-red-500";
 const INPUT_CLASS = "w-full border border-gray-300 px-3 py-1";
 const labelCls = (hasErr: boolean) => (hasErr ? `${INPUT_CLASS} ${FIELD_ERR_CLASS}` : INPUT_CLASS);
 
-type FieldName = "fullName" | "email" | "phone" | "password" | "confirmPassword" | "terms";
+type FieldName = "fullName" | "email" | "phone" | "password" | "terms";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_RE = /^[A-Za-z\s]+$/;
@@ -29,7 +29,9 @@ function mapServerFieldToForm(field: string): FieldName | null {
     email: "email",
     phone: "phone",
     password: "password",
-    confirmPassword: "confirmPassword",
+    // The form asks for the password once; a server-side confirmPassword complaint
+    // can only be about the password field the buyer can actually see.
+    confirmPassword: "password",
   };
   return map[simple] ?? null;
 }
@@ -37,7 +39,8 @@ function mapServerFieldToForm(field: string): FieldName | null {
 /**
  * Checkout signup — name, email, mobile, password, then the email OTP inline.
  * The full profile form on /register is untouched; profession/city/state are
- * asked for after payment instead of before it.
+ * asked for after payment instead of before it, and the password is asked for
+ * once (no confirm field) to keep the form short — /register still confirms it.
  */
 export default function QuickSignupPage() {
   const router = useRouter();
@@ -47,14 +50,12 @@ export default function QuickSignupPage() {
 
   const [step, setStep] = useState<"details" | "otp">("details");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
   });
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -119,9 +120,6 @@ export default function QuickSignupPage() {
     } else if (form.password.length > 128) {
       err.password = "Password must be at most 128 characters.";
     }
-    if (form.password !== form.confirmPassword) {
-      err.confirmPassword = "Passwords do not match.";
-    }
     if (!acceptedTerms) {
       err.terms = "You must accept the Terms & Conditions and Privacy Policy.";
     }
@@ -153,7 +151,6 @@ export default function QuickSignupPage() {
         email: form.email.trim(),
         phone: form.phone,
         password: form.password,
-        confirmPassword: form.confirmPassword,
       });
       setStep("otp");
       setOtpInfo(`We sent a 6-digit code to ${form.email.trim()}.`);
@@ -386,47 +383,6 @@ export default function QuickSignupPage() {
                   {fieldErrors.password && (
                     <p className="text-red-600 text-sm mt-1" role="alert">
                       {fieldErrors.password}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="confirmPassword" className="block mb-1">
-                    Confirm password <span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative w-full">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={form.confirmPassword}
-                      onChange={handleChange}
-                      autoComplete="new-password"
-                      className={
-                        fieldErrors.confirmPassword
-                          ? `${INPUT_CLASS} pr-10 ${FIELD_ERR_CLASS}`
-                          : `${INPUT_CLASS} pr-10`
-                      }
-                      placeholder="Confirm password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword((prev) => !prev)}
-                      className="absolute inset-y-0 right-3 flex items-center text-gray-500"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeIcon className="w-5 h-5" />
-                      ) : (
-                        <EyeSlashIcon className="w-5 h-5" />
-                      )}
-                      <span className="sr-only">
-                        {showConfirmPassword ? "Hide password" : "Show password"}
-                      </span>
-                    </button>
-                  </div>
-                  {fieldErrors.confirmPassword && (
-                    <p className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.confirmPassword}
                     </p>
                   )}
                 </div>

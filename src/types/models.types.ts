@@ -210,7 +210,11 @@ export interface QuickRegisterData {
   email: string;
   phone: string;
   password: string;
-  confirmPassword: string;
+  /**
+   * Optional. The quick forms ask for the password once, so they omit this; the
+   * API only compares it when it is sent. RegisterData (/register) still requires it.
+   */
+  confirmPassword?: string;
   /** Checkout signups: payment auto-verifies the buyer, so skip the immediate OTP email. */
   skipVerificationEmail?: boolean;
 }
