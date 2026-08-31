@@ -27,8 +27,9 @@ function CourseCard({ c }: { c: PublicCourse }) {
   return (
   <Link href={href}>
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
-     <div className="relative ">
-        <img src={thumbnail} alt={c.title} width="100%" className="w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[280px]" />
+     <div className="relative  w-full aspect-[16/9] overflow-hidden">
+        {/* <img src={thumbnail} alt={c.title} width="100%" className="w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[280px]" /> */}
+            <img src={thumbnail} alt={c.title} className="w-full h-full object-cover"/>
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
             <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}

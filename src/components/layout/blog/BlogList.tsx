@@ -6,6 +6,9 @@ import { slotHasContent } from "@/lib/siteDisplayAds";
 import { ArticleListItem, ArticleCategoryItem } from "@/services/platform.service";
 import { articleHref } from "@/lib/articlePaths";
 import { useRouter } from "next/router";
+import ArticleImage from "@/components/articles/ArticleImage";
+import { resolveBlogImageSrc } from "@/components/layout/blog-list/blogImage";
+
 
 
 type PaginationMode = 'query' | 'path';
@@ -104,7 +107,13 @@ export default function Blog_list({
         <div className={`grid grid-cols-1 gap-6 ${hasListingAd ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="overflow-hidden rounded-xl border bg-white shadow-md animate-pulse">
-              <div className="w-full h-[243px] bg-gray-200" />
+              <div className="w-full h-[243px] bg-gray-200">
+                <img
+                  src="/images/placeholder.jpg"
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </div>
               <div className="space-y-3 p-4">
                 <div className="h-4 w-3/4 rounded bg-gray-200" />
                 <div className="h-6 w-full rounded bg-gray-200" />
@@ -128,11 +137,10 @@ export default function Blog_list({
             >
             
               <div className="relative w-full xl:h-[243px]">
-                <img
-                  src={b.cover_image_url || b.thumbnail_url || "/images/placeholder.jpg"}
+                <ArticleImage
+                  src={resolveBlogImageSrc(b.cover_image_url || b.thumbnail_url)}
                   alt={b.title}
                   className="h-full w-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
                 {b.categories && b.categories.length > 0 && (
                   <span className="absolute left-4 top-4 rounded-[14px] bg-white px-2 py-1 text-[14px] font-normal text-[#252525]">
