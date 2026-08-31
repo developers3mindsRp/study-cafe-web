@@ -146,7 +146,7 @@ useEffect(() => {
       {(dashboard?.available_for_withdrawal != null ||
         dashboard?.pending_withdrawal_total != null ||
         dashboard?.settings) && (
-        <div className="mt-4 px-2 flex flex-wrap gap-6 text-sm text-[#555]">
+        <div className="mt-4 px-2 flex flex-wrap gap-6 text-md text-[#000]">
           <p>
             Available to withdraw:{" "}
             <span className="font-semibold text-[#09339B]">
