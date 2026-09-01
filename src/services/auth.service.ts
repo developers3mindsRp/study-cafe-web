@@ -216,7 +216,7 @@ export const registerQuick = async (userData: QuickRegisterData): Promise<AuthRe
     email: userData.email.trim(),
     phone: userData.phone,
     password: userData.password,
-    confirmPassword: userData.confirmPassword,
+    ...(userData.confirmPassword ? { confirmPassword: userData.confirmPassword } : {}),
     referralCode,
     ...(userData.skipVerificationEmail ? { skipVerificationEmail: true } : {}),
   });

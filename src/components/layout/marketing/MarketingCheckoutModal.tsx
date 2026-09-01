@@ -185,7 +185,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const [authBusy, setAuthBusy] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [signinMode, setSigninMode] = useState<"password" | "otp">("password");
   const [otp, setOtp] = useState("");
@@ -195,7 +194,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const resetAuthState = () => {
     setAuthError(null);
     setPassword("");
-    setConfirmPassword("");
     setOtp("");
     setOtpSent(false);
     setOtpInfo(null);
@@ -461,10 +459,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       setAuthError("Password must be at least 6 characters.");
       return;
     }
-    if (password !== confirmPassword) {
-      setAuthError("Passwords do not match.");
-      return;
-    }
     if (!acceptedTerms) {
       setAuthError("Please accept the Terms & Conditions and Privacy Policy.");
       return;
@@ -480,7 +474,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
         email: values.email.trim(),
         phone: values.mobile.trim(),
         password,
-        confirmPassword,
         skipVerificationEmail: true,
       });
       adoptSession(session.user);
@@ -771,20 +764,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputClass}
                   placeholder="At least 6 characters"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Confirm password <span className="text-[#FF383C]">*</span>
-                </label>
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={inputClass}
-                  placeholder="Repeat your password"
                 />
               </div>
 
