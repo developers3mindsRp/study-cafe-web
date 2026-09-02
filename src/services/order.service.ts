@@ -105,12 +105,31 @@ export interface VerifyOrderResponse {
   verified: boolean;
 }
 
+export type PostPurchaseLinkType = 'whatsapp' | 'zoom' | 'telegram' | 'link';
+
+export interface PostPurchaseLink {
+  type: PostPurchaseLinkType;
+  /** Button text configured per course by an admin. */
+  label: string;
+  url: string;
+}
+
+/** Thank-you page configuration carried on the course; null when the course sets none. */
+export interface PostPurchaseConfig {
+  links: PostPurchaseLink[];
+  /** Absolute http(s) URL to send the buyer to once the countdown ends. */
+  redirectUrl: string | null;
+  redirectDelaySeconds: number;
+}
+
 export interface OrderInvoice {
   orderId: string;
   type: 'course' | 'membership' | 'payment_link';
   entityId: string;
   itemName: string;
   itemCategory?: string;
+  /** Join links / redirect the course configured — only sent once the order is paid. */
+  postPurchase?: PostPurchaseConfig | null;
   amount: string | number;
   currency: string;
   status: string;

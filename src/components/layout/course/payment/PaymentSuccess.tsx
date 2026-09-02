@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { getOrderInvoice, type OrderInvoice } from "@/services/order.service";
+import PostPurchaseLinks from "./PostPurchaseLinks";
 import { getToken } from "@/utils/auth.utils";
 
 function normalizeOrderId(raw: string | string[] | undefined): string | undefined {
@@ -66,16 +67,41 @@ const PaymentSuccess = () => {
     return () => clearTimeout(timer);
   }, [router.isReady, fromPaymentLink, orderId, countdown, router, enrolledByLink]);
 
+  /**
+   * A paid course can carry its own thank-you page config: join buttons, and a destination
+   * that replaces the default payment-detail redirect.
+   */
+  const postPurchase = invoice?.status === "paid" ? invoice.postPurchase ?? null : null;
+  const postPurchaseLinks = postPurchase?.links ?? [];
+  const customRedirectUrl = postPurchase?.redirectUrl ?? null;
+  const customRedirectDelay = postPurchase?.redirectDelaySeconds;
+  /**
+   * Join links are the whole point of the page when they exist, so a course that offers them
+   * without naming its own destination keeps the buyer here instead of timing out to the receipt.
+   */
+  const autoRedirectDisabled = postPurchaseLinks.length > 0 && !customRedirectUrl;
+
+  /** Adopt the course's countdown once the invoice lands; otherwise the default 10s stands. */
+  useEffect(() => {
+    if (!customRedirectUrl || typeof customRedirectDelay !== "number") return;
+    setCountdown(customRedirectDelay);
+  }, [customRedirectUrl, customRedirectDelay]);
+
   useEffect(() => {
     if (fromPaymentLink) return;
     if (loading || !invoice) return;
-    if (countdown <= 0) {
-      router.push(`/payment-detail?order_id=${invoice.orderId}`);
+    if (autoRedirectDisabled) return;
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+    if (customRedirectUrl) {
+      /** Replace, not push — Back should not drop the buyer onto a countdown that fires again. */
+      window.location.replace(customRedirectUrl);
       return;
     }
-    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [countdown, loading, invoice, router, fromPaymentLink]);
+    router.push(`/payment-detail?order_id=${invoice.orderId}`);
+  }, [countdown, loading, invoice, router, fromPaymentLink, customRedirectUrl, autoRedirectDisabled]);
 
   useEffect(() => {
     if (!invoice || invoice.status !== "paid") return;
@@ -296,6 +322,9 @@ const PaymentSuccess = () => {
           </p>
         </div>
 
+        {/* Course-configured join buttons (WhatsApp group, Zoom meeting, …) */}
+        <PostPurchaseLinks links={postPurchaseLinks} />
+
         {/* Transaction Details */}
         <div className="p-4 md:p-6 bg-[#F9F9FB] w-full md:max-w-[650px] mx-auto space-y-4 mt-8 md:mt-12 rounded-lg">
           {invoice.paymentId && (
@@ -340,12 +369,18 @@ const PaymentSuccess = () => {
             </>
           ) : (
             <>
-              <p className="text-[#929292] text-sm md:text-[18px] leading-relaxed">
-                You&apos;ll be redirected automatically in{" "}
-                <span className="text-[#09339B] font-semibold">{countdown} seconds.</span>
-                <br />
-                Please keep this screen open.
-              </p>
+              {autoRedirectDisabled ? (
+                <p className="text-[#929292] text-sm md:text-[18px] leading-relaxed">
+                  Use the link above to get started — your receipt stays available any time.
+                </p>
+              ) : (
+                <p className="text-[#929292] text-sm md:text-[18px] leading-relaxed">
+                  You&apos;ll be redirected automatically in{" "}
+                  <span className="text-[#09339B] font-semibold">{countdown} seconds.</span>
+                  <br />
+                  Please keep this screen open.
+                </p>
+              )}
 
               <Link
                 href={`/payment-detail?order_id=${invoice.orderId}`}
