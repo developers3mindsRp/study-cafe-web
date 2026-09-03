@@ -458,6 +458,12 @@ export interface CourseCat {
   is_featured?: boolean;
 }
 
+export interface ProductLink {
+  id: number;
+  title: string;
+  redirect_url: string;
+}
+
 
 export interface Categories {
   id: number;

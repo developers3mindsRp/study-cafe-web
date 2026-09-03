@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLogout } from "@/hooks/useAuth";
 import { useAuth } from "@/providers/AuthProvider";
-import { getCourseCats } from "@/services/platform.service";
-import type { CourseCat } from "@/types/models.types";
+import { getCourseCats, getProductLinks } from "@/services/platform.service";
+import type { CourseCat, ProductLink } from "@/types/models.types";
 import UserDropdown from "./profileDropdown";
 
 /**
@@ -23,18 +23,25 @@ export default function Header() {
 
   // Dropdown state for desktop
   const [coursesMenuOpen, setCoursesMenuOpen] = useState(false);
+  const [productsMenuOpen, setProductsMenuOpen] = useState(false);
   // Collapsible state for mobile
   const [coursesMobileOpen, setCoursesMobileOpen] = useState(false);
+  const [productsMobileOpen, setProductsMobileOpen] = useState(false);
 
   const [courseCats, setCourseCats] = useState<CourseCat[]>([]);
+  const [productLinks, setProductLinks] = useState<ProductLink[]>([]);
 
   const coursesRef = useRef<any>(null);
+  const productsRef = useRef<any>(null);
   const userRef = useRef<any>(null);
 
   // Load course categories for dropdown
   useEffect(() => {
     getCourseCats()
       .then((cats) => setCourseCats(cats))
+      .catch(() => {});
+    getProductLinks()
+      .then((products) => setProductLinks(products))
       .catch(() => {});
   }, []);
 
@@ -43,6 +50,9 @@ export default function Header() {
     function handleClickOutside(e: any) {
       if (coursesRef.current && !coursesRef.current.contains(e.target)) {
         setCoursesMenuOpen(false);
+      }
+      if (productsRef.current && !productsRef.current.contains(e.target)) {
+        setProductsMenuOpen(false);
       }
       if (userRef.current && !userRef.current.contains(e.target)) {
         setUserMenuOpen(false);
@@ -80,6 +90,49 @@ export default function Header() {
             >
               Home
             </Link>
+
+                       {/* Products dropdown */}
+            <div
+              ref={productsRef}
+              className="relative"
+              onMouseEnter={() => setProductsMenuOpen(true)}
+              onMouseLeave={() => setProductsMenuOpen(false)}
+            >
+              <button
+                type="button"
+                aria-expanded={productsMenuOpen}
+                onClick={() => setProductsMenuOpen((open) => !open)}
+                className="flex items-center gap-1 text-[18px] text-[#3a3c3e] transition-colors hover:text-blue-600"
+              >
+                Our Products
+                <svg
+                  className={`w-4 h-4 text-gray-500 transition-transform ${productsMenuOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {productsMenuOpen && productLinks.length > 0 && (
+                <div className="absolute left-0 top-2 mt-2 pt-5">
+                  <div className="w-56 rounded-lg border border-gray-100 bg-white py-2 shadow-lg z-20">
+                    {productLinks.map((product) => (
+                      <a
+                        key={product.id}
+                        href={product.redirect_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block px-4 py-2 text-sm text-[#3a3c3e] hover:bg-gray-50"
+                        onClick={() => setProductsMenuOpen(false)}
+                      >
+                        {product.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Courses dropdown */}
             <div
@@ -136,6 +189,8 @@ export default function Header() {
                 </div>
               )}
             </div>
+
+ 
 
             <Link
               href="/plans"
@@ -258,6 +313,41 @@ export default function Header() {
                 Home
               </Link>
 
+              {/* Products - mobile collapsible */}
+              <div>
+                <button
+                  onClick={() => setProductsMobileOpen((open) => !open)}
+                  className="flex items-center justify-between w-full text-left text-[#3a3c3e] hover:text-blue-600 font-medium"
+                  aria-expanded={productsMobileOpen}
+                >
+                  <span>Our Products</span>
+                  <svg
+                    className={`w-4 h-4 text-gray-500 transition-transform ${productsMobileOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {productsMobileOpen && (
+                  <div className="mt-2 pl-4 flex flex-col gap-3">
+                    {productLinks.map((product) => (
+                      <a
+                        key={product.id}
+                        href={product.redirect_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#3a3c3e] hover:text-blue-600 font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {product.title}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Courses - mobile collapsible */}
               <div>
                 <button
@@ -303,6 +393,8 @@ export default function Header() {
                   </div>
                 )}
               </div>
+
+              
 
               <Link
                 href="/plans"

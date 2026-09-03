@@ -17,6 +17,7 @@ import {
   PaginatedCourses,
   CoursePublicDetail,
   CourseBatch,
+  ProductLink,
   FooterContent,
   SiteDisplayAds,
   Categories,
@@ -501,6 +502,12 @@ export const getCourseCats = async (): Promise<CourseCat[]> => {
 
 
   return response.data.data;
+};
+
+/** Products shown in the public header menu */
+export const getProductLinks = async (): Promise<ProductLink[]> => {
+  const response = await axiosInstance.get<ApiResponse<ProductLink[]>>('/platform/products');
+  return response.data.data ?? [];
 };
 
 
