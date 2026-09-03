@@ -443,6 +443,34 @@ export interface CaseLawResponse {
   totalPages: number;
 }
 
+/** One dropdown entry in the case-law filter bar, with the number of matching judgements. */
+export interface CaseLawFilterOption {
+  value: string;
+  label: string;
+  count: number;
+}
+
+export interface CaseLawFilterOptions {
+  courts: CaseLawFilterOption[];
+  taxTypes: CaseLawFilterOption[];
+}
+
+/** Court + tax-type options, derived server-side from the case laws that actually exist. */
+export const getCaseLawFilterOptions = async (): Promise<CaseLawFilterOptions> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<CaseLawFilterOptions>>(
+      '/platform/case-law-filters'
+    );
+    return {
+      courts: response.data.data?.courts ?? [],
+      taxTypes: response.data.data?.taxTypes ?? [],
+    };
+  } catch {
+    // The filter bar is an enhancement — never let it break the listing.
+    return { courts: [], taxTypes: [] };
+  }
+};
+
 /** Paginated article listing with optional search / category filter */
 export const getArticles = async (params: ArticleQueryParams = {}): Promise<PaginatedArticles> => {
   const { page = 1, limit = 6, search = '', category = '', withTotal = true } = params;
@@ -489,16 +517,25 @@ export const getAllCaseLaws = async ({
   page = 1,
   limit = 6,
   search,
+  court,
+  taxType,
+  sort,
 }: {
   page?: number;
   limit?: number;
   search?: string;
+  court?: string;
+  taxType?: string;
+  sort?: string;
 }, token?:string | undefined) => {
   const response = await axiosInstance.get("/platform/case-laws", {
     params: {
       page,
       limit,
       search,
+      court: court || undefined,
+      tax_type: taxType || undefined,
+      sort: sort && sort !== "latest" ? sort : undefined,
     },
     headers: token
       ? {

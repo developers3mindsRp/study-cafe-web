@@ -6,6 +6,7 @@ import { PublicLayout } from "@/components/layout";
 import BannerSectionCaseLaws from "@/components/layout/case-laws/bannerSection";
 import Breadcrumbs from "@/components/Breadcrumb";
 import JudgementCard from "@/components/layout/case-laws/JudgementCard";
+import CaseLawFilters from "@/components/layout/case-laws/CaseLawFilters";
 
 import { appConfig } from "@/config/app.config";
 import { fetchSiteDisplayAdsSSR } from "@/lib/serverArticle";
@@ -14,7 +15,9 @@ import { runWithServerApiBase } from "@/lib/serverApiContext";
 
 import {
   getAllCaseLaws,
+  getCaseLawFilterOptions,
   CaseLawItem,
+  CaseLawFilterOption,
 } from "@/services/platform.service";
 
 import type { SiteDisplayAds } from "@/types/models.types";
@@ -25,64 +28,83 @@ interface CaseLawsProps {
   totalPages: number;
   total: number;
   search: string;
+  court: string;
+  taxType: string;
+  sort: string;
+  courts: CaseLawFilterOption[];
+  taxTypes: CaseLawFilterOption[];
   siteAds: SiteDisplayAds | null;
 }
 export default function CaseLaws({
   caseLaws,
   currentPage,
   totalPages,
+  total,
   search,
+  court,
+  taxType,
+  sort,
+  courts,
+  taxTypes,
 }: CaseLawsProps) {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState(search);
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const handleSearchSubmit = async () => {
-    const value = searchInput.trim();
+
+  /**
+   * Single place that turns the current filter state into a URL. Everything (search, paging,
+   * each dropdown) routes through here so no control can drop the filters the others set.
+   * Page lives in the path (`/case-laws/page/2`), the rest in the query string.
+   */
+  const navigate = async (
+    overrides: Partial<{
+      page: number;
+      search: string;
+      court: string;
+      taxType: string;
+      sort: string;
+    }> = {}
+  ) => {
+    const next = {
+      page: overrides.page ?? 1,
+      search: (overrides.search ?? search).trim(),
+      court: overrides.court ?? court,
+      taxType: overrides.taxType ?? taxType,
+      sort: overrides.sort ?? sort,
+    };
+
+    const query: Record<string, string> = {};
+    if (next.search) query.search = next.search;
+    if (next.court) query.court = next.court;
+    if (next.taxType) query.tax = next.taxType;
+    if (next.sort && next.sort !== "latest") query.sort = next.sort;
 
     setIsLoading(true);
-
     try {
       await router.push(
-        value
-          ? {
-              pathname: "/case-laws",
-              query: {
-                search: value,
-              },
-            }
-          : "/case-laws"
+        {
+          pathname:
+            next.page === 1 ? "/case-laws" : `/case-laws/page/${next.page}`,
+          query,
+        },
+        undefined,
+        { shallow: false }
       );
     } finally {
       setIsLoading(false);
     }
   };
-const handlePageChange = async (page: number) => {
-  setIsLoading(true);
 
-  try {
-    const query =
-      searchInput.trim() !== ""
-        ? { search: searchInput.trim() }
-        : {};
-
-    await router.push(
-      {
-        pathname:
-          page === 1
-            ? "/case-laws"
-            : `/case-laws/page/${page}`,
-        query,
-      },
-      undefined,
-      {
-        shallow: false,
-      }
-    );
-  } finally {
-    setIsLoading(false);
-  }
-};
+  // Any filter change resets to page 1 — staying on page 7 of a narrower result set
+  // would otherwise land the user on an empty page.
+  const handleSearchSubmit = () => navigate({ search: searchInput, page: 1 });
+  const handlePageChange = (page: number) => navigate({ page });
+  const handleFilterChange = (
+    patch: Partial<{ court: string; taxType: string; sort: string }>
+  ) => navigate({ ...patch, page: 1 });
+  const handleClearFilters = () =>
+    navigate({ court: "", taxType: "", sort: "latest", page: 1 });
 
   const MAX_VISIBLE_PAGES = 6;
 
@@ -113,6 +135,16 @@ const handlePageChange = async (page: number) => {
 
       <section className="w-full py-6 md:py-16">
         <div className="container mx-auto px-4">
+          <CaseLawFilters
+            courts={courts}
+            taxTypes={taxTypes}
+            value={{ court, taxType, sort }}
+            onChange={handleFilterChange}
+            onClear={handleClearFilters}
+            total={total}
+            disabled={isLoading}
+          />
+
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {caseLaws.length > 0 ? (
               caseLaws.map((item) => (
@@ -140,8 +172,17 @@ const handlePageChange = async (page: number) => {
                 />
               ))
             ) : (
-              <div className="col-span-full text-center py-10">
+              <div className="col-span-full text-center py-10 text-gray-500">
                 No Case Laws Found
+                {(court || taxType) && (
+                  <button
+                    type="button"
+                    onClick={handleClearFilters}
+                    className="ml-2 text-[#09339B] underline"
+                  >
+                    Clear filters
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -278,21 +319,28 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
       page = Number(slug[1]) || 1;
     }
 
-    const search =
-      typeof ctx.query.search === "string"
-        ? ctx.query.search.trim()
-        : "";
+    const readQuery = (key: string) =>
+      typeof ctx.query[key] === "string" ? (ctx.query[key] as string).trim() : "";
+
+    const search = readQuery("search");
+    const court = readQuery("court");
+    const taxType = readQuery("tax");
+    const sort = readQuery("sort") === "oldest" ? "oldest" : "latest";
 
     const token = ctx.req.cookies.auth_token;
     // console.log(ctx.req.cookies.auth_token,"ctx.req.cookies.auth_token")
 
     try {
-      const [caseLawData, siteAds] = await Promise.all([
+      const [caseLawData, filterOptions, siteAds] = await Promise.all([
         getAllCaseLaws({
           page,
           limit: 6,
           search: search || undefined,
+          court: court || undefined,
+          taxType: taxType || undefined,
+          sort,
         },token),
+        getCaseLawFilterOptions(),
         fetchSiteDisplayAdsSSR({
           baseUrl: appConfig.apiBaseUrl,
         }),
@@ -307,6 +355,11 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
           totalPages: caseLawData.totalPages || 1,
           total: caseLawData.total || 0,
           search,
+          court,
+          taxType,
+          sort,
+          courts: filterOptions.courts,
+          taxTypes: filterOptions.taxTypes,
           siteAds: siteAds ?? null,
         },
       };
@@ -320,6 +373,11 @@ export const getServerSideProps: GetServerSideProps<CaseLawsProps> = async (
           totalPages: 1,
           total: 0,
           search,
+          court,
+          taxType,
+          sort,
+          courts: [],
+          taxTypes: [],
           siteAds: null,
         },
       };
