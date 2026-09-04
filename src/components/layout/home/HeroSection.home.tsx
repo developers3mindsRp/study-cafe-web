@@ -33,7 +33,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
   };
 
   return (
-    <section className="relative bg-[url('/images/home/home-banner.png')] bg-cover  bg-no-repeat md:h-auto xl:h-[750px]">
+    <section className="relative bg-[url('/images/home/home-banner.webp')] bg-cover  bg-no-repeat md:h-auto xl:h-[750px]">
       <div className="container mx-auto px-4  md:py-12 lg:py-20 xl:py-18 2xl:py-18 flex flex-col lg:flex-row items-center">
  
 

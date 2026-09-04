@@ -170,7 +170,7 @@ export default function BlogSection({ initialArticles = [] }: { initialArticles?
   const progress = (step / totalSteps) * 100;
 
   return (
-    <section className="w-full py-8 md:py-12 bg-[url('/images/course-bg.png')] bg-no-repeat bg-cover bg-center px-6 text-center">
+    <section className="w-full py-8 md:py-12 bg-[url('/images/course-bg.webp')] bg-no-repeat bg-cover bg-center px-6 text-center">
       <h2 className="text-[30px] xl:text-[40px] font-semibold text-[#1A1A1A]">
         Latest from Our Blog
       </h2>
