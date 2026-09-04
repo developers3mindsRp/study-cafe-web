@@ -5,16 +5,26 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { getOrderInvoice, type OrderInvoice } from "@/services/order.service";
 import PostPurchaseLinks from "./PostPurchaseLinks";
+import { getMarketingPageBySlug } from "@/services/platform.service";
 import { getToken } from "@/utils/auth.utils";
 
-function normalizeOrderId(raw: string | string[] | undefined): string | undefined {
+/** Matches the cap the admin form and course-service enforce on the same field. */
+const POST_PURCHASE_DELAY_MAX_SECONDS = 600;
+
+/** Campaign redirect config, read from the published page so the URL never comes off the query string. */
+interface CampaignRedirect {
+  url: string;
+  delaySeconds: number | null;
+}
+
+function trimmedQuery(raw: string | string[] | undefined): string | undefined {
   if (typeof raw === "string" && raw.trim()) return raw.trim();
   return undefined;
 }
 
 const PaymentSuccess = () => {
   const router = useRouter();
-  const orderId = normalizeOrderId(router.query.order_id);
+  const orderId = trimmedQuery(router.query.order_id);
   const fromPaymentLink =
     router.query.payment_link === "1" || router.query.payment_link === "true";
   /**
@@ -24,7 +34,17 @@ const PaymentSuccess = () => {
   const enrolledByLink =
     fromPaymentLink && (router.query.enrolled === "1" || router.query.enrolled === "true");
 
+  /**
+   * Set when the buyer paid through a marketing landing page (`?m=<slug>`). That page can
+   * name its own thank-you destination, which wins over the course's — the same course sold
+   * through a campaign often has to send buyers somewhere else.
+   */
+  const marketingSlug = trimmedQuery(router.query.m);
+
   const [invoice, setInvoice] = useState<OrderInvoice | null>(null);
+  const [campaignRedirect, setCampaignRedirect] = useState<CampaignRedirect | null>(null);
+  /** False until the campaign lookup settles, so the countdown cannot fire at the wrong target. */
+  const [campaignChecked, setCampaignChecked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(10);
 
@@ -56,6 +76,37 @@ const PaymentSuccess = () => {
       .finally(() => setLoading(false));
   }, [router.isReady, orderId, fromPaymentLink]);
 
+  /**
+   * The landing page's own thank-you destination. Only the slug arrives in the URL, so the
+   * destination is read back from the published page — a hand-edited link cannot retarget it.
+   */
+  useEffect(() => {
+    if (!router.isReady || !marketingSlug) return;
+    let cancelled = false;
+    void getMarketingPageBySlug(marketingSlug)
+      .then((payload) => {
+        if (cancelled || !payload) return;
+        const meta = payload.page?.meta ?? {};
+        const url = String(meta.post_purchase_redirect_url ?? "").trim();
+        // Followed with a full page load, so only an absolute http(s) URL is usable.
+        if (!/^https?:\/\//i.test(url)) return;
+        const delay = Number.parseInt(String(meta.post_purchase_redirect_delay ?? "").trim(), 10);
+        setCampaignRedirect({
+          url,
+          delaySeconds:
+            Number.isFinite(delay) && delay >= 0
+              ? Math.min(delay, POST_PURCHASE_DELAY_MAX_SECONDS)
+              : null,
+        });
+      })
+      .finally(() => {
+        if (!cancelled) setCampaignChecked(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, marketingSlug]);
+
   /** Payment-link success: redirect home instead of payment-detail (guests cannot open invoice there). */
   useEffect(() => {
     if (!router.isReady || !fromPaymentLink || !orderId) return;
@@ -71,10 +122,15 @@ const PaymentSuccess = () => {
    * A paid course can carry its own thank-you page config: join buttons, and a destination
    * that replaces the default payment-detail redirect.
    */
-  const postPurchase = invoice?.status === "paid" ? invoice.postPurchase ?? null : null;
+  const isPaid = invoice?.status === "paid";
+  const postPurchase = isPaid ? invoice?.postPurchase ?? null : null;
   const postPurchaseLinks = postPurchase?.links ?? [];
-  const customRedirectUrl = postPurchase?.redirectUrl ?? null;
-  const customRedirectDelay = postPurchase?.redirectDelaySeconds;
+  /** A campaign that names its own destination overrides the course's; join links still apply. */
+  const campaign = isPaid ? campaignRedirect : null;
+  const customRedirectUrl = campaign?.url ?? postPurchase?.redirectUrl ?? null;
+  const customRedirectDelay = campaign
+    ? campaign.delaySeconds ?? undefined
+    : postPurchase?.redirectDelaySeconds;
   /**
    * Join links are the whole point of the page when they exist, so a course that offers them
    * without naming its own destination keeps the buyer here instead of timing out to the receipt.
@@ -90,6 +146,8 @@ const PaymentSuccess = () => {
   useEffect(() => {
     if (fromPaymentLink) return;
     if (loading || !invoice) return;
+    // Hold the countdown until the campaign's own destination is known.
+    if (marketingSlug && !campaignChecked) return;
     if (autoRedirectDisabled) return;
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
@@ -101,7 +159,17 @@ const PaymentSuccess = () => {
       return;
     }
     router.push(`/payment-detail?order_id=${invoice.orderId}`);
-  }, [countdown, loading, invoice, router, fromPaymentLink, customRedirectUrl, autoRedirectDisabled]);
+  }, [
+    countdown,
+    loading,
+    invoice,
+    router,
+    fromPaymentLink,
+    customRedirectUrl,
+    autoRedirectDisabled,
+    marketingSlug,
+    campaignChecked,
+  ]);
 
   useEffect(() => {
     if (!invoice || invoice.status !== "paid") return;

@@ -72,6 +72,26 @@ function authored(value: string | null | undefined, fallback: string): string {
   return value == null ? fallback : value.trim();
 }
 
+/** Matches the cap the admin form and course-service enforce on the same field. */
+const POST_PURCHASE_DELAY_MAX_SECONDS = 600;
+
+/**
+ * The post-purchase redirect is followed with a full page load, so only an absolute
+ * http(s) URL is honoured — anything else is treated as unconfigured rather than
+ * resolved against whatever host the buyer happens to be on.
+ */
+function absoluteRedirectUrl(raw: string | null | undefined): string | null {
+  const url = raw?.trim();
+  if (!url) return null;
+  return /^https?:\/\//i.test(url) ? url : null;
+}
+
+function redirectDelaySeconds(raw: string | number | null | undefined): number | null {
+  const n = Number.parseInt(String(raw ?? '').trim(), 10);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return Math.min(n, POST_PURCHASE_DELAY_MAX_SECONDS);
+}
+
 function toPrice(val: string | number | null | undefined): number | null {
   if (val == null || val === '') return null;
   const n = Number(val);
@@ -239,6 +259,8 @@ export function resolveMarketingPage(
     increasedPriceText: authored(meta.increased_price_text, 'Rs 2,000'),
     countdownMinutes: meta.countdown_minutes ?? 15,
     checkoutUrl: meta.checkout_url || `/course/${encodeURIComponent(courseSlug)}`,
+    postPurchaseRedirectUrl: absoluteRedirectUrl(meta.post_purchase_redirect_url),
+    postPurchaseRedirectDelay: redirectDelaySeconds(meta.post_purchase_redirect_delay),
     videoUrl,
     youtubeEmbedUrl: youtubeEmbed(videoUrl, true),
     thumbnailUrl: course.thumbnail_url || '/images/c1.png',

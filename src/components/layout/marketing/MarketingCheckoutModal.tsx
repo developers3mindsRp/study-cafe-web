@@ -261,7 +261,13 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     } catch {
       /* non-blocking — worst case the gate re-checks on the next full page load */
     }
-    void router.push(`/payment-success?order_id=${encodeURIComponent(orderId)}`);
+    // Naming the campaign lets the thank-you page use THIS page's post-purchase redirect
+    // instead of the course's. Only the slug travels in the URL — the destination itself
+    // is read back from the published page, so a tampered link cannot retarget it.
+    const campaign = data.postPurchaseRedirectUrl
+      ? `&m=${encodeURIComponent(data.slug)}`
+      : "";
+    void router.push(`/payment-success?order_id=${encodeURIComponent(orderId)}${campaign}`);
   };
 
   const startCheckout = async () => {

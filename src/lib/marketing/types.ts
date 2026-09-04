@@ -25,6 +25,10 @@ export interface MarketingPageMeta {
   use_global_faq?: boolean;
   use_course_faq?: boolean;
   checkout_url?: string;
+  /** Thank-you page destination for buyers who paid through this landing page. */
+  post_purchase_redirect_url?: string;
+  /** Seconds the thank-you page waits before that redirect; blank = default. */
+  post_purchase_redirect_delay?: string | number;
   stats?: {
     people_coached?: string;
     preferred_by?: string;
@@ -85,6 +89,13 @@ export interface ResolvedMarketingPage {
   increasedPriceText: string;
   countdownMinutes: number;
   checkoutUrl: string;
+  /**
+   * Where the thank-you page sends a buyer who paid through this page; null hands the
+   * decision back to the course's own post-purchase settings.
+   */
+  postPurchaseRedirectUrl: string | null;
+  /** Countdown before that redirect; null keeps the thank-you page's default. */
+  postPurchaseRedirectDelay: number | null;
   videoUrl: string | null;
   youtubeEmbedUrl: string | null;
   thumbnailUrl: string;
