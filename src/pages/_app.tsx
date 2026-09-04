@@ -27,13 +27,21 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        {/* The CMS serves every hero/thumbnail image from this origin, including the
+            homepage LCP image, which next/head preloads. Without the preconnect that
+            preload still had to pay DNS + TCP + TLS to a cold origin before a single
+            byte arrived. Listed first so it wins the browser's early-connection budget
+            over the analytics origins below. */}
+        <link rel="preconnect" href="https://assets.studycafe.in" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://connect.facebook.net" />
+        {/* No preconnect for connect.facebook.net: the pixel is lazyOnload now, so a
+            warmed connection would have gone idle and been dropped before it was used. */}
       </Head>
       
-      {/* ==================== Google Tag Manager ==================== */}
-   
-
+      {/* ==================== Google Tag Manager ====================
+          This is the ONLY place GTM is loaded. An identical inline copy used to sit in
+          _document.tsx's <head>; it was removed so the container is not initialised
+          twice and so its 151 KB download no longer races the LCP image. */}
       <Script id="gtm" strategy="afterInteractive">
         {`
           (function(w,d,s,l,i){
@@ -52,23 +60,17 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      {/* ==================== Google Analytics (Universal Analytics) ==================== */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=UA-26881622-1"
-        strategy="afterInteractive"
-      />
+      {/* ==================== Google Analytics ====================
+          The Universal Analytics property UA-26881622-1 was loaded here (gtag/js, 131 KB
+          on every page load). Google stopped processing hits to standard UA properties on
+          1 July 2023, so the tag had been sending data nowhere for over two years. Removed
+          — nothing in the app called `gtag()`. Reporting is GA4 via the GTM container. */}
 
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'UA-26881622-1');
-        `}
-      </Script>
-
-     {/* ==================== Facebook Pixel ==================== */}
-        <Script id="facebook-pixel" strategy="afterInteractive">
+     {/* ==================== Facebook Pixel ====================
+         lazyOnload, not afterInteractive: fbevents.js is 109 KB and nothing in the app
+         reads `fbq` (verified by grep), so it has no reason to compete with hydration.
+         PageView still fires on every load, just during browser idle time. */}
+        <Script id="facebook-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s){
               if(f.fbq)return;
@@ -102,7 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Script>
 
       {/* ==================== WebTrafficSource ==================== */}
-      <Script id="webtrafficsource" strategy="afterInteractive">
+      <Script id="webtrafficsource" strategy="lazyOnload">
         {`
           (function(){
             var s=document.createElement("script");
@@ -114,16 +116,19 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      {/* ==================== External Scripts ==================== */}
+      {/* ==================== External Scripts ====================
+          Retargeting pixels. Downgraded from afterInteractive to lazyOnload — they only
+          need to fire once per visit and have no bearing on what the page renders, so
+          they should not be contending for the main thread while React hydrates. */}
 
       <Script
         src="https://rtb-global.com/rtbv2.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
 
       <Script
         src="https://wd-ret.io/rtg/v1/retag.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
 
       <Script

@@ -49,7 +49,18 @@ function BlogCard({
       }
     >
       <div className={`relative w-full ${isMobile ? "h-[200px]" : "xl:h-[233px]"}`}>
-        <Image width={500} height={300} src={img} alt={title} className="w-full h-full object-cover" crossOrigin="anonymous" />
+        {/* Without `sizes`, next/image emits a 1x/2x srcset off `width={500}`, so any
+            phone above 2x DPR pulled the 1080w variant for a 320px-wide card. The card
+            is 320px in the mobile carousel and caps at 500px on desktop. */}
+        <Image
+          width={500}
+          height={300}
+          src={img}
+          alt={title}
+          sizes={isMobile ? "320px" : "(min-width: 768px) 500px, 100vw"}
+          className="w-full h-full object-cover"
+          crossOrigin="anonymous"
+        />
         <span className="absolute top-4 left-4 bg-white text-[#252525] text-[10px] md:text-[14px] font-normal px-2 py-1 rounded-[14px]">
           {tag}
         </span>

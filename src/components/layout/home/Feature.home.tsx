@@ -27,7 +27,11 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
     return (
       <div className="w-[300px] snap-center bg-white shadow-md rounded-md overflow-hidden flex-shrink-0">
         <div className="relative w-full h-[180px]">
-          <Image src={thumbnail} alt={c.title} fill className="object-fit" />
+          {/* `fill` with no `sizes` makes next/image assume 100vw, so a phone was
+              downloading the 1080w variant (~90 KB) for a card that is a fixed 300px
+              wide. The card only renders below the sm breakpoint, so its width is
+              always 300px. */}
+          <Image src={thumbnail} alt={c.title} fill sizes="300px" className="object-fit" />
           {rating && (
             <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow mt-2">
               <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
@@ -66,7 +70,17 @@ function CourseCard({ c, size }: { c: PublicCourse; size: "sm" | "lg" }) {
     <Link href={href}>
       <div className="bg-white shadow-md rounded-md overflow-hidden flex flex-col">
         <div className="relative w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[250px]">
-          <Image src={thumbnail} alt={c.title} fill className="object-fit" />
+          {/* Rendered inside `hidden sm:grid grid-cols-2 md:grid-cols-3` within the
+              container, so: half the viewport at sm, a third from md up, capped by the
+              container's own max width at 2xl. Without this next/image defaulted to
+              100vw and fetched a variant 2-3x wider than the card. */}
+          <Image
+            src={thumbnail}
+            alt={c.title}
+            fill
+            sizes="(min-width: 1536px) 480px, (min-width: 768px) 33vw, 50vw"
+            className="object-fit"
+          />
           {rating && (
             <span className="absolute flex gap-1 top-2 right-3 bg-white px-2 rounded-full text-[18px] font-normal shadow mt-4">
               <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
