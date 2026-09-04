@@ -17,48 +17,42 @@ export async function middleware(request: NextRequest) {
 
   const requestHeaders = new Headers(request.headers);
 
-  if (shouldFetchGlobalSeoForPathname(pathname)) {
-    const redirectApiBase = resolveApiBaseForEdge(request);
-    const redirectPathParam = pathname === "" ? "/" : pathname;
-    const redirectUrl = `${redirectApiBase}/platform/redirects/by-path?path=${encodeURIComponent(redirectPathParam)}`;
-    try {
-      const redirectRes = await fetch(redirectUrl, {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
-      if (redirectRes.ok) {
-        const body = (await redirectRes.json()) as {
-          data?: { new_path?: string; redirect_type?: string };
-        };
-        const newPath = body?.data?.new_path?.trim();
-        if (newPath) {
-          const status = body?.data?.redirect_type === "302" ? 302 : 301;
-          return NextResponse.redirect(new URL(newPath, request.url), status);
-        }
-      }
-    } catch {
-      /* non-blocking */
-    }
-  }
-
+  /**
+   * The redirect lookup and the SEO lookup used to run as two separate awaited fetches,
+   * one after the other. Middleware runs on every request and cannot be cached, so those
+   * two round trips were added to the TTFB of every page — including pages that are
+   * otherwise served straight from the ISR cache in a few milliseconds.
+   *
+   * They are independent queries against the same service, so they are now issued
+   * together and awaited once: one round trip instead of two. The redirect still wins
+   * when it matches; the SEO response is simply discarded on that path, which costs one
+   * cheap query on the small minority of requests that actually redirect.
+   */
   if (shouldFetchGlobalSeoForPathname(pathname)) {
     const apiBase = resolveApiBaseForEdge(request);
     const pathParam = pathname === "" ? "/" : pathname;
-    const seoUrl = `${apiBase}/platform/seo-metadata/by-path?path=${encodeURIComponent(pathParam)}`;
-    try {
-      const fetchRes = await fetch(seoUrl, {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
-      if (fetchRes.ok) {
-        const body = (await fetchRes.json()) as { data?: Record<string, unknown> };
-        const row = body?.data;
-        if (row && typeof row === "object") {
-          requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(row)));
-        }
-      }
-    } catch {
-      /* non-blocking */
+    const encodedPath = encodeURIComponent(pathParam);
+    const json = { Accept: "application/json" };
+
+    const [redirectRow, seoRow] = await Promise.all([
+      fetchJson<{ new_path?: string; redirect_type?: string }>(
+        `${apiBase}/platform/redirects/by-path?path=${encodedPath}`,
+        json,
+      ),
+      fetchJson<Record<string, unknown>>(
+        `${apiBase}/platform/seo-metadata/by-path?path=${encodedPath}`,
+        json,
+      ),
+    ]);
+
+    const newPath = redirectRow?.new_path?.trim();
+    if (newPath) {
+      const status = redirectRow?.redirect_type === "302" ? 302 : 301;
+      return NextResponse.redirect(new URL(newPath, request.url), status);
+    }
+
+    if (seoRow && typeof seoRow === "object") {
+      requestHeaders.set("x-studycafe-seo-json", encodeURIComponent(JSON.stringify(seoRow)));
     }
   }
 
@@ -95,6 +89,28 @@ export async function middleware(request: NextRequest) {
 
 function resolveApiBaseForEdge(_request: NextRequest): string {
   return getPublicApiBaseUrl();
+}
+
+/**
+ * GET a `{ data: T }` endpoint and return `data`, or null for anything else.
+ *
+ * Never throws. Both call sites previously wrapped their fetch in a try/catch marked
+ * "non-blocking", and that has to hold: if the SEO/redirect service is slow, down or
+ * returns something unexpected, the page must still render. Returning null here means
+ * "no redirect" and "no SEO override", which is the same fallback as before.
+ */
+async function fetchJson<T>(
+  url: string,
+  headers: Record<string, string>,
+): Promise<T | null> {
+  try {
+    const res = await fetch(url, { headers, cache: "no-store" });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { data?: T } | null;
+    return body?.data ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export const config = {

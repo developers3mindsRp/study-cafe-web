@@ -18,6 +18,29 @@ interface HeroSectionProps {
   hero?: HomeHero | null;
 }
 
+/** Remote hosts the next/image optimizer is known to handle in production.
+ *
+ *  Remote URLs used to bypass the optimizer wholesale, because it runs on the Next server
+ *  and had been failing for some cross-origin fetches (timeouts, IP rules, SSL). The cost
+ *  of that blanket rule was that the homepage LCP image — always served from the CMS —
+ *  shipped as the raw ~104 KB PNG with no resizing and no WebP.
+ *
+ *  Re-checked against production for this exact image: /_next/image against
+ *  assets.studycafe.in returns 200 image/webp at 36 KB (640w) / 52 KB (828w), cache-HIT.
+ *  So optimization is re-enabled for that one host and every other remote host keeps the
+ *  old bypass. If the optimizer ever regresses for the CMS, empty this array and the
+ *  previous behaviour is restored exactly. */
+const OPTIMIZER_SAFE_REMOTE_HOSTS = ["assets.studycafe.in"];
+
+function isUnoptimizedSrc(src: string): boolean {
+  if (!/^https?:\/\//i.test(src)) return false; // local /public asset — always optimized
+  try {
+    return !OPTIMIZER_SAFE_REMOTE_HOSTS.includes(new URL(src).hostname);
+  } catch {
+    return true; // unparseable URL: fall back to the bypass rather than risk a broken hero
+  }
+}
+
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
@@ -26,9 +49,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
     : "/images/home/home.png";
 
-  /** Remote CMS/API URLs: load in the browser (bypass next/image optimizer). The optimizer runs on the Next server and often fails in production when fetching a different origin (timeouts, IP rules, SSL). Local /public assets still use optimization. */
-  const heroImageUnoptimized =
-    heroSrc.startsWith("http://") || heroSrc.startsWith("https://");
+  const heroImageUnoptimized = isUnoptimizedSrc(heroSrc);
 
   const handleClick = () => {
     router.push(h.ctaLink || "/plans");
@@ -39,6 +60,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
       <div className="container mx-auto px-4  md:py-12 lg:py-20 xl:py-18 2xl:py-18 flex flex-col lg:flex-row items-center">
  
 
+        {/* The entrance animation below is transform-only and staggers fast. It used to
+            fade each child in from opacity:0, which meant every word of above-the-fold
+            copy — including the <h1>, itself an LCP candidate — was invisible in the SSR
+            HTML until hydration finished. Keep `opacity` out of these variants. */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -46,7 +71,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             hidden: {},
             visible: {
               transition: {
-                staggerChildren: 0.25,
+                staggerChildren: 0.08,
               },
             },
           }}
@@ -56,10 +81,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           {h.badge && (
             <motion.p
               variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 },
+                hidden: { y: 12 },
+                visible: { y: 0 },
               }}
-              transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+              transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
               className="bg-white/10 backdrop-blur-lg inline-block px-3 py-2 rounded-lg mb-6 text-sm md:text-lg xl:text-lg text-white border border-[#a5aab8]"
             >
               {h.badge}
@@ -69,10 +94,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           {/* Title */}
           <motion.h1
             variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0 },
+              hidden: { y: 12 },
+              visible: { y: 0 },
             }}
-            transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+            transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
             className="text-[30px] sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-semibold text-white leading-tight md:mb-10"
           >
             {h.title}
@@ -82,10 +107,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           {h.description && (
             <motion.p
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0 },
+                hidden: { y: 12 },
+                visible: { y: 0 },
               }}
-              transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+              transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
               className="mt-4 text-[16px] md:text-[18px] xl:text-[24px] text-white max-w-2xl mx-auto lg:mx-0 font-normal px-6 md:px-0"
             >
               {h.description}
@@ -95,10 +120,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           {/* Buttons */}
           <motion.div
             variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0 },
+              hidden: { y: 12 },
+              visible: { y: 0 },
             }}
-            transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+            transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
             className="mt-6 md:mt-10 flex flex-row justify-center lg:justify-start gap-4 px-2 md:px-0"
           >
             <button
@@ -114,6 +139,8 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
                 <img
                   src="/images/icons/blue_arrow.png"
                   alt="→"
+                  width={24}
+                  height={24}
                   className="w-5 h-auto"
                 />
               </button>
@@ -121,17 +148,16 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
           </motion.div>
         </motion.div>
 
-        {/* IMAGE */}
-        <motion.div
-          initial={{ opacity: 0, y: 80 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 1.2,
-            delay: 0.4,
-            ease: [0.25, 0.8, 0.25, 1],
-          }}
-          className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0"
-        >
+        {/* IMAGE
+            Deliberately NOT wrapped in <motion.div>. This is the page's LCP element, and
+            framer-motion renders its `initial` state as an inline style during SSR — the
+            old `initial={{ opacity: 0, y: 80 }}` shipped the hero image at opacity:0, so
+            the browser could not record LCP until React had hydrated, framer had mounted,
+            the 0.4s delay had elapsed and the 1.2s fade had run. On throttled mobile that
+            put LCP at ~7.9s against an FCP of 1.7s. Rendered plainly, LCP is just the
+            image's own paint. Any entrance effect added back here must animate `transform`
+            only and never `opacity`, and must not offset the image out of the viewport. */}
+        <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0">
           <Image
             width={1000}
             height={1000}
@@ -139,10 +165,12 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             alt="Learning illustration"
             unoptimized={heroImageUnoptimized}
             priority
-            sizes="(max-width: 1023px) min(100vw, 28rem) 50vw"
+            // Was "(max-width: 1023px) min(100vw, 28rem) 50vw" — a missing comma before
+            // `50vw` made the whole attribute invalid, so the browser fell back to 100vw.
+            sizes="(max-width: 1023px) min(100vw, 28rem), 50vw"
             className="px-4 sm:w-[450px] md:w-auto xl:w-full 2xl:w-full h-auto object-contain max-w-full"
           />
-        </motion.div>
+        </div>
       </div>
     </section>
   );
