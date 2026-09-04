@@ -13,15 +13,50 @@ function safeHref(url: string): string | undefined {
   return t;
 }
 
+/** First sign that a real person is doing something with the page. Deliberately excludes
+ *  anything that fires on its own: no timers, no load events. `scroll` covers nearly
+ *  everyone, the rest catch people who interact without scrolling first. */
+const ENGAGEMENT_EVENTS = ['scroll', 'wheel', 'touchmove', 'keydown'] as const;
+// Note: no 'pointerdown'. A plain click is usually someone following a link, and opening
+// the promo over them mid-navigation reads as a trap — with client-side routing the
+// overlay would still be sitting there on the page they navigated to.
+
 /**
  * First-session promotional overlay (image + link from CMS).
  * Dismiss is remembered in localStorage for this browser.
+ *
+ * WHY THIS WAITS FOR AN INTERACTION
+ *
+ * The overlay is `fixed inset-0`, so whenever it paints it covers the viewport and
+ * becomes the Largest Contentful Paint element. It used to appear as soon as the ads
+ * API answered — straight into the initial page load — which made it, not the hero, the
+ * thing LCP measured. It scored 43 where the same page without it scored 78, and
+ * shrinking the image only made that worse: a faster popup wins the race every time
+ * instead of sometimes losing it. The cost was never the bytes, it was appearing during
+ * load at all.
+ *
+ * Holding it until the visitor does something fixes both halves of the measurement:
+ *   - Lab (Lighthouse/PSI) never scrolls, clicks or types, so the popup never opens
+ *     during an audit and the hero is measured instead.
+ *   - Field (real Chrome users) stops recording LCP at the first interaction, so an
+ *     overlay that only appears after that interaction can never be someone's LCP.
+ *
+ * The trade-off is real and deliberate: a visitor who leaves without scrolling, tapping
+ * or typing never sees the promo. In exchange it stops costing every visitor their LCP.
+ * If marketing wants those bounces covered too, a timer is the wrong instrument — it
+ * fires with no interaction, so a slow audit whose trace is still open when it elapses
+ * puts the popup straight back in LCP. Prefer a scroll-depth or exit-intent trigger.
+ *
+ * The CMS config is prefetched during idle time so the image can start loading the
+ * instant the trigger fires; the fetch paints nothing, so it costs no LCP.
  */
 export default function FirstVisitSiteAd() {
-  const [open, setOpen] = useState(false);
+  const [engaged, setEngaged] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [linkUrl, setLinkUrl] = useState<string | undefined>(undefined);
+  const [dismissed, setDismissed] = useState(false);
 
+  // Arm the popup: fetch the CMS config, but do not show anything yet.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
@@ -31,7 +66,7 @@ export default function FirstVisitSiteAd() {
     }
 
     let cancelled = false;
-    (async () => {
+    const load = async () => {
       try {
         const ads = await getSiteDisplayAds();
         if (cancelled || !ads) return;
@@ -41,16 +76,45 @@ export default function FirstVisitSiteAd() {
         setImageUrl(resolveApiAssetUrl(src));
         const href = ads.popup.link_url?.trim();
         setLinkUrl(href ? safeHref(href) : undefined);
-        setOpen(true);
       } catch {
         /* ignore */
       }
-    })();
+    };
+
+    // Idle rather than immediate, so the request queues behind the page's own work.
+    // requestIdleCallback is missing on older Safari, hence the timeout fallback.
+    const ric = (window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    }).requestIdleCallback;
+    const handle = ric ? ric(load, { timeout: 3000 }) : window.setTimeout(load, 1500);
 
     return () => {
       cancelled = true;
+      const cic = (window as unknown as {
+        cancelIdleCallback?: (h: number) => void;
+      }).cancelIdleCallback;
+      if (ric && cic) cic(handle);
+      else window.clearTimeout(handle);
     };
   }, []);
+
+  // Trigger: the visitor's first deliberate action on the page.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const onEngage = () => setEngaged(true);
+    for (const evt of ENGAGEMENT_EVENTS) {
+      window.addEventListener(evt, onEngage, { once: true, passive: true });
+    }
+
+    return () => {
+      for (const evt of ENGAGEMENT_EVENTS) {
+        window.removeEventListener(evt, onEngage);
+      }
+    };
+  }, []);
+
+  const open = engaged && !dismissed;
 
   const dismiss = () => {
     try {
@@ -58,7 +122,7 @@ export default function FirstVisitSiteAd() {
     } catch {
       /* ignore */
     }
-    setOpen(false);
+    setDismissed(true);
   };
 
   if (!open || !imageUrl) return null;
