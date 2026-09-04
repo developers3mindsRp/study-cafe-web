@@ -66,6 +66,14 @@ export function buildRobotsTxt(siteUrl: string): string {
     'User-agent: DotBot',
     'Disallow: /',
     '',
+    // ByteDance's crawler runs a real browser, so its hits execute GTM and land
+    // in GA4 as page views. It was crawling dead WordPress-era URLs hard enough
+    // that the 404 page became the site's most-viewed page in Realtime.
+    // Bytespider has a poor record of honouring robots.txt — the Cloudflare WAF
+    // rule on this user agent is what actually stops it.
+    'User-agent: Bytespider',
+    'Disallow: /',
+    '',
     '# Sitemap',
     `Sitemap: ${siteUrl}/sitemap.xml`,
     '',
