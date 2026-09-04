@@ -10,12 +10,18 @@ export const DEFAULT_META_KEYWORDS = "StudyCafe, online courses, learning, study
 
 export const DEFAULT_ROBOTS = "index, follow";
 
-/** Human-readable label from the last path segment, or "Home" for `/`. */
+/**
+ * Human-readable label from the last path segment, or "Home" for `/`.
+ *
+ * Query and hash are dropped before the segment is title-cased — an ad
+ * vignette's `#google_vignette` would otherwise become part of the label.
+ * The legacy `.html` suffix on article URLs is dropped for the same reason.
+ */
 export function pathSegmentDisplayName(pathname: string): string {
-  const trimmed = pathname.split("?")[0]?.replace(/\/+$/, "") || "";
+  const trimmed = pathname.split(/[?#]/)[0]?.replace(/\/+$/, "") || "";
   if (trimmed === "" || trimmed === "/") return "Home";
   const parts = trimmed.split("/").filter(Boolean);
-  const last = parts[parts.length - 1] ?? "Page";
+  const last = (parts[parts.length - 1] ?? "Page").replace(/\.html$/i, "");
   return last
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());

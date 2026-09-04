@@ -60,6 +60,38 @@ const nextConfig = {
         destination: '/:slug.html',
         permanent: true,
       },
+
+      /**
+       * WordPress-era URLs that still get traffic from old backlinks and
+       * Google's index. All confirmed 404s in the nginx access log; none of
+       * these paths has a route in `src/pages`, so nothing live is shadowed.
+       * Temporary (302) where the old archive may be rebuilt later.
+       */
+      {
+        source: '/tag/:slug',
+        destination: '/blogs',
+        permanent: false,
+      },
+      {
+        source: '/author/:slug',
+        destination: '/blogs',
+        permanent: false,
+      },
+      {
+        source: '/feed',
+        destination: '/sitemap-news.xml',
+        permanent: false,
+      },
+      {
+        source: '/privacy',
+        destination: '/privacy-policy',
+        permanent: true,
+      },
+      {
+        source: '/user',
+        destination: '/account',
+        permanent: false,
+      },
     ];
   },
   images: {

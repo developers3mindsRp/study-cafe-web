@@ -29,9 +29,16 @@ export function normalizeSeoPayload(raw: Record<string, unknown> | null | undefi
   };
 }
 
-/** Path without query string; always starts with `/` or is `/` for home */
+/**
+ * Path without query string or hash; always starts with `/` or is `/` for home.
+ *
+ * The hash matters: AdSense appends `#google_vignette` to the URL when it shows
+ * a mobile vignette, and `router.asPath` carries it. Left in, the SEO by-path
+ * lookup misses and the page falls back to a title built from the raw
+ * segment — readers saw `... 406139.Html#Google_vignette | StudyCafe`.
+ */
 export function pathnameForSeoLookup(pathname: string): string {
-  const path = pathname.split("?")[0] || "/";
+  const path = pathname.split(/[?#]/)[0] || "/";
   if (path === "") return "/";
   return path.startsWith("/") ? path : `/${path}`;
 }
