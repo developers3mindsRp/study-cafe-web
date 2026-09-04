@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { HomeHero } from "@/types/models.types";
-import { resolveApiAssetUrl } from "@/utils/mediaUrl";
+import { resolveApiAssetUrl, isUnoptimizedImageSrc } from "@/utils/mediaUrl";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -18,29 +18,6 @@ interface HeroSectionProps {
   hero?: HomeHero | null;
 }
 
-/** Remote hosts the next/image optimizer is known to handle in production.
- *
- *  Remote URLs used to bypass the optimizer wholesale, because it runs on the Next server
- *  and had been failing for some cross-origin fetches (timeouts, IP rules, SSL). The cost
- *  of that blanket rule was that the homepage LCP image — always served from the CMS —
- *  shipped as the raw ~104 KB PNG with no resizing and no WebP.
- *
- *  Re-checked against production for this exact image: /_next/image against
- *  assets.studycafe.in returns 200 image/webp at 36 KB (640w) / 52 KB (828w), cache-HIT.
- *  So optimization is re-enabled for that one host and every other remote host keeps the
- *  old bypass. If the optimizer ever regresses for the CMS, empty this array and the
- *  previous behaviour is restored exactly. */
-const OPTIMIZER_SAFE_REMOTE_HOSTS = ["assets.studycafe.in"];
-
-function isUnoptimizedSrc(src: string): boolean {
-  if (!/^https?:\/\//i.test(src)) return false; // local /public asset — always optimized
-  try {
-    return !OPTIMIZER_SAFE_REMOTE_HOSTS.includes(new URL(src).hostname);
-  } catch {
-    return true; // unparseable URL: fall back to the bypass rather than risk a broken hero
-  }
-}
-
 const HeroSection = ({ hero }: HeroSectionProps) => {
   const router = useRouter();
   const h = hero ?? DEFAULT_HERO;
@@ -49,7 +26,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
     : "/images/home/home.png";
 
-  const heroImageUnoptimized = isUnoptimizedSrc(heroSrc);
+  const heroImageUnoptimized = isUnoptimizedImageSrc(heroSrc);
 
   const handleClick = () => {
     router.push(h.ctaLink || "/plans");

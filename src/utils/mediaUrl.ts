@@ -9,6 +9,30 @@ import {
   getMediaOrigin,
 } from '@/config/env';
 
+/** Remote hosts the next/image optimizer is known to handle in production.
+ *
+ *  Remote URLs were bypassing the optimizer wholesale, because it runs on the Next server
+ *  and had been failing for some cross-origin fetches (timeouts, IP rules, SSL). The cost
+ *  was that every CMS image — hero, promo popup — shipped at full size in its original
+ *  format.
+ *
+ *  Re-checked against production: /_next/image against assets.studycafe.in returns
+ *  200 image/webp, cache-HIT, for both the hero and the popup asset. Optimization is
+ *  enabled for that one host; every other remote host keeps the old bypass. If the
+ *  optimizer ever regresses for the CMS, empty this array to restore the previous
+ *  behaviour everywhere at once. */
+export const OPTIMIZER_SAFE_REMOTE_HOSTS = ['assets.studycafe.in'];
+
+/** Whether `src` must skip the next/image optimizer. Local /public assets never do. */
+export function isUnoptimizedImageSrc(src: string): boolean {
+  if (!/^https?:\/\//i.test(src)) return false;
+  try {
+    return !OPTIMIZER_SAFE_REMOTE_HOSTS.includes(new URL(src).hostname);
+  } catch {
+    return true; // unparseable URL: bypass rather than risk a broken image
+  }
+}
+
 export function resolveApiAssetUrl(path?: string | null): string {
   if (!path?.trim()) return '';
   const p = path.trim();

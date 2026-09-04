@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getSiteDisplayAds } from '@/services/platform.service';
-import { resolveApiAssetUrl } from '@/utils/mediaUrl';
+import { resolveApiAssetUrl, isUnoptimizedImageSrc } from '@/utils/mediaUrl';
 
 const STORAGE_KEY = 'studycafe_first_visit_popup_seen';
 
@@ -62,11 +63,29 @@ export default function FirstVisitSiteAd() {
 
   if (!open || !imageUrl) return null;
 
+  /**
+   * Served through next/image rather than a bare <img>.
+   *
+   * This overlay is `fixed inset-0`, so the moment it paints it covers the viewport and
+   * becomes the page's LCP element — on the homepage it displaced a hero that paints in
+   * well under a second. The CMS asset behind it is a 1080x1080 JPEG at ~395 KB, sent
+   * verbatim at full size to every device. Through the optimizer the same image is WebP
+   * at roughly a fifth of that.
+   *
+   * Explicit width/height (the asset's own 1:1 aspect) reserve the box before the bytes
+   * arrive, so the modal does not resize around the image as it loads.
+   *
+   * Note there is deliberately no `priority` here: this is promotional, it must never
+   * preload ahead of real page content, and it is mounted only after the ads API responds.
+   */
   const body = (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={imageUrl}
       alt=""
+      width={1080}
+      height={1080}
+      unoptimized={isUnoptimizedImageSrc(imageUrl)}
+      sizes="(max-width: 672px) 90vw, 640px"
       className="max-h-[min(80vh,640px)] w-auto max-w-full rounded-lg object-contain shadow-lg"
     />
   );
