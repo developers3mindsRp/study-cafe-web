@@ -33,16 +33,29 @@ export default function App({ Component, pageProps }: AppProps) {
             byte arrived. Listed first so it wins the browser's early-connection budget
             over the analytics origins below. */}
         <link rel="preconnect" href="https://assets.studycafe.in" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        {/* No preconnect for connect.facebook.net: the pixel is lazyOnload now, so a
-            warmed connection would have gone idle and been dropped before it was used. */}
+        {/* No preconnect for www.googletagmanager.com or connect.facebook.net: both are
+            lazyOnload, so a warmed connection would have gone idle and been dropped
+            before it was used, while still competing for the early-connection budget
+            that the LCP image above needs. */}
       </Head>
       
       {/* ==================== Google Tag Manager ====================
           This is the ONLY place GTM is loaded. An identical inline copy used to sit in
           _document.tsx's <head>; it was removed so the container is not initialised
-          twice and so its 151 KB download no longer races the LCP image. */}
-      <Script id="gtm" strategy="afterInteractive">
+          twice and so its 151 KB download no longer races the LCP image.
+
+          lazyOnload, not afterInteractive. This one snippet pulls 537 KB across three
+          requests — the container, a gtag destination, and a first-party tag script —
+          and it was the last tag still contending with hydration, blocking the main
+          thread for 672 ms of a measured 1,070 ms third-party total. The homepage LCP
+          is gated on an ~11s render delay that is main-thread contention, not bytes.
+
+          The tradeoff is deliberate and it is a real one: tags now fire during idle
+          time after window load rather than shortly after hydration, so a visitor who
+          leaves very quickly may not be counted. Pageviews and Google Ads conversions
+          still fire for everyone else. Revert to afterInteractive if attribution
+          regresses by more than the speed is worth. */}
+      <Script id="gtm" strategy="lazyOnload">
         {`
           (function(w,d,s,l,i){
             w[l]=w[l]||[];
