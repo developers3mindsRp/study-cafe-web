@@ -8,7 +8,7 @@ import FeaturedCourses from '@/components/layout/home/Feature.home';
 import MembershipPricing from '@/components/layout/home/Member.home';
 import Testimonials from '@/components/layout/home/Testimonial.home';
 import BlogSection from '@/components/layout/home/BlogSection.home';
-import FAQSection from '@/components/layout/home/FaqSection.home';
+import dynamic from 'next/dynamic';
 import Learning from '@/components/layout/home/Learning.home';
 import {
   getHomePageData,
@@ -20,6 +20,26 @@ import {
 } from '@/services/platform.service';
 import type { HomePageData, Membership, CourseCat, PublicCourse } from '@/types/models.types';
 import CertificateLayout from '@/components/ui/CertificateLayout';
+
+/**
+ * The FAQ accordion is the last section on the page. It is loaded on demand,
+ * client-only, so its code and its framer-motion AnimatePresence usage are not part
+ * of initial hydration. The placeholder reserves roughly the section's closed height
+ * and matches its background, so a fast scroll to the bottom does not shift.
+ *
+ * Trade-off, deliberately accepted: the FAQ text is no longer in the server HTML.
+ * Googlebot renders JavaScript and there is no FAQPage structured data on this page,
+ * so the exposure is small. If that ever matters, drop `ssr: false` here.
+ */
+const FAQSection = dynamic(
+  () => import('@/components/layout/home/FaqSection.home'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full bg-[#FAFBFB] min-h-[520px] md:min-h-[680px] mb-4 md:mb-0" />
+    ),
+  },
+);
 
 interface HomeProps {
   homePageData: HomePageData | null;

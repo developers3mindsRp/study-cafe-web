@@ -1,6 +1,19 @@
 "use client";
 import React from "react";
-import CountUp from "react-countup";
+import dynamic from "next/dynamic";
+
+/**
+ * react-countup (plus countup.js underneath) is loaded on demand, client-only, so
+ * the counters are not part of initial hydration. The `loading` fallback is an empty
+ * <span>, which is exactly what CountUp itself server-renders today: it paints
+ * nothing until its scroll-spy fires. Server HTML and first client paint are
+ * therefore unchanged. This section sits right at the desktop fold, so that
+ * equivalence is the point, not a nicety.
+ */
+const CountUp = dynamic(() => import("react-countup"), {
+  ssr: false,
+  loading: () => <span />,
+});
 
 const ICONS = [
   "/images/icons/s1.svg",

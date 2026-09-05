@@ -1,10 +1,20 @@
 import type { Testimonial } from '@/types/models.types';
 import { useState, useEffect, useRef } from 'react';
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import dynamic from 'next/dynamic';
 
-import "swiper/css";
+/**
+ * Swiper (~150 KB unminified) only powers the md+ carousel, yet it was the heaviest
+ * first-party dependency in initial hydration. Load it on demand, client-only. The
+ * heading and the mobile scroll-snap list below stay server-rendered, so the
+ * testimonial text is still in the HTML and mobile, which never used Swiper, no
+ * longer pays for it. The placeholder reserves roughly the carousel's height so a
+ * fast scroll does not shift the page while the chunk arrives.
+ */
+const DesktopCarousel = dynamic(
+  () => import('./TestimonialCarousel.home'),
+  { ssr: false, loading: () => <div className="min-h-[280px]" /> },
+);
 
 const FALLBACK_TESTIMONIALS = [
   { id: '1', quote: 'StudyCafe transformed my career! The courses are practical, well-organized, well-structured, and the instructors are incredibly knowledgeable.', authorName: 'Rahul Verma', authorRole: 'Software Developer' },
@@ -77,63 +87,9 @@ export default function Testimonials({ testimonials: testimonialsProp }: Testimo
             ))}
           </div>
 
-          {/* Desktop marquee */}
+          {/* Desktop marquee. Swiper loads on demand; see TestimonialCarousel.home.tsx */}
           <div className='max-w-7xl mx-auto md:px-4 md:pt-6 hidden md:block'>
-            <Swiper           
-              spaceBetween={30}
-              slidesPerView={3}            
-              speed={3000}            
-               autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              
-                modules={[Autoplay]}
-              className="testimonial-swiper"
-            >
-              {[...testimonials, ...testimonials].map((item, index) => (
-                <SwiperSlide
-                  key={`${item.id ?? index}-${index}`}
-                  className=""
-                >
-                  <div className="relative border border-[#17254E] rounded-xl p-6 text-left h-full flex flex-col justify-between">
-                    {/* <img
-                      src="/images/quote.png"
-                      alt="quote"
-                      className="absolute -top-6 -left-2 w-14 h-10"
-                    /> */}
-
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <img
-                          key={i}
-                          src="/images/icons/star.svg"
-                          className="w-4 h-4"
-                          alt=""
-                        />
-                      ))}
-                    </div>
-
-                    <p className="text-[#3a3c3e] text-[14px] mt-2 leading-relaxed min-h-[117px]">
-                      {item.quote}
-                    </p>
-
-                    <div className="mt-6 flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold text-gray-900 text-[18px]">
-                          {item.authorName}
-                        </h4>
-
-                        <p className="text-[#09339B] text-[14px]">
-                          {item.authorRole}
-                        </p>
-                      </div>
-
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            <DesktopCarousel testimonials={testimonials} />
           </div>
 
 {/*            
