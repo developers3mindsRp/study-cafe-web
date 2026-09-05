@@ -143,14 +143,21 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
         </motion.div>
 
         {/* IMAGE
-            Deliberately NOT wrapped in <motion.div>. This is the page's LCP element, and
-            framer-motion renders its `initial` state as an inline style during SSR — the
-            old `initial={{ opacity: 0, y: 80 }}` shipped the hero image at opacity:0, so
-            the browser could not record LCP until React had hydrated, framer had mounted,
-            the 0.4s delay had elapsed and the 1.2s fade had run. On throttled mobile that
-            put LCP at ~7.9s against an FCP of 1.7s. Rendered plainly, LCP is just the
-            image's own paint. Any entrance effect added back here must animate `transform`
-            only and never `opacity`, and must not offset the image out of the viewport. */}
+            Deliberately NOT wrapped in <motion.div>. framer-motion renders its `initial`
+            state as an inline style during SSR — the old `initial={{ opacity: 0, y: 80 }}`
+            shipped the hero image at opacity:0, so the browser could not record LCP until
+            React had hydrated, framer had mounted, the 0.4s delay had elapsed and the 1.2s
+            fade had run. On throttled mobile that put LCP at ~7.9s against an FCP of 1.7s.
+            Any entrance effect added back here must animate `transform` only and never
+            `opacity`, and must not offset the image out of the viewport.
+
+            `loading="eager"` rather than `priority`. This illustration used to be the LCP
+            element, but the section background behind it is larger and took that role once
+            the background became CMS-driven. `priority` emits a preload, so the page was
+            issuing two high-priority image preloads that split the early bandwidth: the
+            LCP background's own load time measurably rose when its preload was added.
+            Eager keeps this image loading immediately without competing for the preload
+            budget. If it ever becomes the LCP element again, restore `priority`. */}
         <div className="sm:w-auto md:w-auto lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end mb-4 md:mb-0">
           <Image
             width={1000}
@@ -158,7 +165,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
             src={heroSrc}
             alt="Learning illustration"
             unoptimized={heroImageUnoptimized}
-            priority
+            loading="eager"
             // Was "(max-width: 1023px) min(100vw, 28rem) 50vw" — a missing comma before
             // `50vw` made the whole attribute invalid, so the browser fell back to 100vw.
             sizes="(max-width: 1023px) min(100vw, 28rem), 50vw"
