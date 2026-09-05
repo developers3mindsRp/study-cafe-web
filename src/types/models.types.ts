@@ -324,9 +324,16 @@ export interface HomeStat {
   suffix?: string;
 }
 
+/** "Ready to Start Learning?" band near the foot of the home page */
+export interface HomeCta {
+  /** Full-bleed background for the band. Null keeps the shipped default. */
+  backgroundImageUrl?: string | null;
+}
+
 /** Aggregated home page data for landing */
 export interface HomePageData {
   hero: HomeHero;
+  cta?: HomeCta | null;
   features?: HomeFeature[];
   stats?: HomeStat[];
   testimonials?: Testimonial[];

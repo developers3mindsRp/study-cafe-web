@@ -84,3 +84,22 @@ function rewriteUploadUrlToAssetsOrigin(url: string): string {
   }
   return url;
 }
+
+/**
+ * Resolve a CMS image path and wrap it as a CSS `background-image` value, falling
+ * back to `fallbackSrc` when nothing is set.
+ *
+ * These backgrounds cannot be Tailwind arbitrary classes: Tailwind compiles class
+ * names at build time, so a `bg-[url(...)]` can never reflect a CMS value. They have
+ * to be inline styles, which means the URL is interpolated into a CSS string — quotes
+ * and backslashes are escaped so a crafted filename cannot close the url() and inject
+ * further declarations.
+ */
+export function resolveCssBackgroundImage(
+  path: string | null | undefined,
+  fallbackSrc: string,
+): string {
+  const resolved = path ? resolveApiAssetUrl(path) || path : '';
+  const src = resolved || fallbackSrc;
+  return `url("${src.replace(/["\\]/g, (c) => `\\${c}`)}")`;
+}

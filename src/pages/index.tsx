@@ -46,7 +46,7 @@ export default function Home({
       <MembershipPricing memberships={memberships ?? undefined} />
       <Testimonials testimonials={homePageData?.testimonials} />
       <BlogSection initialArticles={initialArticles} />
-      <Learning/>
+      <Learning cta={homePageData?.cta} />
       <FAQSection faqs={homePageData?.faqs} />
     </PublicLayout>
   );

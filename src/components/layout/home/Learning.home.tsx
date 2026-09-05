@@ -1,15 +1,30 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
+import type { HomeCta } from "@/types/models.types";
+import { resolveCssBackgroundImage } from "@/utils/mediaUrl";
 
-const Learning = () => {
+/** Shipped fallback, used until an admin uploads a banner in the CMS. */
+const DEFAULT_CTA_BACKGROUND = "/images/learning-bg.webp";
+
+interface LearningProps {
+  cta?: HomeCta | null;
+}
+
+const Learning = ({ cta }: LearningProps) => {
   const { user, isLoading: authLoading } = useAuth();
 
-  // console.log(user,"user")
+  // Rendered during SSR, so the correct background is in the initial HTML — no flash.
+  const background = resolveCssBackgroundImage(
+    cta?.backgroundImageUrl,
+    DEFAULT_CTA_BACKGROUND,
+  );
+
   return (
     <section
       className="relative w-full h-[350px] md:h-[295px] flex items-center justify-center
-                 bg-[url('/images/learning-bg.webp')]  bg-cover bg-center bg-no-repeat container mx-auto px-4  md:mt-8 md:rounded-[10px]"
+                 bg-cover bg-center bg-no-repeat container mx-auto px-4  md:mt-8 md:rounded-[10px]"
+      style={{ backgroundImage: background }}
     >
 
 
