@@ -300,7 +300,10 @@ export interface HomeHero {
   title: string;
   ctaText?: string;
   ctaLink?: string;
+  /** Foreground illustration rendered beside the copy. */
   imageUrl?: string;
+  /** Full-bleed background behind the whole hero section. */
+  backgroundImageUrl?: string;
   badge?: string;
   description?: string;
 }

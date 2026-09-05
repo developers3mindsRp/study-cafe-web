@@ -14,6 +14,17 @@ const DEFAULT_HERO: HomeHero = {
   badge: "Welcome to StudyCafe Learning Platform",
 };
 
+/** Shipped fallback, used until an admin uploads a hero background in the CMS. */
+const DEFAULT_HERO_BACKGROUND = "/images/home/home-banner.webp";
+
+/**
+ * Build a `background-image` value. The src is interpolated into a CSS string, so
+ * quotes and backslashes must be escaped or a crafted filename could terminate the
+ * url() and inject further declarations.
+ */
+const cssBackgroundImage = (src: string) =>
+  `url("${src.replace(/["\\]/g, (c) => `\\${c}`)}")`;
+
 interface HeroSectionProps {
   hero?: HomeHero | null;
 }
@@ -26,6 +37,13 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
     ? resolveApiAssetUrl(h.imageUrl) || h.imageUrl
     : "/images/home/home.png";
 
+  // The background used to be a Tailwind arbitrary class, which Tailwind compiles at
+  // build time and so can never reflect a CMS value. It has to be an inline style.
+  // Rendered during SSR, so the correct background is in the initial HTML — no flash.
+  const heroBackgroundSrc = h.backgroundImageUrl
+    ? resolveApiAssetUrl(h.backgroundImageUrl) || h.backgroundImageUrl
+    : DEFAULT_HERO_BACKGROUND;
+
   const heroImageUnoptimized = isUnoptimizedImageSrc(heroSrc);
 
   const handleClick = () => {
@@ -33,7 +51,10 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
   };
 
   return (
-    <section className="relative bg-[url('/images/home/home-banner.webp')] bg-cover  bg-no-repeat md:h-auto xl:h-[750px]">
+    <section
+      className="relative bg-cover bg-no-repeat md:h-auto xl:h-[750px]"
+      style={{ backgroundImage: cssBackgroundImage(heroBackgroundSrc) }}
+    >
       <div className="container mx-auto px-4  md:py-12 lg:py-20 xl:py-18 2xl:py-18 flex flex-col lg:flex-row items-center">
  
 
