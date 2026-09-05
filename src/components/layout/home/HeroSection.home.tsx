@@ -18,8 +18,9 @@ const DEFAULT_HERO: HomeHero = {
   badge: "Welcome to StudyCafe Learning Platform",
 };
 
-/** Shipped fallback, used until an admin uploads a hero background in the CMS. */
-const DEFAULT_HERO_BACKGROUND = "/images/home/home-banner.webp";
+/** Shipped fallback, used until an admin uploads a hero background in the CMS.
+ *  Exported so the page can preload exactly the URL this section will paint. */
+export const DEFAULT_HERO_BACKGROUND = "/images/home/home-banner.webp";
 
 interface HeroSectionProps {
   hero?: HomeHero | null;

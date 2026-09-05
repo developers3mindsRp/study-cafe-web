@@ -95,11 +95,18 @@ function rewriteUploadUrlToAssetsOrigin(url: string): string {
  * and backslashes are escaped so a crafted filename cannot close the url() and inject
  * further declarations.
  */
-export function resolveCssBackgroundImage(
+export function resolveBackgroundImageSrc(
   path: string | null | undefined,
   fallbackSrc: string,
 ): string {
   const resolved = path ? resolveApiAssetUrl(path) || path : '';
-  const src = resolved || fallbackSrc;
+  return resolved || fallbackSrc;
+}
+
+export function resolveCssBackgroundImage(
+  path: string | null | undefined,
+  fallbackSrc: string,
+): string {
+  const src = resolveBackgroundImageSrc(path, fallbackSrc);
   return `url("${src.replace(/["\\]/g, (c) => `\\${c}`)}")`;
 }

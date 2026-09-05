@@ -1,6 +1,8 @@
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 import { PublicLayout } from '@/components/layout';
-import HeroSection from '@/components/layout/home/HeroSection.home';
+import HeroSection, { DEFAULT_HERO_BACKGROUND } from '@/components/layout/home/HeroSection.home';
+import { resolveBackgroundImageSrc } from '@/utils/mediaUrl';
 import StatsSection from '@/components/layout/home/StaticSection.home';
 import FeaturedCourses from '@/components/layout/home/Feature.home';
 import MembershipPricing from '@/components/layout/home/Member.home';
@@ -34,8 +36,27 @@ export default function Home({
   initialCourseCats,
   initialFeaturedCourses,
 }: HomeProps) {
+  // The hero background is the page's largest contentful paint. It is painted from an
+  // inline `background-image`, which the browser cannot discover until it has built the
+  // layout — measured at ~2s of load delay on mobile. A preload makes it discoverable in
+  // the initial HTML instead. `resolveBackgroundImageSrc` is the same resolver the
+  // section itself uses, so this URL matches the one it paints; if the two ever diverge
+  // the browser fetches two images rather than none, so they must stay in step.
+  const heroBackgroundSrc = resolveBackgroundImageSrc(
+    homePageData?.hero?.backgroundImageUrl,
+    DEFAULT_HERO_BACKGROUND,
+  );
+
   return (
     <PublicLayout>
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href={heroBackgroundSrc}
+          fetchPriority="high"
+        />
+      </Head>
       {/* <CertificateLayout /> */}
       <HeroSection hero={homePageData?.hero} />
       <StatsSection stats={homePageData?.stats} />
