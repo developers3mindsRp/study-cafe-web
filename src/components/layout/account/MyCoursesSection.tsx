@@ -52,9 +52,10 @@ export default function MyCoursesSection() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Paid course purchases (excludes membership plan orders)
+  // Paid course purchases (excludes membership plan orders, and courses an admin has
+  // deallotted — the order stays in payment history, but there is no course to open).
   const purchases = (purchasesRaw ?? []).filter(
-    isUserCourseOrderPurchase
+    (p) => isUserCourseOrderPurchase(p) && !p.revoked
   );
 
   // courseIds already covered by paid purchases — avoid duplicates

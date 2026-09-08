@@ -141,6 +141,13 @@ export interface Purchase {
   accessExpiresAt?: string | null;
   /** Whether course access is currently 'active' or 'expired'. */
   accessStatus?: 'active' | 'expired';
+  /**
+   * An admin deallotted this course, so the learner has no access to it.
+   *
+   * The order is still returned — it is a real payment and belongs in payment history and
+   * on the invoice. Only views that show course *access* should drop these rows.
+   */
+  revoked?: boolean;
   /** Legacy WP workflow status carried from migration: 'publish' | 'draft' | null. */
   wpPostStatus?: string | null;
 }
