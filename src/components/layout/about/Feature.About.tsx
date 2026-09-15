@@ -16,15 +16,20 @@ const Feature_about = () => {
             <h1 className="text-[30px] md:text-[40px] font-semibold text-[#252525] mb-6">{featuredIn.sectionTitle}</h1>
           </div>
 
-          <div className="rounded-lg bg-white flex flex-wrap border">
-            {logos.map((src, index) => (
-              <div
-                key={`${src}-${index}`}
-                className="flex flex-1 min-w-[33%] md:min-w-[16.66%] basis-[33%] md:basis-0 items-center justify-center border-r border-b md:border-b-0 border-gray-100 p-4 last:border-r-0"
-              >
-                <img src={src} alt="" />
-              </div>
-            ))}
+          {/* Fixed 3-up / 6-up cells so an extra logo starts a tidy new row instead
+              of stretching the row it lands in. The inner grid is pulled 1px past
+              the clipped edge, which trims the trailing dividers. */}
+          <div className="rounded-lg bg-white border overflow-hidden">
+            <div className="grid grid-cols-3 md:grid-cols-6 -mr-px -mb-px">
+              {logos.map((src, index) => (
+                <div
+                  key={`${src}-${index}`}
+                  className="flex items-center justify-center border-r border-b border-gray-100 p-4"
+                >
+                  <img src={src} alt="" className="max-w-full h-auto" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

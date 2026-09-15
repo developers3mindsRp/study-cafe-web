@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAboutPage } from '@/contexts/AboutPageContext';
+import { peopleGridRowClass } from './peopleGridRow';
 
 const Teams_about = () => {
   const { team } = useAboutPage();
@@ -40,12 +41,14 @@ const Teams_about = () => {
               ))}
             </div>
 
-            <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
+            <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-4 xl:gap-6">
               {team.members.map((member, index) => (
                 <div
                   key={member.name}
-                  className={`flex flex-col border p-6 rounded-lg bg-white
-        ${index === 4 ? 'lg:col-start-2' : ''}`}
+                  className={`flex flex-col border p-6 rounded-lg bg-white md:col-span-2 ${peopleGridRowClass(
+                    index,
+                    team.members.length
+                  )}`}
                 >
                   <img src={member.image} alt={member.name} />
 

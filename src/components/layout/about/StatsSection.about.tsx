@@ -6,11 +6,13 @@ const Stats_about = () => {
 
   return (
     <>
-      <section className="container mx-auto pt-4 md:pt-6 md:pb-12 w-[100%] px-4 text-left grid grid-cols-2 md:grid-cols-4 gap-1">
+      {/* Wrapping flex rather than a grid: 2-up / 4-up as before, but a row that
+          does not fill up stays centred instead of hugging the left edge. */}
+      <section className="container mx-auto pt-4 md:pt-6 md:pb-12 w-[100%] px-4 text-left flex flex-wrap justify-center gap-1">
         {stats.map((item, index) => (
           <div
             key={`${item.title}-${index}`}
-            className="p-2 md:p-4 bg-[#09339B] rounded-lg text-center flex items-center md:justify-center gap-3  md:gap-8 px-3 "
+            className="basis-[calc(50%-2px)] md:basis-[calc(25%-3px)] p-2 md:p-4 bg-[#09339B] rounded-lg text-center flex items-center md:justify-center gap-3  md:gap-8 px-3 "
           >
             <img src={item.icon} alt={item.title} className="w-10 h-10 xl:w-auto xl:h-auto " />
 
