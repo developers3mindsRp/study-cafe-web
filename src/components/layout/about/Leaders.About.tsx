@@ -16,9 +16,7 @@ const Leader_about = () => {
           <div className="rounded-lg  bg-white grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mx-auto">
             {leadership.leaders.map((leader) => (
               <div key={leader.name} className="flex flex-col  rounded-full mb-4">
-                {/* Capped rather than fixed, so a third leader shrinks to fit its
-                    column instead of spilling out of it. */}
-                <img src={leader.image} alt="" className="w-full md:max-w-[350px]" />
+                <img src={leader.image} alt="" className="md:w-[350px]" />
                 <div className="flex justify-between pr-4 mt-2">
                   <h1 className="text-[18px] xl:text-[25px] font-medium text-[#454545]">{leader.name}</h1>
                   {leader.linkedin ? (
