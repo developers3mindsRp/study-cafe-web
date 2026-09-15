@@ -15,6 +15,8 @@ const CARD_WRAPPER_CLASSES = [
 const Journey_about = () => {
   const { journey } = useAboutPage();
   const items = journey.milestones.slice(0, CARD_WRAPPER_CLASSES.length);
+  /** The timeline only has 7 pinned positions — anything past that is listed below it. */
+  const extraItems = journey.milestones.slice(CARD_WRAPPER_CLASSES.length);
 
   return (
     <>
@@ -62,6 +64,24 @@ const Journey_about = () => {
               ))}
             </div>
           </div>
+
+          {extraItems.length > 0 && (
+            <div className="grid grid-cols-1 gap-6 mt-12 md:grid-cols-2 lg:grid-cols-3">
+              {extraItems.map((milestone, index) => (
+                <div
+                  key={`${milestone.year}-${milestone.title}-extra-${index}`}
+                  className="relative bg-white rounded-lg shadow-lg p-4"
+                >
+                  <img src="/images/pin.svg" className="absolute -top-5 left-1/2 -translate-x-1/2 w-8" alt="" />
+                  <div className="bg-[#DDE4FF] px-4 py-10 rounded-lg">
+                    <h4 className="font-bold">{milestone.year}</h4>
+                    <h5 className="font-bold text-[18px]">{milestone.title}</h5>
+                    <p className="text-[14px] text-gray-500 mt-4 mb-6">{milestone.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>
