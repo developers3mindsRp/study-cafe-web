@@ -65,6 +65,7 @@ export const getStaticProps: GetStaticProps<AboutPageProps> = async () => {
       dehydratedState: dehydrate(queryClient),
       aboutData,
     },
-    revalidate: 600,
+    // Short window so CMS edits to this page show up soon after saving.
+    revalidate: 60,
   };
 };
