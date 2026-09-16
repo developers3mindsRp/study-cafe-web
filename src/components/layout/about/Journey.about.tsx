@@ -25,6 +25,27 @@ const MilestoneCard = ({ milestone }: { milestone: Milestone }) => (
   </>
 );
 
+/** Extra milestones sit 3-up, so the dashed rail can run straight through a row. */
+const OVERFLOW_PER_ROW = 3;
+
+/**
+ * The 7th pinned card is centred at 35% (see its md:left-[35%] md:-translate-x-1/2),
+ * so the first drop hangs from there and the trail stays unbroken.
+ */
+const LAST_PINNED_CENTER = 'ml-[35%]';
+
+/** Dashed rules matching the illustrated path above (#9CA3AF, 6px dash / 6px gap). */
+const DASH_DOWN =
+  'hidden md:block w-[2px] h-16 xl:h-28 bg-[repeating-linear-gradient(to_bottom,#9CA3AF_0_6px,transparent_6px_12px)]';
+const DASH_ACROSS =
+  'hidden md:block absolute top-0 left-0 right-0 h-[2px] bg-[repeating-linear-gradient(to_right,#9CA3AF_0_6px,transparent_6px_12px)]';
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
+  return rows;
+}
+
 const Journey_about = () => {
   const { journey } = useAboutPage();
   /**
@@ -78,13 +99,27 @@ const Journey_about = () => {
           </div>
 
           {overflow.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center pt-14 xl:pt-24 pb-6">
-              {overflow.map((milestone, index) => (
-                <div
-                  key={`${milestone.year}-${milestone.title}-${CARD_WRAPPER_CLASSES.length + index}`}
-                  className="relative w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto"
-                >
-                  <MilestoneCard milestone={milestone} />
+            <div className="pb-6">
+              {chunk(overflow, OVERFLOW_PER_ROW).map((row, rowIndex) => (
+                <div key={`overflow-row-${rowIndex}`}>
+                  {/* Drops out of the illustration for the first row, then row to row. */}
+                  <span
+                    aria-hidden
+                    className={`${DASH_DOWN} ${rowIndex === 0 ? LAST_PINNED_CENTER : 'mx-auto'}`}
+                  />
+
+                  {/* Rail the pins sit on, so a row of one still reads as the trail continuing. */}
+                  <div className="relative flex flex-col md:flex-row justify-center gap-12 md:pt-7">
+                    <span aria-hidden className={DASH_ACROSS} />
+                    {row.map((milestone, colIndex) => (
+                      <div
+                        key={`${milestone.year}-${milestone.title}-${CARD_WRAPPER_CLASSES.length + rowIndex * OVERFLOW_PER_ROW + colIndex}`}
+                        className="relative z-10 w-[230px] bg-white rounded-lg shadow-lg p-4 mx-auto md:mx-0"
+                      >
+                        <MilestoneCard milestone={milestone} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
