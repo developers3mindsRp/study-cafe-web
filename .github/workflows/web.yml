@@ -16,10 +16,15 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          # Without this the remote script keeps running after a failed step and
+          # pm2 gets restarted onto a build that was never produced.
+          script_stop: true
           script: |
+            set -e
+
             # Load NVM
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || true
 
             # Use Node version
             nvm use 24
@@ -28,11 +33,21 @@ jobs:
             node -v
             npm -v
 
-            # Deploy
             cd /var/www/html/study-cafe-web
             git pull origin main
             npm install
-            npm run build
+
+            # Build into a staging directory. The live `.next` keeps serving
+            # traffic for the whole build, and if the build fails we exit here
+            # with the previous build still in place.
+            rm -rf .next-build
+            [ -d .next/cache ] && mkdir -p .next-build && cp -r .next/cache .next-build/cache || true
+            NEXT_DIST_DIR=.next-build npm run build
+
+            # Swap the finished build in, keeping the previous one for rollback.
+            rm -rf .next-prev
+            [ -d .next ] && mv .next .next-prev || true
+            mv .next-build .next
 
             # Restart or start app
             pm2 restart studycafe-web || pm2 start npm --name "studycafe-web" -- start -- -p 3001

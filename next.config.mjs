@@ -16,6 +16,14 @@ const gatewayOrigin = requiredEnv('API_GATEWAY_ORIGIN').replace(/\/$/, '');
 const nextConfig = {
   reactStrictMode: true,
 
+  /**
+   * Deploys build into a staging directory (NEXT_DIST_DIR) and only swap it
+   * over `.next` once the build succeeded, so a failed build can never leave
+   * the server with no production build at all. `next start` runs without the
+   * variable set and therefore always serves `.next`.
+   */
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+
   typescript: {
     ignoreBuildErrors: true,
   },
