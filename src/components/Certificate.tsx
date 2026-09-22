@@ -1,9 +1,10 @@
 "use client";
-import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import CertificateLayout from "./ui/CertificateLayout";
+import CertificateArtwork from "./ui/CertificateArtwork";
 import { getCertificateByCourseId } from "@/services/courses.service";
-import * as htmlToImage from "html-to-image";
+import { useCertificateDownload } from "@/hooks/useCertificateDownload";
+import { CERTIFICATE_HEIGHT, CERTIFICATE_WIDTH } from "@/lib/certificateImage";
 
 type CertifyModalProps = {
   onClose?: () => void;
@@ -19,7 +20,7 @@ type CertificateData = {
 
 export default function Certificate({ onClose, onDownload, courseId }: CertifyModalProps) {
 
-const certificateRef = useRef<HTMLDivElement>(null);
+const { captureRef, download, isDownloading } = useCertificateDownload();
   const [loading, setLoading] = useState(false);
  const [certificateData, setCertificateData] = useState<CertificateData | null>(null);
 
@@ -40,52 +41,8 @@ useEffect(() => {
 
   fetchCertificate();
 }, [courseId]);
-// const handleDownload = async () => {
-//   if (!certificateRef.current) return;
-
-//   try {
-//     const dataUrl = await htmlToImage.toPng(certificateRef.current, {
-//       cacheBust: true,
-//       pixelRatio: 3, // better quality
-//     });
-
-//     const link = document.createElement("a");
-//     link.download = "certificate.png";
-//     link.href = dataUrl;
-//     link.click();
-//   } catch (error) {
-//     console.error("Download failed:", error);
-//   }
-// };
-
-const handleDownload = async () => {
-  if (!certificateRef.current) return;
-
-  try {
-    const dataUrl = await htmlToImage.toPng(certificateRef.current, {
-      cacheBust: true,
-      pixelRatio: 3,
-    });
-
-    // Running inside React Native WebView
-    if ((window as any).ReactNativeWebView) {
-      (window as any).ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type:"DOWNLOAD_CERTIFICATE",
-          image: dataUrl,   // <-- send actual base64
-        })
-      );
-      return;
-    }
-
-    // Normal browser download
-    const link = document.createElement("a");
-    link.download = "certificate.png";
-    link.href = dataUrl;
-    link.click();
-  } catch (error) {
-    console.error(error);
-  }
+const handleDownload = () => {
+  void download("certificate.png");
 };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -122,13 +79,14 @@ const handleDownload = async () => {
               <div className="flex justify-center gap-3 pt-3 ">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-[#09339B] text-white rounded"
+                  disabled={isDownloading}
+                  className="px-4 py-2 bg-[#09339B] text-white rounded disabled:opacity-60"
                   // onClick={() => {
                   //   void onDownload?.();
                   // }}
                   onClick={handleDownload}
                 >
-                  Download
+                  {isDownloading ? "Preparing…" : "Download"}
                 </button>
 
                 {/* <button
@@ -149,7 +107,7 @@ const handleDownload = async () => {
                     className="rounded"
                   /> */}
                   {/* <CertificateLayout name="Sushma" course="AI" date="25/01/2016"/> */}
-                  <div ref={certificateRef} className="pb-6">
+                  <div className="pb-6">
                    {loading ? (
                     <p className="text-center">Loading...</p>
                   ) : certificateData ? (
@@ -187,6 +145,37 @@ const handleDownload = async () => {
           </button>
         </div> */}
       </div>
+
+      {/*
+        Off-screen capture host at the certificate's true 822x583 size. The visible block above is
+        the scaled preview; capturing it produced a 0.42-scale PNG clipped to 285px tall on phones.
+        Never hide this with display:none or visibility:hidden — a hidden subtree has no layout and
+        rasterizes blank.
+      */}
+      {certificateData && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            left: -10000,
+            top: 0,
+            width: CERTIFICATE_WIDTH,
+            height: CERTIFICATE_HEIGHT,
+            pointerEvents: "none",
+            zIndex: -1,
+          }}
+        >
+          {/* captureRef goes on this INNER, unpositioned div — see useCertificateDownload. */}
+          <div ref={captureRef}>
+            <CertificateArtwork
+              name={certificateData.studentName}
+              course={certificateData.courseTitle}
+              date={certificateData.completionDate}
+              serial={certificateData.certificateNumber}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,7 +14,12 @@ export function shouldFetchGlobalSeoForPathname(pathname: string): boolean {
     p === "/register" ||
     p === "/signup" ||
     p === "/forget-password" ||
-    p === "/verify-email"
+    p === "/verify-email" ||
+    // Public certificate claim pages carry their own <Head> and are noindex, so the two SEO
+    // round trips would only slow a cold visitor down. Matched exactly rather than by prefix:
+    // p.startsWith("/certificate") would also swallow the existing /verify-certificate page.
+    p === "/certificate" ||
+    p.startsWith("/certificate/")
   ) {
     return false;
   }
