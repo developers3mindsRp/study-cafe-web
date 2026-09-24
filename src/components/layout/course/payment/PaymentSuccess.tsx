@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getOrderInvoice, type OrderInvoice } from "@/services/order.service";
 import PostPurchaseLinks from "./PostPurchaseLinks";
 import { getMarketingPageBySlug } from "@/services/platform.service";
-import { getToken } from "@/utils/auth.utils";
+import { clearAuthData, getToken, isGuestSession } from "@/utils/auth.utils";
 
 /** Matches the cap the admin form and course-service enforce on the same field. */
 const POST_PURCHASE_DELAY_MAX_SECONDS = 600;
@@ -154,6 +154,10 @@ const PaymentSuccess = () => {
       return () => clearTimeout(timer);
     }
     if (customRedirectUrl) {
+      // A buyer who skipped creating an account was signed in only to pay and land here.
+      // Sending them off-site (e.g. the WhatsApp group) ends that, so reopening StudyCafe
+      // later does not find them signed in.
+      if (isGuestSession()) clearAuthData();
       /** Replace, not push — Back should not drop the buyer onto a countdown that fires again. */
       window.location.replace(customRedirectUrl);
       return;

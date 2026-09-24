@@ -3,9 +3,18 @@ import Cookies from 'js-cookie';
 // Token keys
 const TOKEN_KEY = 'auth_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
+/** When a guest checkout's sign-in ends (ms since epoch) — see markGuestSession. */
+const GUEST_SESSION_KEY = 'guest_session_until';
 
-const cookieOpts = (days: number) => ({
-  expires: days,
+/**
+ * How long a marketing-checkout buyer who skipped creating an account stays signed in:
+ * enough to finish paying (a UPI approval can take minutes) and see the thank-you page.
+ */
+const GUEST_SESSION_MINUTES = 60;
+
+/** `expires`: days from now, or an exact moment. */
+const cookieOpts = (expires: number | Date) => ({
+  expires,
   secure: process.env.NODE_ENV === 'production',
   sameSite: 'strict' as const,
   path: '/',
@@ -13,14 +22,39 @@ const cookieOpts = (days: number) => ({
 
 const cookieRemoveOpts = { path: '/' as const };
 
+/** The moment the current guest checkout session ends, or null when this is a normal sign-in. */
+const guestSessionEnd = (): Date | null => {
+  if (typeof document === 'undefined') return null;
+  const endsAt = Number(Cookies.get(GUEST_SESSION_KEY));
+  return Number.isFinite(endsAt) && endsAt > Date.now() ? new Date(endsAt) : null;
+};
+
+/**
+ * Guest checkout (marketing page, "create an account" left unticked): the sign-in cookies
+ * written after this expire with the checkout instead of lasting 7/30 days, so the buyer
+ * is signed out afterwards without anything having to run. Call before setToken.
+ */
+export const markGuestSession = (): void => {
+  const endsAt = new Date(Date.now() + GUEST_SESSION_MINUTES * 60 * 1000);
+  Cookies.set(GUEST_SESSION_KEY, String(endsAt.getTime()), cookieOpts(endsAt));
+};
+
+/** Any real sign-in replaces a guest session: tokens written afterwards are remembered as usual. */
+export const unmarkGuestSession = (): void => {
+  Cookies.remove(GUEST_SESSION_KEY, cookieRemoveOpts);
+};
+
+export const isGuestSession = (): boolean => guestSessionEnd() !== null;
+
 // Token storage functions
 export const getToken = (): string | undefined => {
   if (typeof document === 'undefined') return undefined;
   return Cookies.get(TOKEN_KEY);
 };
 
+// A guest session's tokens (including ones refreshed mid-checkout) end with the session.
 export const setToken = (token: string): void => {
-  Cookies.set(TOKEN_KEY, token, cookieOpts(7));
+  Cookies.set(TOKEN_KEY, token, cookieOpts(guestSessionEnd() ?? 7));
 };
 
 export const removeToken = (): void => {
@@ -33,7 +67,7 @@ export const getRefreshToken = (): string | undefined => {
 };
 
 export const setRefreshToken = (token: string): void => {
-  Cookies.set(REFRESH_TOKEN_KEY, token, cookieOpts(30));
+  Cookies.set(REFRESH_TOKEN_KEY, token, cookieOpts(guestSessionEnd() ?? 30));
 };
 
 export const removeRefreshToken = (): void => {
@@ -49,6 +83,7 @@ export const isAuthenticated = (): boolean => {
 export const clearAuthData = (): void => {
   removeToken();
   removeRefreshToken();
+  unmarkGuestSession();
 
   if (typeof window !== "undefined") {
     try {

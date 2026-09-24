@@ -646,7 +646,9 @@ export default function EditProfile({
                   className="flex items-center gap-2 border px-4 py-2 rounded-md text-gray-700 bg-[#F9F9FB] hover:bg-[#ececf2] transition"
                 >
                   <img src="/images/lock.png" alt="Change Password icon" className="w-5 h-5" />
-                  <span className="font-medium">Change Password</span>
+                  <span className="font-medium">
+                    {user?.hasPassword === false ? "Set Password" : "Change Password"}
+                  </span>
                 </button>
               </div>
 

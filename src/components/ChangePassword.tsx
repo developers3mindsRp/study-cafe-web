@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { changePassword } from "@/services/auth.service";
+import { changePassword, isPasswordNotSetError, requestPasswordReset } from "@/services/auth.service";
+import { useAuth } from "@/providers/AuthProvider";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 type ChangePasswordModalProps = {
@@ -9,6 +10,17 @@ type ChangePasswordModalProps = {
 };
 
 export default function ChangePasswordModal({ onClose }: ChangePasswordModalProps) {
+  const { user } = useAuth();
+  /** Set when the API reports no password even though the cached user said otherwise. */
+  const [passwordMissing, setPasswordMissing] = useState(false);
+  /**
+   * Bought on a marketing page without creating an account: there is no current
+   * password to ask for. The first one is set through the emailed reset link, which
+   * proves they own the address (the checkout session was issued before that).
+   */
+  const needsFirstPassword = user?.hasPassword === false || passwordMissing;
+  const [linkSent, setLinkSent] = useState(false);
+
   const [current, setCurrent] = useState("");
   const [newPw, setNewPw] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -36,12 +48,87 @@ export default function ChangePasswordModal({ onClose }: ChangePasswordModalProp
       setSuccess(true);
       setTimeout(() => onClose?.(), 1500);
     } catch (err: any) {
+      if (isPasswordNotSetError(err)) {
+        setPasswordMissing(true);
+        return;
+      }
       const msg = err?.response?.data?.message || err?.message || "Failed to change password";
       setError(msg);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleSendSetupLink = async () => {
+    setError("");
+    if (!user?.email) {
+      setError("We couldn't find your email address. Please sign in again.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await requestPasswordReset(user.email);
+      setLinkSent(true);
+    } catch (err: any) {
+      setError(err?.message || "Could not send the link. Try again shortly.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (needsFirstPassword) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+
+        <div className="relative bg-white w-full max-w-[350px] md:max-w-[400px] rounded-xl shadow-lg p-6 z-10">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-black"
+          >
+            ✕
+          </button>
+
+          <h2 className="text-xl font-semibold mb-1">Set a Password</h2>
+          {linkSent ? (
+            <>
+              <p className="text-sm text-gray-600 mb-5">
+                Check your inbox — we sent a link to <span className="font-medium">{user?.email}</span>.
+                It expires in 30 minutes.
+              </p>
+              <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
+                Close
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-gray-600 mb-5">
+                Your account doesn&apos;t have a password yet — you&apos;ve been signing in with codes
+                sent to <span className="font-medium">{user?.email}</span>. We&apos;ll email you a
+                secure link to choose one.
+              </p>
+
+              {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => void handleSendSetupLink()}
+                  disabled={loading}
+                  className="px-4 py-2 bg-[#09339B] text-white rounded disabled:opacity-60"
+                >
+                  {loading ? "Sending…" : "Email me the link"}
+                </button>
+                <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
+                  Cancel
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

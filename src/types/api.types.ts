@@ -8,6 +8,7 @@ export interface ApiResponse<T> {
 // Error Response structure
 export interface ApiError {
   message: string;
+  /** The API's reason when it sends one (e.g. PASSWORD_NOT_SET), else axios's transport code. */
   code?: string;
   errors?: Record<string, string[]>;
   /** Field-level errors from API validation (e.g. auth-service Joi) */

@@ -37,6 +37,11 @@ export interface User {
   referralCode?: string | null;
   /** Explicit `false`: must complete email OTP verification (see `/verify-email`). */
   emailVerified?: boolean;
+  /**
+   * Explicit `false`: no password yet (skipped the account at marketing checkout) — signs
+   * in with emailed codes. Undefined when unknown; treat that as having one.
+   */
+  hasPassword?: boolean;
   createdAt?: string;
   updatedAt?: string;
   bank_account_holder_name?: string | null;
@@ -212,19 +217,32 @@ export interface RegisterData {
  * Checkout signup (/signup). Profession, city and state are asked for after
  * payment instead of before it — see RegisterData for the full /register form.
  */
-export interface QuickRegisterData {
+interface QuickRegisterBase {
   name: string;
   email: string;
   phone: string;
-  password: string;
-  /**
-   * Optional. The quick forms ask for the password once, so they omit this; the
-   * API only compares it when it is sent. RegisterData (/register) still requires it.
-   */
-  confirmPassword?: string;
   /** Checkout signups: payment auto-verifies the buyer, so skip the immediate OTP email. */
   skipVerificationEmail?: boolean;
 }
+
+/**
+ * Quick signup either creates a real account (password required) or — marketing
+ * checkout only — stores the buyer without one (`createAccount: false`), who then
+ * signs in with emailed codes until they set a password.
+ */
+export type QuickRegisterData = QuickRegisterBase &
+  (
+    | {
+        createAccount?: true;
+        password: string;
+        /**
+         * Optional. The quick forms ask for the password once, so they omit this; the
+         * API only compares it when it is sent. RegisterData (/register) still requires it.
+         */
+        confirmPassword?: string;
+      }
+    | { createAccount: false; password?: never; confirmPassword?: never }
+  );
 
 export interface AuthResponse {
   user: User;
