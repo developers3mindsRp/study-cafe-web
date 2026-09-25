@@ -513,6 +513,15 @@ h6 {
     margin: 0 auto;
 }
 
+/* 40% of a phone-width column shrinks a banner to thumbnail size. Use the
+   full column there, capped so a landscape phone doesn't blow a square
+   creative up to half the screen. */
+@media (max-width: 767px) {
+  .site-ad-slot.my-6.text-center img {
+    max-width: min(100%, 400px);
+  }
+}
+
 table.article-table  td {
     border: 1px solid #ddd;
     padding: 9px 14px;
