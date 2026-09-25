@@ -78,8 +78,13 @@ type FormValues = {
 /**
  * Same fork as PaymentLinkCheckout: "details" collects the buyer, then splits on
  * whether the email already has an account. registerQuick returns a live session
- * with NO OTP gate, so a brand-new ad visitor goes details → password → Razorpay
- * without ever leaving the landing page.
+ * with NO OTP gate, so a brand-new ad visitor goes details → Razorpay without ever
+ * leaving the landing page.
+ *
+ * Creating an account is optional. Only a buyer who ticks "Create a StudyCafe
+ * account" gets the "signup" (password) stage; everyone else is stored without a
+ * password, the purchase still lands on that record, and they sign in later with an
+ * emailed code. A returning buyer without a password is sent straight to that code.
  *
  * "owned": the signed-in buyer already has this course. Shown instead of a Pay
  * button so a returning learner (or a double click after paying) is sent to their
@@ -185,8 +190,13 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const [authBusy, setAuthBusy] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
+  /** Opt-in, so unticked by default: without it the buyer is stored with no password. */
+  const [createAccount, setCreateAccount] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
   const [signinMode, setSigninMode] = useState<"password" | "otp">("password");
+  /** false: the account on file has no password, so sign-in is code-only. */
+  const [accountHasPassword, setAccountHasPassword] = useState(true);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpInfo, setOtpInfo] = useState<string | null>(null);
@@ -198,6 +208,7 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     setOtpSent(false);
     setOtpInfo(null);
     setSigninMode("password");
+    setAccountHasPassword(true);
   };
 
   const backToDetails = () => {
@@ -390,14 +401,90 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       return;
     }
 
-    try {
-      const exists = await authService.accountExists(values.email.trim());
-      resetAuthState();
-      setStage(exists ? "signin" : "signup");
-    } catch {
+    // Asked here rather than on the password step, because a buyer who skips the
+    // account never sees that step.
+    if (!acceptedTerms) {
+      setTermsError("Please accept the Terms & Conditions and Privacy Policy.");
+      return;
+    }
+
+    // Never throws: a failed lookup reads as "no account", and registerQuick's own 409
+    // sends the buyer to sign-in if that turns out to be wrong.
+    const account = await authService.lookupAccount(values.email.trim());
+    resetAuthState();
+    if (account.exists) {
+      if (account.hasPassword) setStage("signin");
+      else await beginCodeSignIn();
+      return;
+    }
+    if (createAccount) {
       setStage("signup");
+      return;
+    }
+    try {
+      await registerAndCheckout();
+    } catch (err: unknown) {
+      const message = await recoverFromSignupError(err, "Could not start checkout. Please try again.");
+      if (message) setSubmitError(message);
     }
   });
+
+  /**
+   * Store the buyer and open payment. With a password this is a real account; without
+   * one (box left unticked) the buyer is stored with no password and signs in later
+   * with an emailed code. Either way registerQuick returns a live session — no OTP
+   * screen between the buyer and the payment. The server marks the email verified once
+   * they pay, so the immediate verification-code email is skipped to avoid confusion.
+   */
+  const registerAndCheckout = async (accountPassword?: string) => {
+    const values = getValues();
+    const identity = {
+      name: values.fullName.trim(),
+      email: values.email.trim(),
+      phone: values.mobile.trim(),
+      skipVerificationEmail: true,
+    };
+    const session = await authService.registerQuick(
+      accountPassword
+        ? { ...identity, password: accountPassword }
+        : { ...identity, createAccount: false },
+    );
+    adoptSession(session.user);
+    await startCheckout();
+  };
+
+  /**
+   * Move a failed registerAndCheckout to the stage that lets the buyer finish. Returns
+   * the message to show on the current stage, or null when the stage change says it all.
+   */
+  const recoverFromSignupError = async (err: unknown, fallback: string): Promise<string | null> => {
+    if (isDuplicatePhoneError(err)) {
+      // The EMAIL is new but the PHONE belongs to another account. Sending them to
+      // sign-in would dead-end (there is no account for this email) — send them
+      // back to the form with the real reason so they can change the number.
+      resetAuthState();
+      setStage("details");
+      setSubmitError(errorMessage(err, "This phone number is already registered. Use a different number."));
+      return null;
+    }
+    const api = err as ApiError;
+    if (api?.statusCode === 409) {
+      // They do have an account after all (e.g. registered on another device
+      // between the lookup and now) — move them to sign-in rather than dead-end.
+      resetAuthState();
+      if (authService.isPasswordNotSetError(err)) {
+        await beginCodeSignIn();
+      } else {
+        setStage("signin");
+        setAuthError("You already have an account with this email. Sign in to finish.");
+      }
+      return null;
+    }
+    if (isDuplicateInProgressError(err)) {
+      return "Your previous attempt is still being processed. Please wait a few seconds and try again.";
+    }
+    return errorMessage(err, fallback);
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -427,6 +514,13 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       // routes them to the dashboard instead of a second payment.
       await checkoutAsSignedIn();
     } catch (err: unknown) {
+      if (authService.isPasswordNotSetError(err)) {
+        // Bought before without creating an account — there is no password to type.
+        setAccountHasPassword(false);
+        setPassword("");
+        await handleSendOtp("This account has no password yet, so we emailed you a 6-digit sign-in code instead.");
+        return;
+      }
       setAuthError(
         errorMessage(
           err,
@@ -440,7 +534,7 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     }
   };
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = async (sentInfo = "We emailed you a 6-digit sign-in code.") => {
     setAuthError(null);
     setOtpInfo(null);
     setAuthBusy(true);
@@ -448,7 +542,7 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       await authService.requestLoginOtp(getValues("email").trim());
       setOtpSent(true);
       setSigninMode("otp");
-      setOtpInfo("We emailed you a 6-digit sign-in code.");
+      setOtpInfo(sentInfo);
     } catch (err: unknown) {
       setAuthError(errorMessage(err, "Could not send the code. Try again shortly."));
     } finally {
@@ -456,58 +550,32 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     }
   };
 
+  /**
+   * Sign-in for an account with no password (bought before without creating one):
+   * straight to an emailed code. A password box they never filled in would dead-end them.
+   */
+  const beginCodeSignIn = async () => {
+    setAccountHasPassword(false);
+    setSigninMode("otp");
+    setStage("signin");
+    await handleSendOtp();
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
-    const values = getValues();
 
     if (password.length < 6) {
       setAuthError("Password must be at least 6 characters.");
       return;
     }
-    if (!acceptedTerms) {
-      setAuthError("Please accept the Terms & Conditions and Privacy Policy.");
-      return;
-    }
 
     setAuthBusy(true);
     try {
-      // registerQuick returns a live session immediately — no OTP screen between the
-      // buyer and the payment. The server marks the email verified once they pay, so
-      // the immediate verification-code email is skipped to avoid confusing the buyer.
-      const session = await authService.registerQuick({
-        name: values.fullName.trim(),
-        email: values.email.trim(),
-        phone: values.mobile.trim(),
-        password,
-        skipVerificationEmail: true,
-      });
-      adoptSession(session.user);
-      await startCheckout();
+      await registerAndCheckout(password);
     } catch (err: unknown) {
-      if (isDuplicatePhoneError(err)) {
-        // The EMAIL is new but the PHONE belongs to another account. Sending them to
-        // sign-in would dead-end (there is no account for this email) — send them
-        // back to the form with the real reason so they can change the number.
-        resetAuthState();
-        setStage("details");
-        setSubmitError(errorMessage(err, "This phone number is already registered. Use a different number."));
-        return;
-      }
-      const api = err as ApiError;
-      if (api?.statusCode === 409) {
-        // They do have an account after all (e.g. registered on another device
-        // between the lookup and now) — move them to sign-in rather than dead-end.
-        resetAuthState();
-        setStage("signin");
-        setAuthError("You already have an account with this email. Sign in to finish.");
-        return;
-      }
-      if (isDuplicateInProgressError(err)) {
-        setAuthError("Your previous attempt is still being processed. Please wait a few seconds and try again.");
-        return;
-      }
-      setAuthError(errorMessage(err, "Could not create your account. Try again."));
+      const message = await recoverFromSignupError(err, "Could not create your account. Try again.");
+      if (message) setAuthError(message);
     } finally {
       setAuthBusy(false);
     }
@@ -638,17 +706,66 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                 {errors.mobile && <p className="mt-1 text-xs text-[#FF383C]">{errors.mobile.message}</p>}
               </div>
 
+              {!isAuthenticated && (
+                <div className="space-y-3">
+                  <label className="flex items-start gap-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      className="mt-1 shrink-0"
+                      checked={createAccount}
+                      onChange={(e) => setCreateAccount(e.target.checked)}
+                    />
+                    <span>
+                      <span className="font-medium text-gray-900">Create a StudyCafe account</span>{" "}
+                      <span className="text-gray-500">(optional)</span>
+                      {createAccount && (
+                        <span className="mt-0.5 block text-xs text-gray-500">
+                          You&apos;ll choose a password on the next step.
+                        </span>
+                      )}
+                    </span>
+                  </label>
+
+                  <label className="flex items-start gap-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      className="mt-1 shrink-0"
+                      checked={acceptedTerms}
+                      onChange={(e) => {
+                        setAcceptedTerms(e.target.checked);
+                        if (e.target.checked) setTermsError(null);
+                      }}
+                      aria-invalid={!!termsError}
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
+                        Terms &amp; Conditions
+                      </a>{" "}
+                      and{" "}
+                      <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
+                        Privacy Policy
+                      </a>
+                      <span className="text-[#FF383C]"> *</span>
+                    </span>
+                  </label>
+                  {termsError && (
+                    <p className="text-xs text-[#FF383C]" role="alert">
+                      {termsError}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {submitError && <p className="text-sm text-[#FF383C]">{submitError}</p>}
 
               <button type="submit" disabled={isSubmitting || payBusy} className={primaryButtonClass}>
-                {isSubmitting || payBusy ? "Processing…" : isAuthenticated ? payLabel : "Continue"}
+                {isSubmitting || payBusy
+                  ? "Processing…"
+                  : !isAuthenticated && createAccount
+                    ? "Continue"
+                    : payLabel}
               </button>
-
-              {!isAuthenticated && (
-                <p className="text-center text-xs text-gray-500">
-                  Next: set a password so your access is saved to your account. No OTP needed.
-                </p>
-              )}
             </form>
           </>
         )}
@@ -657,9 +774,18 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
           <>
             <h2 className="text-xl font-bold text-gray-900">Welcome back</h2>
             <p className="mb-4 mt-1 text-sm text-gray-600">
-              You already have an account for{" "}
-              <span className="font-semibold">{getValues("email")}</span>. Sign in and your payment
-              opens right away.
+              {accountHasPassword ? (
+                <>
+                  You already have an account for{" "}
+                  <span className="font-semibold">{getValues("email")}</span>. Sign in and your payment
+                  opens right away.
+                </>
+              ) : (
+                <>
+                  You&apos;ve bought with <span className="font-semibold">{getValues("email")}</span>{" "}
+                  before. Enter the code we email you and your payment opens right away.
+                </>
+              )}
             </p>
 
             <form onSubmit={handleSignIn} className="space-y-4">
@@ -702,25 +828,28 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
               </button>
 
               <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (signinMode === "password" || !otpSent) {
-                      void handleSendOtp();
-                    } else {
-                      setSigninMode("password");
-                      setAuthError(null);
-                    }
-                  }}
-                  disabled={authBusy}
-                  className="text-[#09339B] hover:underline disabled:opacity-50"
-                >
-                  {signinMode === "password"
-                    ? "Email me a sign-in code instead"
-                    : otpSent
-                      ? "Use my password instead"
-                      : "Send the code"}
-                </button>
+                {/* A code-only account has no password to switch back to. */}
+                {(accountHasPassword || !otpSent) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (signinMode === "password" || !otpSent) {
+                        void handleSendOtp();
+                      } else {
+                        setSigninMode("password");
+                        setAuthError(null);
+                      }
+                    }}
+                    disabled={authBusy}
+                    className="text-[#09339B] hover:underline disabled:opacity-50"
+                  >
+                    {signinMode === "password"
+                      ? "Email me a sign-in code instead"
+                      : otpSent
+                        ? "Use my password instead"
+                        : "Send the code"}
+                  </button>
+                )}
                 {signinMode === "otp" && otpSent && (
                   <button
                     type="button"
@@ -748,7 +877,7 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
           <>
             <h2 className="text-xl font-bold text-gray-900">Create your account</h2>
             <p className="mb-4 mt-1 text-sm text-gray-600">
-              One quick step so your course is saved to your account — then payment opens
+              Choose a password so you can sign in with it next time — then payment opens
               straight away. No OTP needed.
             </p>
 
@@ -772,26 +901,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                   placeholder="At least 6 characters"
                 />
               </div>
-
-              <label className="flex items-start gap-2 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  className="mt-1 shrink-0"
-                  checked={acceptedTerms}
-                  onChange={(e) => setAcceptedTerms(e.target.checked)}
-                />
-                <span>
-                  I agree to the{" "}
-                  <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
-                    Terms &amp; Conditions
-                  </a>{" "}
-                  and{" "}
-                  <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
-                    Privacy Policy
-                  </a>
-                  <span className="text-[#FF383C]"> *</span>
-                </span>
-              </label>
 
               {authError && <p className="text-sm text-[#FF383C]">{authError}</p>}
 

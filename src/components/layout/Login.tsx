@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { EyeIcon, EyeSlashIcon , EnvelopeIcon } from "@heroicons/react/24/solid";
 import { useLogin, useLoginWithOtp, useRequestLoginOtp, useRequestPasswordReset } from "@/hooks/useAuth";
+import { isPasswordNotSetError } from "@/services/auth.service";
 import type { ApiError } from "@/types/api.types";
 
 type SignInMode = "password" | "otp";
@@ -61,10 +62,44 @@ export default function LoginPage() {
         password: form.password,
       });
     } catch (err: unknown) {
+      if (isPasswordNotSetError(err)) {
+        await switchToCodeSignIn();
+        return;
+      }
       const msg =
         (err as ApiError)?.message ||
         (err as Error)?.message ||
         "Sign in failed. Check your email or StudyCafe ID and password.";
+      setErrors(msg);
+    }
+  }
+
+  /**
+   * The account has no password — bought on a marketing page without creating one.
+   * Move to the emailed code, and send it straight away when we already have an email
+   * (a StudyCafe ID can't receive one, so that case asks for the email instead).
+   */
+  async function switchToCodeSignIn() {
+    const email = form.email.trim();
+    pickMode("otp");
+    setForm({ email: email.includes("@") ? email : "", password: "" });
+    if (!email.includes("@")) {
+      setInfo("This account has no password yet. Enter your email and we'll send you a sign-in code.");
+      return;
+    }
+    await sendCode(email, "This account has no password yet, so we emailed you a 6-digit sign-in code instead.");
+  }
+
+  async function sendCode(email: string, sentInfo: string) {
+    try {
+      await requestOtp.mutateAsync(email);
+      setOtpSent(true);
+      setInfo(sentInfo);
+    } catch (err: unknown) {
+      const msg =
+        (err as ApiError)?.message ||
+        (err as Error)?.message ||
+        "Could not send a code. Try again.";
       setErrors(msg);
     }
   }
@@ -77,17 +112,7 @@ export default function LoginPage() {
       setErrors("Enter your email first.");
       return;
     }
-    try {
-      await requestOtp.mutateAsync(form.email.trim());
-      setOtpSent(true);
-      setInfo("If an account exists for this email, you will receive a 6-digit code shortly.");
-    } catch (err: unknown) {
-      const msg =
-        (err as ApiError)?.message ||
-        (err as Error)?.message ||
-        "Could not send a code. Try again.";
-      setErrors(msg);
-    }
+    await sendCode(form.email.trim(), "If an account exists for this email, you will receive a 6-digit code shortly.");
   }
 
   async function handleOtpSubmit(e: React.FormEvent) {

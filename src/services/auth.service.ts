@@ -9,7 +9,7 @@ import {
   User,
   ChangePasswordData,
 } from '@/types/models.types';
-import { ApiResponse } from '@/types/api.types';
+import { ApiError, ApiResponse } from '@/types/api.types';
 import {
   setToken,
   setRefreshToken,
@@ -17,9 +17,20 @@ import {
   clearAuthData,
   getRefreshToken,
   getReferralCode,
+  markGuestSession,
+  unmarkGuestSession,
 } from '@/utils/auth.utils';
 import { shouldUseMock } from '@/config/app.config';
 import { mockAuthApi } from '@/mocks/api.mock';
+
+/**
+ * The account exists but has no password — a marketing-checkout buyer who skipped
+ * creating one. Sent by password login, quick signup (409) and change-password; the
+ * way forward is always the emailed sign-in code.
+ */
+export function isPasswordNotSetError(err: unknown): boolean {
+  return (err as ApiError | undefined)?.code === 'PASSWORD_NOT_SET';
+}
 
 /** Map API `email_verified` — only explicit `false` blocks the app; omit/`true`/`undefined` = verified for stale cachess. */
 export function mapEmailVerifiedFromApi(v: boolean | undefined): boolean | undefined {
@@ -80,10 +91,20 @@ function toUser(u: AuthPayload['user']): User {
   };
 }
 
-export async function persistAuth(payload: AuthPayload): Promise<AuthResponse> {
+/**
+ * `guest`: a marketing-checkout buyer who skipped creating an account. They are signed in
+ * only for the checkout (see markGuestSession). Every other sign-in is remembered as usual,
+ * including one that replaces a guest session in this browser.
+ */
+export async function persistAuth(
+  payload: AuthPayload,
+  { guest = false }: { guest?: boolean } = {},
+): Promise<AuthResponse> {
   const access = payload.accessToken ?? payload.token;
   if (!access) throw new Error('No access token in auth response');
 
+  if (guest) markGuestSession();
+  else unmarkGuestSession();
   setToken(access);
   if (payload.refreshToken) setRefreshToken(payload.refreshToken);
 
@@ -142,25 +163,35 @@ export const requestLoginOtp = async (email: string): Promise<void> => {
   await axiosInstance.post('/auth/login/otp/request', { email: email.trim() });
 };
 
+export type AccountLookup = { exists: boolean; hasPassword: boolean };
+
 /**
- * Whether this email already has an account.
+ * Whether this email already has an account, and whether it has a password.
  *
  * Lets checkout ask for a password instead of guessing: an existing buyer is sent to
  * sign-in, a new one straight to "pick a password", neither is shown a 409 after
- * filling in a form. Falls back to "no account" so a lookup failure degrades into the
- * signup path, which surfaces a proper duplicate-email error of its own.
+ * filling in a form. `hasPassword: false` (skipped the account at checkout) means
+ * sign-in should go straight to the emailed code. A missing `hasPassword` (older API)
+ * reads as true, which keeps the password box. Falls back to "no account" so a lookup
+ * failure degrades into the signup path, which surfaces a proper duplicate-email
+ * error of its own.
  */
-export const accountExists = async (email: string): Promise<boolean> => {
+export const lookupAccount = async (email: string): Promise<AccountLookup> => {
   try {
-    const response = await axiosInstance.post<ApiResponse<{ exists: boolean }>>(
+    const response = await axiosInstance.post<ApiResponse<{ exists: boolean; hasPassword?: boolean }>>(
       '/auth/account-exists',
       { email: email.trim() },
     );
-    return !!response.data.data?.exists;
+    const exists = !!response.data.data?.exists;
+    return { exists, hasPassword: exists && response.data.data?.hasPassword !== false };
   } catch {
-    return false;
+    return { exists: false, hasPassword: false };
   }
 };
+
+/** Boolean-only form of lookupAccount, for callers that do not care about the password. */
+export const accountExists = async (email: string): Promise<boolean> =>
+  (await lookupAccount(email)).exists;
 
 export const register = async (userData: RegisterData): Promise<AuthResponse> => {
   if (shouldUseMock()) {
@@ -215,12 +246,17 @@ export const registerQuick = async (userData: QuickRegisterData): Promise<AuthRe
     name: userData.name.trim(),
     email: userData.email.trim(),
     phone: userData.phone,
-    password: userData.password,
-    ...(userData.confirmPassword ? { confirmPassword: userData.confirmPassword } : {}),
+    // The API forbids a password alongside createAccount: false, so send one or the other.
+    ...(userData.createAccount === false
+      ? { createAccount: false }
+      : {
+          password: userData.password,
+          ...(userData.confirmPassword ? { confirmPassword: userData.confirmPassword } : {}),
+        }),
     referralCode,
     ...(userData.skipVerificationEmail ? { skipVerificationEmail: true } : {}),
   });
-  return await persistAuth(response.data.data);
+  return await persistAuth(response.data.data, { guest: userData.createAccount === false });
 };
 
 export const getCurrentUser = async (): Promise<User> => {
@@ -241,6 +277,7 @@ export const getCurrentUser = async (): Promise<User> => {
       permissions?: string[];
       has_active_membership?: boolean;
       email_verified?: boolean;
+      has_password?: boolean;
       referral_code?: string | null;
       avatar?: string | null;
       profession?: string | null;
@@ -287,6 +324,7 @@ export const getCurrentUser = async (): Promise<User> => {
     bank_name:d.bank_name || null,
     bank_branch: d.bank_branch || null,
     ...(ev !== undefined ? { emailVerified: ev } : {}),
+    ...(typeof d.has_password === 'boolean' ? { hasPassword: d.has_password } : {}),
   };
   setUserData(user);
   return user;

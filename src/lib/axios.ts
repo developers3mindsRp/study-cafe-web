@@ -164,7 +164,7 @@ axiosInstance.interceptors.response.use(
 
     // ================= NORMALIZE ERROR =================
     const body = error.response?.data as
-      | { message?: string; error?: string; errors?: any; details?: { field: string; message: string }[] }
+      | { message?: string; error?: string; code?: string; errors?: any; details?: { field: string; message: string }[] }
       | undefined;
 
     const apiError: ApiError = {
@@ -173,7 +173,8 @@ axiosInstance.interceptors.response.use(
         body?.error ||
         error.message ||
         'An unexpected error occurred',
-      code: error.code,
+      // The API's own reason (e.g. PASSWORD_NOT_SET) wins over axios's transport code.
+      code: body?.code || error.code,
       statusCode: status,
       errors: body?.errors,
       details: body?.details,

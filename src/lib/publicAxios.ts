@@ -53,6 +53,7 @@ publicAxios.interceptors.response.use(
       | {
           message?: string;
           error?: string;
+          code?: string;
           errors?: Record<string, string[]>;
           details?: { field: string; message: string }[];
         }
@@ -64,7 +65,8 @@ publicAxios.interceptors.response.use(
         body?.error ||
         error.message ||
         'An unexpected error occurred',
-      code: error.code,
+      // The API's own reason (e.g. PASSWORD_NOT_SET) wins over axios's transport code.
+      code: body?.code || error.code,
       statusCode: error.response?.status,
       errors: body?.errors,
       details: body?.details,
