@@ -201,8 +201,12 @@ h6 {
    and inline styles from TipTap / WordPress.
    NOTE: Only disable flex/grid/absolute — do NOT override padding/margin/gap
    so TipTap's inline style="text-align:..." and image sizing are respected.
+   Injected ad slots are exempt: AdSense draws its unit as an absolutely
+   positioned iframe inside a position:relative host div. Forcing that div
+   static sent the iframe to the top of the page, leaving the unit's reserved
+   box empty — the blank gap after paragraph 3.
 */
-.article-rich-text div,
+.article-rich-text div:not(.site-ad-slot, .site-ad-slot *),
 .article-rich-text section,
 .article-rich-text article {
   display: block !important;
