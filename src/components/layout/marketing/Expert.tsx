@@ -26,9 +26,10 @@ const Expert_marketing = ({ data, onBuy, hideOnMobile = false }: Props) => {
 
   // Phrasing content only: this is rendered inside a <button>, where <h2>/<p>
   // would be invalid HTML.
-  // The pill sits on a red banner, so its hover state must not be red. Hover is
-  // gated to real pointers: Tailwind v3 applies :hover on touch too, and a tap
-  // leaves it stuck on phones after the checkout modal closes.
+  // The pill sits on a red banner, so its hover state must not be red, and its
+  // 1px light border is what keeps a dark hover colour from blurring into the
+  // red. Hover is gated to real pointers: Tailwind v3 applies :hover on touch
+  // too, and a tap leaves it stuck on phones after the checkout modal closes.
   const inner = (
     <span className="relative z-10 block w-full text-center">
       {data.ctaTitle ? (
@@ -37,7 +38,7 @@ const Expert_marketing = ({ data, onBuy, hideOnMobile = false }: Props) => {
         </span>
       ) : null}
       {offerText ? (
-        <span className="inline-flex items-center justify-center gap-2 bg-white text-black text-[14px] md:text-[18px] xl:text-[22px] font-semibold px-5 py-2.5 md:px-7 md:py-3 rounded-[15px] border transition [@media(hover:hover)]:group-hover:bg-[#09339B] [@media(hover:hover)]:group-hover:text-white group-focus-visible:bg-[#09339B] group-focus-visible:text-white">
+        <span className="inline-flex items-center justify-center gap-2 bg-white text-black text-[14px] md:text-[18px] xl:text-[22px] font-semibold px-5 py-2.5 md:px-7 md:py-3 rounded-[15px] border transition [@media(hover:hover)]:group-hover:bg-[#0A1F5C] [@media(hover:hover)]:group-hover:text-white group-focus-visible:bg-[#0A1F5C] group-focus-visible:text-white">
           {offerText}
         </span>
       ) : null}
