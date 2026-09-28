@@ -296,6 +296,39 @@ export const verifyOrder = async (payload: VerifyOrderPayload): Promise<VerifyOr
   return response.data.data;
 };
 
+/**
+ * Marketing checkout for an email that already has an account, when the buyer is not
+ * signed in and did not ask for an account. No session comes back — access lands on
+ * that account and they sign in later. 404 `ACCOUNT_NOT_FOUND` when the email is new.
+ */
+export interface MarketingGuestOrderPayload {
+  courseId: number | string;
+  marketingSlug: string;
+  fullName: string;
+  email: string;
+  mobile: string;
+  referralCode?: string;
+  utm?: CreateOrderPayload['utm'];
+}
+
+export const createMarketingGuestOrder = async (
+  payload: MarketingGuestOrderPayload,
+): Promise<CreateOrderResponse> => {
+  const response = await axiosInstance.post<ApiResponse<CreateOrderResponse>>(
+    '/orders/marketing-guest/create',
+    payload,
+  );
+  return response.data.data;
+};
+
+export const verifyMarketingGuestOrder = async (payload: VerifyOrderPayload): Promise<VerifyOrderResponse> => {
+  const response = await axiosInstance.post<ApiResponse<VerifyOrderResponse>>(
+    '/orders/marketing-guest/verify',
+    payload,
+  );
+  return response.data.data;
+};
+
 export const getOrderInvoice = async (orderId: string): Promise<OrderInvoice> => {
   const response = await axiosInstance.get<ApiResponse<OrderInvoice>>(
     `/orders/${orderId}/invoice`,

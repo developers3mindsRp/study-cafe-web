@@ -9,7 +9,12 @@ import * as yup from "yup";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import type { ResolvedMarketingPage } from "@/lib/marketing/types";
-import { createOrder, verifyOrder } from "@/services/order.service";
+import {
+  createMarketingGuestOrder,
+  createOrder,
+  verifyMarketingGuestOrder,
+  verifyOrder,
+} from "@/services/order.service";
 import { checkPurchaseStatus } from "@/services/purchases.service";
 import * as authService from "@/services/auth.service";
 import { useAuth } from "@/providers/AuthProvider";
@@ -81,16 +86,18 @@ type FormValues = {
  * with NO OTP gate, so a brand-new ad visitor goes details → Razorpay without ever
  * leaving the landing page.
  *
- * Creating an account is optional. Only a buyer who ticks "Create a StudyCafe
- * account" gets the "signup" (password) stage; everyone else is stored without a
- * password, the purchase still lands on that record, and they sign in later with an
- * emailed code. A returning buyer without a password is sent straight to that code.
+ * Creating an account is optional, and only a buyer who ticks "Create a StudyCafe
+ * account" is ever asked for a password or a code — new email → "signup" (choose a
+ * password), existing email → "signin". Everyone else goes straight to payment:
+ *  - new email: stored without a password (registerQuick), then the normal checkout;
+ *  - existing email: a guest order placed on that account with no session at all,
+ *    ending on the in-modal "paid" stage (the thank-you page needs a session).
  *
- * "owned": the signed-in buyer already has this course. Shown instead of a Pay
- * button so a returning learner (or a double click after paying) is sent to their
- * dashboard rather than at order-service's double-payment guard.
+ * "owned": the buyer already has this course. Shown instead of a Pay button so a
+ * returning learner (or a double click after paying) is sent to their dashboard
+ * rather than at order-service's double-payment guard.
  */
-type Stage = "details" | "signin" | "signup" | "owned";
+type Stage = "details" | "signin" | "signup" | "owned" | "paid";
 
 /** order-service refuses a repeat paid order inside its double-payment window with this 409. */
 function isAlreadyPurchasedError(err: unknown): boolean {
@@ -102,6 +109,16 @@ function isAlreadyPurchasedError(err: unknown): boolean {
 function isDuplicateInProgressError(err: unknown): boolean {
   const api = err as ApiError | undefined;
   return api?.statusCode === 429 && /duplicate order/i.test(String(api.message || ""));
+}
+
+/** Guest checkout: this email's account already holds the course. */
+function isGuestAlreadyPurchasedError(err: unknown): boolean {
+  return (err as ApiError | undefined)?.code === "ALREADY_PURCHASED";
+}
+
+/** Guest checkout: the email has no account after all (lookup failed or raced). */
+function isAccountNotFoundError(err: unknown): boolean {
+  return (err as ApiError | undefined)?.code === "ACCOUNT_NOT_FOUND";
 }
 
 /** registerQuick 409s for a duplicate email OR a duplicate phone — only the former means "sign in". */
@@ -192,8 +209,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const [password, setPassword] = useState("");
   /** Opt-in, so unticked by default: without it the buyer is stored with no password. */
   const [createAccount, setCreateAccount] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [termsError, setTermsError] = useState<string | null>(null);
   const [signinMode, setSigninMode] = useState<"password" | "otp">("password");
   /** false: the account on file has no password, so sign-in is code-only. */
   const [accountHasPassword, setAccountHasPassword] = useState(true);
@@ -228,6 +243,30 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     queryClient.setQueryData(queryKeys.auth.currentUser, nextUser);
     void queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser });
   };
+
+  // ─── Guest "paid" stage ─────────────────────────────────────────────────────
+  /** The campaign's own post-purchase destination; full page load, so absolute http(s) only. */
+  const campaignRedirectUrl =
+    data.postPurchaseRedirectUrl && /^https?:\/\//i.test(data.postPurchaseRedirectUrl)
+      ? data.postPurchaseRedirectUrl
+      : null;
+  const [paidCountdown, setPaidCountdown] = useState(10);
+
+  useEffect(() => {
+    if (stage !== "paid" || !campaignRedirectUrl) return;
+    const delay = data.postPurchaseRedirectDelay;
+    setPaidCountdown(typeof delay === "number" && delay >= 0 ? delay : 10);
+  }, [stage, campaignRedirectUrl, data.postPurchaseRedirectDelay]);
+
+  useEffect(() => {
+    if (stage !== "paid" || !campaignRedirectUrl) return;
+    if (paidCountdown <= 0) {
+      window.location.replace(campaignRedirectUrl);
+      return;
+    }
+    const timer = setTimeout(() => setPaidCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [stage, campaignRedirectUrl, paidCountdown]);
 
   // ─── Already-owned check ────────────────────────────────────────────────────
   /**
@@ -281,21 +320,45 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
     void router.push(`/payment-success?order_id=${encodeURIComponent(orderId)}${campaign}`);
   };
 
-  const startCheckout = async () => {
+  /** Guest checkout has no session for the thank-you page — finish inside the modal. */
+  const showGuestPaid = () => {
+    setPayBusy(false);
+    setStage("paid");
+  };
+
+  /**
+   * `guest`: the email already has an account but the buyer is not signed in and did
+   * not ask for one — the order goes on that account without a session.
+   */
+  const startCheckout = async ({ guest = false }: { guest?: boolean } = {}) => {
     if (payBusyRef.current) return; // a checkout is already in flight — ignore the repeat tap
     setSubmitError(null);
     setPayBusy(true);
     try {
-      const orderData = await createOrder({
-        type: "course",
-        entityId: data.courseId,
-        marketingSlug: data.slug,
-        referralCode: getReferralCode() || undefined,
-        utm: readUtm(router.query as Record<string, unknown>),
-      });
+      const values = getValues();
+      const referralCode = getReferralCode() || undefined;
+      const utm = readUtm(router.query as Record<string, unknown>);
+      const orderData = guest
+        ? await createMarketingGuestOrder({
+            courseId: data.courseId,
+            marketingSlug: data.slug,
+            fullName: values.fullName.trim(),
+            email: values.email.trim(),
+            mobile: values.mobile.trim(),
+            referralCode,
+            utm,
+          })
+        : await createOrder({
+            type: "course",
+            entityId: data.courseId,
+            marketingSlug: data.slug,
+            referralCode,
+            utm,
+          });
+      const onPaid = guest ? async () => showGuestPaid() : () => goToSuccess(orderData.orderId);
 
       if (orderData.free && orderData.paid) {
-        await goToSuccess(orderData.orderId);
+        await onPaid();
         return;
       }
 
@@ -311,7 +374,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
         return;
       }
 
-      const values = getValues();
       const options = {
         key: orderData.key,
         amount: orderData.amount,
@@ -325,13 +387,13 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
           razorpay_signature: string;
         }) => {
           try {
-            await verifyOrder({
+            await (guest ? verifyMarketingGuestOrder : verifyOrder)({
               orderId: orderData.orderId,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
-            await goToSuccess(orderData.orderId);
+            await onPaid();
           } catch (verifyErr: unknown) {
             setPayBusy(false);
             alert(
@@ -401,18 +463,12 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       return;
     }
 
-    // Asked here rather than on the password step, because a buyer who skips the
-    // account never sees that step.
-    if (!acceptedTerms) {
-      setTermsError("Please accept the Terms & Conditions and Privacy Policy.");
-      return;
-    }
-
     // Never throws: a failed lookup reads as "no account", and registerQuick's own 409
-    // sends the buyer to sign-in if that turns out to be wrong.
+    // corrects that below.
     const account = await authService.lookupAccount(values.email.trim());
     resetAuthState();
-    if (account.exists) {
+    // Only a buyer who asked for an account is ever asked to sign in.
+    if (account.exists && createAccount) {
       if (account.hasPassword) setStage("signin");
       else await beginCodeSignIn();
       return;
@@ -422,12 +478,37 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       return;
     }
     try {
-      await registerAndCheckout();
+      if (account.exists) await checkoutAsGuest();
+      else await registerAndCheckout();
     } catch (err: unknown) {
       const message = await recoverFromSignupError(err, "Could not start checkout. Please try again.");
       if (message) setSubmitError(message);
     }
   });
+
+  /**
+   * Existing email, box unticked: straight to payment on that account, no sign-in.
+   * `fallbackToSignup` handles a lookup that was wrong (no account after all); it is
+   * off when we got here from registerQuick's own 409, so the two cannot ping-pong.
+   */
+  const checkoutAsGuest = async ({ fallbackToSignup = true }: { fallbackToSignup?: boolean } = {}) => {
+    try {
+      await startCheckout({ guest: true });
+    } catch (e: unknown) {
+      if (isGuestAlreadyPurchasedError(e)) {
+        setStage("owned");
+        return;
+      }
+      if (fallbackToSignup && isAccountNotFoundError(e)) {
+        await registerAndCheckout();
+        return;
+      }
+      if (isDuplicateInProgressError(e)) {
+        throw new Error("Your previous attempt is still being processed. Please wait a few seconds and try again.");
+      }
+      throw e;
+    }
+  };
 
   /**
    * Store the buyer and open payment. With a password this is a real account; without
@@ -468,6 +549,16 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       return null;
     }
     const api = err as ApiError;
+    if (api?.statusCode === 409 && !createAccount) {
+      // They do have an account after all, but never asked to use it — pay as a guest.
+      resetAuthState();
+      try {
+        await checkoutAsGuest({ fallbackToSignup: false });
+        return null;
+      } catch (guestErr: unknown) {
+        return errorMessage(guestErr, fallback);
+      }
+    }
     if (api?.statusCode === 409) {
       // They do have an account after all (e.g. registered on another device
       // between the lookup and now) — move them to sign-in rather than dead-end.
@@ -590,16 +681,17 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
 
   const payLabel = `Pay ${fmt(grandTotal)}`;
 
+  // No close-on-backdrop-click: a stray tap outside, or a text selection that ends
+  // outside the box (copying an email or code), used to wipe the half-filled form.
+  // Only the X / Close buttons close it.
   return (
     <div
       className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/70 p-0 sm:p-4"
       role="dialog"
       aria-modal="true"
-      onClick={handleClose}
     >
       <div
         className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white p-5 sm:p-8 text-gray-900"
-        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
@@ -647,6 +739,11 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                   <span className="font-semibold">{user.email}</span> already has access — no need to
                   pay again. Find it under My Courses.
                 </>
+              ) : getValues("email") ? (
+                <>
+                  <span className="font-semibold">{getValues("email")}</span> already has access — no
+                  need to pay again. Sign in to open it from My Courses.
+                </>
               ) : (
                 "This account already has access — no need to pay again. Find it under My Courses."
               )}
@@ -665,6 +762,40 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
             >
               Close
             </button>
+          </div>
+        )}
+
+        {stage === "paid" && (
+          <div className="text-center">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <BadgeCheck className="text-green-600" size={30} />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Payment successful</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              {data.courseTitle || data.headline} has been added to your StudyCafe account for{" "}
+              <span className="font-semibold">{getValues("email")}</span>. We&apos;ve emailed your
+              receipt and access details — sign in with a one-time code sent to that email to start
+              learning.
+            </p>
+            {campaignRedirectUrl ? (
+              <>
+                <a href={campaignRedirectUrl} className={`${primaryButtonClass} mt-5 block`}>
+                  Continue
+                </a>
+                <p className="mt-3 text-sm text-gray-500">
+                  Redirecting in <span className="font-semibold text-[#09339B]">{paidCountdown}</span>{" "}
+                  seconds…
+                </p>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void router.push("/login")}
+                className={`${primaryButtonClass} mt-5`}
+              >
+                Sign in to start learning
+              </button>
+            )}
           </div>
         )}
 
@@ -725,35 +856,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                       )}
                     </span>
                   </label>
-
-                  <label className="flex items-start gap-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="mt-1 shrink-0"
-                      checked={acceptedTerms}
-                      onChange={(e) => {
-                        setAcceptedTerms(e.target.checked);
-                        if (e.target.checked) setTermsError(null);
-                      }}
-                      aria-invalid={!!termsError}
-                    />
-                    <span>
-                      I agree to the{" "}
-                      <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
-                        Terms &amp; Conditions
-                      </a>{" "}
-                      and{" "}
-                      <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
-                        Privacy Policy
-                      </a>
-                      <span className="text-[#FF383C]"> *</span>
-                    </span>
-                  </label>
-                  {termsError && (
-                    <p className="text-xs text-[#FF383C]" role="alert">
-                      {termsError}
-                    </p>
-                  )}
                 </div>
               )}
 
