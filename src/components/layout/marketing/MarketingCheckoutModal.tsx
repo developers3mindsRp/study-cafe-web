@@ -192,8 +192,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
   const [password, setPassword] = useState("");
   /** Opt-in, so unticked by default: without it the buyer is stored with no password. */
   const [createAccount, setCreateAccount] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [termsError, setTermsError] = useState<string | null>(null);
   const [signinMode, setSigninMode] = useState<"password" | "otp">("password");
   /** false: the account on file has no password, so sign-in is code-only. */
   const [accountHasPassword, setAccountHasPassword] = useState(true);
@@ -398,13 +396,6 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
       } catch (e: unknown) {
         setSubmitError(errorMessage(e, "Checkout failed. Please try again."));
       }
-      return;
-    }
-
-    // Asked here rather than on the password step, because a buyer who skips the
-    // account never sees that step.
-    if (!acceptedTerms) {
-      setTermsError("Please accept the Terms & Conditions and Privacy Policy.");
       return;
     }
 
@@ -726,34 +717,17 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                     </span>
                   </label>
 
-                  <label className="flex items-start gap-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="mt-1 shrink-0"
-                      checked={acceptedTerms}
-                      onChange={(e) => {
-                        setAcceptedTerms(e.target.checked);
-                        if (e.target.checked) setTermsError(null);
-                      }}
-                      aria-invalid={!!termsError}
-                    />
-                    <span>
-                      I agree to the{" "}
-                      <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
-                        Terms &amp; Conditions
-                      </a>{" "}
-                      and{" "}
-                      <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
-                        Privacy Policy
-                      </a>
-                      <span className="text-[#FF383C]"> *</span>
-                    </span>
-                  </label>
-                  {termsError && (
-                    <p className="text-xs text-[#FF383C]" role="alert">
-                      {termsError}
-                    </p>
-                  )}
+                  <p className="text-xs text-gray-500">
+                    By continuing, you agree to our{" "}
+                    <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
+                      Terms &amp; Conditions
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
+                      Privacy Policy
+                    </a>
+                    .
+                  </p>
                 </div>
               )}
 
