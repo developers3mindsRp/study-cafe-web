@@ -856,6 +856,18 @@ export default function MarketingCheckoutModal({ data, open, onClose }: Props) {
                       )}
                     </span>
                   </label>
+
+                  <p className="text-xs text-gray-500">
+                    By continuing, you agree to our{" "}
+                    <a href="/terms-conditions" target="_blank" className="text-[#09339B] hover:underline">
+                      Terms &amp; Conditions
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy-policy" target="_blank" className="text-[#09339B] hover:underline">
+                      Privacy Policy
+                    </a>
+                    .
+                  </p>
                 </div>
               )}
 
