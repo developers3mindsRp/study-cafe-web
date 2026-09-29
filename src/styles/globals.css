@@ -205,8 +205,11 @@ h6 {
    positioned iframe inside a position:relative host div. Forcing that div
    static sent the iframe to the top of the page, leaving the unit's reserved
    box empty — the blank gap after paragraph 3.
+   Tweet embeds are exempt too: widgets.js renders div.twitter-tweet as a
+   flex box sizing its iframe; forcing block collapsed it to a narrow
+   left-aligned column.
 */
-.article-rich-text div:not(.site-ad-slot, .site-ad-slot *),
+.article-rich-text div:not(.site-ad-slot, .site-ad-slot *, .twitter-tweet, .twitter-tweet *),
 .article-rich-text section,
 .article-rich-text article {
   display: block !important;
@@ -307,6 +310,19 @@ h6 {
   margin: 1em 0;
   padding-left: 1em;
   color: #52525b;
+}
+
+/* X/Twitter embeds: centered in the article column. Covers both the raw
+   blockquote (before widgets.js runs) and the rendered div. */
+.article-rich-text .twitter-tweet {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.article-rich-text blockquote.twitter-tweet {
+  border-left: none;
+  padding-left: 0;
+  max-width: 550px;
 }
 
 .article-rich-text code {
