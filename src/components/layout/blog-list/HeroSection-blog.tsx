@@ -1,7 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
 import { resolveBlogImageSrc } from "./blogImage";
-import { isUnoptimizedImageSrc } from "@/utils/mediaUrl";
 import TableOfContents from "./TableOfContent";
 type HeroSectionBlogProps = {
   title: string;
@@ -33,21 +31,16 @@ const HeroSection_blog = ({
 }: HeroSectionBlogProps) => {
   const bannerSrc = resolveBlogImageSrc(image) || "/images/s-court.png";
 
-  // The article's LCP element on mobile. It was a plain <img> of the original upload —
-  // editors upload phone screenshots, so 200 KB–2 MB PNG/JPEGs were shipped to show it
-  // ~350px wide. next/image serves a resized WebP (a 2 MB PNG comes back as ~50 KB).
-  // `priority` preloads it from <head>. It is rendered twice (mobile slot / desktop
-  // slot); both share one `sizes`, so the browser picks one URL and fetches it once.
   const heroBanner = () => (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element -- resolved CMS/API URLs; reliable in SSR + CSR
+    <img
       src={bannerSrc}
       alt={title}
       width={1200}
       height={600}
-      unoptimized={isUnoptimizedImageSrc(bannerSrc)}
-      priority
-      sizes="(max-width: 1023px) calc(100vw - 64px), 60vw"
       className="w-full h-auto object-cover"
+      loading="eager"
+      decoding="async"
       referrerPolicy="no-referrer"
     />
   );
