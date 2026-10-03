@@ -14,7 +14,10 @@ const BannerSection_blog = ({ searchValue = '', onSearchChange, onSearchSubmit }
   };
 
   return (
-    <section className='bg-[url("/images/blog_bg.svg")] bg-no-repeat bg-cover bg-center '>
+    // WebP, not the original Figma SVG export: that SVG wrapped four full-resolution
+    // photos (~60 MP, 15 MB) under blur filters and took ~55s to load on mobile. The
+    // WebP is the same artwork rendered at 2x (2880x908) onto white — keep it raster.
+    <section className='bg-[url("/images/blog_bg.webp")] bg-no-repeat bg-cover bg-center '>
 
       <div className='container mx-auto pt-4 xl:pt-20 pb-12 xl:pb-32 w-[100%] xl:h-[580px] px-4'>
 
