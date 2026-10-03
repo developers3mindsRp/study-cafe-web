@@ -103,6 +103,20 @@ const nextConfig = {
     ];
   },
   images: {
+    /**
+     * Image optimizer switched OFF (Oct 2026). Every <Image> renders a plain <img> of the
+     * original file, and /_next/image returns 404 without doing any work.
+     *
+     * The optimizer resizes on this same Node process that does SSR. Production has no
+     * `sharp`, so it runs on the slow WASM fallback, and every deploy swaps `.next` and
+     * with it `.next/cache/images` — so after each deploy every image is resized again.
+     * When article pages were moved onto it, uncached resizes took 10s+ and page TTFB
+     * went from <1s to 15–20s site-wide; reverting that alone did not recover it.
+     *
+     * Before turning this back on: install `sharp`, keep the image cache across deploys,
+     * and add a Cloudflare cache rule for /_next/image.
+     */
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
