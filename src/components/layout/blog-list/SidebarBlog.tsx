@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type {
   BlogSpotlightArticleCard,
   BlogSpotlightTag,
@@ -7,6 +8,7 @@ import type {
 import SiteAdBanner from "@/components/ads/SiteAdBanner";
 import { slotHasContent } from "@/lib/siteDisplayAds";
 import { cardThumb } from "./blogImage";
+import { isUnoptimizedImageSrc } from "@/utils/mediaUrl";
 
 import { articleHref } from "@/lib/articlePaths";
 
@@ -54,15 +56,18 @@ export default function SidebarBlog({
             recentPosts.map((post) => (
               <div key={post.id} className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8 md:p-0">
                 <Link href={postHref(post.slug, post.id)} className="block">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- remote CMS URLs; avoids Image SSR/client hydration drift */}
-                  <img
+                  {/* Resized WebP rather than the raw upload. `src` resolves to the same URL on
+                      server and client (resolveApiAssetUrl reads build-time env only), so
+                      next/image's srcset hydrates cleanly. Mobile: 80%-wide swipe cards;
+                      md: full-width list; lg+: the one-third sidebar column. */}
+                  <Image
                     src={cardThumb(post.thumbnail_url || post.cover_image_url)}
                     alt=""
                     width={500}
                     height={300}
+                    unoptimized={isUnoptimizedImageSrc(cardThumb(post.thumbnail_url || post.cover_image_url))}
+                    sizes="(max-width: 767px) 80vw, (max-width: 1023px) 100vw, 33vw"
                     className="rounded w-full object-cover aspect-[5/3]"
-                    loading="lazy"
-                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <p className="text-[16px] font-medium mt-2 xl:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">
@@ -93,15 +98,18 @@ export default function SidebarBlog({
             allPosts.slice(0, 3).map((post) => (
               <div key={post.id} className="snap-start min-w-[80%] md:min-w-full bg-white md:mb-8 md:p-0">
                 <Link href={postHref(post.slug, post.id)} className="block">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- remote CMS URLs; avoids Image SSR/client hydration drift */}
-                  <img
+                  {/* Resized WebP rather than the raw upload. `src` resolves to the same URL on
+                      server and client (resolveApiAssetUrl reads build-time env only), so
+                      next/image's srcset hydrates cleanly. Mobile: 80%-wide swipe cards;
+                      md: full-width list; lg+: the one-third sidebar column. */}
+                  <Image
                     src={cardThumb(post.thumbnail_url || post.cover_image_url)}
                     alt=""
                     width={500}
                     height={300}
+                    unoptimized={isUnoptimizedImageSrc(cardThumb(post.thumbnail_url || post.cover_image_url))}
+                    sizes="(max-width: 767px) 80vw, (max-width: 1023px) 100vw, 33vw"
                     className="rounded w-full object-cover aspect-[5/3]"
-                    loading="lazy"
-                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <p className="text-[15px] font-medium mt-2 md:text-[20px] line-clamp-2 flex flex-wrap items-center gap-2">

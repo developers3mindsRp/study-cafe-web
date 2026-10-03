@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query";
 import { getArticleUpNext } from "@/services/platform.service";
 import { cardThumb, resolveBlogImageSrc } from "@/components/layout/blog-list/blogImage";
+import { isUnoptimizedImageSrc } from "@/utils/mediaUrl";
 import { articleTeaserPlain, sanitizeTeaserPlain } from "@/components/layout/blog-list/articleTeaserPlain";
 import type { BlogSpotlightArticleCard } from "@/types/models.types";
 import { articleHref } from "@/lib/articlePaths";
@@ -112,15 +114,15 @@ function UpNextArticleBlock({ post }: { post: BlogSpotlightArticleCard }) {
       </div>
 
       <div className="rounded-[10px] overflow-hidden shadow">
-        {/* eslint-disable-next-line @next/next/no-img-element -- CMS URLs */}
-        <img
+        {/* Same column and `sizes` as the article hero — resized WebP instead of the raw upload. */}
+        <Image
           src={banner}
           alt=""
           width={1200}
           height={600}
+          unoptimized={isUnoptimizedImageSrc(banner)}
+          sizes="(max-width: 1023px) calc(100vw - 64px), 60vw"
           className="w-full h-auto object-cover"
-          loading="lazy"
-          decoding="async"
           referrerPolicy="no-referrer"
         />
       </div>
