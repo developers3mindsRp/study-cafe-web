@@ -17,7 +17,13 @@ const BannerSection_blog = ({ searchValue = '', onSearchChange, onSearchSubmit }
     // WebP, not the original Figma SVG export: that SVG wrapped four full-resolution
     // photos (~60 MP, 15 MB) under blur filters and took ~55s to load on mobile. The
     // WebP is the same artwork rendered at 2x (2880x908) onto white — keep it raster.
-    <section className='bg-[url("/images/blog_bg.webp")] bg-no-repeat bg-cover bg-center '>
+    //
+    // Below 540px, bg-cover crops the illustrations off and only the artwork's blue
+    // gradient shows, so phones get that gradient in CSS (stops sampled from the
+    // artwork's centre strip) and download no image. The image was the mobile LCP
+    // element, discovered only after the stylesheet — without it, LCP is the heading.
+    // From ~600px the illustrations start to show, so wider screens keep the WebP.
+    <section className='bg-[linear-gradient(to_bottom,#edf6fd_0%,#e3f2fc_20%,#d4ebfb_40%,#c5e3f8_60%,#baddf7_80%,#b5dbf6_100%)] min-[540px]:bg-[url("/images/blog_bg.webp")] bg-no-repeat bg-cover bg-center '>
 
       <div className='container mx-auto pt-4 xl:pt-20 pb-12 xl:pb-32 w-[100%] xl:h-[580px] px-4'>
 
