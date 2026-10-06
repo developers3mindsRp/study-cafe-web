@@ -5,11 +5,13 @@ import { PublicLayout } from "@/components/layout";
 import CertificateArtwork from "@/components/ui/CertificateArtwork";
 import CertificateLayout from "@/components/ui/CertificateLayout";
 import CertificateClaimForm from "@/components/certificate/CertificateClaimForm";
+import CertificateRetrieveForm from "@/components/certificate/CertificateRetrieveForm";
 import { useCertificateDownload } from "@/hooks/useCertificateDownload";
 import { runWithServerApiBase } from "@/lib/serverApiContext";
 import {
   claimCertificate,
   getCertificateLink,
+  retrieveCertificate,
   type CertificateClaimPayload,
   type ClaimedCertificate,
   type PublicCertificateLink,
@@ -24,15 +26,25 @@ interface Props {
  * Public certificate claim page.
  *
  * No login, no purchase, no course progress — the token in the URL is the only thing gating it.
- * Three states: the form, a closed notice (expired / limit reached), and the issued certificate.
+ * States: the claim form, the email-only "get it again" form, and the issued certificate. A closed
+ * link (expired / limit reached) shows only the "get it again" form — the claim email's button
+ * lands here, often after the link has closed, and people must still reach the certificate they hold.
  */
 export default function CertificateClaimPage({ link }: Props) {
   const [certificate, setCertificate] = useState<ClaimedCertificate | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** On an open link, a returning visitor can switch to the email-only form. */
+  const [wantsRetrieve, setWantsRetrieve] = useState(false);
   const { captureRef, download, isDownloading, error: downloadError } = useCertificateDownload();
 
   const isOpen = link.status === "active";
+  const showRetrieve = !isOpen || wantsRetrieve;
+
+  const switchForm = (retrieve: boolean) => {
+    setWantsRetrieve(retrieve);
+    setError(null);
+  };
 
   const handleClaim = async (payload: CertificateClaimPayload) => {
     setSubmitting(true);
@@ -45,6 +57,22 @@ export default function CertificateClaimPage({ link }: Props) {
       setError(
         apiError?.message ||
           "Something went wrong while generating your certificate. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleRetrieve = async (email: string) => {
+    setSubmitting(true);
+    setError(null);
+    try {
+      const issued = await retrieveCertificate(link.token, email);
+      setCertificate(issued);
+    } catch (err) {
+      const apiError = err as { message?: string; statusCode?: number };
+      setError(
+        apiError?.message || "Something went wrong while finding your certificate. Please try again.",
       );
     } finally {
       setSubmitting(false);
@@ -84,7 +112,7 @@ export default function CertificateClaimPage({ link }: Props) {
           <p className="mx-auto mt-4 max-w-xl text-center text-sm text-gray-600">{link.description}</p>
         )}
 
-        {!isOpen && (
+        {!isOpen && !certificate && (
           <div className="mx-auto mt-10 max-w-lg rounded-xl border border-gray-200 bg-gray-50 p-6 text-center">
             <h2 className="text-lg font-medium text-gray-900">
               {link.status === "full" ? "All certificates have been claimed" : "This link has closed"}
@@ -92,7 +120,8 @@ export default function CertificateClaimPage({ link }: Props) {
             <p className="mt-3 text-sm text-gray-600">
               {link.status === "full"
                 ? "Every certificate available through this link has already been issued."
-                : "Certificates are no longer being issued through this link."}
+                : "New certificates are no longer being issued through this link."}{" "}
+              Already received yours? You can still download it below.
             </p>
             <p className="mt-3 text-sm text-gray-600">
               If you believe you should have received one, contact us at{" "}
@@ -104,18 +133,54 @@ export default function CertificateClaimPage({ link }: Props) {
           </div>
         )}
 
-        {isOpen && !certificate && (
-          <div className="mx-auto mt-10 max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-1 text-lg font-medium text-gray-900">Get your certificate</h2>
-            <p className="mb-5 text-sm text-gray-500">
-              Enter your details and your certificate will be generated straight away.
-            </p>
-            <CertificateClaimForm
-              renderedAt={link.rendered_at}
-              submitting={submitting}
-              errorMessage={error}
-              onSubmit={handleClaim}
-            />
+        {!certificate && (
+          <div
+            className={`mx-auto max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm ${
+              isOpen ? "mt-10" : "mt-6"
+            }`}
+          >
+            {showRetrieve ? (
+              <>
+                <h2 className="mb-1 text-lg font-medium text-gray-900">Download your certificate again</h2>
+                <p className="mb-5 text-sm text-gray-500">
+                  Enter the email you used and we will show the same certificate again.
+                </p>
+                <CertificateRetrieveForm
+                  submitting={submitting}
+                  errorMessage={error}
+                  onSubmit={handleRetrieve}
+                />
+                {isOpen && (
+                  <button
+                    type="button"
+                    onClick={() => switchForm(false)}
+                    className="mt-4 w-full text-center text-sm text-[#09339B] underline"
+                  >
+                    Don&apos;t have a certificate yet? Get yours
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <h2 className="mb-1 text-lg font-medium text-gray-900">Get your certificate</h2>
+                <p className="mb-5 text-sm text-gray-500">
+                  Enter your details and your certificate will be generated straight away.
+                </p>
+                <CertificateClaimForm
+                  renderedAt={link.rendered_at}
+                  submitting={submitting}
+                  errorMessage={error}
+                  onSubmit={handleClaim}
+                />
+                <button
+                  type="button"
+                  onClick={() => switchForm(true)}
+                  className="mt-4 w-full text-center text-sm text-[#09339B] underline"
+                >
+                  Already received your certificate? Get it again with just your email
+                </button>
+              </>
+            )}
           </div>
         )}
 
@@ -142,7 +207,7 @@ export default function CertificateClaimPage({ link }: Props) {
               {downloadError && <p className="text-xs text-red-600">{downloadError}</p>}
               <p className="text-center text-xs text-gray-500">
                 Keep this page bookmarked — entering the same email here again returns the same
-                certificate.
+                certificate, even after this link closes.
               </p>
             </div>
           </div>

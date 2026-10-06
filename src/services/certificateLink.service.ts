@@ -37,7 +37,7 @@ export interface ClaimedCertificate {
 }
 
 /**
- * Both calls go through publicAxios: no auth header, and no 401 interceptor that would redirect a
+ * All calls go through publicAxios: no auth header, and no 401 interceptor that would redirect a
  * signed-out visitor to /login.
  */
 export const getCertificateLink = async (token: string): Promise<PublicCertificateLink> => {
@@ -54,6 +54,22 @@ export const claimCertificate = async (
   const { data } = await publicAxios.post<ApiResponse<ClaimedCertificate>>(
     `/certificate-links/${encodeURIComponent(token)}/claim`,
     payload,
+  );
+  return data.data;
+};
+
+/**
+ * Re-show a certificate this email already holds. Works on expired / full links too (the claim
+ * email's button lands here long after the link may have closed) and never issues a new one —
+ * an email with no certificate gets a 404 with a message to show.
+ */
+export const retrieveCertificate = async (
+  token: string,
+  email: string,
+): Promise<ClaimedCertificate> => {
+  const { data } = await publicAxios.post<ApiResponse<ClaimedCertificate>>(
+    `/certificate-links/${encodeURIComponent(token)}/retrieve`,
+    { email },
   );
   return data.data;
 };
