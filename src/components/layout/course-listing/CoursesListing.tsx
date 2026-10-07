@@ -16,7 +16,10 @@ function formatPrice(val?: string | number | null) {
 
 // ─── course card ─────────────────────────────────────────────────────────────
 
-function CourseCard({ c }: { c: PublicCourse }) {
+// Thumbnails are the original CMS uploads (60–400 KB each, the image optimizer is off),
+// and on phones only the first card is near the fold. Loading all nine eagerly put
+// ~1.2 MB in front of the LCP, so every card after the first lazy-loads.
+function CourseCard({ c, eager = false }: { c: PublicCourse; eager?: boolean }) {
   const href = c.slug ? `/course/${c.slug}` : `/course/${c.id}`;
   const thumbnail = c.thumbnail_url || "/images/placeholder.jpg";
   const rating = c.ratings ? Number(c.ratings).toFixed(1) : null;
@@ -29,7 +32,7 @@ function CourseCard({ c }: { c: PublicCourse }) {
     <div className="bg-white shadow-md rounded-md overflow-hidden h-full">
      <div className="relative  w-full aspect-[16/9] overflow-hidden">
         {/* <img src={thumbnail} alt={c.title} width="100%" className="w-full h-[250px] sm:h-[180px] md:h-[200px] xl:h-[280px]" /> */}
-            <img src={thumbnail} alt={c.title} className="w-full h-full object-cover"/>
+            <img src={thumbnail} alt={c.title} loading={eager ? "eager" : "lazy"} decoding="async" className="w-full h-full object-cover"/>
         {rating && (
           <span className="absolute flex gap-1 top-2 right-4 bg-white px-2 py-1 rounded-full text-sm shadow font-normal mt-2">
             <img src="/images/icons/star.svg" alt="" className="w-4 h-4 mt-1" /> {rating}
@@ -407,8 +410,8 @@ useEffect(() => {
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-10 container mx-auto px-4">
-          {courses.map((c) => (
-            <CourseCard key={c.id} c={c} />
+          {courses.map((c, i) => (
+            <CourseCard key={c.id} c={c} eager={i === 0} />
           ))}
         </div>
       )}

@@ -56,7 +56,10 @@ const pushSearch = (val: string) => {
   useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current) }, [])
 
   return (
-    <section className='bg-[url("/images/course_bg.svg")] bg-no-repeat bg-cover bg-center '>
+    // WebP, not the original Figma SVG export: that SVG embedded a 4096x3382 PNG and a
+    // 4096x2048 JPEG under blur filters (2.7 MB) and was the mobile LCP element, at 18s.
+    // The WebP is the same artwork rendered at 2x (2880x904) onto white — keep it raster.
+    <section className='bg-[url("/images/course_bg.webp")] bg-no-repeat bg-cover bg-center '>
       <div className='container mx-auto pt-4 xl:pt-20 pb-12 xl:pb-32 w-[100%] xl:h-[580px] px-4'>
 
         <div className="flex items-center justify-center mb-4 mt-6">
