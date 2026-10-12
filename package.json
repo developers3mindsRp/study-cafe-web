@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "node init && next dev -p 3001",
     "clean": "node -e \"require('fs').rmSync(process.env.NEXT_DIST_DIR||'.next',{recursive:true,force:true})\"",
     "prebuild": "npm run clean",
-    "build": "next build",
-    "start": "next start",
+    "build": "node init && next build",
+    "start": "node init && next start",
     "lint": "next lint"
   },
   "dependencies": {

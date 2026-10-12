@@ -58,7 +58,7 @@ const CertificateArtwork: React.FC<CertificateArtworkProps> = ({
         </h1>
 
         <p className="text-[20px] text-[#1C232B]">
-          OF APPRECIATION
+          OF PARTICIPATION
         </p>
 
         <p className="text-[16px] text-[#808285] mt-1">
